@@ -29,6 +29,11 @@ def parse_formula(formula):
     for group_text, multiplier in _GROUP_RE.findall(formula):
         for row_str in _CELLREF_RE.findall(group_text):
             terms.append((int(row_str), float(multiplier)))
+        group_remainder = (
+            _CELLREF_RE.sub("", group_text).replace("+", "").strip()
+        )
+        if group_remainder:
+            raise ValueError(f"Kan formule niet ontleden: {formula!r}")
     remainder = _GROUP_RE.sub("", formula)
 
     for row_str, multiplier in _STANDALONE_RE.findall(remainder):

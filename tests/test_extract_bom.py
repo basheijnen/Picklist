@@ -30,6 +30,23 @@ def test_parse_formula_rejects_unsupported_shapes():
         parse_formula("=SUM('1. Invoer pakketaantal'!G1:G5)")
 
 
+def test_parse_formula_rejects_unrecognised_extra_term_inside_group():
+    with pytest.raises(ValueError):
+        parse_formula("=('1. Invoer pakketaantal'!G5+2)*3")
+
+
+def test_parse_formula_rejects_unrecognised_column_inside_group():
+    with pytest.raises(ValueError):
+        parse_formula(
+            "=('1. Invoer pakketaantal'!G5+'1. Invoer pakketaantal'!H6)*3"
+        )
+
+
+def test_parse_formula_rejects_unrecognised_other_sheet_ref_inside_group():
+    with pytest.raises(ValueError):
+        parse_formula("=('1. Invoer pakketaantal'!G5+'Blad2'!G9)*3")
+
+
 import openpyxl as _openpyxl
 
 from bom import BomEntry

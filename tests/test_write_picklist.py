@@ -34,3 +34,18 @@ def test_write_picklist_creates_one_sheet_per_gebied_plus_unknown(tmp_path):
 
     onbekend = workbook["Onbekende pakketten"]
     assert [cell.value for cell in onbekend[2]] == ["99.9", 7]
+
+
+def test_write_picklist_warns_about_unknown_gebied(tmp_path, capsys):
+    totals = {
+        "KOELING": {("Parade", "CL Pink"): 14.0},
+        "Koeling": {("Typo", "Fout"): 5.0},
+    }
+    unknown = {}
+    output_path = tmp_path / "Picklist.xlsx"
+
+    write_picklist(totals, unknown, output_path, date(2026, 9, 16))
+
+    captured = capsys.readouterr()
+    assert "LET OP" in captured.out
+    assert "Koeling" in captured.out

@@ -8,6 +8,13 @@ def _display_aantal(aantal):
 
 
 def write_picklist(totals, unknown, output_path, for_date):
+    onbekend_gebieden = set(totals) - set(GEBIED_ORDER)
+    if onbekend_gebieden:
+        print(
+            f"LET OP: onbekend gebied in BOM: {sorted(onbekend_gebieden)}, "
+            "dit wordt niet in de picklist opgenomen."
+        )
+
     workbook = openpyxl.Workbook()
     workbook.remove(workbook.active)
 

@@ -23,18 +23,28 @@ def main(base_order_dir=BASE_ORDER_DIR, bom_csv_path=BOM_CSV_PATH,
         print(f"FOUT: {error}")
         return 1
 
-    bom_entries = load_bom_csv(bom_csv_path)
-    totals, unknown = calculate_totals(bom_entries, aantallen)
-    write_picklist(totals, unknown, output_path, today)
+    try:
+        bom_entries = load_bom_csv(bom_csv_path)
+        totals, unknown = calculate_totals(bom_entries, aantallen)
+        write_picklist(totals, unknown, output_path, today)
 
-    print(f"Picklist geschreven naar {output_path}")
-    if unknown:
+        print(f"Picklist geschreven naar {output_path}")
+        if unknown:
+            print(
+                f"LET OP: {len(unknown)} onbekend pakketnummer/-nummers "
+                "(zie sheet 'Onbekende pakketten'):"
+            )
+            for pakketnummer, aantal in sorted(unknown.items()):
+                print(f"  {pakketnummer}: {aantal}")
+    except PermissionError:
         print(
-            f"LET OP: {len(unknown)} onbekend pakketnummer/-nummers "
-            "(zie sheet 'Onbekende pakketten'):"
+            "FOUT: kan Picklist.xlsx niet opslaan — sluit het bestand in "
+            "Excel en probeer opnieuw."
         )
-        for pakketnummer, aantal in sorted(unknown.items()):
-            print(f"  {pakketnummer}: {aantal}")
+        return 1
+    except Exception as error:
+        print(f"FOUT: {error}")
+        return 1
 
     return 0
 
