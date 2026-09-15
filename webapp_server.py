@@ -8,6 +8,7 @@ import argparse
 import json
 import sys
 import threading
+import urllib.parse
 import webbrowser
 from dataclasses import asdict, replace
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -57,17 +58,22 @@ def _insert_into_groep(bom_entries, gebied, groep):
     return shifted, insertion_volgorde
 
 
-def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
+def _validate_package_fields(payload):
+    """Validate the fields shared by add_package/update_package. Returns
+    (pakketnaam, doosnummers, parsed_components, pokon, pokon_aantal).
+    Raises ValueError with a Dutch message on any problem. Does not look at
+    `payload["pakketnummer"]` — the two callers each decide what that
+    identity means (a brand-new one vs. an existing one being replaced).
+    """
     if not isinstance(payload, dict):
         raise ValueError("Ongeldige aanvraag.")
 
-    pakketnummer = str(payload.get("pakketnummer", "")).strip()
     pakketnaam = str(payload.get("pakketnaam", "")).strip()
     doosnummers = str(payload.get("doosnummers", "")).strip()
     components = payload.get("components") or []
     pokon = payload.get("pokon")
 
-    if not pakketnummer or not pakketnaam or not doosnummers or not components:
+    if not pakketnaam or not doosnummers or not components:
         raise ValueError("Vul pakketnummer, pakketnaam, doosnummer(s) en minstens één artikelregel in.")
 
     parsed_components = []
@@ -105,12 +111,17 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
         except (TypeError, ValueError):
             raise ValueError("Ongeldig Pokon-aantal.")
 
-    packages = load_package_info_csv(package_info_csv_path)
-    bom_entries = load_bom_csv(bom_csv_path)
-    if any(entry.pakketnummer == pakketnummer for entry in bom_entries) or any(
-            existing.pakketnummer == pakketnummer for existing in packages):
-        raise ValueError(f"Pakketnummer {pakketnummer} bestaat al.")
+    return pakketnaam, doosnummers, parsed_components, pokon, pokon_aantal
 
+
+def _build_entries(pakketnummer, doosnummers, parsed_components, pokon, pokon_aantal, bom_entries):
+    """Build the BomEntry rows for `pakketnummer`: each component is either
+    inserted into its chosen existing category (shifting later items in that
+    gebied to make room) or, if left blank/unknown, appended under "Nieuwe
+    artikelen:" at the end. Returns (new_entries, bom_entries) — bom_entries
+    may have shifted volgorde values applied by category insertion; combine
+    it with new_entries for the full updated BOM.
+    """
     new_entries = []
     for index, component in enumerate(parsed_components):
         groep, insertion_volgorde = None, None
@@ -158,7 +169,27 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
                     volgorde=NEW_ITEMS_BASE_VOLGORDE + index,
                 )
             )
+    return new_entries, bom_entries
 
+
+def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
+    if not isinstance(payload, dict):
+        raise ValueError("Ongeldige aanvraag.")
+    pakketnummer = str(payload.get("pakketnummer", "")).strip()
+    if not pakketnummer:
+        raise ValueError("Vul pakketnummer, pakketnaam, doosnummer(s) en minstens één artikelregel in.")
+
+    pakketnaam, doosnummers, parsed_components, pokon, pokon_aantal = _validate_package_fields(payload)
+
+    packages = load_package_info_csv(package_info_csv_path)
+    bom_entries = load_bom_csv(bom_csv_path)
+    if any(entry.pakketnummer == pakketnummer for entry in bom_entries) or any(
+            existing.pakketnummer == pakketnummer for existing in packages):
+        raise ValueError(f"Pakketnummer {pakketnummer} bestaat al.")
+
+    new_entries, bom_entries = _build_entries(
+        pakketnummer, doosnummers, parsed_components, pokon, pokon_aantal, bom_entries
+    )
     write_bom_csv(bom_entries + new_entries, bom_csv_path)
 
     new_package = PackageInfo(
@@ -172,6 +203,42 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
     return new_package, new_entries
 
 
+def update_package(pakketnummer, payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
+    """Replace an existing package's BOM rows and package_info row with a
+    freshly validated set built from `payload`, keeping `pakketnummer`
+    unchanged (renaming a pakketnummer is not supported — delete and re-add
+    if that's ever really needed).
+    """
+    pakketnummer = str(pakketnummer).strip()
+    if not pakketnummer:
+        raise ValueError("Ongeldig pakketnummer.")
+
+    pakketnaam, doosnummers, parsed_components, pokon, pokon_aantal = _validate_package_fields(payload)
+
+    packages = load_package_info_csv(package_info_csv_path)
+    bom_entries = load_bom_csv(bom_csv_path)
+    if not any(existing.pakketnummer == pakketnummer for existing in packages):
+        raise ValueError(f"Pakketnummer {pakketnummer} bestaat niet.")
+
+    remaining_bom = [entry for entry in bom_entries if entry.pakketnummer != pakketnummer]
+    remaining_packages = [entry for entry in packages if entry.pakketnummer != pakketnummer]
+
+    new_entries, remaining_bom = _build_entries(
+        pakketnummer, doosnummers, parsed_components, pokon, pokon_aantal, remaining_bom
+    )
+    write_bom_csv(remaining_bom + new_entries, bom_csv_path)
+
+    new_package = PackageInfo(
+        pakketnummer=pakketnummer,
+        pakketnaam=pakketnaam,
+        pokon="ja" if pokon else "nee",
+        doosnummers=doosnummers,
+    )
+    write_package_info_csv(remaining_packages + [new_package], package_info_csv_path)
+
+    return new_package, new_entries
+
+
 class PicklistRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(DIST_DIR), **kwargs)
@@ -180,6 +247,25 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         if self.path != "/api/pakketten":
             self._send_json(404, {"error": "Onbekend endpoint."})
             return
+        self._handle_pakketten_write(
+            lambda payload: add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
+        )
+
+    def do_PUT(self):
+        prefix = "/api/pakketten/"
+        if not self.path.startswith(prefix) or len(self.path) <= len(prefix):
+            self._send_json(404, {"error": "Onbekend endpoint."})
+            return
+        pakketnummer = urllib.parse.unquote(self.path[len(prefix):])
+        self._handle_pakketten_write(
+            lambda payload: update_package(pakketnummer, payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
+        )
+
+    def _handle_pakketten_write(self, operation):
+        """Parse the request body as JSON, run `operation(payload)` (either
+        add_package or update_package, already bound to its other args), and
+        send the resulting package+BOM rows as JSON — or a Dutch error.
+        """
         try:
             length = int(self.headers.get("Content-Length", 0))
             payload = json.loads(self.rfile.read(length) or b"{}")
@@ -188,11 +274,11 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             return
         try:
             # Holding the lock across the read-modify-write means two
-            # concurrent POSTs (e.g. a double-clicked save button) can't
-            # both read the same "before" state and each append their own
-            # copy of the new rows.
+            # concurrent requests (e.g. a double-clicked save button) can't
+            # both read the same "before" state and each append/replace their
+            # own copy of the rows.
             with _write_lock:
-                package, entries = add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
+                package, entries = operation(payload)
                 build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
                 response_body = {"package": asdict(package), "bom": [asdict(entry) for entry in entries]}
             self._send_json(200, response_body)

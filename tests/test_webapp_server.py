@@ -2,7 +2,7 @@ import pytest
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
-from webapp_server import add_package
+from webapp_server import add_package, update_package
 
 
 def _empty_csvs(tmp_path):
@@ -299,6 +299,100 @@ def test_add_package_rejects_pokon_missing_naam(tmp_path):
         )
 
 
+def test_update_package_replaces_components_pokon_and_boxes(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    add_package(
+        {
+            "pakketnummer": "281.1",
+            "pakketnaam": "Klimroos rood x3",
+            "doosnummers": "14",
+            "pokon": None,
+            "components": [
+                {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    package, entries = update_package(
+        "281.1",
+        {
+            "pakketnaam": "Klimroos rood x5",
+            "doosnummers": "14 + 15",
+            "pokon": {"naam": "Pokon Rozen", "aantal": 1},
+            "components": [
+                {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 5}
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert package == PackageInfo("281.1", "Klimroos rood x5", "ja", "14 + 15")
+    assert entries == [
+        BomEntry("281.1", "KAS", "Klimroos", "rood", 5.0, "Nieuwe artikelen:", 900),
+        BomEntry("281.1", "POKON", "Pokon Rozen", "", 1.0, "Pokon:", 900),
+        BomEntry("281.1", "DOZEN", "14", "", 1.0, "", 900),
+        BomEntry("281.1", "DOZEN", "15", "", 1.0, "", 901),
+    ]
+    reloaded_bom = load_bom_csv(bom_csv_path)
+    assert reloaded_bom == entries  # the old rows for 281.1 are gone, replaced, not duplicated
+    assert load_package_info_csv(package_info_csv_path) == [package]
+
+
+def test_update_package_reinserts_into_an_existing_groep(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv(
+        [
+            BomEntry("100.5", "KAS", "Olijfboom struik", "", 1.0, "Mediterrane:", 18),
+            BomEntry("500.1", "KAS", "Olijfboom P9 (oud)", "", 1.0, "Nieuwe artikelen:", 900),
+        ],
+        bom_csv_path,
+    )
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv([PackageInfo("500.1", "Olijfboom P9", "nee", "9")], package_info_csv_path)
+
+    package, entries = update_package(
+        "500.1",
+        {
+            "pakketnaam": "Olijfboom P9",
+            "doosnummers": "9",
+            "pokon": None,
+            "components": [
+                {
+                    "gebied": "KAS", "item": "Olijfboom P9", "soort": "",
+                    "aantal_per_pakket": 1, "groep": "Mediterrane:",
+                }
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert entries[0] == BomEntry("500.1", "KAS", "Olijfboom P9", "", 1.0, "Mediterrane:", 19)
+    reloaded = load_bom_csv(bom_csv_path)
+    # 100.5 (untouched) + the 2 freshly rebuilt rows for 500.1 (KAS + DOZEN) — the
+    # stale "500.1 ... Nieuwe artikelen:" row is gone, not left behind as a duplicate.
+    assert len(reloaded) == 3
+    assert reloaded[1] == BomEntry("500.1", "KAS", "Olijfboom P9", "", 1.0, "Mediterrane:", 19)
+
+
+def test_update_package_rejects_unknown_pakketnummer(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="1.1"):
+        update_package(
+            "1.1",
+            {
+                "pakketnaam": "X", "doosnummers": "1", "pokon": None,
+                "components": [{"gebied": "KAS", "item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
 import json as _json
 import threading as _threading
 import urllib.request as _urllib_request
@@ -342,6 +436,52 @@ def test_server_persists_new_package_via_http_post(tmp_path, monkeypatch):
     assert body["package"]["pakketnummer"] == "281.1"
     assert body["bom"][0]["item"] == "Klimroos"
     assert data_js_path.exists()
+
+
+def test_server_updates_existing_package_via_http_put(tmp_path, monkeypatch):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    add_package(
+        {
+            "pakketnummer": "281.1", "pakketnaam": "Klimroos rood x3", "doosnummers": "14",
+            "pokon": None,
+            "components": [{"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten/281.1",
+            data=_json.dumps(
+                {
+                    "pakketnaam": "Klimroos rood x5", "doosnummers": "14",
+                    "pokon": None,
+                    "components": [
+                        {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 5}
+                    ],
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="PUT",
+        )
+        with _urllib_request.urlopen(request, timeout=5) as response:
+            body = _json.loads(response.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert body["package"]["pakketnaam"] == "Klimroos rood x5"
+    assert body["bom"][0]["aantal_per_pakket"] == 5.0
+    assert len(load_bom_csv(bom_csv_path)) == 2  # replaced (KAS + DOZEN row), not duplicated
 
 
 def test_server_returns_dutch_error_for_malformed_json_body(tmp_path, monkeypatch):
