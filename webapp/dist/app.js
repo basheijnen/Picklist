@@ -356,11 +356,17 @@ function renderPackages(orderCounts) {
   section.className = "department";
   section.dataset.department = "PAKKETTEN";
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
+  // Derived from the actual BOM rather than PackageInfo.pokon: the two are
+  // extracted separately for the original data and can disagree (found:
+  // packages flagged "ja" with no POKON row in bom.csv, and vice versa).
+  const pokonPakketten = new Set(
+    (window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "POKON").map((entry) => entry.pakketnummer)
+  );
   const rows = [...orderCounts.entries()]
     .sort(([a], [b]) => a.localeCompare(b, "nl", { numeric: true }))
     .map(([pakketnummer, aantal]) => {
       const info = packageInfo.get(pakketnummer) || {};
-      const needsPokon = info.pokon === "ja";
+      const needsPokon = pokonPakketten.has(pakketnummer);
       return `<tr class="${needsPokon ? "needs-pokon" : ""}">
         <td class="package-number">${escapeHtml(pakketnummer)}</td>
         <td class="package-name">${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
