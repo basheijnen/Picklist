@@ -1823,3 +1823,930 @@ git add import_csv.py generate_picklist.py run_picklist.bat README.md tests/test
 git commit -m "feat: support a manually supplied CSV order export as an alternate source"
 ```
 
+---
+
+## Amendment 3 (post-launch): merge the browser webapp built in a parallel ChatGPT session
+
+While Amendment 2 was being planned, the user worked in parallel with ChatGPT in an
+untracked sibling folder (`C:\picklist\Picklist`) and independently built: (1) the
+exact same CSV-order-import feature as Task 12 (verified byte-identical diff against
+this plan's Task 12 code), (2) a package-name/Pokon/box-number database
+(`package_info.csv`, 1085 rows, extracted once from
+`E-Commerce PICKLIST - IN PROGRESS.xlsm` via `tools/extract_package_info.py` — the
+same one-time-extraction pattern as `extract_bom.py`/`bom.csv`), and (3) a static
+browser app (`webapp/dist/index.html` + `app.js` + `styles.css`) that lets warehouse
+staff drag in a CSV order export and see the same per-gebied picklists as
+`Picklist.xlsx`, without opening Excel. This was reviewed directly: `app.js`'s
+`BOXES_PER_PALLET` table is byte-for-byte identical to `write_picklist.py`'s, and its
+CSV-parsing/grouping logic matches the Python tool's rules.
+
+**Gap found in the ChatGPT build:** the browser app's "Pakket aan database
+toevoegen" dialog saves new packages only to that one browser's `localStorage` —
+never to `bom.csv`/`package_info.csv` on disk. Confirmed with the user: fix this by
+replacing the direct `file://` static-HTML launch with a small local HTTP server
+(stdlib only, matching this project's existing "no web framework" constraint) that
+serves the app AND writes new packages straight into `bom.csv`/`package_info.csv`,
+so every computer that opens the app (and the Excel/Python pipeline) sees the same
+data.
+
+**Also found:** running `python -m pytest` from `C:\picklist` while the untracked
+`Picklist/` folder exists currently **fails to collect** — `tests/test_bom.py` and
+`Picklist/tests/test_bom.py` (same basename, no `__init__.py` in either `tests/`
+dir) collide under pytest's default import mode. Task 13 fixes this immediately
+(independently of when `Picklist/` finally gets deleted in Task 19) by scoping
+pytest to this project's own `tests/` directory.
+
+### Task 13: Scope pytest to this project's tests directory
+
+**Files:**
+- Create: `C:\picklist\pytest.ini`
+
+**Interfaces:** None — this only changes what `python -m pytest` (no path argument)
+collects; every existing `python -m pytest tests/test_x.py` invocation in this plan
+is unaffected.
+
+- [ ] **Step 1: Reproduce the current collection failure**
+
+Run: `python -m pytest -v`
+Expected: `Interrupted: N errors during collection` with `import file mismatch`
+errors naming files under `Picklist\tests\`.
+
+- [ ] **Step 2: Add `pytest.ini`**
+
+`C:\picklist\pytest.ini`:
+```ini
+[pytest]
+testpaths = tests
+```
+
+- [ ] **Step 3: Verify the collection failure is gone**
+
+Run: `python -m pytest -v`
+Expected: only this project's `tests/` directory is collected; the existing 29
+tests pass (no `Picklist\tests\` entries appear at all).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add pytest.ini
+git commit -m "fix: scope pytest to tests/ to avoid collecting sibling scratch folders"
+```
+
+---
+
+### Task 14: Package database data model
+
+**Files:**
+- Create: `C:\picklist\packages.py`
+- Test: `C:\picklist\tests\test_packages.py`
+
+**Interfaces:**
+- Produces: `PackageInfo` dataclass (`pakketnummer: str`, `pakketnaam: str`,
+  `pokon: str`, `doosnummers: str`); `write_package_info_csv(entries, path)`;
+  `load_package_info_csv(path) -> list[PackageInfo]`. Task 16 (build script) and
+  Task 18 (webapp server) both import these.
+
+- [ ] **Step 1: Write the failing test**
+
+`C:\picklist\tests\test_packages.py`:
+```python
+from packages import PackageInfo, load_package_info_csv, write_package_info_csv
+
+
+def test_write_then_load_round_trip(tmp_path):
+    entries = [
+        PackageInfo("1.1", "Grootbloemige rozen x 6", "nee", "14"),
+        PackageInfo("1.1p", "Grootbloemige rozen x 6", "ja", "2"),
+    ]
+    csv_path = tmp_path / "package_info.csv"
+
+    write_package_info_csv(entries, csv_path)
+    loaded = load_package_info_csv(csv_path)
+
+    assert loaded == entries
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_packages.py -v`
+Expected: FAIL with `ModuleNotFoundError: No module named 'packages'`
+
+- [ ] **Step 3: Implement `packages.py`**
+
+`C:\picklist\packages.py`:
+```python
+import csv
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+
+@dataclass(frozen=True)
+class PackageInfo:
+    pakketnummer: str
+    pakketnaam: str
+    pokon: str
+    doosnummers: str
+
+
+FIELDNAMES = ["pakketnummer", "pakketnaam", "pokon", "doosnummers"]
+
+
+def write_package_info_csv(entries, path):
+    path = Path(path)
+    with path.open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=FIELDNAMES)
+        writer.writeheader()
+        for entry in entries:
+            writer.writerow(asdict(entry))
+
+
+def load_package_info_csv(path):
+    path = Path(path)
+    entries = []
+    with path.open("r", newline="", encoding="utf-8") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            entries.append(
+                PackageInfo(
+                    pakketnummer=row["pakketnummer"],
+                    pakketnaam=row["pakketnaam"],
+                    pokon=row["pokon"],
+                    doosnummers=row["doosnummers"],
+                )
+            )
+    return entries
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `python -m pytest tests/test_packages.py -v`
+Expected: PASS
+
+- [ ] **Step 5: Bring in the already-extracted `package_info.csv` and its one-time extractor**
+
+```bash
+cp "Picklist/package_info.csv" "package_info.csv"
+cp "Picklist/tools/extract_package_info.py" "tools/extract_package_info.py"
+```
+
+Confirm `tools/extract_package_info.py` still parses cleanly (it only reads
+`E-Commerce PICKLIST - IN PROGRESS.xlsm` — the same read-only source material as
+`extract_bom.py` — and is a one-time regeneration script, not run as part of normal
+operation): run `python -m py_compile tools/extract_package_info.py`.
+Expected: no output (compiles cleanly).
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add packages.py tests/test_packages.py package_info.csv tools/extract_package_info.py
+git commit -m "feat: add package database data model and bring in the extracted package_info.csv"
+```
+
+---
+
+### Task 15: Webapp data bundle build script
+
+**Files:**
+- Create: `C:\picklist\tools\build_webapp_data.py`
+- Test: `C:\picklist\tests\test_build_webapp_data.py`
+
+**Interfaces:**
+- Consumes: `load_bom_csv` (Task 1), `load_package_info_csv` (Task 14).
+- Produces: `build_data_js(bom_csv_path, package_info_csv_path, output_path) ->
+  tuple[int, int]` (counts written). Task 18 (webapp server) calls this on every
+  server start and after every successful package save, always passing its own
+  current path globals explicitly (never relying on this function's defaults) so
+  the server's paths stay swappable in tests.
+
+- [ ] **Step 1: Write the failing test**
+
+`C:\picklist\tests\test_build_webapp_data.py`:
+```python
+import json
+
+from bom import BomEntry, write_bom_csv
+from packages import PackageInfo, write_package_info_csv
+from tools.build_webapp_data import build_data_js
+
+
+def test_build_data_js_writes_bom_and_packages_as_window_globals(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv(
+        [BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "Rozen 38CM:", 7)],
+        bom_csv_path,
+    )
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv(
+        [PackageInfo("1.3", "Klimroos rood", "nee", "14")], package_info_csv_path
+    )
+    output_path = tmp_path / "data.js"
+
+    counts = build_data_js(bom_csv_path, package_info_csv_path, output_path)
+
+    assert counts == (1, 1)
+    text = output_path.read_text(encoding="utf-8")
+    bom_json = text.split("window.PICKLIST_BOM = ", 1)[1].split(";\n", 1)[0]
+    packages_json = text.split("window.PICKLIST_PACKAGES = ", 1)[1].rstrip(";\n")
+    assert json.loads(bom_json) == [
+        {
+            "pakketnummer": "1.3", "gebied": "KOELING", "item": "Parade",
+            "soort": "CL Pink", "aantal_per_pakket": 1.0,
+            "groep": "Rozen 38CM:", "volgorde": 7,
+        }
+    ]
+    assert json.loads(packages_json) == [
+        {"pakketnummer": "1.3", "pakketnaam": "Klimroos rood", "pokon": "nee", "doosnummers": "14"}
+    ]
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_build_webapp_data.py -v`
+Expected: FAIL with `ModuleNotFoundError: No module named 'tools.build_webapp_data'`
+
+- [ ] **Step 3: Implement `tools/build_webapp_data.py`**
+
+`C:\picklist\tools\build_webapp_data.py`:
+```python
+"""Build the browser app's bundled BOM/package data from bom.csv and package_info.csv."""
+
+import json
+import sys
+from pathlib import Path
+
+PROJECT_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_DIR))
+
+from bom import load_bom_csv
+from packages import load_package_info_csv
+
+BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
+PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
+DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "data.js"
+
+
+def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH,
+                   output_path=DATA_JS_PATH):
+    entries = [
+        {
+            "pakketnummer": entry.pakketnummer,
+            "gebied": entry.gebied,
+            "item": entry.item,
+            "soort": entry.soort,
+            "aantal_per_pakket": entry.aantal_per_pakket,
+            "groep": entry.groep,
+            "volgorde": entry.volgorde,
+        }
+        for entry in load_bom_csv(bom_csv_path)
+    ]
+    packages = [
+        {
+            "pakketnummer": entry.pakketnummer,
+            "pakketnaam": entry.pakketnaam,
+            "pokon": entry.pokon,
+            "doosnummers": entry.doosnummers,
+        }
+        for entry in load_package_info_csv(package_info_csv_path)
+    ]
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        "window.PICKLIST_BOM = "
+        + json.dumps(entries, ensure_ascii=False, separators=(",", ":"))
+        + ";\nwindow.PICKLIST_PACKAGES = "
+        + json.dumps(packages, ensure_ascii=False, separators=(",", ":"))
+        + ";\n",
+        encoding="utf-8",
+    )
+    return len(entries), len(packages)
+
+
+def main():
+    bom_count, package_count = build_data_js()
+    print(f"{bom_count} BOM-regels en {package_count} pakketten geschreven naar {DATA_JS_PATH}")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `python -m pytest tests/test_build_webapp_data.py -v`
+Expected: PASS
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add tools/build_webapp_data.py tests/test_build_webapp_data.py
+git commit -m "feat: add build script bundling bom.csv/package_info.csv for the webapp"
+```
+
+---
+
+### Task 16: Bring in the static webapp assets
+
+**Files:**
+- Create: `C:\picklist\webapp\dist\index.html` (copied)
+- Create: `C:\picklist\webapp\dist\styles.css` (copied)
+- Create: `C:\picklist\webapp\dist\assets\eurogreen-logo.jpg` (copied)
+- Create: `C:\picklist\webapp\dist\assets\gardenzo-logo.png` (copied)
+- Modify: `C:\picklist\.gitignore`
+
+**Interfaces:** None yet — `index.html` still references `data.js` (built by Task
+15, gitignored, not committed) and `app.js` (rewritten in Task 18 to talk to the
+new server instead of `localStorage`; a plain copy now would reference
+`localStorage` APIs that Task 18 replaces, so `app.js` itself is deliberately
+brought in as part of Task 18, not here).
+
+**Note:** `webapp/.openai/hosting.json` is a leftover from the ChatGPT canvas
+environment used to build this (`{"static": {"directory": "dist"}}`, only meaningful
+inside that authoring tool) — it is not copied.
+
+- [ ] **Step 1: Copy the static assets**
+
+```bash
+mkdir -p webapp/dist/assets
+cp "Picklist/webapp/dist/index.html" "webapp/dist/index.html"
+cp "Picklist/webapp/dist/styles.css" "webapp/dist/styles.css"
+cp "Picklist/webapp/dist/assets/eurogreen-logo.jpg" "webapp/dist/assets/eurogreen-logo.jpg"
+cp "Picklist/webapp/dist/assets/gardenzo-logo.png" "webapp/dist/assets/gardenzo-logo.png"
+```
+
+- [ ] **Step 2: Gitignore the generated data bundle**
+
+Add to `C:\picklist\.gitignore`:
+```
+webapp/dist/data.js
+```
+(`data.js` is regenerated from `bom.csv`/`package_info.csv` on every server start —
+see Task 18 — so committing it would just churn on every BOM change; `bom.csv`/
+`package_info.csv` remain the source of truth in git.)
+
+- [ ] **Step 3: Confirm nothing references the dropped `.openai` folder**
+
+Run: `grep -r "\.openai" webapp/dist/index.html`
+Expected: no matches (the page never linked to it).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add webapp/dist/index.html webapp/dist/styles.css webapp/dist/assets/eurogreen-logo.jpg webapp/dist/assets/gardenzo-logo.png .gitignore
+git commit -m "feat: bring in the browser picklist app's static assets"
+```
+
+---
+
+### Task 17: Local webapp server with file-backed package persistence
+
+**Files:**
+- Create: `C:\picklist\webapp_server.py`
+- Test: `C:\picklist\tests\test_webapp_server.py`
+
+**Interfaces:**
+- Consumes: `BomEntry`/`load_bom_csv`/`write_bom_csv` (Task 1), `PackageInfo`/
+  `load_package_info_csv`/`write_package_info_csv` (Task 14), `build_data_js`
+  (Task 15).
+- Produces: `add_package(payload, bom_csv_path, package_info_csv_path) ->
+  tuple[PackageInfo, list[BomEntry]]` (raises `ValueError` with a Dutch message on
+  any invalid/duplicate input); `PicklistRequestHandler` (serves `webapp/dist`,
+  handles `POST /api/pakketten`); `main(port=8765, open_browser=True) -> int`. Task
+  18 rewrites `app.js` to call the `/api/pakketten` endpoint this produces; the
+  `.bat` launcher (also Task 18) calls this module's `__main__` block.
+
+- [ ] **Step 1: Write the failing tests for `add_package`**
+
+`C:\picklist\tests\test_webapp_server.py`:
+```python
+import pytest
+
+from bom import BomEntry, load_bom_csv, write_bom_csv
+from packages import PackageInfo, load_package_info_csv, write_package_info_csv
+from webapp_server import add_package
+
+
+def _empty_csvs(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv([], bom_csv_path)
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv([], package_info_csv_path)
+    return bom_csv_path, package_info_csv_path
+
+
+def test_add_package_appends_components_pokon_and_boxes(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    package, entries = add_package(
+        {
+            "pakketnummer": "281.1",
+            "pakketnaam": "Klimroos rood x3",
+            "doosnummers": "14 + 15",
+            "pokon": {"naam": "Pokon Rozen", "aantal": 2},
+            "components": [
+                {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert package == PackageInfo("281.1", "Klimroos rood x3", "ja", "14 + 15")
+    assert entries == [
+        BomEntry("281.1", "KAS", "Klimroos", "rood", 3.0, "Nieuwe artikelen:", 900),
+        BomEntry("281.1", "POKON", "Pokon Rozen", "", 2.0, "Pokon:", 900),
+        BomEntry("281.1", "DOZEN", "14", "", 1.0, "", 900),
+        BomEntry("281.1", "DOZEN", "15", "", 1.0, "", 901),
+    ]
+    assert load_bom_csv(bom_csv_path) == entries
+    assert load_package_info_csv(package_info_csv_path) == [package]
+
+
+def test_add_package_without_pokon_or_multiple_boxes(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    package, entries = add_package(
+        {
+            "pakketnummer": "1.99",
+            "pakketnaam": "Losse plant",
+            "doosnummers": "9",
+            "pokon": None,
+            "components": [
+                {"gebied": "KOELING", "item": "Losse plant", "soort": "", "aantal_per_pakket": 1}
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert package.pokon == "nee"
+    assert entries == [
+        BomEntry("1.99", "KOELING", "Losse plant", "", 1.0, "Nieuwe artikelen:", 900),
+        BomEntry("1.99", "DOZEN", "9", "", 1.0, "", 900),
+    ]
+
+
+def test_add_package_rejects_duplicate_pakketnummer(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv([], bom_csv_path)
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv(
+        [PackageInfo("1.3", "Bestaand", "nee", "1")], package_info_csv_path
+    )
+
+    with pytest.raises(ValueError, match="1.3"):
+        add_package(
+            {
+                "pakketnummer": "1.3", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": None,
+                "components": [{"gebied": "KAS", "item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_missing_required_fields(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError):
+        add_package(
+            {"pakketnummer": "", "pakketnaam": "X", "doosnummers": "1", "pokon": None, "components": []},
+            bom_csv_path,
+            package_info_csv_path,
+        )
+```
+
+- [ ] **Step 2: Run tests to verify they fail**
+
+Run: `python -m pytest tests/test_webapp_server.py -v`
+Expected: FAIL with `ModuleNotFoundError: No module named 'webapp_server'`
+
+- [ ] **Step 3: Implement `add_package`**
+
+`C:\picklist\webapp_server.py` (first part):
+```python
+"""Local HTTP server for the browser picklist app: serves webapp/dist and
+persists newly added packages straight into bom.csv/package_info.csv, so every
+computer that opens the app (and the Excel/Python pipeline) sees the same data
+instead of one browser's localStorage.
+"""
+
+import argparse
+import json
+import sys
+import threading
+import webbrowser
+from dataclasses import asdict
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+
+from bom import BomEntry, load_bom_csv, write_bom_csv
+from packages import PackageInfo, load_package_info_csv, write_package_info_csv
+from tools.build_webapp_data import build_data_js
+
+PROJECT_DIR = Path(__file__).resolve().parent
+DIST_DIR = PROJECT_DIR / "webapp" / "dist"
+BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
+PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
+DATA_JS_PATH = DIST_DIR / "data.js"
+
+NEW_ITEMS_GROEP = "Nieuwe artikelen:"
+POKON_GROEP = "Pokon:"
+NEW_ITEMS_BASE_VOLGORDE = 900
+
+
+def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
+    pakketnummer = str(payload.get("pakketnummer", "")).strip()
+    pakketnaam = str(payload.get("pakketnaam", "")).strip()
+    doosnummers = str(payload.get("doosnummers", "")).strip()
+    components = payload.get("components") or []
+    pokon = payload.get("pokon")
+
+    if not pakketnummer or not pakketnaam or not doosnummers or not components:
+        raise ValueError("Vul pakketnummer, pakketnaam, doosnummer(s) en minstens één artikelregel in.")
+    for component in components:
+        if not str(component.get("item", "")).strip() or not (float(component.get("aantal_per_pakket", 0)) > 0):
+            raise ValueError("Elke artikelregel moet een naam en een geldig aantal hebben.")
+
+    packages = load_package_info_csv(package_info_csv_path)
+    if any(existing.pakketnummer == pakketnummer for existing in packages):
+        raise ValueError(f"Pakketnummer {pakketnummer} bestaat al.")
+
+    new_entries = [
+        BomEntry(
+            pakketnummer=pakketnummer,
+            gebied=component["gebied"],
+            item=str(component["item"]).strip(),
+            soort=str(component.get("soort", "")).strip(),
+            aantal_per_pakket=float(component["aantal_per_pakket"]),
+            groep=NEW_ITEMS_GROEP,
+            volgorde=NEW_ITEMS_BASE_VOLGORDE + index,
+        )
+        for index, component in enumerate(components)
+    ]
+    if pokon:
+        new_entries.append(
+            BomEntry(
+                pakketnummer=pakketnummer,
+                gebied="POKON",
+                item=str(pokon["naam"]),
+                soort="",
+                aantal_per_pakket=float(pokon.get("aantal", 1)),
+                groep=POKON_GROEP,
+                volgorde=NEW_ITEMS_BASE_VOLGORDE,
+            )
+        )
+    for index, box in enumerate(part.strip() for part in doosnummers.split("+")):
+        if box:
+            new_entries.append(
+                BomEntry(
+                    pakketnummer=pakketnummer,
+                    gebied="DOZEN",
+                    item=box,
+                    soort="",
+                    aantal_per_pakket=1.0,
+                    groep="",
+                    volgorde=NEW_ITEMS_BASE_VOLGORDE + index,
+                )
+            )
+
+    bom_entries = load_bom_csv(bom_csv_path)
+    write_bom_csv(bom_entries + new_entries, bom_csv_path)
+
+    new_package = PackageInfo(
+        pakketnummer=pakketnummer,
+        pakketnaam=pakketnaam,
+        pokon="ja" if pokon else "nee",
+        doosnummers=doosnummers,
+    )
+    write_package_info_csv(packages + [new_package], package_info_csv_path)
+
+    return new_package, new_entries
+```
+
+- [ ] **Step 4: Run tests to verify they pass**
+
+Run: `python -m pytest tests/test_webapp_server.py -v`
+Expected: PASS (4 passed)
+
+- [ ] **Step 5: Write the failing end-to-end test for the HTTP endpoint**
+
+Append to `C:\picklist\tests\test_webapp_server.py`:
+```python
+import json as _json
+import threading as _threading
+import urllib.request as _urllib_request
+from http.server import ThreadingHTTPServer as _ThreadingHTTPServer
+
+import webapp_server
+
+
+def test_server_persists_new_package_via_http_post(tmp_path, monkeypatch):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten",
+            data=_json.dumps(
+                {
+                    "pakketnummer": "281.1", "pakketnaam": "Klimroos rood x3",
+                    "doosnummers": "14", "pokon": None,
+                    "components": [
+                        {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+                    ],
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with _urllib_request.urlopen(request, timeout=5) as response:
+            body = _json.loads(response.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert body["package"]["pakketnummer"] == "281.1"
+    assert body["bom"][0]["item"] == "Klimroos"
+    assert data_js_path.exists()
+```
+
+- [ ] **Step 6: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_webapp_server.py -v`
+Expected: FAIL with `AttributeError: module 'webapp_server' has no attribute
+'PicklistRequestHandler'`
+
+- [ ] **Step 7: Implement the HTTP handler and `main`**
+
+Append to `C:\picklist\webapp_server.py`:
+```python
+class PicklistRequestHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=str(DIST_DIR), **kwargs)
+
+    def do_POST(self):
+        if self.path != "/api/pakketten":
+            self._send_json(404, {"error": "Onbekend endpoint."})
+            return
+        length = int(self.headers.get("Content-Length", 0))
+        try:
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            package, entries = add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
+            build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+            self._send_json(200, {"package": asdict(package), "bom": [asdict(entry) for entry in entries]})
+        except ValueError as error:
+            self._send_json(400, {"error": str(error)})
+        except Exception as error:
+            # A local single-user tool: surface any unexpected failure (e.g. a
+            # locked CSV file) as a readable message in the browser instead of
+            # a bare connection reset.
+            self._send_json(500, {"error": str(error)})
+
+    def _send_json(self, status, payload):
+        body = json.dumps(payload).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, format, *args):
+        pass
+
+
+def main(port=8765, open_browser=True):
+    build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", port), PicklistRequestHandler)
+    except OSError as error:
+        print(f"FOUT: kan niet starten op poort {port}: {error}")
+        return 1
+
+    url = f"http://127.0.0.1:{port}/"
+    print(f"Picklist-app draait op {url} (sluit dit venster om te stoppen)")
+    if open_browser:
+        threading.Timer(0.5, lambda: webbrowser.open(url)).start()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    return 0
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--no-browser", action="store_true")
+    args = parser.parse_args()
+    sys.exit(main(port=args.port, open_browser=not args.no_browser))
+```
+
+- [ ] **Step 8: Run tests to verify they pass**
+
+Run: `python -m pytest tests/test_webapp_server.py -v`
+Expected: PASS (5 passed)
+
+- [ ] **Step 9: Run the full test suite**
+
+Run: `python -m pytest -v`
+Expected: all tests pass.
+
+- [ ] **Step 10: Commit**
+
+```bash
+git add webapp_server.py tests/test_webapp_server.py
+git commit -m "feat: serve the webapp locally and persist new packages to disk"
+```
+
+---
+
+### Task 18: Wire the browser app to the new server and drop localStorage
+
+**Files:**
+- Create: `C:\picklist\webapp\dist\app.js` (adapted from `Picklist/webapp/dist/app.js`)
+- Modify: `C:\picklist\open_picklist_app.bat`
+- Delete: nothing extra (`Picklist/vernieuw_webapp_gegevens.bat` is not copied —
+  restarting the app now rebuilds `data.js` automatically, see Task 17 Step 7's
+  `main()`)
+
+**Interfaces:**
+- Consumes: `POST /api/pakketten` (Task 17), returning
+  `{"package": {...}, "bom": [...]}` on success or `{"error": "..."}` on failure.
+
+- [ ] **Step 1: Copy `app.js` as a starting point**
+
+```bash
+cp "Picklist/webapp/dist/app.js" "webapp/dist/app.js"
+```
+
+- [ ] **Step 2: Replace the localStorage persistence with a server round trip**
+
+In `C:\picklist\webapp\dist\app.js`, delete these three functions and the
+`CUSTOM_DATA_KEY` constant (no longer needed — packages now persist server-side):
+```javascript
+const CUSTOM_DATA_KEY = "picklist-custom-packages-v1";
+
+function readCustomData() { ... }
+
+function loadCustomData() { ... }
+```
+
+Delete the `loadCustomData();` call near the bottom of the file (just above
+`populatePokonOptions();`).
+
+Replace the `saveNewPackage` function with:
+```javascript
+async function saveNewPackage(event) {
+  event.preventDefault();
+  const pakketnummer = document.querySelector("#newPackageNumber").value.trim();
+  const pakketnaam = document.querySelector("#newPackageName").value.trim();
+  const doosnummers = document.querySelector("#newPackageBoxes").value.trim();
+  const pokonName = document.querySelector("#newPackagePokon").value;
+  const pokonAmount = Number(document.querySelector("#newPackagePokonAmount").value || 1);
+  const formMessage = document.querySelector("#packageFormMessage");
+  if ((window.PICKLIST_PACKAGES || []).some((entry) => entry.pakketnummer === pakketnummer)) {
+    formMessage.textContent = `Pakketnummer ${pakketnummer} bestaat al.`;
+    return;
+  }
+  const components = [...componentRows.querySelectorAll(".component-row")].map((row) => ({
+    gebied: row.querySelector(".component-area").value,
+    item: row.querySelector(".component-item").value.trim(),
+    soort: row.querySelector(".component-kind").value.trim(),
+    aantal_per_pakket: Number(row.querySelector(".component-amount").value),
+  }));
+  if (!pakketnummer || !pakketnaam || !doosnummers || components.some((entry) => !entry.item || !(entry.aantal_per_pakket > 0))) {
+    formMessage.textContent = "Vul alle verplichte velden en geldige aantallen in.";
+    return;
+  }
+  formMessage.textContent = "Opslaan...";
+  try {
+    const response = await fetch("/api/pakketten", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        pakketnummer, pakketnaam, doosnummers,
+        pokon: pokonName ? { naam: pokonName, aantal: pokonAmount } : null,
+        components,
+      }),
+    });
+    const result = await response.json();
+    if (!response.ok) { formMessage.textContent = result.error || "Opslaan mislukt."; return; }
+    window.PICKLIST_PACKAGES.push(result.package);
+    window.PICKLIST_BOM.push(...result.bom);
+    packageDialog.close();
+    message.textContent = `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
+    if (currentImport) showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
+  } catch (_error) {
+    formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
+  }
+}
+```
+
+- [ ] **Step 3: Point the launcher at the server instead of the static HTML file**
+
+`C:\picklist\open_picklist_app.bat`:
+```bat
+@echo off
+cd /d "%~dp0"
+python webapp_server.py
+if errorlevel 1 (
+  echo.
+  echo FOUT: de Picklist-app kon niet worden gestart.
+  pause
+)
+```
+
+- [ ] **Step 4: Manually verify in a real browser**
+
+Run: double-click `open_picklist_app.bat`
+Expected: a console window prints `Picklist-app draait op http://127.0.0.1:8765/`
+and the default browser opens that URL showing the drag-and-drop screen. Drag in a
+sample order CSV, confirm picklists render, then use "Pakket aan database
+toevoegen" to add a test package; confirm the success message mentions
+`bom.csv`/`package_info.csv`, and that `bom.csv`/`package_info.csv` on disk now
+contain the new rows (check with a text editor). Restart the app and confirm the
+test package still shows up (proves it survived the restart, unlike the old
+localStorage-only behavior) — then manually remove the test rows from `bom.csv`/
+`package_info.csv` before committing.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add webapp/dist/app.js open_picklist_app.bat
+git commit -m "feat: persist new packages to bom.csv/package_info.csv instead of localStorage"
+```
+
+---
+
+### Task 19: Documentation, full verification, and cleanup
+
+**Files:**
+- Modify: `C:\picklist\README.md`
+- Delete: `C:\picklist\Picklist` (the entire untracked scratch folder, once every
+  file it contained that mattered has been merged by Tasks 13-18)
+
+**Interfaces:** None — this is documentation plus a final verification and cleanup
+pass.
+
+- [ ] **Step 1: Merge the webapp usage section into `README.md`**
+
+Add this section to `C:\picklist\README.md`, right after the existing `## Gebruik`
+section (before `## Alternatieve bron: los CSV-bestand`):
+```markdown
+## Browser-app zonder Excel
+
+Dubbelklik `open_picklist_app.bat`. De picklistmaker opent lokaal in Chrome of
+Edge. Sleep de orderexport-CSV naar het venster om eerst de pakkettenlijst met
+pakketnaam, Pokon-markering en doosnummer(s), en daarna de picklists per afdeling
+te bekijken. Met **Printen / PDF opslaan** kun je de pakkettenlijst en alle
+afdelingen printen of in het Windows-afdrukvenster kiezen voor **Opslaan als
+PDF**. De ordergegevens blijven op de computer en worden niet geüpload.
+
+### Pakketdatabase
+
+Nieuwe pakketten voeg je in de browser-app toe met **Pakket aan database
+toevoegen**. Komt in een ingelezen export een onbekend pakket voor, dan staat bij
+dat nummer direct een knop **Toevoegen aan database**. Vul pakketnaam, inhoud,
+aantallen, locatie, Pokon en doosnummer(s) in. Na opslaan wordt de geopende
+picklist meteen opnieuw berekend, en de gegevens worden direct weggeschreven naar
+`bom.csv`/`package_info.csv` — dus zichtbaar voor iedereen die de app opent, en
+voor `run_picklist.bat`.
+```
+
+- [ ] **Step 2: Run the full test suite**
+
+Run: `python -m pytest -v`
+Expected: all tests pass (this project's `tests/` only, per Task 13's `pytest.ini`).
+
+- [ ] **Step 3: Full manual dry run of both entry points**
+
+- Double-click `run_picklist.bat` (or drag a CSV export onto it) and confirm
+  `Picklist.xlsx` is produced as before.
+- Double-click `open_picklist_app.bat` and repeat Task 18 Step 4's manual check.
+
+- [ ] **Step 4: Delete the merged scratch folder**
+
+Confirm every file `C:\picklist\Picklist` contained that was worth keeping has a
+home in this project (Tasks 14-18 above), then:
+```bash
+rm -rf Picklist
+git status --short
+```
+Expected: `git status` shows no `Picklist/` entry at all (it was always untracked,
+so there is nothing to `git rm`).
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add README.md
+git commit -m "docs: document the browser app and its file-backed package database"
+```
+
