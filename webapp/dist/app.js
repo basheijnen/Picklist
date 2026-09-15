@@ -11,14 +11,50 @@ const message = document.querySelector("#message");
 const results = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
+const newImportButton = document.querySelector("#newImportButton");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
+const IMPORT_STORAGE_KEY = "picklist-current-import-v1";
 let currentImport = null;
 let editingPakketnummer = null;
+
+function saveImportState() {
+  try {
+    if (!currentImport) { localStorage.removeItem(IMPORT_STORAGE_KEY); return; }
+    localStorage.setItem(IMPORT_STORAGE_KEY, JSON.stringify({
+      fileLabel: currentImport.file.name,
+      orderCounts: Object.fromEntries(currentImport.orderCounts),
+    }));
+  } catch (_error) {
+    // localStorage unavailable (private browsing, quota, ...) — the session
+    // just won't be remembered on reload, not fatal for the current run.
+  }
+}
+
+function loadImportState() {
+  try {
+    const raw = localStorage.getItem(IMPORT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return { file: { name: parsed.fileLabel }, orderCounts: new Map(Object.entries(parsed.orderCounts)) };
+  } catch (_error) {
+    return null;
+  }
+}
+
+function resetImport() {
+  currentImport = null;
+  saveImportState();
+  results.hidden = true;
+  emptyState.hidden = false;
+  printButton.disabled = true;
+  newImportButton.disabled = true;
+  message.textContent = "";
+}
 
 function populateGroepOptions(gebied, select) {
   const previous = select.value;
@@ -329,7 +365,7 @@ function renderPackages(orderCounts) {
         <td class="package-number">${escapeHtml(pakketnummer)}</td>
         <td class="package-name">${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
         <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
-        <td class="package-count">${displayNumber(aantal)}</td>
+        <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${aantal}" data-pakketnummer="${escapeHtml(pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(pakketnummer)}"></td>
         <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
       </tr>`;
     })
@@ -344,7 +380,20 @@ function renderPackages(orderCounts) {
       <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th></tr></thead>
       <tbody>${rows}<tr class="package-total-row"><td>Totaal</td><td colspan="2"></td><td class="package-grand-total">${displayNumber(total)}</td><td></td></tr></tbody>
     </table></div>`;
+  section.querySelector("tbody").addEventListener("change", (event) => {
+    const input = event.target.closest(".package-count-input");
+    if (!input) return;
+    adjustOrderCount(input.dataset.pakketnummer, Math.max(0, Math.floor(Number(input.value) || 0)));
+  });
   return section;
+}
+
+function adjustOrderCount(pakketnummer, newValue) {
+  if (!currentImport) return;
+  if (newValue > 0) currentImport.orderCounts.set(pakketnummer, newValue);
+  else currentImport.orderCounts.delete(pakketnummer);
+  saveImportState();
+  showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
 }
 
 function escapeHtml(value) {
@@ -386,7 +435,7 @@ function showResults(file, orderCounts, calculated) {
     unknownList.append(item);
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
-  emptyState.hidden = true; results.hidden = false; printButton.disabled = false;
+  emptyState.hidden = true; results.hidden = false; printButton.disabled = false; newImportButton.disabled = false;
 }
 
 function selectDepartment(name) {
@@ -398,9 +447,19 @@ async function handleFile(file) {
   message.textContent = "";
   if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
   try {
-    const orderCounts = readOrders(await file.text());
-    currentImport = { file, orderCounts };
-    showResults(file, orderCounts, calculate(orderCounts));
+    const newCounts = readOrders(await file.text());
+    let orderCounts, fileLabel;
+    if (currentImport) {
+      orderCounts = new Map(currentImport.orderCounts);
+      newCounts.forEach((aantal, pakketnummer) => orderCounts.set(pakketnummer, (orderCounts.get(pakketnummer) || 0) + aantal));
+      fileLabel = `${currentImport.file.name} + ${file.name}`;
+    } else {
+      orderCounts = newCounts;
+      fileLabel = file.name;
+    }
+    currentImport = { file: { name: fileLabel }, orderCounts };
+    saveImportState();
+    showResults(currentImport.file, orderCounts, calculate(orderCounts));
   } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
 }
 
@@ -409,6 +468,7 @@ fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
 ["dragleave", "drop"].forEach((event) => dropZone.addEventListener(event, (e) => { e.preventDefault(); dropZone.classList.remove("is-dragging"); }));
 dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files[0]));
 printButton.addEventListener("click", () => window.print());
+newImportButton.addEventListener("click", resetImport);
 document.querySelector("#addPackageButton").addEventListener("click", () => openPackageForm());
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
 document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
@@ -423,3 +483,9 @@ document.querySelector("#closeManagePackagesDialog").addEventListener("click", (
 document.querySelector("#managePackagesSearch").addEventListener("input", (event) => renderManagePackagesList(event.target.value));
 
 populatePokonOptions();
+
+const restoredImport = loadImportState();
+if (restoredImport) {
+  currentImport = restoredImport;
+  showResults(restoredImport.file, restoredImport.orderCounts, calculate(restoredImport.orderCounts));
+}
