@@ -63,6 +63,13 @@ def _write_dozen_sheet(ws, totals_for_gebied, item_order_for_gebied):
 
 
 def write_picklist(totals, unknown, output_path, for_date, item_order):
+    onbekend_gebieden = set(totals) - set(GEBIED_ORDER)
+    if onbekend_gebieden:
+        print(
+            f"LET OP: onbekend gebied in BOM: {sorted(onbekend_gebieden)}, "
+            "dit wordt niet in de picklist opgenomen."
+        )
+
     workbook = openpyxl.Workbook()
     workbook.remove(workbook.active)
 

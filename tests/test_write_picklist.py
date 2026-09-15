@@ -52,3 +52,18 @@ def test_write_picklist_dozen_sheet_has_pallet_column_and_total(tmp_path):
         ["KB", 2, 48],
         ["Totaal", 4.5, 298],
     ]
+
+
+def test_write_picklist_warns_about_unknown_gebied(tmp_path, capsys):
+    totals = {
+        "KOELING": {("Parade", "CL Pink"): 14.0},
+        "Koeling": {("Typo", "Fout"): 5.0},
+    }
+    unknown = {}
+    output_path = tmp_path / "Picklist.xlsx"
+
+    write_picklist(totals, unknown, output_path, date(2026, 9, 16), {})
+
+    captured = capsys.readouterr()
+    assert "LET OP" in captured.out
+    assert "Koeling" in captured.out
