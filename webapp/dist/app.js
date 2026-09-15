@@ -235,7 +235,7 @@ function renderDepartment(name, entries) {
   groupEntries(entries).forEach((group) => {
     const subtotal = group.entries.reduce((sum, entry) => sum + entry.aantal, 0);
     const rows = group.entries.map((entry) => `<tr><td>${escapeHtml(entry.item)}</td><td>${escapeHtml(entry.soort)}</td><td>${displayNumber(entry.aantal)}</td></tr>`).join("");
-    section.insertAdjacentHTML("beforeend", `<div class="group"><div class="group-title"><span>${escapeHtml(group.name)}</span><span>${displayNumber(subtotal)}</span></div><div class="table-wrap"><table><thead><tr><th>Item</th><th>Soort</th><th>Aantal</th></tr></thead><tbody>${rows}</tbody></table></div></div>`);
+    section.insertAdjacentHTML("beforeend", `<div class="group"><div class="group-title"><span>${escapeHtml(group.name)}</span><span>${displayNumber(subtotal)}</span></div><div class="table-wrap"><table><tbody>${rows}</tbody></table></div></div>`);
   });
   return section;
 }
@@ -261,9 +261,9 @@ function renderPackages(orderCounts) {
     .join("");
   const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0);
   section.innerHTML = `
-    <header class="department-header">
-      <div><h2>Picklist</h2><p class="picklist-date">${formatLongDate(new Date())}</p></div>
-      <div class="department-total">${displayNumber(total)} pakketten</div>
+    <header class="department-header pakketten-header">
+      <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p></div>
+      <div class="department-total badge">${displayNumber(total)} pakketten</div>
     </header>
     <div class="table-wrap"><table>
       <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th></tr></thead>

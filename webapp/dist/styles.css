@@ -69,6 +69,10 @@ main { width: min(1180px, calc(100% - 32px)); margin: 36px auto 64px; }
 .department-header p { margin: 3px 0 0; color: var(--muted); }
 .picklist-date { font-size: 1.05rem; font-weight: 750; }
 .department-total { color: var(--accent); font-size: 1.4rem; font-weight: 850; }
+.pakketten-header { position: relative; justify-content: center; text-align: center; }
+.pakketten-title h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: .01em; }
+.pakketten-title .picklist-date { text-align: center; }
+.badge { position: absolute; top: 20px; right: 28px; padding: 8px 18px; border-radius: 999px; background: var(--accent); color: white; font-size: 1.05rem; }
 .group { break-inside: avoid; }
 .group-title { display: grid; grid-template-columns: 1fr 120px; padding: 8px 22px; color: white; background: var(--accent); font-weight: 800; }
 .table-wrap { overflow-x: auto; }
@@ -84,10 +88,13 @@ tbody tr:hover { background: #f5faf7; }
 .department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) td:nth-child(2) { width: 30%; }
 .department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) th:nth-child(3),
 .department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) td:nth-child(3) { width: 15%; }
-.package-number { font-size: 1.03rem; font-weight: 800; }
-.package-count { font-size: 1.03rem; font-weight: 850; }
+.department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) td { padding: 10px 22px; font-size: 1.1rem; }
+.package-name { font-size: 1.12rem; font-weight: 600; }
+.package-number { font-size: 1.03rem; font-weight: 500; }
+.package-count { font-size: 1.03rem; font-weight: 600; }
 .needs-pokon .package-number, .pokon-cell { color: #d82c25; font-weight: 850; }
 .pokon-cell { font-style: italic; }
+.department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { background: #f3f8f4; }
 .box-cell { white-space: nowrap; color: var(--muted); font-size: .82rem; font-style: italic; font-weight: 650; }
 .department[data-department="PAKKETTEN"] th:nth-child(3),
 .department[data-department="PAKKETTEN"] td:nth-child(3) { width: 90px; text-align: center; }
@@ -172,14 +179,21 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
   .department.is-empty { display: none !important; }
   .department { margin: 0; border: 0; box-shadow: none; break-after: page; }
   .department:last-child { break-after: auto; }
+  .department[data-department="POKON"] { break-after: avoid; }
   .department-header { padding: 0 0 6px; border-bottom: 3px solid var(--accent); background: white; }
   .department-header h2 { font-size: 18pt; }
   .department-header p, .eyebrow { margin-bottom: 2px; font-size: 8pt; }
   .department-total { font-size: 12pt; }
+  .pakketten-title h2 { font-size: 26pt; }
+  .badge { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .group-title { padding: 3px 7px; font-size: 8.5pt; line-height: 1.15; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   th, td { padding: 3px 7px; font-size: 8.5pt; line-height: 1.15; }
   th { font-size: 7.5pt; }
   .box-cell { font-size: 7.5pt; }
+  .department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) td { padding: 4px 7px; font-size: 11pt; }
+  .package-name { font-size: 10.5pt; }
+  .package-number, .package-count { font-size: 9.5pt; }
+  .department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .package-total-row .package-grand-total { padding-right: 7px; font-size: 19pt; }
   .dozen-total-row td { padding-top: 6px; padding-bottom: 6px; font-size: 10pt; }
   tbody tr:hover { background: transparent; }
