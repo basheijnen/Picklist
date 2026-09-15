@@ -23,6 +23,7 @@ const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORT_STORAGE_KEY = "picklist-current-import-v1";
 let currentImport = null;
 let editingPakketnummer = null;
+let manageListForNav = [];
 
 function saveImportState() {
   try {
@@ -107,6 +108,27 @@ function syncPokonAmountField() {
   }
 }
 
+function updatePackageNavButtons(pakketnummer) {
+  const nav = document.querySelector(".package-nav");
+  const prevButton = document.querySelector("#prevPackageButton");
+  const nextButton = document.querySelector("#nextPackageButton");
+  const index = manageListForNav.indexOf(pakketnummer);
+  const show = Boolean(editingPakketnummer) && index !== -1 && manageListForNav.length > 1;
+  nav.hidden = !show;
+  if (show) {
+    prevButton.disabled = index <= 0;
+    nextButton.disabled = index >= manageListForNav.length - 1;
+  }
+}
+
+function navigatePackage(step) {
+  const index = manageListForNav.indexOf(editingPakketnummer);
+  if (index === -1) return;
+  const nextIndex = index + step;
+  if (nextIndex < 0 || nextIndex >= manageListForNav.length) return;
+  openEditPackageForm(manageListForNav[nextIndex]);
+}
+
 function openPackageForm(pakketnummer = "") {
   editingPakketnummer = null;
   packageForm.reset();
@@ -118,7 +140,8 @@ function openPackageForm(pakketnummer = "") {
   document.querySelector("#packageDialogTitle").textContent = "Nieuw pakket toevoegen";
   document.querySelector("#savePackageButton").textContent = "Pakket opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
-  packageDialog.showModal();
+  updatePackageNavButtons(pakketnummer);
+  if (!packageDialog.open) packageDialog.showModal();
 }
 
 function openEditPackageForm(pakketnummer) {
@@ -155,7 +178,8 @@ function openEditPackageForm(pakketnummer) {
   document.querySelector("#packageDialogTitle").textContent = "Pakket bewerken";
   document.querySelector("#savePackageButton").textContent = "Wijzigingen opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
-  packageDialog.showModal();
+  updatePackageNavButtons(pakketnummer);
+  if (!packageDialog.open) packageDialog.showModal();
 }
 
 function renderManagePackagesList(filter = "") {
@@ -163,6 +187,7 @@ function renderManagePackagesList(filter = "") {
   const packages = [...(window.PICKLIST_PACKAGES || [])]
     .filter((entry) => !term || entry.pakketnummer.toLowerCase().includes(term) || entry.pakketnaam.toLowerCase().includes(term))
     .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true }));
+  manageListForNav = packages.map((entry) => entry.pakketnummer);
   if (!packages.length) {
     managePackagesList.innerHTML = '<p class="manage-packages-empty">Geen pakketten gevonden.</p>';
     return;
@@ -543,6 +568,8 @@ document.querySelector("#closePackageDialog").addEventListener("click", () => pa
 document.querySelector("#cancelPackageButton").addEventListener("click", () => packageDialog.close());
 packageForm.addEventListener("submit", saveNewPackage);
 document.querySelector("#newPackagePokon").addEventListener("change", syncPokonAmountField);
+document.querySelector("#prevPackageButton").addEventListener("click", () => navigatePackage(-1));
+document.querySelector("#nextPackageButton").addEventListener("click", () => navigatePackage(1));
 document.querySelector("#managePackagesButton").addEventListener("click", () => {
   document.querySelector("#managePackagesSearch").value = "";
   renderManagePackagesList();
