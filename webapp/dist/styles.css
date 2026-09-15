@@ -112,6 +112,15 @@ tbody tr:hover { background: #f5faf7; }
 .package-total-row .package-grand-total { padding-right: 22px; font-size: 2rem; line-height: 1; text-align: right; vertical-align: middle; }
 .dozen-total-row td { padding-top: 13px; padding-bottom: 13px; border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f5f3f1; font-size: 1.12rem; font-weight: 900; }
 .empty-department { padding: 48px 28px; color: var(--muted); text-align: center; }
+.pakketkaart { display: flex; flex-direction: column; min-height: 275mm; padding: 16mm 14mm; break-after: page; background: white; color: var(--ink); }
+.pakketkaart:last-child { break-after: auto; }
+.pakketkaart-label { font-size: 20pt; font-weight: 800; letter-spacing: .04em; }
+.pakketkaart-nummer { margin: 10mm 0; font-size: 80pt; font-weight: 800; line-height: 1; text-align: center; }
+.pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
+.pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
+.pakketkaart-doos { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; margin-top: auto; }
+.pakketkaart-doos-label { font-size: 12pt; font-weight: 700; }
+.pakketkaart-doos-nummer { font-size: 40pt; font-weight: 800; }
 .unknown-panel { margin-top: 24px; padding: 26px 28px; border: 1px solid #eac8a3; border-radius: 18px; background: #fff8ee; }
 .eyebrow-warning { color: #a05d16; }
 .unknown-panel h2 { margin-bottom: 5px; }
@@ -196,6 +205,9 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
   .pokon-dozen-page { display: flex; flex-direction: column; min-height: 275mm; break-after: page; }
   .pokon-dozen-page:last-child { break-after: auto; }
   .department[data-department="DOZEN"] { margin-top: auto; }
+  #pakketkaartenPanel { display: none; }
+  body.printing-pakketkaarten .results { display: none !important; }
+  body.printing-pakketkaarten #pakketkaartenPanel { display: block !important; }
   .department-header { padding: 0 0 6px; border-bottom: 3px solid var(--accent); background: white; }
   .department-header h2 { font-size: 18pt; }
   .department-header p, .eyebrow { margin-bottom: 2px; font-size: 8pt; }

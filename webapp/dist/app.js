@@ -12,6 +12,8 @@ const results = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
 const newImportButton = document.querySelector("#newImportButton");
+const printPakketkaartenButton = document.querySelector("#printPakketkaartenButton");
+const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
@@ -53,6 +55,7 @@ function resetImport() {
   emptyState.hidden = false;
   printButton.disabled = true;
   newImportButton.disabled = true;
+  printPakketkaartenButton.disabled = true;
   message.textContent = "";
 }
 
@@ -402,6 +405,44 @@ function adjustOrderCount(pakketnummer, newValue) {
   showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
 }
 
+function buildPakketkaarten(orderCounts) {
+  const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
+  const bomByPakket = new Map();
+  (window.PICKLIST_BOM || []).forEach((entry) => {
+    if (!bomByPakket.has(entry.pakketnummer)) bomByPakket.set(entry.pakketnummer, []);
+    bomByPakket.get(entry.pakketnummer).push(entry);
+  });
+  const pakketnummers = [...orderCounts.keys()].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
+  pakketkaartenPanel.replaceChildren();
+  pakketnummers.forEach((pakketnummer) => {
+    const info = packageInfo.get(pakketnummer);
+    const entries = (bomByPakket.get(pakketnummer) || []).filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied));
+    entries.sort((a, b) => a.volgorde - b.volgorde);
+    const totalCount = entries.reduce((sum, entry) => sum + entry.aantal_per_pakket, 0);
+    const itemsHtml = entries
+      .map((entry) => `<li>${displayNumber(entry.aantal_per_pakket)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
+      .join("");
+    const card = document.createElement("div");
+    card.className = "pakketkaart";
+    card.innerHTML = `
+      <div class="pakketkaart-label">PAKKETNUMMER:</div>
+      <div class="pakketkaart-nummer">${escapeHtml(pakketnummer)}</div>
+      <div class="pakketkaart-naam"><span>${escapeHtml(info ? info.pakketnaam : "Onbekend pakket")}</span><span>x ${displayNumber(totalCount)}</span></div>
+      <ul class="pakketkaart-items">${itemsHtml}</ul>
+      <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>`;
+    pakketkaartenPanel.append(card);
+  });
+}
+
+function printPakketkaarten() {
+  if (!currentImport) return;
+  buildPakketkaarten(currentImport.orderCounts);
+  document.body.classList.add("printing-pakketkaarten");
+  window.print();
+}
+
+window.addEventListener("afterprint", () => document.body.classList.remove("printing-pakketkaarten"));
+
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 }
@@ -448,7 +489,7 @@ function showResults(file, orderCounts, calculated) {
     unknownList.append(item);
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
-  emptyState.hidden = true; results.hidden = false; printButton.disabled = false; newImportButton.disabled = false;
+  emptyState.hidden = true; results.hidden = false; printButton.disabled = false; newImportButton.disabled = false; printPakketkaartenButton.disabled = false;
 }
 
 function selectDepartment(name) {
@@ -482,6 +523,7 @@ fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
 dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files[0]));
 printButton.addEventListener("click", () => window.print());
 newImportButton.addEventListener("click", resetImport);
+printPakketkaartenButton.addEventListener("click", printPakketkaarten);
 document.querySelector("#addPackageButton").addEventListener("click", () => openPackageForm());
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
 document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
