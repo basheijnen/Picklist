@@ -10,7 +10,12 @@
 </head>
 <body>
   <header class="topbar">
-    <img class="header-logo eurogreen-logo" src="assets/eurogreen-logo.jpg" alt="Eurogreen International BV">
+    <div class="header-logos">
+      <img class="header-logo eurogreen-logo" src="assets/eurogreen-logo.jpg" alt="Eurogreen International BV">
+      <div class="gardenzo-card">
+        <img class="header-logo gardenzo-logo" src="assets/gardenzo-logo.png" alt="Gardenzo">
+      </div>
+    </div>
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">✓</span>
       <div>
@@ -19,9 +24,6 @@
       </div>
     </div>
     <div class="header-actions">
-      <div class="gardenzo-card">
-        <img class="header-logo gardenzo-logo" src="assets/gardenzo-logo.png" alt="Gardenzo">
-      </div>
       <button id="newImportButton" class="button button-secondary" type="button" disabled>
         Nieuw
       </button>
@@ -40,10 +42,7 @@
         <span class="eyebrow">Nieuwe picklist</span>
         <h2 id="import-title">Sleep de orderexport hierheen</h2>
         <p>Gebruik een puntkomma-gescheiden CSV met de kolom <strong>Package Number</strong>. De pakkettenlijst verschijnt als eerste. Sleep je nog een export erbij terwijl er al een picklist openstaat, dan worden de aantallen opgeteld — klik op <strong>Nieuw</strong> om met een lege lijst te beginnen.</p>
-        <div class="manage-buttons">
-          <button id="addPackageButton" class="button button-primary manage-button" type="button">+ Pakket aan database toevoegen</button>
-          <button id="managePackagesButton" class="button button-quiet manage-button" type="button">Pakketten beheren</button>
-        </div>
+        <button id="managePackagesButton" class="button button-quiet manage-button" type="button">Pakketten beheren</button>
       </div>
       <label id="dropZone" class="drop-zone" for="fileInput">
         <span class="upload-icon" aria-hidden="true">↑</span>
@@ -135,7 +134,10 @@
       <button id="closeManagePackagesDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
     </div>
     <div class="manage-dialog-body">
-      <input id="managePackagesSearch" type="search" placeholder="Zoek op pakketnummer of naam…">
+      <div class="manage-dialog-toolbar">
+        <input id="managePackagesSearch" type="search" placeholder="Zoek op pakketnummer of naam…">
+        <button id="addPackageFromManageButton" class="button button-primary" type="button">+ Nieuw pakket</button>
+      </div>
       <div id="managePackagesList" class="manage-packages-list"></div>
     </div>
   </dialog>

@@ -524,7 +524,6 @@ dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files
 printButton.addEventListener("click", () => window.print());
 newImportButton.addEventListener("click", resetImport);
 printPakketkaartenButton.addEventListener("click", printPakketkaarten);
-document.querySelector("#addPackageButton").addEventListener("click", () => openPackageForm());
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
 document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
 document.querySelector("#cancelPackageButton").addEventListener("click", () => packageDialog.close());
@@ -536,6 +535,10 @@ document.querySelector("#managePackagesButton").addEventListener("click", () => 
 });
 document.querySelector("#closeManagePackagesDialog").addEventListener("click", () => managePackagesDialog.close());
 document.querySelector("#managePackagesSearch").addEventListener("input", (event) => renderManagePackagesList(event.target.value));
+document.querySelector("#addPackageFromManageButton").addEventListener("click", () => {
+  managePackagesDialog.close();
+  openPackageForm();
+});
 
 populatePokonOptions();
 
