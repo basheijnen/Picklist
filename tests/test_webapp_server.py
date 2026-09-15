@@ -65,6 +65,78 @@ def test_add_package_without_pokon_or_multiple_boxes(tmp_path):
     ]
 
 
+def test_add_package_inserts_into_an_existing_groep_and_shifts_later_items(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv(
+        [
+            BomEntry("100.5", "KAS", "Olijfboom struik", "", 1.0, "Mediterrane:", 18),
+            BomEntry("100.3", "KAS", "Olijfboom op stam", "", 1.0, "Mediterrane:", 19),
+            BomEntry("161.0", "KAS", "Olea europaea", "", 1.0, "Mediterrane:", 20),
+            BomEntry("150.1", "KAS", "Chamaerops humilis", "", 1.0, "Tropische planten:", 24),
+        ],
+        bom_csv_path,
+    )
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv([], package_info_csv_path)
+
+    package, entries = add_package(
+        {
+            "pakketnummer": "500.1",
+            "pakketnaam": "Olijfboom P9",
+            "doosnummers": "9",
+            "pokon": None,
+            "components": [
+                {
+                    "gebied": "KAS", "item": "Olijfboom P9", "soort": "",
+                    "aantal_per_pakket": 1, "groep": "Mediterrane:",
+                }
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert entries[0] == BomEntry("500.1", "KAS", "Olijfboom P9", "", 1.0, "Mediterrane:", 21)
+    reloaded = {(entry.pakketnummer, entry.gebied): entry for entry in load_bom_csv(bom_csv_path)}
+    assert reloaded[("100.5", "KAS")].volgorde == 18
+    assert reloaded[("100.3", "KAS")].volgorde == 19
+    assert reloaded[("161.0", "KAS")].volgorde == 20
+    assert reloaded[("500.1", "KAS")].volgorde == 21
+    assert reloaded[("150.1", "KAS")].volgorde == 25
+
+
+def test_add_package_falls_back_to_nieuwe_artikelen_for_unknown_groep(tmp_path):
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv(
+        [BomEntry("100.5", "KAS", "Olijfboom struik", "", 1.0, "Mediterrane:", 18)],
+        bom_csv_path,
+    )
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv([], package_info_csv_path)
+
+    package, entries = add_package(
+        {
+            "pakketnummer": "500.2",
+            "pakketnaam": "Iets nieuws",
+            "doosnummers": "9",
+            "pokon": None,
+            "components": [
+                {
+                    "gebied": "KAS", "item": "Iets nieuws", "soort": "",
+                    "aantal_per_pakket": 1, "groep": "Categorie die niet bestaat:",
+                }
+            ],
+        },
+        bom_csv_path,
+        package_info_csv_path,
+    )
+
+    assert entries == [
+        BomEntry("500.2", "KAS", "Iets nieuws", "", 1.0, "Nieuwe artikelen:", 900),
+        BomEntry("500.2", "DOZEN", "9", "", 1.0, "", 900),
+    ]
+
+
 def test_add_package_rejects_duplicate_pakketnummer(tmp_path):
     bom_csv_path = tmp_path / "bom.csv"
     write_bom_csv([], bom_csv_path)

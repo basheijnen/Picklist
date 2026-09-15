@@ -9,7 +9,7 @@ import json
 import sys
 import threading
 import webbrowser
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -32,6 +32,29 @@ KNOWN_GEBIEDEN = {"KOELING", "KAS", "KAMER", "POKON", "DOZEN"}
 # requests can't both read the same "before" state and each append their own
 # copy of the new rows.
 _write_lock = threading.Lock()
+
+
+def _insert_into_groep(bom_entries, gebied, groep):
+    """Open a gap right after `groep`'s last item within `gebied`, shifting
+    every later entry in that gebied up by one volgorde. Returns
+    (updated_entries, insertion_volgorde), or (bom_entries, None) unchanged
+    if `groep` isn't an existing category for this gebied — the caller then
+    falls back to appending under "Nieuwe artikelen:" as before.
+    """
+    matching_volgordes = [
+        entry.volgorde for entry in bom_entries
+        if entry.gebied == gebied and entry.groep == groep
+    ]
+    if not matching_volgordes:
+        return bom_entries, None
+    insertion_volgorde = max(matching_volgordes) + 1
+    shifted = [
+        replace(entry, volgorde=entry.volgorde + 1)
+        if entry.gebied == gebied and entry.volgorde >= insertion_volgorde
+        else entry
+        for entry in bom_entries
+    ]
+    return shifted, insertion_volgorde
 
 
 def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
@@ -68,6 +91,7 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
             "item": item,
             "soort": str(component.get("soort", "")).strip(),
             "aantal_per_pakket": aantal,
+            "groep": str(component.get("groep", "")).strip(),
         })
 
     if pokon is not None:
@@ -87,18 +111,28 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
             existing.pakketnummer == pakketnummer for existing in packages):
         raise ValueError(f"Pakketnummer {pakketnummer} bestaat al.")
 
-    new_entries = [
-        BomEntry(
-            pakketnummer=pakketnummer,
-            gebied=component["gebied"],
-            item=component["item"],
-            soort=component["soort"],
-            aantal_per_pakket=component["aantal_per_pakket"],
-            groep=NEW_ITEMS_GROEP,
-            volgorde=NEW_ITEMS_BASE_VOLGORDE + index,
+    new_entries = []
+    for index, component in enumerate(parsed_components):
+        groep, insertion_volgorde = None, None
+        if component["groep"]:
+            bom_entries, insertion_volgorde = _insert_into_groep(
+                bom_entries, component["gebied"], component["groep"]
+            )
+            groep = component["groep"]
+        if insertion_volgorde is None:
+            groep = NEW_ITEMS_GROEP
+            insertion_volgorde = NEW_ITEMS_BASE_VOLGORDE + index
+        new_entries.append(
+            BomEntry(
+                pakketnummer=pakketnummer,
+                gebied=component["gebied"],
+                item=component["item"],
+                soort=component["soort"],
+                aantal_per_pakket=component["aantal_per_pakket"],
+                groep=groep,
+                volgorde=insertion_volgorde,
+            )
         )
-        for index, component in enumerate(parsed_components)
-    ]
     if pokon:
         new_entries.append(
             BomEntry(

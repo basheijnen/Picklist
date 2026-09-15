@@ -16,6 +16,22 @@ const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
 let currentImport = null;
 
+function populateGroepOptions(gebied, select) {
+  const previous = select.value;
+  select.replaceChildren(new Option("Nieuw (onderaan de lijst)", ""));
+  const firstSeenVolgorde = new Map();
+  (window.PICKLIST_BOM || []).forEach((entry) => {
+    if (entry.gebied !== gebied || !entry.groep) return;
+    if (!firstSeenVolgorde.has(entry.groep) || entry.volgorde < firstSeenVolgorde.get(entry.groep)) {
+      firstSeenVolgorde.set(entry.groep, entry.volgorde);
+    }
+  });
+  [...firstSeenVolgorde.entries()]
+    .sort((a, b) => a[1] - b[1])
+    .forEach(([groep]) => select.add(new Option(groep, groep)));
+  if ([...select.options].some((option) => option.value === previous)) select.value = previous;
+}
+
 function createComponentRow() {
   const row = document.createElement("div");
   row.className = "component-row";
@@ -24,7 +40,12 @@ function createComponentRow() {
     <label>Soort<input class="component-kind" placeholder="Optioneel"></label>
     <label>Aantal<input class="component-amount" type="number" min="0.01" step="0.01" value="1" required></label>
     <label>Waar?<select class="component-area" required><option>KOELING</option><option>KAS</option><option>KAMER</option></select></label>
+    <label>Categorie<select class="component-groep"></select></label>
     <button class="remove-component" type="button" aria-label="Regel verwijderen">×</button>`;
+  const areaSelect = row.querySelector(".component-area");
+  const groepSelect = row.querySelector(".component-groep");
+  populateGroepOptions(areaSelect.value, groepSelect);
+  areaSelect.addEventListener("change", () => populateGroepOptions(areaSelect.value, groepSelect));
   row.querySelector(".remove-component").addEventListener("click", () => {
     if (componentRows.children.length > 1) row.remove();
   });
@@ -63,6 +84,7 @@ async function saveNewPackage(event) {
     item: row.querySelector(".component-item").value.trim(),
     soort: row.querySelector(".component-kind").value.trim(),
     aantal_per_pakket: Number(row.querySelector(".component-amount").value),
+    groep: row.querySelector(".component-groep").value,
   }));
   if (!pakketnummer || !pakketnaam || !doosnummers || components.some((entry) => !entry.item || !(entry.aantal_per_pakket > 0))) {
     formMessage.textContent = "Vul alle verplichte velden en geldige aantallen in.";

@@ -129,7 +129,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .form-grid label, .component-row label { display: grid; gap: 6px; color: var(--muted); font-size: .82rem; font-weight: 750; }
 .form-grid input, .form-grid select, .component-row input, .component-row select { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; color: var(--ink); background: white; font-size: .95rem; }
 .component-rows { display: grid; gap: 10px; margin-top: 14px; }
-.component-row { display: grid; grid-template-columns: 2fr 1.2fr .7fr 1fr 36px; gap: 9px; align-items: end; padding: 12px; border-radius: 12px; background: #f4f8f5; }
+.component-row { display: grid; grid-template-columns: 2fr 1.2fr .7fr 1fr 1fr 36px; gap: 9px; align-items: end; padding: 12px; border-radius: 12px; background: #f4f8f5; }
 .remove-component { width: 36px; height: 42px; border: 0; border-radius: 9px; color: var(--danger); background: #f9e9e7; font-size: 1.25rem; cursor: pointer; }
 .text-button { padding: 6px 9px; border: 0; color: #2f7058; background: transparent; font-weight: 800; cursor: pointer; }
 .dialog-message { min-height: 22px; margin: 16px 0 0; color: var(--danger); font-weight: 750; }
