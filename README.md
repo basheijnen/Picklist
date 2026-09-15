@@ -9,6 +9,25 @@ resultaat komt in `Picklist.xlsx` in deze map, en bestaande onbekende
 pakketnummers (nieuw product, nog niet in `bom.csv`) worden apart getoond in het
 consolevenster en op het tabblad "Onbekende pakketten".
 
+## Browser-app zonder Excel
+
+Dubbelklik `open_picklist_app.bat`. De picklistmaker opent lokaal in Chrome of
+Edge. Sleep de orderexport-CSV naar het venster om eerst de pakkettenlijst met
+pakketnaam, Pokon-markering en doosnummer(s), en daarna de picklists per afdeling
+te bekijken. Met **Printen / PDF opslaan** kun je de pakkettenlijst en alle
+afdelingen printen of in het Windows-afdrukvenster kiezen voor **Opslaan als
+PDF**. De ordergegevens blijven op de computer en worden niet geüpload.
+
+### Pakketdatabase
+
+Nieuwe pakketten voeg je in de browser-app toe met **Pakket aan database
+toevoegen**. Komt in een ingelezen export een onbekend pakket voor, dan staat bij
+dat nummer direct een knop **Toevoegen aan database**. Vul pakketnaam, inhoud,
+aantallen, locatie, Pokon en doosnummer(s) in. Na opslaan wordt de geopende
+picklist meteen opnieuw berekend, en de gegevens worden direct weggeschreven naar
+`bom.csv`/`package_info.csv` — dus zichtbaar voor iedereen die de app opent, en
+voor `run_picklist.bat`.
+
 ## Alternatieve bron: los CSV-bestand
 
 In plaats van automatisch `Bron.xlsm` van vandaag te zoeken, kun je ook een los
