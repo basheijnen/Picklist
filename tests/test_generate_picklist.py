@@ -121,3 +121,32 @@ def test_main_returns_error_code_for_unexpected_exception(tmp_path, capsys, monk
     out = capsys.readouterr().out
     assert "FOUT" in out
     assert "iets onverwachts" in out
+
+
+def test_main_uses_source_csv_path_instead_of_bron_when_given(tmp_path, capsys):
+    csv_path = tmp_path / "export.csv"
+    csv_path.write_text(
+        '"Ordernr. intern";"Package Number";"Status"\n'
+        '"1";"1.3";"Printed"\n'
+        '"2";"1.3";"Printed"\n',
+        encoding="utf-8-sig",
+    )
+
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv([BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0)], bom_csv_path)
+
+    output_path = tmp_path / "Picklist.xlsx"
+
+    exit_code = main(
+        base_order_dir=tmp_path / "unused",
+        bom_csv_path=bom_csv_path,
+        output_path=output_path,
+        today=date(2026, 9, 16),
+        source_csv_path=csv_path,
+    )
+
+    assert exit_code == 0
+    assert output_path.exists()
+    workbook = openpyxl.load_workbook(output_path)
+    assert workbook["KOELING"]["A5"].value == "Parade"
+    assert workbook["KOELING"]["C5"].value == 2
