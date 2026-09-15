@@ -51,7 +51,7 @@ def main(base_order_dir=BASE_ORDER_DIR, bom_csv_path=BOM_CSV_PATH,
         )
         return 1
     except Exception as error:
-        print(f"FOUT: {error}")
+        print(f"FOUT: kan de picklist niet maken: {error}")
         return 1
 
     return 0

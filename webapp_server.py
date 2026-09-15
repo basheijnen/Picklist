@@ -26,9 +26,18 @@ DATA_JS_PATH = DIST_DIR / "data.js"
 NEW_ITEMS_GROEP = "Nieuwe artikelen:"
 POKON_GROEP = "Pokon:"
 NEW_ITEMS_BASE_VOLGORDE = 900
+KNOWN_GEBIEDEN = {"KOELING", "KAS", "KAMER", "POKON", "DOZEN"}
+
+# Serializes the read-modify-write in do_POST so two concurrent/double-click
+# requests can't both read the same "before" state and each append their own
+# copy of the new rows.
+_write_lock = threading.Lock()
 
 
 def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH):
+    if not isinstance(payload, dict):
+        raise ValueError("Ongeldige aanvraag.")
+
     pakketnummer = str(payload.get("pakketnummer", "")).strip()
     pakketnaam = str(payload.get("pakketnaam", "")).strip()
     doosnummers = str(payload.get("doosnummers", "")).strip()
@@ -40,10 +49,14 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
 
     parsed_components = []
     for component in components:
+        if not isinstance(component, dict):
+            raise ValueError("Elke artikelregel moet een gebied en een naam hebben.")
         gebied = str(component.get("gebied", "")).strip()
         item = str(component.get("item", "")).strip()
         if not gebied or not item:
             raise ValueError("Elke artikelregel moet een gebied en een naam hebben.")
+        if gebied not in KNOWN_GEBIEDEN:
+            raise ValueError("Elke artikelregel moet een geldig gebied hebben (KOELING, KAS of KAMER).")
         try:
             aantal = float(component.get("aantal_per_pakket", 0))
         except (TypeError, ValueError):
@@ -57,6 +70,10 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
             "aantal_per_pakket": aantal,
         })
 
+    if pokon is not None:
+        if not isinstance(pokon, dict) or not str(pokon.get("naam", "")).strip():
+            raise ValueError("Kies een geldige Pokon of laat het veld leeg.")
+
     pokon_aantal = 1.0
     if pokon:
         try:
@@ -65,7 +82,9 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
             raise ValueError("Ongeldig Pokon-aantal.")
 
     packages = load_package_info_csv(package_info_csv_path)
-    if any(existing.pakketnummer == pakketnummer for existing in packages):
+    bom_entries = load_bom_csv(bom_csv_path)
+    if any(entry.pakketnummer == pakketnummer for entry in bom_entries) or any(
+            existing.pakketnummer == pakketnummer for existing in packages):
         raise ValueError(f"Pakketnummer {pakketnummer} bestaat al.")
 
     new_entries = [
@@ -85,7 +104,7 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
             BomEntry(
                 pakketnummer=pakketnummer,
                 gebied="POKON",
-                item=str(pokon["naam"]),
+                item=str(pokon.get("naam")),
                 soort="",
                 aantal_per_pakket=pokon_aantal,
                 groep=POKON_GROEP,
@@ -106,7 +125,6 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
                 )
             )
 
-    bom_entries = load_bom_csv(bom_csv_path)
     write_bom_csv(bom_entries + new_entries, bom_csv_path)
 
     new_package = PackageInfo(
@@ -128,23 +146,29 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         if self.path != "/api/pakketten":
             self._send_json(404, {"error": "Onbekend endpoint."})
             return
-        length = int(self.headers.get("Content-Length", 0))
         try:
+            length = int(self.headers.get("Content-Length", 0))
             payload = json.loads(self.rfile.read(length) or b"{}")
-        except json.JSONDecodeError:
+        except (TypeError, ValueError):
             self._send_json(400, {"error": "Ongeldige aanvraag: kan de gegevens niet lezen."})
             return
         try:
-            package, entries = add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
-            build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
-            self._send_json(200, {"package": asdict(package), "bom": [asdict(entry) for entry in entries]})
+            # Holding the lock across the read-modify-write means two
+            # concurrent POSTs (e.g. a double-clicked save button) can't
+            # both read the same "before" state and each append their own
+            # copy of the new rows.
+            with _write_lock:
+                package, entries = add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
+                build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+                response_body = {"package": asdict(package), "bom": [asdict(entry) for entry in entries]}
+            self._send_json(200, response_body)
         except ValueError as error:
             self._send_json(400, {"error": str(error)})
         except Exception as error:
             # A local single-user tool: surface any unexpected failure (e.g. a
             # locked CSV file) as a readable message in the browser instead of
             # a bare connection reset.
-            self._send_json(500, {"error": str(error)})
+            self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
 
     def _send_json(self, status, payload):
         body = json.dumps(payload).encode("utf-8")
@@ -159,7 +183,11 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
 
 
 def main(port=8765, open_browser=True):
-    build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+    try:
+        build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+    except Exception as error:
+        print(f"FOUT: kan bom.csv/package_info.csv niet inlezen: {error}")
+        return 1
     try:
         server = ThreadingHTTPServer(("127.0.0.1", port), PicklistRequestHandler)
     except OSError as error:

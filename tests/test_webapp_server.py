@@ -85,6 +85,40 @@ def test_add_package_rejects_duplicate_pakketnummer(tmp_path):
         )
 
 
+def test_add_package_rejects_pakketnummer_present_only_in_bom_csv(tmp_path):
+    # Simulates a partial write left behind by a failed retry: bom.csv was
+    # already written for this pakketnummer but package_info.csv write
+    # failed (e.g. the file was locked open in Excel), so package_info.csv
+    # still has no record of it. A naive retry that only checks
+    # package_info.csv would pass the duplicate check and append the BOM
+    # rows a second time, silently doubling that package's quantities.
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv(
+        [BomEntry("281.1", "KAS", "Klimroos", "rood", 3.0, "Nieuwe artikelen:", 900)],
+        bom_csv_path,
+    )
+    package_info_csv_path = tmp_path / "package_info.csv"
+    write_package_info_csv([], package_info_csv_path)
+
+    with pytest.raises(ValueError, match="281.1"):
+        add_package(
+            {
+                "pakketnummer": "281.1", "pakketnaam": "Klimroos rood x3",
+                "doosnummers": "14", "pokon": None,
+                "components": [
+                    {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+                ],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+    # And bom.csv must remain untouched — no doubled rows.
+    assert load_bom_csv(bom_csv_path) == [
+        BomEntry("281.1", "KAS", "Klimroos", "rood", 3.0, "Nieuwe artikelen:", 900)
+    ]
+
+
 def test_add_package_rejects_missing_required_fields(tmp_path):
     bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
 
@@ -120,6 +154,73 @@ def test_add_package_rejects_component_missing_gebied(tmp_path):
                 "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
                 "pokon": None,
                 "components": [{"item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_unknown_gebied(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="gebied"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": None,
+                "components": [{"gebied": "TYPO", "item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_non_dict_payload(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError):
+        add_package([], bom_csv_path, package_info_csv_path)
+
+
+def test_add_package_rejects_non_dict_component(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="gebied"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": None,
+                "components": ["not-a-dict"],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_non_dict_pokon(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="Pokon"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": "Pokon Rozen",
+                "components": [{"gebied": "KAS", "item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_pokon_missing_naam(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="Pokon"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": {"aantal": 2},
+                "components": [{"gebied": "KAS", "item": "X", "soort": "", "aantal_per_pakket": 1}],
             },
             bom_csv_path,
             package_info_csv_path,
@@ -202,3 +303,153 @@ def test_server_returns_dutch_error_for_malformed_json_body(tmp_path, monkeypatc
         server.server_close()
 
     assert body["error"] == "Ongeldige aanvraag: kan de gegevens niet lezen."
+
+
+def test_server_returns_dutch_400_for_non_dict_json_body(tmp_path, monkeypatch):
+    import urllib.error as _urllib_error
+
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        # A JSON array is valid JSON but not the object shape add_package
+        # expects; it must be rejected with a clean Dutch 400, not a raw
+        # AttributeError from calling .get() on a list.
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten",
+            data=b"[]",
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            _urllib_request.urlopen(request, timeout=5)
+            assert False, "expected an HTTPError for the non-dict body"
+        except _urllib_error.HTTPError as error:
+            assert error.code == 400
+            body = _json.loads(error.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert body["error"] == "Ongeldige aanvraag."
+
+
+def test_server_wraps_unexpected_500_error_in_dutch_text(tmp_path, monkeypatch):
+    import urllib.error as _urllib_error
+
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    def _boom(*args, **kwargs):
+        raise RuntimeError("disk on fire")
+
+    # Simulates an unexpected failure that isn't a ValueError (e.g. a locked
+    # CSV file raising PermissionError) reaching the catch-all handler.
+    monkeypatch.setattr(webapp_server, "build_data_js", _boom)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten",
+            data=_json.dumps(
+                {
+                    "pakketnummer": "281.1", "pakketnaam": "Klimroos rood x3",
+                    "doosnummers": "14", "pokon": None,
+                    "components": [
+                        {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+                    ],
+                }
+            ).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            _urllib_request.urlopen(request, timeout=5)
+            assert False, "expected an HTTPError for the unexpected failure"
+        except _urllib_error.HTTPError as error:
+            assert error.code == 500
+            body = _json.loads(error.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    # Dutch framing must wrap the raw (possibly English) exception text.
+    assert body["error"].startswith("Onverwachte fout bij opslaan:")
+    assert "disk on fire" in body["error"]
+
+
+def test_server_serializes_concurrent_posts_for_same_pakketnummer(tmp_path, monkeypatch):
+    # Regression test for the double-click race: two requests for the same
+    # new pakketnummer arriving at (almost) the same instant must not both
+    # pass the duplicate check and both append BOM rows. With the write
+    # lock held across the read-modify-write, exactly one must succeed and
+    # the other must be rejected as a duplicate.
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    payload = _json.dumps(
+        {
+            "pakketnummer": "281.1", "pakketnaam": "Klimroos rood x3",
+            "doosnummers": "14", "pokon": None,
+            "components": [
+                {"gebied": "KAS", "item": "Klimroos", "soort": "rood", "aantal_per_pakket": 3}
+            ],
+        }
+    ).encode("utf-8")
+
+    barrier = _threading.Barrier(2)
+    statuses = []
+    statuses_lock = _threading.Lock()
+
+    def _post():
+        barrier.wait(timeout=5)
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten",
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with _urllib_request.urlopen(request, timeout=5) as response:
+                status = response.status
+        except Exception as error:
+            status = getattr(error, "code", None)
+        with statuses_lock:
+            statuses.append(status)
+
+    try:
+        workers = [_threading.Thread(target=_post) for _ in range(2)]
+        for worker in workers:
+            worker.start()
+        for worker in workers:
+            worker.join(timeout=5)
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert sorted(statuses) == [200, 400]
+    # Exactly one copy of the BOM rows (1 component + 1 doosnummer) must
+    # exist, never two — a doubled write would leave 4 rows instead of 2.
+    entries = load_bom_csv(bom_csv_path)
+    assert len([entry for entry in entries if entry.pakketnummer == "281.1"]) == 2

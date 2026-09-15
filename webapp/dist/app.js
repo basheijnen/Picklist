@@ -69,6 +69,8 @@ async function saveNewPackage(event) {
     return;
   }
   formMessage.textContent = "Opslaan...";
+  const submitButton = packageForm.querySelector('button[type="submit"]');
+  if (submitButton) submitButton.disabled = true;
   try {
     const response = await fetch("/api/pakketten", {
       method: "POST",
@@ -88,6 +90,8 @@ async function saveNewPackage(event) {
     if (currentImport) showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
   } catch (_error) {
     formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
+  } finally {
+    if (submitButton) submitButton.disabled = false;
   }
 }
 
@@ -315,14 +319,3 @@ document.querySelector("#cancelPackageButton").addEventListener("click", () => p
 packageForm.addEventListener("submit", saveNewPackage);
 
 populatePokonOptions();
-
-if (document.modelContext?.registerTool) {
-  document.modelContext.registerTool({
-    name: "show_department",
-    title: "Toon afdeling",
-    description: "Toon één afdeling in de ingelezen picklist.",
-    inputSchema: { type: "object", properties: { department: { type: "string", enum: ["PAKKETTEN", ...DEPARTMENTS] } }, required: ["department"], additionalProperties: false },
-    annotations: { readOnlyHint: false, untrustedContentHint: false },
-    execute({ department }) { selectDepartment(department); return { department }; },
-  }).catch(() => {});
-}

@@ -120,6 +120,7 @@ def test_main_returns_error_code_for_unexpected_exception(tmp_path, capsys, monk
     assert exit_code == 1
     out = capsys.readouterr().out
     assert "FOUT" in out
+    assert "kan de picklist niet maken" in out
     assert "iets onverwachts" in out
 
 
