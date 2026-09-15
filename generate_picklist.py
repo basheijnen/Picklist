@@ -26,6 +26,9 @@ def main(base_order_dir=BASE_ORDER_DIR, bom_csv_path=BOM_CSV_PATH,
     except FileNotFoundError as error:
         print(f"FOUT: {error}")
         return 1
+    except Exception as error:
+        print(f"FOUT: kan orders niet inlezen uit {source_csv_path or base_order_dir}: {error}")
+        return 1
 
     try:
         bom_entries = load_bom_csv(bom_csv_path)

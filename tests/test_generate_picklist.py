@@ -150,3 +150,31 @@ def test_main_uses_source_csv_path_instead_of_bron_when_given(tmp_path, capsys):
     workbook = openpyxl.load_workbook(output_path)
     assert workbook["KOELING"]["A5"].value == "Parade"
     assert workbook["KOELING"]["C5"].value == 2
+
+
+def test_main_returns_error_code_for_malformed_csv_source(tmp_path, capsys):
+    # CSV missing the required "Package Number" column
+    csv_path = tmp_path / "malformed.csv"
+    csv_path.write_text(
+        '"Ordernr. intern";"Status"\n'
+        '"1";"Printed"\n',
+        encoding="utf-8-sig",
+    )
+
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv([], bom_csv_path)
+    output_path = tmp_path / "Picklist.xlsx"
+
+    exit_code = main(
+        base_order_dir=tmp_path / "unused",
+        bom_csv_path=bom_csv_path,
+        output_path=output_path,
+        today=date(2026, 9, 16),
+        source_csv_path=csv_path,
+    )
+
+    assert exit_code == 1
+    assert not output_path.exists()
+    out = capsys.readouterr().out
+    assert "FOUT" in out
+    assert "kan orders niet inlezen" in out
