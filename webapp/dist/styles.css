@@ -138,6 +138,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .dialog-header { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
 .dialog-header h2, .form-section h3 { margin: 0; }
 .package-nav { display: flex; gap: 8px; }
+.package-nav[hidden] { display: none; }
 .package-nav .button { min-height: 36px; padding: 0 14px; font-size: .85rem; }
 .package-nav .button:disabled { opacity: .35; cursor: not-allowed; }
 .icon-button { width: 40px; height: 40px; border: 0; border-radius: 50%; color: var(--muted); background: #edf3ef; font-size: 1.7rem; cursor: pointer; }

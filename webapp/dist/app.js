@@ -23,7 +23,6 @@ const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORT_STORAGE_KEY = "picklist-current-import-v1";
 let currentImport = null;
 let editingPakketnummer = null;
-let manageListForNav = [];
 
 function saveImportState() {
   try {
@@ -108,25 +107,33 @@ function syncPokonAmountField() {
   }
 }
 
+function getPakketnummerList() {
+  return [...(window.PICKLIST_PACKAGES || [])]
+    .map((entry) => entry.pakketnummer)
+    .sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
+}
+
 function updatePackageNavButtons(pakketnummer) {
   const nav = document.querySelector(".package-nav");
   const prevButton = document.querySelector("#prevPackageButton");
   const nextButton = document.querySelector("#nextPackageButton");
-  const index = manageListForNav.indexOf(pakketnummer);
-  const show = Boolean(editingPakketnummer) && index !== -1 && manageListForNav.length > 1;
+  const list = getPakketnummerList();
+  const index = list.indexOf(pakketnummer);
+  const show = Boolean(editingPakketnummer) && index !== -1 && list.length > 1;
   nav.hidden = !show;
   if (show) {
     prevButton.disabled = index <= 0;
-    nextButton.disabled = index >= manageListForNav.length - 1;
+    nextButton.disabled = index >= list.length - 1;
   }
 }
 
 function navigatePackage(step) {
-  const index = manageListForNav.indexOf(editingPakketnummer);
+  const list = getPakketnummerList();
+  const index = list.indexOf(editingPakketnummer);
   if (index === -1) return;
   const nextIndex = index + step;
-  if (nextIndex < 0 || nextIndex >= manageListForNav.length) return;
-  openEditPackageForm(manageListForNav[nextIndex]);
+  if (nextIndex < 0 || nextIndex >= list.length) return;
+  openEditPackageForm(list[nextIndex]);
 }
 
 function openPackageForm(pakketnummer = "") {
@@ -187,7 +194,6 @@ function renderManagePackagesList(filter = "") {
   const packages = [...(window.PICKLIST_PACKAGES || [])]
     .filter((entry) => !term || entry.pakketnummer.toLowerCase().includes(term) || entry.pakketnaam.toLowerCase().includes(term))
     .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true }));
-  manageListForNav = packages.map((entry) => entry.pakketnummer);
   if (!packages.length) {
     managePackagesList.innerHTML = '<p class="manage-packages-empty">Geen pakketten gevonden.</p>';
     return;
