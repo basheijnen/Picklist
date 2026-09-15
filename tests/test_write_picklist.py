@@ -5,47 +5,50 @@ import openpyxl
 from write_picklist import write_picklist
 
 
-def test_write_picklist_creates_one_sheet_per_gebied_plus_unknown(tmp_path):
+def test_write_picklist_groups_area_items_by_category_with_subtotal(tmp_path):
     totals = {
-        "KOELING": {("Parade", "CL Pink"): 14.0},
-        "DOZEN": {("9", ""): 3.0},
+        "KOELING": {
+            ("Parade", "CL Pink"): 4.0,
+            ("Golden Rain", "CL Yellow"): 2.0,
+            ("Bambino", "Pink"): 1.0,
+        },
     }
-    unknown = {"99.9": 7}
+    item_order = {
+        "KOELING": {
+            ("Parade", "CL Pink"): ("Rozen 38CM:", 7),
+            ("Golden Rain", "CL Yellow"): ("Rozen 38CM:", 9),
+            ("Bambino", "Pink"): ("Mini Stamroos 70CM:", 27),
+        },
+    }
     output_path = tmp_path / "Picklist.xlsx"
 
-    write_picklist(totals, unknown, output_path, date(2026, 9, 16))
+    write_picklist(totals, {}, output_path, date(2026, 9, 16), item_order)
 
-    workbook = openpyxl.load_workbook(output_path)
-    assert workbook.sheetnames == [
-        "KOELING",
-        "KAS",
-        "KAMER",
-        "POKON",
-        "DOZEN",
-        "Onbekende pakketten",
+    ws = openpyxl.load_workbook(output_path)["KOELING"]
+    rows = [[c.value for c in row] for row in ws.iter_rows(min_row=5)]
+    assert rows == [
+        ["Rozen 38CM:", None, 6],
+        ["Parade", "CL Pink", 4],
+        ["Golden Rain", "CL Yellow", 2],
+        [None, None, None],
+        ["Mini Stamroos 70CM:", None, 1],
+        ["Bambino", "Pink", 1],
+        [None, None, None],
     ]
 
-    koeling = workbook["KOELING"]
-    assert koeling["B2"].value == "16-09-2026"
-    assert [cell.value for cell in koeling[5]] == ["Parade", "CL Pink", 14]
 
-    kas = workbook["KAS"]
-    assert kas.max_row == 4  # header rows only, no items ordered
-
-    onbekend = workbook["Onbekende pakketten"]
-    assert [cell.value for cell in onbekend[2]] == ["99.9", 7]
-
-
-def test_write_picklist_warns_about_unknown_gebied(tmp_path, capsys):
-    totals = {
-        "KOELING": {("Parade", "CL Pink"): 14.0},
-        "Koeling": {("Typo", "Fout"): 5.0},
-    }
-    unknown = {}
+def test_write_picklist_dozen_sheet_has_pallet_column_and_total(tmp_path):
+    totals = {"DOZEN": {("1", ""): 250.0, ("KB", ""): 48.0}}
+    item_order = {"DOZEN": {("1", ""): ("", 0), ("KB", ""): ("", 16)}}
     output_path = tmp_path / "Picklist.xlsx"
 
-    write_picklist(totals, unknown, output_path, date(2026, 9, 16))
+    write_picklist(totals, {}, output_path, date(2026, 9, 16), item_order)
 
-    captured = capsys.readouterr()
-    assert "LET OP" in captured.out
-    assert "Koeling" in captured.out
+    ws = openpyxl.load_workbook(output_path)["DOZEN"]
+    rows = [[c.value for c in row] for row in ws.iter_rows(min_row=4)]
+    assert rows == [
+        ["Doosnummer", "Aantal pallets", "Aantal dozen"],
+        ["1", 2.5, 250],
+        ["KB", 2, 48],
+        ["Totaal", 4.5, 298],
+    ]

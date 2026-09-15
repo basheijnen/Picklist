@@ -3,7 +3,7 @@ from datetime import date
 from pathlib import Path
 
 from bom import load_bom_csv
-from calculate import calculate_totals
+from calculate import build_item_order, calculate_totals
 from import_orders import find_bron_file, read_totaal_alles
 from write_picklist import write_picklist
 
@@ -26,7 +26,8 @@ def main(base_order_dir=BASE_ORDER_DIR, bom_csv_path=BOM_CSV_PATH,
     try:
         bom_entries = load_bom_csv(bom_csv_path)
         totals, unknown = calculate_totals(bom_entries, aantallen)
-        write_picklist(totals, unknown, output_path, today)
+        item_order = build_item_order(bom_entries)
+        write_picklist(totals, unknown, output_path, today, item_order)
 
         print(f"Picklist geschreven naar {output_path}")
         if unknown:
