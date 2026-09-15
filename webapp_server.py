@@ -37,9 +37,32 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
 
     if not pakketnummer or not pakketnaam or not doosnummers or not components:
         raise ValueError("Vul pakketnummer, pakketnaam, doosnummer(s) en minstens één artikelregel in.")
+
+    parsed_components = []
     for component in components:
-        if not str(component.get("item", "")).strip() or not (float(component.get("aantal_per_pakket", 0)) > 0):
-            raise ValueError("Elke artikelregel moet een naam en een geldig aantal hebben.")
+        gebied = str(component.get("gebied", "")).strip()
+        item = str(component.get("item", "")).strip()
+        if not gebied or not item:
+            raise ValueError("Elke artikelregel moet een gebied en een naam hebben.")
+        try:
+            aantal = float(component.get("aantal_per_pakket", 0))
+        except (TypeError, ValueError):
+            raise ValueError("Elke artikelregel moet een geldig aantal hebben.")
+        if not aantal > 0:
+            raise ValueError("Elke artikelregel moet een geldig aantal hebben.")
+        parsed_components.append({
+            "gebied": gebied,
+            "item": item,
+            "soort": str(component.get("soort", "")).strip(),
+            "aantal_per_pakket": aantal,
+        })
+
+    pokon_aantal = 1.0
+    if pokon:
+        try:
+            pokon_aantal = float(pokon.get("aantal", 1))
+        except (TypeError, ValueError):
+            raise ValueError("Ongeldig Pokon-aantal.")
 
     packages = load_package_info_csv(package_info_csv_path)
     if any(existing.pakketnummer == pakketnummer for existing in packages):
@@ -49,13 +72,13 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
         BomEntry(
             pakketnummer=pakketnummer,
             gebied=component["gebied"],
-            item=str(component["item"]).strip(),
-            soort=str(component.get("soort", "")).strip(),
-            aantal_per_pakket=float(component["aantal_per_pakket"]),
+            item=component["item"],
+            soort=component["soort"],
+            aantal_per_pakket=component["aantal_per_pakket"],
             groep=NEW_ITEMS_GROEP,
             volgorde=NEW_ITEMS_BASE_VOLGORDE + index,
         )
-        for index, component in enumerate(components)
+        for index, component in enumerate(parsed_components)
     ]
     if pokon:
         new_entries.append(
@@ -64,7 +87,7 @@ def add_package(payload, bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAG
                 gebied="POKON",
                 item=str(pokon["naam"]),
                 soort="",
-                aantal_per_pakket=float(pokon.get("aantal", 1)),
+                aantal_per_pakket=pokon_aantal,
                 groep=POKON_GROEP,
                 volgorde=NEW_ITEMS_BASE_VOLGORDE,
             )
@@ -108,6 +131,10 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", 0))
         try:
             payload = json.loads(self.rfile.read(length) or b"{}")
+        except json.JSONDecodeError:
+            self._send_json(400, {"error": "Ongeldige aanvraag: kan de gegevens niet lezen."})
+            return
+        try:
             package, entries = add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
             build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
             self._send_json(200, {"package": asdict(package), "bom": [asdict(entry) for entry in entries]})

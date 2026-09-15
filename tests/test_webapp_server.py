@@ -96,6 +96,36 @@ def test_add_package_rejects_missing_required_fields(tmp_path):
         )
 
 
+def test_add_package_rejects_non_numeric_aantal_with_dutch_message(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="geldig aantal"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": None,
+                "components": [{"gebied": "KAS", "item": "X", "soort": "", "aantal_per_pakket": "abc"}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
+def test_add_package_rejects_component_missing_gebied(tmp_path):
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+
+    with pytest.raises(ValueError, match="gebied"):
+        add_package(
+            {
+                "pakketnummer": "1.1", "pakketnaam": "X", "doosnummers": "1",
+                "pokon": None,
+                "components": [{"item": "X", "soort": "", "aantal_per_pakket": 1}],
+            },
+            bom_csv_path,
+            package_info_csv_path,
+        )
+
+
 import json as _json
 import threading as _threading
 import urllib.request as _urllib_request
@@ -139,3 +169,36 @@ def test_server_persists_new_package_via_http_post(tmp_path, monkeypatch):
     assert body["package"]["pakketnummer"] == "281.1"
     assert body["bom"][0]["item"] == "Klimroos"
     assert data_js_path.exists()
+
+
+def test_server_returns_dutch_error_for_malformed_json_body(tmp_path, monkeypatch):
+    import urllib.error as _urllib_error
+
+    bom_csv_path, package_info_csv_path = _empty_csvs(tmp_path)
+    data_js_path = tmp_path / "data.js"
+    monkeypatch.setattr(webapp_server, "BOM_CSV_PATH", bom_csv_path)
+    monkeypatch.setattr(webapp_server, "PACKAGE_INFO_CSV_PATH", package_info_csv_path)
+    monkeypatch.setattr(webapp_server, "DATA_JS_PATH", data_js_path)
+
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        request = _urllib_request.Request(
+            f"http://127.0.0.1:{port}/api/pakketten",
+            data=b"not valid json",
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            _urllib_request.urlopen(request, timeout=5)
+            assert False, "expected an HTTPError for the malformed body"
+        except _urllib_error.HTTPError as error:
+            assert error.code == 400
+            body = _json.loads(error.read())
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert body["error"] == "Ongeldige aanvraag: kan de gegevens niet lezen."
