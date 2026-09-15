@@ -1098,3 +1098,524 @@ real day.
   have produced.
 - [ ] Confirm any genuinely new pakketnummer for the day shows up on the "Onbekende
   pakketten" sheet, and add it to `bom.csv` using the format in `README.md`.
+
+---
+
+## Amendment (post-final-review): category grouping and DOZEN pallets
+
+The final whole-branch review (after Task 9) found that `write_picklist.py`
+flattens each gebied's items into one alphabetical list, dropping two things the
+original workbook's picklist sheets have: (1) category header rows (e.g. "Rozen
+38CM:", "Mediterrane:") with a subtotal, which group items in the order the picker
+walks them, and (2) on the DOZEN sheet specifically, a computed "Aantal pallets"
+column (dozen ÷ a fixed divisor per doosnummer) and a "TOTAAL AANTAL PALLETS" row.
+The user confirmed both are operationally needed. Tasks 10-11 add them.
+
+This was verified directly against the live production workbook while writing this
+amendment: every category header row in the four area sheets (KOELING/KAS/KAMER/
+POKON) is a row whose column-C formula is a `=SUM(...)` referencing the rows below
+it (e.g. `2. KOELING PICKLIST!C6 = 'Rozen 38CM:' / '=SUM(C7:C18)'`), immediately
+followed by that category's item rows, a blank row, then the next header — this
+pattern holds across all four sheets. The DOZEN sheet's per-doosnummer pallet
+divisors were read directly from `6. DOZEN PICKLIST!B6:B23`
+(`=Tabel110[[#This Row],[Aantal dozen:]]/<divisor>`):
+
+```
+1→100, 2→54, 3→54, 4→27, 5→34, 6→16, 7→70, 8→60, 9→40, 10→36, 11→21, 12→36,
+13→16, 14→72, 15→144, 16→25, KB→24, EUR40→30
+```
+
+and the sheet's own doosnummer row order is `1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+13, 14, 15, 16, KB, EUR40` — every box token present in the live `H` column data
+(`1`-`15`, `EUR40`, `KB`; `16` unused today but present on the sheet) is covered by
+this list.
+
+### Task 10: Capture category and original order in the BOM
+
+**Files:**
+- Modify: `C:\picklist\bom.py`
+- Modify: `C:\picklist\extract_bom.py`
+- Modify: `C:\picklist\calculate.py`
+- Modify: `C:\picklist\tests\test_extract_bom.py`
+- Test: `C:\picklist\tests\test_bom.py`, `C:\picklist\tests\test_calculate.py`
+
+**Interfaces:**
+- Consumes: existing `BomEntry`, `extract_area_bom`, `extract_dozen_bom` (Tasks 1-2).
+- Produces: `BomEntry` gains two fields with defaults (`groep: str = ""`,
+  `volgorde: int = 0`) — existing callers that don't pass them are unaffected.
+  `calculate.build_item_order(bom_entries) -> dict[str, dict[tuple[str, str], tuple[str, int]]]`
+  (`gebied -> (item, soort) -> (groep, volgorde)`). Task 11 consumes both.
+
+- [ ] **Step 1: Write the failing test for the extended `BomEntry`**
+
+Add to `C:\picklist\tests\test_bom.py`:
+```python
+def test_write_then_load_round_trip_preserves_groep_and_volgorde(tmp_path):
+    entries = [BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "Rozen 38CM:", 7)]
+    csv_path = tmp_path / "bom.csv"
+
+    write_bom_csv(entries, csv_path)
+    loaded = load_bom_csv(csv_path)
+
+    assert loaded == entries
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_bom.py -v`
+Expected: FAIL — `TypeError: BomEntry.__init__() takes ... positional arguments`
+(the new fields don't exist yet).
+
+- [ ] **Step 3: Extend `bom.py`**
+
+In `C:\picklist\bom.py`, change the `BomEntry` dataclass and `FIELDNAMES`:
+```python
+@dataclass(frozen=True)
+class BomEntry:
+    pakketnummer: str
+    gebied: str
+    item: str
+    soort: str
+    aantal_per_pakket: float
+    groep: str = ""
+    volgorde: int = 0
+
+
+FIELDNAMES = [
+    "pakketnummer",
+    "gebied",
+    "item",
+    "soort",
+    "aantal_per_pakket",
+    "groep",
+    "volgorde",
+]
+```
+
+In `load_bom_csv`, add the two fields when constructing each `BomEntry`:
+```python
+                    groep=row["groep"],
+                    volgorde=int(row["volgorde"]),
+```
+(insert these two lines inside the existing `BomEntry(...)` call, after
+`aantal_per_pakket=float(row["aantal_per_pakket"]),`)
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `python -m pytest tests/test_bom.py -v`
+Expected: PASS (2 passed — the original round-trip test still passes using the new
+fields' defaults)
+
+- [ ] **Step 5: Update the existing DOZEN extraction test for the new fields**
+
+`extract_dozen_bom` is about to start populating `groep`/`volgorde` for real, which
+will break the existing equality assertions in
+`tests/test_extract_bom.py::test_extract_dozen_bom_splits_combined_box_values`
+(they currently rely on the defaults). Replace that test:
+```python
+def test_extract_dozen_bom_splits_combined_box_values():
+    ws = _make_invoer_ws([("1.10p", "14 + 15"), ("1.1", 14)])
+
+    entries = extract_dozen_bom(ws)
+
+    assert entries == [
+        BomEntry("1.10p", "DOZEN", "14", "", 1.0, "", 13),
+        BomEntry("1.10p", "DOZEN", "15", "", 1.0, "", 14),
+        BomEntry("1.1", "DOZEN", "14", "", 1.0, "", 13),
+    ]
+```
+(`13`/`14` are the box's position in the fixed doosnummer order defined in Step 7
+below — box "14" is the 14th entry, 0-indexed position 13; box "15" is position 14)
+
+- [ ] **Step 6: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_extract_bom.py -v`
+Expected: FAIL on `test_extract_dozen_bom_splits_combined_box_values` — actual
+entries still have `volgorde=0` (default), not `13`/`14`.
+
+- [ ] **Step 7: Implement category/order capture in `extract_bom.py`**
+
+Replace `extract_area_bom` in `C:\picklist\extract_bom.py`:
+```python
+def extract_area_bom(workbook, sheet_name, gebied, row_to_pakket, first_row=6):
+    ws = workbook[sheet_name]
+    entries = []
+    current_groep = ""
+    for row in range(first_row, ws.max_row + 1):
+        item = ws[f"A{row}"].value
+        soort = ws[f"B{row}"].value
+        formula = ws[f"C{row}"].value
+        if isinstance(formula, str) and formula.strip().startswith("=SUM("):
+            current_groep = str(item) if item is not None else ""
+            continue
+        if not isinstance(formula, str) or "Invoer" not in formula:
+            continue
+        if item is None and soort is None:
+            continue
+        for pakket_row, multiplier in parse_formula(formula):
+            pakketnummer = row_to_pakket.get(pakket_row)
+            if pakketnummer is None:
+                raise ValueError(
+                    f"{sheet_name} rij {row} verwijst naar Invoer-rij {pakket_row}, "
+                    "die geen pakketnummer heeft"
+                )
+            entries.append(
+                BomEntry(
+                    pakketnummer=pakketnummer,
+                    gebied=gebied,
+                    item=str(item) if item is not None else "",
+                    soort=str(soort) if soort is not None else "",
+                    aantal_per_pakket=multiplier,
+                    groep=current_groep,
+                    volgorde=row,
+                )
+            )
+    return entries
+```
+
+Add a fixed doosnummer order and replace `extract_dozen_bom`:
+```python
+BOX_ORDER = [
+    "1", "2", "3", "4", "5", "6", "7", "8",
+    "9", "10", "11", "12", "13", "14", "15", "16",
+    "KB", "EUR40",
+]
+
+
+def _box_volgorde(box):
+    return BOX_ORDER.index(box) if box in BOX_ORDER else len(BOX_ORDER)
+
+
+def extract_dozen_bom(invoer_ws, first_row=5):
+    entries = []
+    for row in range(first_row, invoer_ws.max_row + 1):
+        pakketnummer = invoer_ws[f"B{row}"].value
+        doos_value = invoer_ws[f"H{row}"].value
+        if pakketnummer is None or doos_value is None:
+            continue
+        for token in str(doos_value).split("+"):
+            box = token.strip()
+            if box:
+                entries.append(
+                    BomEntry(
+                        pakketnummer=str(pakketnummer),
+                        gebied="DOZEN",
+                        item=box,
+                        soort="",
+                        aantal_per_pakket=1.0,
+                        groep="",
+                        volgorde=_box_volgorde(box),
+                    )
+                )
+    return entries
+```
+
+- [ ] **Step 8: Run tests to verify they pass**
+
+Run: `python -m pytest tests/test_extract_bom.py -v`
+Expected: PASS (4 passed)
+
+- [ ] **Step 9: Write the failing test for `build_item_order`**
+
+Add to `C:\picklist\tests\test_calculate.py`:
+```python
+from calculate import build_item_order
+
+
+def test_build_item_order_maps_first_seen_groep_and_volgorde():
+    bom_entries = [
+        BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "Rozen 38CM:", 7),
+        BomEntry("1.32", "KOELING", "Parade", "CL Pink", 3.0, "Rozen 38CM:", 7),
+        BomEntry("1.1", "DOZEN", "14", "", 1.0, "", 13),
+    ]
+
+    item_order = build_item_order(bom_entries)
+
+    assert item_order["KOELING"][("Parade", "CL Pink")] == ("Rozen 38CM:", 7)
+    assert item_order["DOZEN"][("14", "")] == ("", 13)
+```
+
+- [ ] **Step 10: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_calculate.py -v`
+Expected: FAIL with `ImportError: cannot import name 'build_item_order'`
+
+- [ ] **Step 11: Implement `build_item_order`**
+
+Append to `C:\picklist\calculate.py`:
+```python
+def build_item_order(bom_entries):
+    item_order = {}
+    for entry in bom_entries:
+        key = (entry.item, entry.soort)
+        item_order.setdefault(entry.gebied, {}).setdefault(
+            key, (entry.groep, entry.volgorde)
+        )
+    return item_order
+```
+
+- [ ] **Step 12: Run tests to verify they pass**
+
+Run: `python -m pytest tests/test_calculate.py -v`
+Expected: PASS (4 passed)
+
+- [ ] **Step 13: Re-run the real extraction and re-validate**
+
+Run: `python extract_bom.py "E-Commerce PICKLIST - IN PROGRESS.xlsm"`
+Expected: prints a BOM row count (same order of magnitude as before — this only
+adds two columns per row, it doesn't change which rows are extracted).
+
+Run: `python tools/validate_against_history.py "K:\E-Commerce\Orderverwerking\1_Invoeren\PICKLISTEN\E-Commerce PICKLIST-BACKUP.xlsm"`
+Expected: the same result as before this amendment (as of this plan being written:
+`checked=267 matches=266 mismatches=1`, the one mismatch being the known
+"Nandina Domestica Obsessed" naming drift) — `build_item_order`/the new fields
+don't change what gets extracted or how totals are computed, only what extra
+metadata rides along.
+
+- [ ] **Step 14: Run the full test suite**
+
+Run: `python -m pytest -v`
+Expected: all tests pass.
+
+- [ ] **Step 15: Commit**
+
+```bash
+git add bom.py extract_bom.py calculate.py tests/test_bom.py tests/test_extract_bom.py tests/test_calculate.py bom.csv
+git commit -m "feat: capture category and original sheet order in the BOM"
+```
+
+---
+
+### Task 11: Grouped output and DOZEN pallet totals
+
+**Files:**
+- Modify: `C:\picklist\write_picklist.py`
+- Modify: `C:\picklist\generate_picklist.py`
+- Test: `C:\picklist\tests\test_write_picklist.py`
+- Modify: `C:\picklist\tests\test_generate_picklist.py`
+
+**Interfaces:**
+- Consumes: `build_item_order` (Task 10).
+- Produces: `write_picklist(totals, unknown, output_path, for_date, item_order)` —
+  the signature gains a required `item_order` parameter. `generate_picklist.main`
+  is the only caller and is updated in this task too.
+
+**Global constraint this task must honor:** all user-facing text stays Dutch —
+"Aantal pallets", "Aantal dozen", "Totaal" are already Dutch; keep it that way.
+
+- [ ] **Step 1: Write the failing tests**
+
+Replace `C:\picklist\tests\test_write_picklist.py`:
+```python
+from datetime import date
+
+import openpyxl
+
+from write_picklist import write_picklist
+
+
+def test_write_picklist_groups_area_items_by_category_with_subtotal(tmp_path):
+    totals = {
+        "KOELING": {
+            ("Parade", "CL Pink"): 4.0,
+            ("Golden Rain", "CL Yellow"): 2.0,
+            ("Bambino", "Pink"): 1.0,
+        },
+    }
+    item_order = {
+        "KOELING": {
+            ("Parade", "CL Pink"): ("Rozen 38CM:", 7),
+            ("Golden Rain", "CL Yellow"): ("Rozen 38CM:", 9),
+            ("Bambino", "Pink"): ("Mini Stamroos 70CM:", 27),
+        },
+    }
+    output_path = tmp_path / "Picklist.xlsx"
+
+    write_picklist(totals, {}, output_path, date(2026, 9, 16), item_order)
+
+    ws = openpyxl.load_workbook(output_path)["KOELING"]
+    rows = [[c.value for c in row] for row in ws.iter_rows(min_row=5)]
+    assert rows == [
+        ["Rozen 38CM:", None, 6],
+        ["Parade", "CL Pink", 4],
+        ["Golden Rain", "CL Yellow", 2],
+        [None, None, None],
+        ["Mini Stamroos 70CM:", None, 1],
+        ["Bambino", "Pink", 1],
+        [None, None, None],
+    ]
+
+
+def test_write_picklist_dozen_sheet_has_pallet_column_and_total(tmp_path):
+    totals = {"DOZEN": {("1", ""): 250.0, ("KB", ""): 48.0}}
+    item_order = {"DOZEN": {("1", ""): ("", 0), ("KB", ""): ("", 16)}}
+    output_path = tmp_path / "Picklist.xlsx"
+
+    write_picklist(totals, {}, output_path, date(2026, 9, 16), item_order)
+
+    ws = openpyxl.load_workbook(output_path)["DOZEN"]
+    rows = [[c.value for c in row] for row in ws.iter_rows(min_row=4)]
+    assert rows == [
+        ["Doosnummer", "Aantal pallets", "Aantal dozen"],
+        ["1", 2.5, 250],
+        ["KB", 2, 48],
+        ["Totaal", 4.5, 298],
+    ]
+```
+
+- [ ] **Step 2: Run tests to verify they fail**
+
+Run: `python -m pytest tests/test_write_picklist.py -v`
+Expected: FAIL — `write_picklist() missing 1 required positional argument:
+'item_order'`
+
+- [ ] **Step 3: Implement the grouped/pallet writer**
+
+Replace `C:\picklist\write_picklist.py`:
+```python
+import openpyxl
+
+GEBIED_ORDER = ["KOELING", "KAS", "KAMER", "POKON", "DOZEN"]
+
+BOXES_PER_PALLET = {
+    "1": 100, "2": 54, "3": 54, "4": 27, "5": 34, "6": 16, "7": 70, "8": 60,
+    "9": 40, "10": 36, "11": 21, "12": 36, "13": 16, "14": 72, "15": 144,
+    "16": 25, "KB": 24, "EUR40": 30,
+}
+
+
+def _display_aantal(aantal):
+    return int(aantal) if float(aantal).is_integer() else aantal
+
+
+def _grouped_by_category(totals_for_gebied, item_order_for_gebied):
+    entries = []
+    for (item, soort), aantal in totals_for_gebied.items():
+        groep, volgorde = item_order_for_gebied.get((item, soort), ("", 0))
+        entries.append((volgorde, groep, item, soort, aantal))
+    entries.sort(key=lambda e: e[0])
+
+    groups = []
+    current_groep = None
+    for _volgorde, groep, item, soort, aantal in entries:
+        if groep != current_groep:
+            groups.append({"groep": groep, "items": []})
+            current_groep = groep
+        groups[-1]["items"].append((item, soort, aantal))
+    return groups
+
+
+def _write_area_sheet(ws, totals_for_gebied, item_order_for_gebied):
+    ws.append(["Item", "Soort", "Aantal"])
+    for group in _grouped_by_category(totals_for_gebied, item_order_for_gebied):
+        subtotal = sum(aantal for _item, _soort, aantal in group["items"])
+        if group["groep"]:
+            ws.append([group["groep"], None, _display_aantal(subtotal)])
+        for item, soort, aantal in group["items"]:
+            ws.append([item, soort, _display_aantal(aantal)])
+        ws.append([])
+
+
+def _write_dozen_sheet(ws, totals_for_gebied, item_order_for_gebied):
+    ws.append(["Doosnummer", "Aantal pallets", "Aantal dozen"])
+    rows = sorted(
+        totals_for_gebied.items(),
+        key=lambda kv: item_order_for_gebied.get(kv[0], ("", 0))[1],
+    )
+    total_pallets = 0.0
+    total_dozen = 0.0
+    for (item, _soort), aantal in rows:
+        divisor = BOXES_PER_PALLET.get(item)
+        pallets = aantal / divisor if divisor else 0.0
+        total_pallets += pallets
+        total_dozen += aantal
+        ws.append([item, _display_aantal(pallets), _display_aantal(aantal)])
+    ws.append(["Totaal", _display_aantal(total_pallets), _display_aantal(total_dozen)])
+
+
+def write_picklist(totals, unknown, output_path, for_date, item_order):
+    workbook = openpyxl.Workbook()
+    workbook.remove(workbook.active)
+
+    for gebied in GEBIED_ORDER:
+        ws = workbook.create_sheet(gebied)
+        ws.append([f"E-COMMERCE {gebied} PICKLIST"])
+        ws.append(["Datum:", for_date.strftime("%d-%m-%Y")])
+        ws.append([])
+        totals_for_gebied = totals.get(gebied, {})
+        item_order_for_gebied = item_order.get(gebied, {})
+        if gebied == "DOZEN":
+            _write_dozen_sheet(ws, totals_for_gebied, item_order_for_gebied)
+        else:
+            _write_area_sheet(ws, totals_for_gebied, item_order_for_gebied)
+
+    unknown_ws = workbook.create_sheet("Onbekende pakketten")
+    unknown_ws.append(["Pakketnummer", "Aantal besteld"])
+    for pakketnummer, aantal in sorted(unknown.items()):
+        unknown_ws.append([pakketnummer, _display_aantal(aantal)])
+
+    workbook.save(output_path)
+```
+
+- [ ] **Step 4: Run tests to verify they pass**
+
+Run: `python -m pytest tests/test_write_picklist.py -v`
+Expected: PASS (2 passed)
+
+- [ ] **Step 5: Wire `item_order` through `generate_picklist.py`**
+
+In `C:\picklist\generate_picklist.py`, add the import and call:
+```python
+from calculate import build_item_order, calculate_totals
+```
+(replaces the existing `from calculate import calculate_totals` line)
+
+And in `main`, replace:
+```python
+    bom_entries = load_bom_csv(bom_csv_path)
+    totals, unknown = calculate_totals(bom_entries, aantallen)
+    write_picklist(totals, unknown, output_path, today)
+```
+with:
+```python
+    bom_entries = load_bom_csv(bom_csv_path)
+    totals, unknown = calculate_totals(bom_entries, aantallen)
+    item_order = build_item_order(bom_entries)
+    write_picklist(totals, unknown, output_path, today, item_order)
+```
+
+- [ ] **Step 6: Confirm `test_generate_picklist.py` still passes unmodified**
+
+The success-path test asserts `workbook["KOELING"]["A5"].value == "Parade"`. Its
+`BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0)` doesn't pass `groep`, so it
+gets the default `""`. In `_write_area_sheet`, a group with `groep == ""` is
+falsy, so the `if group["groep"]:` check skips writing a header row for it — the
+item row is written directly. Row 4 is still the `["Item", "Soort", "Aantal"]`
+header, so row 5 is still `["Parade", "CL Pink", 2]`. No test changes are needed
+for this file; this step is a confirmation run, not a fix:
+
+Run: `python -m pytest tests/test_generate_picklist.py -v`
+Expected: PASS (2 passed), unmodified. If it fails, that means the reasoning above
+missed something real — stop and report DONE_WITH_CONCERNS with the actual output
+rather than editing the test to force a pass.
+
+- [ ] **Step 7: Run the full test suite**
+
+Run: `python -m pytest -v`
+Expected: all tests pass.
+
+- [ ] **Step 8: Manually regenerate today's real Picklist.xlsx and spot-check**
+
+Run: `python generate_picklist.py`
+Expected: succeeds. Open `C:\picklist\Picklist.xlsx` and confirm: KOELING/KAS/KAMER/
+POKON sheets show category header rows in bold-free plain rows with a subtotal in
+column C, items nested beneath in original sheet order; DOZEN sheet shows
+`Doosnummer | Aantal pallets | Aantal dozen` with numeric-then-KB-then-EUR40 order
+and a `Totaal` row.
+
+- [ ] **Step 9: Commit**
+
+```bash
+git add write_picklist.py generate_picklist.py tests/test_write_picklist.py tests/test_generate_picklist.py
+git commit -m "feat: group area-sheet output by category and add DOZEN pallet totals"
+```
