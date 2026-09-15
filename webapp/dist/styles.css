@@ -101,11 +101,11 @@ tbody tr:hover { background: #f5faf7; }
 .department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { background: #f3f8f4; }
 .box-cell { white-space: nowrap; color: var(--muted); font-size: .82rem; font-style: italic; font-weight: 650; }
 .department[data-department="PAKKETTEN"] th:nth-child(3),
-.department[data-department="PAKKETTEN"] td:nth-child(3) { width: 90px; text-align: center; }
+.department[data-department="PAKKETTEN"] td:nth-child(3) { width: 65px; text-align: center; }
 .department[data-department="PAKKETTEN"] th:nth-child(4),
-.department[data-department="PAKKETTEN"] td:nth-child(4) { width: 90px; text-align: right; }
+.department[data-department="PAKKETTEN"] td:nth-child(4) { width: 75px; text-align: right; }
 .department[data-department="PAKKETTEN"] th:nth-child(5),
-.department[data-department="PAKKETTEN"] td:nth-child(5) { width: 130px; text-align: center; }
+.department[data-department="PAKKETTEN"] td:nth-child(5) { width: 85px; text-align: center; }
 .department[data-department="PAKKETTEN"] th:last-child,
 .department[data-department="PAKKETTEN"] td:last-child { text-align: center; }
 .package-total-row td { border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f1f7f3; font-weight: 850; }
@@ -137,6 +137,9 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .dialog-header, .section-title-row, .dialog-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
 .dialog-header { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
 .dialog-header h2, .form-section h3 { margin: 0; }
+.package-nav { display: flex; gap: 8px; }
+.package-nav .button { min-height: 36px; padding: 0 14px; font-size: .85rem; }
+.package-nav .button:disabled { opacity: .35; cursor: not-allowed; }
 .icon-button { width: 40px; height: 40px; border: 0; border-radius: 50%; color: var(--muted); background: #edf3ef; font-size: 1.7rem; cursor: pointer; }
 .form-section { display: grid; grid-template-columns: 38px 1fr; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--line); }
 .step-number { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: white; background: var(--brand); font-weight: 850; }
@@ -224,7 +227,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
   .department:not([data-department="PAKKETTEN"]):not([data-department="DOZEN"]) td { padding: 4px 7px; font-size: 11pt; }
   .package-name { font-size: 10.5pt; }
   .package-number, .package-count { font-size: 11pt; }
-  .package-count-input { min-height: auto; padding: 0; border: 0; background: transparent; }
+  .package-count-input { width: 40px; min-height: auto; padding: 0; border: 0; background: transparent; }
   .department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .package-total-row .package-grand-total { padding-right: 7px; font-size: 19pt; }
   .dozen-total-row td { padding-top: 6px; padding-bottom: 6px; font-size: 10pt; }
