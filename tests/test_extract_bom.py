@@ -69,7 +69,7 @@ def test_extract_dozen_bom_splits_combined_box_values():
     entries = extract_dozen_bom(ws)
 
     assert entries == [
-        BomEntry("1.10p", "DOZEN", "14", "", 1.0),
-        BomEntry("1.10p", "DOZEN", "15", "", 1.0),
-        BomEntry("1.1", "DOZEN", "14", "", 1.0),
+        BomEntry("1.10p", "DOZEN", "14", "", 1.0, "", 13),
+        BomEntry("1.10p", "DOZEN", "15", "", 1.0, "", 14),
+        BomEntry("1.1", "DOZEN", "14", "", 1.0, "", 13),
     ]

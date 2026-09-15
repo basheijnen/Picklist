@@ -63,10 +63,14 @@ def build_row_to_pakket(invoer_ws, first_row=5):
 def extract_area_bom(workbook, sheet_name, gebied, row_to_pakket, first_row=6):
     ws = workbook[sheet_name]
     entries = []
+    current_groep = ""
     for row in range(first_row, ws.max_row + 1):
         item = ws[f"A{row}"].value
         soort = ws[f"B{row}"].value
         formula = ws[f"C{row}"].value
+        if isinstance(formula, str) and formula.strip().startswith("=SUM("):
+            current_groep = str(item) if item is not None else ""
+            continue
         if not isinstance(formula, str) or "Invoer" not in formula:
             continue
         if item is None and soort is None:
@@ -85,9 +89,22 @@ def extract_area_bom(workbook, sheet_name, gebied, row_to_pakket, first_row=6):
                     item=str(item) if item is not None else "",
                     soort=str(soort) if soort is not None else "",
                     aantal_per_pakket=multiplier,
+                    groep=current_groep,
+                    volgorde=row,
                 )
             )
     return entries
+
+
+BOX_ORDER = [
+    "1", "2", "3", "4", "5", "6", "7", "8",
+    "9", "10", "11", "12", "13", "14", "15", "16",
+    "KB", "EUR40",
+]
+
+
+def _box_volgorde(box):
+    return BOX_ORDER.index(box) if box in BOX_ORDER else len(BOX_ORDER)
 
 
 def extract_dozen_bom(invoer_ws, first_row=5):
@@ -107,6 +124,8 @@ def extract_dozen_bom(invoer_ws, first_row=5):
                         item=box,
                         soort="",
                         aantal_per_pakket=1.0,
+                        groep="",
+                        volgorde=_box_volgorde(box),
                     )
                 )
     return entries

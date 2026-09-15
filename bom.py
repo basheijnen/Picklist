@@ -10,9 +10,19 @@ class BomEntry:
     item: str
     soort: str
     aantal_per_pakket: float
+    groep: str = ""
+    volgorde: int = 0
 
 
-FIELDNAMES = ["pakketnummer", "gebied", "item", "soort", "aantal_per_pakket"]
+FIELDNAMES = [
+    "pakketnummer",
+    "gebied",
+    "item",
+    "soort",
+    "aantal_per_pakket",
+    "groep",
+    "volgorde",
+]
 
 
 def write_bom_csv(entries, path):
@@ -37,6 +47,8 @@ def load_bom_csv(path):
                     item=row["item"],
                     soort=row["soort"],
                     aantal_per_pakket=float(row["aantal_per_pakket"]),
+                    groep=row["groep"],
+                    volgorde=int(row["volgorde"]),
                 )
             )
     return entries

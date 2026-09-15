@@ -19,3 +19,13 @@ def calculate_totals(bom_entries, aantallen):
     }
 
     return {gebied: dict(items) for gebied, items in totals.items()}, unknown
+
+
+def build_item_order(bom_entries):
+    item_order = {}
+    for entry in bom_entries:
+        key = (entry.item, entry.soort)
+        item_order.setdefault(entry.gebied, {}).setdefault(
+            key, (entry.groep, entry.volgorde)
+        )
+    return item_order

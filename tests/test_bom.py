@@ -15,3 +15,13 @@ def test_write_then_load_round_trip(tmp_path):
     loaded = load_bom_csv(csv_path)
 
     assert loaded == entries
+
+
+def test_write_then_load_round_trip_preserves_groep_and_volgorde(tmp_path):
+    entries = [BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "Rozen 38CM:", 7)]
+    csv_path = tmp_path / "bom.csv"
+
+    write_bom_csv(entries, csv_path)
+    loaded = load_bom_csv(csv_path)
+
+    assert loaded == entries

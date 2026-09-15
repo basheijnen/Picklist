@@ -1,5 +1,5 @@
 from bom import BomEntry
-from calculate import calculate_totals
+from calculate import build_item_order, calculate_totals
 
 
 def test_calculate_totals_applies_multiplier_and_sums_across_pakketten():
@@ -32,3 +32,16 @@ def test_calculate_totals_flags_unknown_pakketten_with_nonzero_orders():
     totals, unknown = calculate_totals(bom_entries, aantallen)
 
     assert unknown == {"99.9": 7}
+
+
+def test_build_item_order_maps_first_seen_groep_and_volgorde():
+    bom_entries = [
+        BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "Rozen 38CM:", 7),
+        BomEntry("1.32", "KOELING", "Parade", "CL Pink", 3.0, "Rozen 38CM:", 7),
+        BomEntry("1.1", "DOZEN", "14", "", 1.0, "", 13),
+    ]
+
+    item_order = build_item_order(bom_entries)
+
+    assert item_order["KOELING"][("Parade", "CL Pink")] == ("Rozen 38CM:", 7)
+    assert item_order["DOZEN"][("14", "")] == ("", 13)
