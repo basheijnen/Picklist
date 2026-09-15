@@ -35,18 +35,33 @@ def read_historical_aantallen(invoer_ws):
 
 
 def main(historical_path, bom_csv_path=Path(__file__).resolve().parent.parent / "bom.csv"):
-    workbook = openpyxl.load_workbook(historical_path, data_only=True, keep_vba=True)
-    aantallen = read_historical_aantallen(workbook["1. Invoer pakketaantal"])
+    # Load workbook twice: once for values, once for formulas
+    workbook_values = openpyxl.load_workbook(historical_path, data_only=True, keep_vba=True)
+    workbook_formulas = openpyxl.load_workbook(historical_path, data_only=False, keep_vba=True)
+
+    aantallen = read_historical_aantallen(workbook_values["1. Invoer pakketaantal"])
     bom_entries = load_bom_csv(bom_csv_path)
-    totals, _unknown = calculate_totals(bom_entries, aantallen)
+    totals, unknown = calculate_totals(bom_entries, aantallen)
+
+    # Report unknown pakketnummers if any exist
+    if unknown:
+        print(f"WARNING: {len(unknown)} unknown pakketnummers found in historical data:")
+        for pakketnummer, aantal in sorted(unknown.items()):
+            print(f"  {pakketnummer}: {aantal}")
 
     checked = matches = mismatches = 0
     for sheet_name, gebied in AREA_SHEETS.items():
-        ws = workbook[sheet_name]
-        for row in range(6, ws.max_row + 1):
-            item = ws[f"A{row}"].value
-            soort = ws[f"B{row}"].value
-            cached = ws[f"C{row}"].value
+        ws_values = workbook_values[sheet_name]
+        ws_formulas = workbook_formulas[sheet_name]
+        for row in range(6, ws_values.max_row + 1):
+            # Skip rows where C{row} formula doesn't contain "Invoer" (like extract_bom.py does)
+            formula = ws_formulas[f"C{row}"].value
+            if not isinstance(formula, str) or "Invoer" not in formula:
+                continue
+
+            item = ws_values[f"A{row}"].value
+            soort = ws_values[f"B{row}"].value
+            cached = ws_values[f"C{row}"].value
             if item is None and soort is None:
                 continue
             cached = cached if isinstance(cached, (int, float)) else 0
