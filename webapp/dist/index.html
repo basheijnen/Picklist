@@ -34,7 +34,10 @@
         <span class="eyebrow">Nieuwe picklist</span>
         <h2 id="import-title">Sleep de orderexport hierheen</h2>
         <p>Gebruik een puntkomma-gescheiden CSV met de kolom <strong>Package Number</strong>. De pakkettenlijst verschijnt als eerste.</p>
-        <button id="addPackageButton" class="button button-primary manage-button" type="button">+ Pakket aan database toevoegen</button>
+        <div class="manage-buttons">
+          <button id="addPackageButton" class="button button-primary manage-button" type="button">+ Pakket aan database toevoegen</button>
+          <button id="managePackagesButton" class="button button-quiet manage-button" type="button">Pakketten beheren</button>
+        </div>
       </div>
       <label id="dropZone" class="drop-zone" for="fileInput">
         <span class="upload-icon" aria-hidden="true">↑</span>
@@ -75,7 +78,7 @@
   <dialog id="packageDialog" class="package-dialog">
     <form id="packageForm" method="dialog">
       <div class="dialog-header">
-        <div><span class="eyebrow">Lokale database</span><h2>Nieuw pakket toevoegen</h2></div>
+        <div><span class="eyebrow">Lokale database</span><h2 id="packageDialogTitle">Nieuw pakket toevoegen</h2></div>
         <button id="closePackageDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
       </div>
 
@@ -113,9 +116,20 @@
       <p id="packageFormMessage" class="dialog-message" role="alert"></p>
       <div class="dialog-actions">
         <button id="cancelPackageButton" class="button button-quiet" type="button">Annuleren</button>
-        <button class="button button-primary" type="submit">Pakket opslaan</button>
+        <button id="savePackageButton" class="button button-primary" type="submit">Pakket opslaan</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="managePackagesDialog" class="package-dialog manage-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Lokale database</span><h2>Pakketten beheren</h2></div>
+      <button id="closeManagePackagesDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="manage-dialog-body">
+      <input id="managePackagesSearch" type="search" placeholder="Zoek op pakketnummer of naam…">
+      <div id="managePackagesList" class="manage-packages-list"></div>
+    </div>
   </dialog>
 
   <footer>Alles blijft op deze computer; het CSV-bestand wordt niet geüpload.</footer>

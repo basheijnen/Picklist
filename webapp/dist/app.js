@@ -14,14 +14,18 @@ const printButton = document.querySelector("#printButton");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
+const managePackagesDialog = document.querySelector("#managePackagesDialog");
+const managePackagesList = document.querySelector("#managePackagesList");
+const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 let currentImport = null;
+let editingPakketnummer = null;
 
 function populateGroepOptions(gebied, select) {
   const previous = select.value;
   select.replaceChildren(new Option("Nieuw (onderaan de lijst)", ""));
   const firstSeenVolgorde = new Map();
   (window.PICKLIST_BOM || []).forEach((entry) => {
-    if (entry.gebied !== gebied || !entry.groep) return;
+    if (entry.gebied !== gebied || !entry.groep || entry.groep === NEW_ITEMS_GROEP) return;
     if (!firstSeenVolgorde.has(entry.groep) || entry.volgorde < firstSeenVolgorde.get(entry.groep)) {
       firstSeenVolgorde.set(entry.groep, entry.volgorde);
     }
@@ -53,12 +57,75 @@ function createComponentRow() {
 }
 
 function openPackageForm(pakketnummer = "") {
+  editingPakketnummer = null;
   packageForm.reset();
   componentRows.replaceChildren();
   createComponentRow();
   document.querySelector("#newPackageNumber").value = pakketnummer;
+  document.querySelector("#newPackageNumber").disabled = false;
+  document.querySelector("#packageDialogTitle").textContent = "Nieuw pakket toevoegen";
+  document.querySelector("#savePackageButton").textContent = "Pakket opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
   packageDialog.showModal();
+}
+
+function openEditPackageForm(pakketnummer) {
+  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
+  if (!info) return;
+  const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
+  const components = relatedEntries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied));
+  const pokonEntry = relatedEntries.find((entry) => entry.gebied === "POKON");
+  const doosEntries = relatedEntries.filter((entry) => entry.gebied === "DOZEN");
+
+  editingPakketnummer = pakketnummer;
+  packageForm.reset();
+  componentRows.replaceChildren();
+  (components.length ? components : [null]).forEach((entry) => {
+    createComponentRow();
+    if (!entry) return;
+    const row = componentRows.lastElementChild;
+    row.querySelector(".component-item").value = entry.item;
+    row.querySelector(".component-kind").value = entry.soort;
+    row.querySelector(".component-amount").value = entry.aantal_per_pakket;
+    const areaSelect = row.querySelector(".component-area");
+    areaSelect.value = entry.gebied;
+    const groepSelect = row.querySelector(".component-groep");
+    populateGroepOptions(areaSelect.value, groepSelect);
+    groepSelect.value = entry.groep === NEW_ITEMS_GROEP ? "" : entry.groep;
+  });
+  document.querySelector("#newPackageNumber").value = pakketnummer;
+  document.querySelector("#newPackageNumber").disabled = true;
+  document.querySelector("#newPackageName").value = info.pakketnaam;
+  document.querySelector("#newPackageBoxes").value = doosEntries.map((entry) => entry.item).join(" + ");
+  document.querySelector("#newPackagePokon").value = pokonEntry ? pokonEntry.item : "";
+  document.querySelector("#newPackagePokonAmount").value = pokonEntry ? pokonEntry.aantal_per_pakket : 1;
+  document.querySelector("#packageDialogTitle").textContent = "Pakket bewerken";
+  document.querySelector("#savePackageButton").textContent = "Wijzigingen opslaan";
+  document.querySelector("#packageFormMessage").textContent = "";
+  packageDialog.showModal();
+}
+
+function renderManagePackagesList(filter = "") {
+  const term = filter.trim().toLowerCase();
+  const packages = [...(window.PICKLIST_PACKAGES || [])]
+    .filter((entry) => !term || entry.pakketnummer.toLowerCase().includes(term) || entry.pakketnaam.toLowerCase().includes(term))
+    .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true }));
+  if (!packages.length) {
+    managePackagesList.innerHTML = '<p class="manage-packages-empty">Geen pakketten gevonden.</p>';
+    return;
+  }
+  managePackagesList.replaceChildren();
+  packages.forEach((entry) => {
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "manage-package-row";
+    row.innerHTML = `<span class="manage-package-number">${escapeHtml(entry.pakketnummer)}</span><span class="manage-package-name">${escapeHtml(entry.pakketnaam)}</span>`;
+    row.addEventListener("click", () => {
+      managePackagesDialog.close();
+      openEditPackageForm(entry.pakketnummer);
+    });
+    managePackagesList.append(row);
+  });
 }
 
 function populatePokonOptions() {
@@ -75,7 +142,7 @@ async function saveNewPackage(event) {
   const pokonName = document.querySelector("#newPackagePokon").value;
   const pokonAmount = Number(document.querySelector("#newPackagePokonAmount").value || 1);
   const formMessage = document.querySelector("#packageFormMessage");
-  if ((window.PICKLIST_PACKAGES || []).some((entry) => entry.pakketnummer === pakketnummer)) {
+  if (!editingPakketnummer && (window.PICKLIST_PACKAGES || []).some((entry) => entry.pakketnummer === pakketnummer)) {
     formMessage.textContent = `Pakketnummer ${pakketnummer} bestaat al.`;
     return;
   }
@@ -94,8 +161,10 @@ async function saveNewPackage(event) {
   const submitButton = packageForm.querySelector('button[type="submit"]');
   if (submitButton) submitButton.disabled = true;
   try {
-    const response = await fetch("/api/pakketten", {
-      method: "POST",
+    const url = editingPakketnummer ? `/api/pakketten/${encodeURIComponent(editingPakketnummer)}` : "/api/pakketten";
+    const method = editingPakketnummer ? "PUT" : "POST";
+    const response = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         pakketnummer, pakketnaam, doosnummers,
@@ -105,10 +174,16 @@ async function saveNewPackage(event) {
     });
     const result = await response.json();
     if (!response.ok) { formMessage.textContent = result.error || "Opslaan mislukt."; return; }
+    if (editingPakketnummer) {
+      window.PICKLIST_PACKAGES = window.PICKLIST_PACKAGES.filter((entry) => entry.pakketnummer !== editingPakketnummer);
+      window.PICKLIST_BOM = window.PICKLIST_BOM.filter((entry) => entry.pakketnummer !== editingPakketnummer);
+    }
     window.PICKLIST_PACKAGES.push(result.package);
     window.PICKLIST_BOM.push(...result.bom);
     packageDialog.close();
-    message.textContent = `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
+    message.textContent = editingPakketnummer
+      ? `Pakket ${pakketnummer} is bijgewerkt.`
+      : `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
     if (currentImport) showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
   } catch (_error) {
     formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
@@ -339,5 +414,12 @@ document.querySelector("#addComponentButton").addEventListener("click", createCo
 document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
 document.querySelector("#cancelPackageButton").addEventListener("click", () => packageDialog.close());
 packageForm.addEventListener("submit", saveNewPackage);
+document.querySelector("#managePackagesButton").addEventListener("click", () => {
+  document.querySelector("#managePackagesSearch").value = "";
+  renderManagePackagesList();
+  managePackagesDialog.showModal();
+});
+document.querySelector("#closeManagePackagesDialog").addEventListener("click", () => managePackagesDialog.close());
+document.querySelector("#managePackagesSearch").addEventListener("input", (event) => renderManagePackagesList(event.target.value));
 
 populatePokonOptions();
