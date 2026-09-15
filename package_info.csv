@@ -1,0 +1,1085 @@
+pakketnummer,pakketnaam,pokon,doosnummers
+1.1,Grootbloemige rozen x 6,nee,14
+1.1p,Grootbloemige rozen x 6,ja,2
+1.10,Grootbloemige roos ROOD x3,nee,15
+1.10p,Grootbloemige roos ROOD x3,ja,14 + 15
+1.11,Grootbloemige roos WIT x3,nee,15
+1.11p,Grootbloemige roos WIT x3,ja,14 + 15
+1.12,Grootbloemige roos ROZE x3,nee,15
+1.12p,Grootbloemige roos ROZE x3,ja,14 + 15
+1.13,Grootbloemige roos ORANJE x3,nee,15
+1.13p,Grootbloemige roos ORANJE x3,ja,14 + 15
+1.14,Grootbloemige roos GEEL/ROZE x3,nee,15
+1.14p,Grootbloemige roos GEEL/ROZE x3,ja,14 + 15
+1.15,Grootbloemige roos ROOD/WIT x3,nee,15
+1.15p,Grootbloemige roos ROOD/WIT x3,ja,14 + 15
+1.2,Polyantha rozen x 6,nee,14
+1.2p,Polyantha rozen x 6,ja,2
+1.20,Polyantha roos ROOD x3,nee,15
+1.20p,Polyantha roos ROOD x3,ja,14 + 15
+1.21,Polyantha roos ROZE x3,nee,15
+1.21p,Polyantha roos ROZE x3,ja,14 + 15
+1.22,Polyantha roos GEEL x3,nee,15
+1.22p,Polyantha roos GEEL x3,ja,14 + 15
+1.3,Klimrozen x 4,nee,1
+1.3p,Klimrozen x 4,ja,14
+1.30,Klim roos ROOD x3,nee,15
+1.30p,Klim roos ROOD x3,ja,14 + 15
+1.31,Klim roos GEEL x3,nee,15
+1.31p,Klim roos GEEL x3,ja,14 + 15
+1.32,Klim roos ROZE x3,nee,15
+1.32p,Klim roos ROZE x3,ja,14 + 15
+1.4,Grootbloemige rozen x 3,nee,15
+1.4p,Grootbloemige rozen x 3,ja,14 + 15
+1.5,Polyantha rozen x 3,nee,15
+1.5p,Polyantha rozen x 3,ja,14 + 15
+2.1,Mediterrane x 4,nee,1
+2.1p,Mediterrane x 4,ja,14
+2.2,Mediterrane x 8,nee,2
+2.2p,Mediterrane x 8,ja,12
+2.3,Olive set Small amount x4,nee,1
+2.3p,Olive set Small amount x4,ja,14
+2.4,Olive set Large amount x8,nee,2
+2.4p,Olive set Large amount x8,ja,12
+2.5,Citrus Mix x4,nee,1
+2.5p,Citrus Mix x4,ja,14
+2.6,Ficus set x4,nee,1
+2.6p,Ficus set x4,ja,14
+2.7,Olive & Ficus set x8,nee,2
+2.7p,Olive & Ficus set x8,ja,12
+2.8,Mediterrane set small x6,nee,14
+2.8p,Mediterrane set small x6,ja,2
+2.9,Mediterrane set large x12,nee,12
+2.9p,Mediterrane set large x12,ja,4
+3.1,Magnolia x 3,nee,15
+3.1p,Magnolia x 3,ja,14 + 15
+3.2,Magnolia x 6,nee,14
+3.2p,Magnolia x 6,ja,2
+3.3,Magnolia soulangeana x3,nee,15
+3.3p,Magnolia soulangeana x3,ja,14 + 15
+3.4,Magnolia Susan x3,nee,15
+3.4p,Magnolia Susan x3,ja,14 + 15
+3.5,Magnolia stellata x3,nee,15
+3.5p,Magnolia stellata x3,ja,14 + 15
+3.6,Magnolia soulangeana x6,nee,14
+3.6p,Magnolia soulangeana x6,ja,2
+3.7,Magnolia Susan x6,nee,14
+3.7p,Magnolia Susan x6,ja,2
+3.8,Magnolia stellata x6,nee,14
+3.8p,Magnolia stellata x6,ja,2
+4.0,Clematis montana 'Rubens' x3,nee,15
+4.0p,Clematis montana 'Rubens' x3,ja,14 + 15
+4.1,Clematis montana 'Wilsonii' x3,nee,15
+4.1p,Clematis montana 'Wilsonii' x3,ja,14 + 15
+4.2,Clematis montana 'Mayleen' x3,nee,15
+4.2p,Clematis montana 'Mayleen' x3,ja,14 + 15
+4.3,Clematis montana x 3,nee,15
+4.3p,Clematis montana x 3,ja,14 + 15
+5.1,Mini Stamrozen x 3,nee,3
+5.1p,Mini Stamrozen x 3,ja,4
+5.2,Mini Stamrozen x 5,nee,4
+5.2p,Mini Stamrozen x 5,ja,4
+5.3,Mini Stamroos WIT x3,nee,3
+5.3p,Mini Stamroos WIT x3,ja,4
+5.4,Mini Stamroos ROOD x3,nee,3
+5.4p,Mini Stamroos ROOD x3,ja,4
+5.5,Mini Stamroos GEEL x3,nee,3
+5.5p,Mini Stamroos GEEL x3,ja,4
+5.6,Mini Stamroos ROZE x3,nee,3
+5.6p,Mini Stamroos ROZE x3,ja,4
+5.7,Mini Stamroos 2-KLEUR x3,nee,3
+5.7p,Mini Stamroos 2-KLEUR x3,ja,4
+6.1,Camelia x 3,nee,15
+6.1p,Camelia x 3,ja,14 + 15
+6.2,Camelia x 6,nee,14
+6.2p,Camelia x 6,ja,2
+6.3,Camellia ROOD x3,nee,15
+6.3p,Camellia ROOD x3,ja,14 + 15
+6.4,Camellia ROZE x3,nee,15
+6.4p,Camellia ROZE x3,ja,14 + 15
+6.5,Camellia WIT x3,nee,15
+6.5p,Camellia WIT x3,ja,14 + 15
+7.1,Blauwe bes x 4,nee,1
+7.1p,Blauwe bes x 4,ja,14
+7.2,Blauwe bes x 8,nee,2
+7.2p,Blauwe bes x 8,ja,12
+8.1,Hydrangea x 4,nee,1
+8.1p,Hydrangea x 4,ja,14
+8.2,Hydrangea x 8,nee,2
+8.2p,Hydrangea x 8,ja,12
+8.3,Hydrangea macrophylla Blauw x3,nee,15
+8.3p,Hydrangea macrophylla Blauw x3,ja,14 + 15
+8.4,Hydrangea macrophylla Blauw x6,nee,14
+8.4p,Hydrangea macrophylla Blauw x6,ja,2
+8.5,Hydrangea pan. 'Phantom' x3,nee,15
+8.5p,Hydrangea pan. 'Phantom' x3,ja,14 + 15
+8.6,Hydrangea pan. 'Phantom' x6,nee,14
+8.6p,Hydrangea pan. 'Phantom' x6,ja,2
+8.7,Hydrangea pan. 'Pink Diamond' x3,nee,15
+8.7p,Hydrangea pan. 'Pink Diamond' x3,ja,14 + 15
+8.8,Hydrangea pan. 'Pink Diamond' x6,nee,14
+8.8p,Hydrangea pan. 'Pink Diamond' x6,ja,2
+8.9,Hydrangea pan. 'Kyushu' x3,nee,15
+8.9p,Hydrangea pan. 'Kyushu' x3,ja,14 + 15
+8.10,Hydrangea pan. 'Kyushu' x6,nee,14
+8.10p,Hydrangea pan. 'Kyushu' x6,ja,2
+8.11,Hydrangea arb. 'Annabelle' x3,nee,15
+8.11p,Hydrangea arb. 'Annabelle' x3,ja,14 + 15
+8.12,Hydrangea arb. 'Annabelle' x6,nee,14
+8.12p,Hydrangea arb. 'Annabelle' x6,ja,2
+8.13,Hydrangea macrophylla Wit x 3,nee,15
+8.13p,Hydrangea macrophylla Wit x 3,ja,14 + 15
+8.14,Hydrangea macrophylla Wit x 6,nee,14
+8.14p,Hydrangea macrophylla Wit x 6,ja,2
+8.15,Hydrangea macrophylla Roze x 3,nee,15
+8.15p,Hydrangea macrophylla Roze x 3,ja,14 + 15
+8.16,Hydrangea macrophylla Roze x 6,nee,14
+8.16p,Hydrangea macrophylla Roze x 6,ja,2
+8.17,Hydrangea macrophylla Rood x 3,nee,15
+8.17p,Hydrangea macrophylla Rood x 3,ja,14 + 15
+8.18,Hydrangea macrophylla Rood x 6,nee,14
+8.18p,Hydrangea macrophylla Rood x 6,ja,2
+8.19,Hydrangea macrophylla mix x 4,nee,1
+8.19p,Hydrangea macrophylla mix x 4,ja,14
+8.20,Hydrangea macrophylla mix x 8,nee,2
+8.20p,Hydrangea macrophylla mix x 8,ja,12
+8.21,Hydrangea pan. 'Limelight' x 2,nee,15
+8.21p,Hydrangea pan. 'Limelight' x 2,ja,1
+8.22,Hydrangea pan. 'Limelight' x 3,nee,15
+8.22p,Hydrangea pan. 'Limelight' x 3,ja,14 + 15
+8.23,Hydrangea pan. 'Limelight' x 6,nee,14
+8.23p,Hydrangea pan. 'Limelight' x 6,ja,2
+8.24,Hydrangea quercifolia 'Snow Queen' x 2,nee,15
+8.24p,Hydrangea quercifolia 'Snow Queen' x 2,ja,1
+8.25,Hydrangea quercifolia 'Snow Queen' x 3,nee,15
+8.25p,Hydrangea quercifolia 'Snow Queen' x 3,ja,14 + 15
+8.26,Hydrangea quercifolia 'Snow Queen' x 6,nee,14
+8.26p,Hydrangea quercifolia 'Snow Queen' x 6,ja,2
+9.1,Pampasgras wit x 2 roze x 2,nee,1
+9.1p,Pampasgras wit x 2 roze x 2,ja,14
+9.2,Pampasgras wit x 4 roze x 4,nee,2
+9.2p,Pampasgras wit x 4 roze x 4,ja,12
+9.4,Pampasgras wit x 3 roze x 3,nee,14
+9.4p,Pampasgras wit x 3 roze x 3,ja,2
+9.5,Pampasgras wit x 6,nee,14
+9.5p,Pampasgras wit x 6,ja,2
+9.6,Pampasgras roze x 6,nee,14
+9.6p,Pampasgras roze x 6,ja,2
+9.7,Pampasgras wit x 3,nee,15
+9.7p,Pampasgras wit x 3,ja,14 + 15
+9.8,Pampasgras roze x 3,nee,15
+9.8p,Pampasgras roze x 3,ja,14 + 15
+9.9,Pampasgras wit x 12 roze x 12,nee,EUR40
+9.9p,Pampasgras wit x 12 roze x 12,ja,EUR40
+9.10,Pampasgras wit x 2,nee,15
+9.10p,Pampasgras wit x 2,ja,1
+9.11,Pampasgras roze x 2,nee,15
+9.11p,Pampasgras roze x 2,ja,1
+10.1,Fruitplanten x 4,nee,1
+10.1p,Fruitplanten x 4,ja,14
+10.2,Fruitplanten x 8,nee,2
+10.2p,Fruitplanten x 8,ja,12
+10.3,Rode bes x3,nee,15
+10.3p,Rode bes x3,ja,14 + 15
+10.4,Zwarte bes x3,nee,15
+10.4p,Zwarte bes x3,ja,14 + 15
+10.5,Aalbes Mix x6,nee,14
+10.5p,Aalbes Mix x6,ja,2
+10.6,Framboos x3,nee,15
+10.6p,Framboos x3,ja,14 + 15
+10.7,Braam x3,nee,15
+10.7p,Braam x3,ja,14 + 15
+10.8,Rubus Mix x6,nee,14
+10.8p,Rubus Mix x6,ja,2
+10.9,Rode Kruisbes x3,nee,15
+10.9p,Rode Kruisbes x3,ja,14 + 15
+10.10,Groene Kruisbes x3,nee,15
+10.10p,Groene Kruisbes x3,ja,14 + 15
+10.11,Kruisbes mix x6,nee,14
+10.11p,Kruisbes mix x6,ja,2
+11.0,Fruitbomen x 3,nee,5
+11.0p,Fruitbomen x 3,ja,5
+11.1,Fruitbomen x 5,nee,5
+11.1p,Fruitbomen x 5,ja,5
+11.2,Fruitbomen x 10,nee,6
+11.2p,Fruitbomen x 10,ja,6
+11.3,Appel Jonagold x3,nee,5
+11.3p,Appel Jonagold x3,ja,5
+11.4,Peer Conference x3,nee,5
+11.4p,Peer Conference x3,ja,5
+11.5,Kers Schattenmorelle x3,nee,5
+11.5p,Kers Schattenmorelle x3,ja,5
+11.6,Pruim Opal x3,nee,5
+11.6p,Pruim Opal x3,ja,5
+11.7,Perzik Red heaven x3,nee,5
+11.7p,Perzik Red heaven x3,ja,5
+12.1,Photinia frag. Carre Rouge x2,nee,3
+12.1p,Photinia frag. Carre Rouge x2,ja,3
+12.2,Photinia frag. Carre Rouge x4,nee,4
+12.2p,Photinia frag. Carre Rouge x4,ja,4
+13.1,Buddleja x 3,nee,15
+13.1p,Buddleja x 3,ja,14 + 15
+13.2,Buddleja x 6,nee,14
+13.2p,Buddleja x 6,ja,2
+13.3,Buddleja davidii purpurrood x3,nee,15
+13.3p,Buddleja davidii purpurrood x3,ja,14 + 15
+13.4,Buddleja davidii wit x3,nee,15
+13.4p,Buddleja davidii wit x3,ja,14 + 15
+13.5,Buddleja davidii roze x3,nee,15
+13.5p,Buddleja davidii roze x3,ja,14 + 15
+13.6,Buddleja davidii zwart/violet x3,nee,15
+13.6p,Buddleja davidii zwart/violet x3,ja,14 + 15
+13.7,Buddleja davidii mix x8,nee,2
+13.7p,Buddleja davidii mix x8,ja,12
+14.1,Sierheesters x 4,nee,1
+14.1p,Sierheesters x 4,ja,14
+14.2,Sierheesters x 8,nee,2
+14.2p,Sierheesters x 8,ja,12
+15.1,Super Fruit Mix x 25,nee,14
+15.1p,Super Fruit Mix x 25,ja,2
+16.1,Notenplanten mix x 4,nee,3
+16.1p,Notenplanten mix x 4,ja,4
+16.2,Notenplanten mix x 8,nee,4
+16.2p,Notenplanten mix x 8,ja,4
+16.3,Kastanje + Walnoot set,nee,3
+16.3p,Kastanje + Walnoot set,ja,3
+16.4,Kastanje + Hazelnoot set,nee,3
+16.4p,Kastanje + Hazelnoot set,ja,3
+16.5,Walnoot + Hazelnoot set,nee,3
+16.5p,Walnoot + Hazelnoot set,ja,3
+16.6,Kastanje x 2,nee,3
+16.6p,Kastanje x 2,ja,3
+16.7,Walnoot x 2,nee,3
+16.7p,Walnoot x 2,ja,3
+16.8,Hazelnoot x 2,nee,3
+16.8p,Hazelnoot x 2,ja,3
+16.9,Japanse Notenboom x 2,nee,3
+16.9p,Japanse Notenboom x 2,ja,3
+17.1,Fruitbomen XXL x 5,nee,13
+17.1p,Fruitbomen XXL x 5,ja,13
+17.2,Fruitbomen XXL x 3,nee,13
+17.2p,Fruitbomen XXL x 3,ja,13
+17.3,Appel Jonagold x3,nee,13
+17.3p,Appel Jonagold x3,ja,13
+17.4,Peer Conference x3,nee,13
+17.4p,Peer Conference x3,ja,13
+17.5,Kers Kordia Zoet x3,nee,13
+17.5p,Kers Kordia Zoet x3,ja,13
+17.6,Kers Rheinische Schattenmorelle Zuur x3,nee,13
+17.6p,Kers Rheinische Schattenmorelle Zuur x3,ja,13
+17.7,Pruim Hauszwetsche x3,nee,13
+17.7p,Pruim Hauszwetsche x3,ja,13
+18.1,Stamrozen ROOD XXL x 3,nee,13
+18.1p,Stamrozen ROOD XXL x 3,ja,13
+18.2,Stamrozen ROZE XXL x 3,nee,13
+18.2p,Stamrozen ROZE XXL x 3,ja,13
+18.3,Stamrozen WIT XXL x 3,nee,13
+18.3p,Stamrozen WIT XXL x 3,ja,13
+18.4,Stamrozen 3-kleuren mix XXL x 3,nee,13
+18.4p,Stamrozen 3-kleuren mix XXL x 3,ja,13
+18.5,Stamrozen 3-kleuren mix XXL x 3 v2,nee,13
+18.5p,Stamrozen 3-kleuren mix XXL x 3 v2,ja,13
+18.6,Stamrozen 2-COLOUR XXL x 3,nee,13
+18.6p,Stamrozen 2-COLOUR XXL x 3,ja,13
+18.7,Stamrozen GEEL XXL x3,nee,13
+18.7p,Stamrozen GEEL XXL x3,ja,13
+18.8,Stamrozen ORANJE XXL x3,nee,13
+18.8p,Stamrozen ORANJE XXL x3,ja,13
+19.0,Salix Integra 'Hakuro Nishiki' XXL x 1,nee,13
+19.0p,Salix Integra 'Hakuro Nishiki' XXL x 1,ja,13
+19.1,Salix Integra 'Hakuro Nishiki' XXL x 2,nee,13
+19.1p,Salix Integra 'Hakuro Nishiki' XXL x 2,ja,13
+19.2,Salix Integra 'Hakuro Nishiki' XXL x 4,nee,13
+19.2p,Salix Integra 'Hakuro Nishiki' XXL x 4,ja,13
+21.0,Prunus Triloba XXL x 1,nee,13
+21.0p,Prunus Triloba XXL x 1,ja,13
+21.1,Prunus Triloba XXL x 2,nee,13
+21.1p,Prunus Triloba XXL x 2,ja,13
+21.2,Prunus Triloba XXL x 4,nee,13
+21.2p,Prunus Triloba XXL x 4,ja,13
+22.1,Eucalyptus Gunnii Azura op stam x1,nee,3
+22.1p,Eucalyptus Gunnii Azura op stam x1,ja,3
+22.2,Eucalyptus Gunnii Azura op stam x2,nee,3
+22.2p,Eucalyptus Gunnii Azura op stam x2,ja,3
+23.1,"Salix integra ""Flamingo"" struik x3",nee,8
+23.1p,"Salix integra ""Flamingo"" struik x3",ja,8
+23.2,"Salix integra ""Flamingo"" struik x6",nee,9
+23.2p,"Salix integra ""Flamingo"" struik x6",ja,9
+23.3,"Salix integra ""Flamingo"" op stam x 1",nee,10
+23.3p,"Salix integra ""Flamingo"" op stam x 1",ja,10
+23.4,"Salix integra ""Flamingo"" op stam x 2",nee,10
+23.4p,"Salix integra ""Flamingo"" op stam x 2",ja,10
+24.1,Photinia fras. 'Red Robin' x3,nee,15
+24.1p,Photinia fras. 'Red Robin' x3,ja,14 + 15
+24.2,Photinia fras. 'Red Robin' x6,nee,14
+24.2p,Photinia fras. 'Red Robin' x6,ja,2
+25.1,Kiwi 'Jenny' x3,nee,15
+25.1p,Kiwi 'Jenny' x3,ja,14 + 15
+25.2,Kiwi 'Jenny' x6,nee,14
+25.2p,Kiwi 'Jenny' x6,ja,2
+26.1,Bessen op stam x 4,nee,11
+26.1p,Bessen op stam x 4,ja,11
+26.2,Rode Aalbes op stam x 2,nee,11
+26.2p,Rode Aalbes op stam x 2,ja,11
+26.3,Zwarte Aalbes op stam x 2,nee,11
+26.3p,Zwarte Aalbes op stam x 2,ja,11
+26.4,Witte Aalbes op stam x 2,nee,11
+26.4p,Witte Aalbes op stam x 2,ja,11
+26.5,Rode Kruisbes op stam x 2,nee,11
+26.5p,Rode Kruisbes op stam x 2,ja,11
+27.1,Aardbeien Frigoplanten x 20,nee,15
+27.1p,Aardbeien Frigoplanten x 20,ja,15
+27.2,Aardbeien Frigoplanten x 40,nee,15
+27.2p,Aardbeien Frigoplanten x 40,ja,15
+27.3,Aardbeien Frigoplanten x 60,nee,15
+27.3p,Aardbeien Frigoplanten x 60,ja,15
+28.1,Geënte druivenplanten x 4,nee,3
+28.1p,Geënte druivenplanten x 4,ja,4
+28.2,Geënte druivenplanten x 2,nee,3
+28.2p,Geënte druivenplanten x 2,ja,3
+28.3,Geënte druivenplanten x 2,nee,3
+28.3p,Geënte druivenplanten x 2,ja,3
+29.1,Vitamine planten x 4,nee,1
+29.1p,Vitamine planten x 4,ja,14
+29.2,Vitamine planten x 8,nee,2
+29.2p,Vitamine planten x 8,ja,12
+30.1,Gojibes x4,nee,1
+30.1p,Gojibes x4,ja,14
+31.0,Klimhortensia x 2,nee,15
+31.0p,Klimhortensia x 2,ja,14 + 15
+31.1,Klimhortensia x 4,nee,1
+31.1p,Klimhortensia x 4,ja,14
+31.2,Klimhortensia x 8,nee,2
+31.2p,Klimhortensia x 8,ja,12
+32.1,Blauwe regenplanten x 3,nee,15
+32.1p,Blauwe regenplanten x 3,ja,14 + 15
+32.2,Blauwe regenplanten x 6,nee,14
+32.2p,Blauwe regenplanten x 6,ja,2
+33.1,Lonicera periclymenum x3,nee,15
+33.1p,Lonicera periclymenum x3,ja,14 + 15
+33.2,Lonicera periclymenum x6,nee,14
+33.2p,Lonicera periclymenum x6,ja,2
+34.1,Parthenocissus quinquefolia x3,nee,15
+34.1p,Parthenocissus quinquefolia x3,ja,14 + 15
+34.2,Parthenocissus quinquefolia x6,nee,14
+34.2p,Parthenocissus quinquefolia x6,ja,2
+35.1,Klimplanten mix x8,nee,2
+35.1p,Klimplanten mix x8,ja,12
+36.1,Geurende grootbloemige tuinrozen x 4,nee,3
+36.1p,Geurende grootbloemige tuinrozen x 4,ja,4
+36.2,Geurende Grootbloemige tuinrozen ROOD x 4,nee,3
+36.2p,Geurende Grootbloemige tuinrozen ROOD x 4,ja,4
+36.3,Geurende Grootbloemige tuinrozen ROZE x 4,nee,3
+36.3p,Geurende Grootbloemige tuinrozen ROZE x 4,ja,4
+36.4,Geurende Grootbloemige tuinrozen GEEL x 4,nee,3
+36.4p,Geurende Grootbloemige tuinrozen GEEL x 4,ja,4
+36.5,Geurende Grootbloemige tuinrozen 2-KLEUR x 4,nee,3
+36.5p,Geurende Grootbloemige tuinrozen 2-KLEUR x 4,ja,4
+37.0,Thunbergia oranje x 2,nee,15
+37.0p,Thunbergia oranje x 2,ja,1
+39.0,Vedergras (Stipa Ponytails) x 3,nee,15
+39.0p,Vedergras (Stipa Ponytails) x 3,ja,14 + 15
+39.1,Vedergras (Stipa Ponytails) x 4,nee,1
+39.1p,Vedergras (Stipa Ponytails) x 4,ja,14
+39.2,Vedergras (Stipa Ponytails) x 8,nee,2
+39.2p,Vedergras (Stipa Ponytails) x 8,ja,12
+40.1,Camellia struik 'Japanse roos' XL x 1 Roze,nee,3
+40.1p,Camellia struik 'Japanse roos' XL x 1 Roze,ja,3
+40.2,Camellia struik 'Japanse roos' XL x 2 Roze,nee,3
+40.2p,Camellia struik 'Japanse roos' XL x 2 Roze,ja,3
+40.3,Camellia struik 'Japanse roos' XL x 1 Rood,nee,3
+40.3p,Camellia struik 'Japanse roos' XL x 1 Rood,ja,3
+40.4,Camellia struik 'Japanse roos' XL x 2 Rood,nee,3
+40.4p,Camellia struik 'Japanse roos' XL x 2 Rood,ja,3
+40.5,Camellia struik 'Japanse roos' XL x 1 Wit,nee,3
+40.5p,Camellia struik 'Japanse roos' XL x 1 Wit,ja,3
+40.6,Camellia struik 'Japanse roos' XL x 2 Wit,nee,3
+40.6p,Camellia struik 'Japanse roos' XL x 2 Wit,ja,3
+40.7,Camellia struik 'Japanse roos' XL x 1 Tricolor,nee,3
+40.7p,Camellia struik 'Japanse roos' XL x 1 Tricolor,ja,3
+40.8,Camellia struik 'Japanse roos' XL x 2 Tricolor,nee,3
+40.8p,Camellia struik 'Japanse roos' XL x 2 Tricolor,ja,3
+41.1,Bamboe Fargesia XL C2 x1,nee,3
+41.1p,Bamboe Fargesia XL C2 x1,ja,3
+41.2,Bamboe Fargesia XL C2 x2,nee,3
+41.2p,Bamboe Fargesia XL C2 x2,ja,3
+41.3,Bamboe Fargesia Medium C1 x2,nee,8
+41.3p,Bamboe Fargesia Medium C1 x2,ja,8
+41.4,Bamboe Fargesia Medium C1 x4,nee,9
+41.4p,Bamboe Fargesia Medium C1 x4,ja,9
+44.1,Paeonia lactiflora Red x3,nee,15
+44.1p,Paeonia lactiflora Red x3,ja,14 + 15
+44.2,Paeonia lactiflora Red x6,nee,14
+44.2p,Paeonia lactiflora Red x6,ja,2
+44.3,Paeonia lactiflora Mix x3,nee,15
+44.3p,Paeonia lactiflora Mix x3,ja,14 + 15
+44.4,Paeonia lactiflora Mix x6,nee,14
+44.4p,Paeonia lactiflora Mix x6,ja,2
+44.5,Paeonia lactiflora Roze x 3,nee,15
+44.5p,Paeonia lactiflora Roze x 3,ja,14 + 15
+44.6,Paeonia lactiflora Roze x 6,nee,14
+44.6p,Paeonia lactiflora Roze x 6,ja,2
+44.7,Paeonia lactiflora Wit x 3,nee,15
+44.7p,Paeonia lactiflora Wit x 3,ja,14 + 15
+44.8,Paeonia lactiflora Wit x 6,nee,14
+44.8p,Paeonia lactiflora Wit x 6,ja,2
+50.1,Nandina Domestica Obsessed x1,nee,3
+50.1p,Nandina Domestica Obsessed x1,ja,3
+50.2,Nandina Domestica Obsessed x2,nee,3
+50.2p,Nandina Domestica Obsessed x2,ja,3
+52.1,Pennisetum alap. 'Hameln x4,nee,1
+52.1p,Pennisetum alap. 'Hameln x4,ja,14
+52.2,Pennisetum alap. 'Hameln x8,nee,2
+52.2p,Pennisetum alap. 'Hameln x8,ja,12
+53.1,Imperata cyl. 'Red Baron' x4,nee,1
+53.1p,Imperata cyl. 'Red Baron' x4,ja,14
+53.2,Imperata cyl. 'Red Baron' x8,nee,2
+53.2p,Imperata cyl. 'Red Baron' x8,ja,12
+54.1,Liriope muscari x4,nee,1
+54.1p,Liriope muscari x4,ja,14
+54.2,Liriope muscari x8,nee,2
+54.2p,Liriope muscari x8,ja,12
+55.1,Festuca glauca 'Elija Blue' x4,nee,1
+55.1p,Festuca glauca 'Elija Blue' x4,ja,14
+55.2,Festuca glauca 'Elija Blue' x8,nee,2
+55.2p,Festuca glauca 'Elija Blue' x8,ja,12
+56.1,Grassen Mix Premium x8,nee,2
+56.1p,Grassen Mix Premium x8,ja,12
+56.2,Grassen Mix Excellent x8,nee,2
+56.2p,Grassen Mix Excellent x8,ja,12
+56.3,"Grassen Mix x4 (Stipa, Pen., Imperata, Festuca)",nee,1
+56.3p,"Grassen Mix x4 (Stipa, Pen., Imperata, Festuca)",ja,14
+56.4,"Grassen Mix x8 (Stipa, Pen., Imperata, Festuca)",nee,2
+56.4p,"Grassen Mix x8 (Stipa, Pen., Imperata, Festuca)",ja,12
+57.1,Miscanthus sin. 'Kleine Silbersp.' x 1,nee,11
+57.1p,Miscanthus sin. 'Kleine Silbersp.' x 1,ja,11
+57.2,Miscanthus sin. 'Red Chief' x 1,nee,11
+57.2p,Miscanthus sin. 'Red Chief' x 1,ja,11
+57.3,Miscanthus sin. 'Zebrinus' x 1,nee,11
+57.3p,Miscanthus sin. 'Zebrinus' x 1,ja,11
+58.1,Pennisetum al. 'Hameln' x 1,nee,11
+58.1p,Pennisetum al. 'Hameln' x 1,ja,11
+58.2,Pennisetum al. 'Hameln' x 2,nee,11
+58.2p,Pennisetum al. 'Hameln' x 2,ja,11
+60.1,Ilex meserveae 'Blue Maid' x 3,nee,15
+60.1p,Ilex meserveae 'Blue Maid' x 3,ja,14 + 15
+60.2,Ilex meserveae 'Blue Maid' x 6,nee,14
+60.2p,Ilex meserveae 'Blue Maid' x 6,ja,2
+61.1,Ilex aquifolium 'Argentea Marginata' x 3,nee,15
+61.1p,Ilex aquifolium 'Argentea Marginata' x 3,ja,14 + 15
+61.2,Ilex aquifolium 'Argentea Marginata' x 6,nee,14
+61.2p,Ilex aquifolium 'Argentea Marginata' x 6,ja,2
+62.1,Prunus lusitanica 'Angustifolia' x 3,nee,15
+62.1p,Prunus lusitanica 'Angustifolia' x 3,ja,14 + 15
+62.2,Prunus lusitanica 'Angustifolia' x 6,nee,14
+62.2p,Prunus lusitanica 'Angustifolia' x 6,ja,2
+63.1,Evergreen Mix x 4,nee,1
+63.1p,Evergreen Mix x 4,ja,14
+63.2,Evergreen Mix x 8,nee,2
+63.2p,Evergreen Mix x 8,ja,12
+64.1,Elaeagnus ebbingei x 3,nee,15
+64.1p,Elaeagnus ebbingei x 3,ja,14 + 15
+64.2,Elaeagnus ebbingei x 6,nee,14
+64.2p,Elaeagnus ebbingei x 6,ja,2
+70.1,Azalea Paars x 3,nee,15
+70.1p,Azalea Paars x 3,ja,14 + 15
+70.2,Azalea Rood x 3,nee,15
+70.2p,Azalea Rood x 3,ja,14 + 15
+70.3,Azalea Roze x 3,nee,15
+70.3p,Azalea Roze x 3,ja,14 + 15
+70.4,Azalea Wit x 3,nee,15
+70.4p,Azalea Wit x 3,ja,14 + 15
+70.5,Azalea Mix x 4,nee,1
+70.5p,Azalea Mix x 4,ja,14
+70.6,Azalea Mix x 8,nee,2
+70.6p,Azalea Mix x 8,ja,12
+70.7,Azalea Rood x 6,nee,14
+70.7p,Azalea Rood x 6,ja,2
+70.8,Azalea Roze x 6,nee,14
+70.8p,Azalea Roze x 6,ja,2
+70.9,Azalea Wit x 6,nee,14
+70.9p,Azalea Wit x 6,ja,2
+70.10,Azalea Mix x 3,nee,15
+70.10p,Azalea Mix x 3,ja,14 + 15
+70.11,Azalea Mix x 6,nee,14
+70.11p,Azalea Mix x 6,ja,2
+70.12,Azalea Paars x 6,nee,14
+70.12p,Azalea Paars x 6,ja,2
+71.0,Rhododendron 'Cunningham's White' x 3,nee,15
+71.0p,Rhododendron 'Cunningham's White' x 3,ja,14 + 15
+71.1,Rhododendron 'Cunningham's White' x 6,nee,14
+71.1p,Rhododendron 'Cunningham's White' x 6,ja,2
+71.2,Rhododendron 'Roseum Elegans' x 3,nee,15
+71.2p,Rhododendron 'Roseum Elegans' x 3,ja,14 + 15
+71.3,Rhododendron 'Roseum Elegans' x 6,nee,14
+71.3p,Rhododendron 'Roseum Elegans' x 6,ja,2
+71.4,Rhododendron 'Nova Zembla' x 3,nee,15
+71.4p,Rhododendron 'Nova Zembla' x 3,ja,14 + 15
+71.5,Rhododendron 'Nova Zembla' x 6,nee,14
+71.5p,Rhododendron 'Nova Zembla' x 6,ja,2
+71.6,Rhododendron 'Cosmopolitan' x 3,nee,15
+71.6p,Rhododendron 'Cosmopolitan' x 3,ja,14 + 15
+71.7,Rhododendron 'Cosmopolitan' x 6,nee,14
+71.7p,Rhododendron 'Cosmopolitan' x 6,ja,2
+71.8,Rhododendron Mix x 4,nee,1
+71.8p,Rhododendron Mix x 4,ja,14
+71.9,Rhododendron Mix x 8,nee,2
+71.9p,Rhododendron Mix x 8,ja,12
+72.0,Rhododendron P13 Purple x 3,nee,8
+72.0p,Rhododendron P13 Purple x 3,ja,8
+72.1,Rhododendron P13 Purple x 6,nee,9
+72.1p,Rhododendron P13 Purple x 6,ja,9
+72.2,Rhododendron P13 White x 3,nee,8
+72.2p,Rhododendron P13 White x 3,ja,8
+72.3,Rhododendron P13 White x 6,nee,9
+72.3p,Rhododendron P13 White x 6,ja,9
+72.4,Rhododendron P13 Red x 3,nee,8
+72.4p,Rhododendron P13 Red x 3,ja,8
+72.5,Rhododendron P13 Red x 6,nee,9
+72.5p,Rhododendron P13 Red x 6,ja,9
+72.6,Rhododendron P13 Pink x 3,nee,8
+72.6p,Rhododendron P13 Pink x 3,ja,8
+72.7,Rhododendron P13 Pink x 6,nee,9
+72.7p,Rhododendron P13 Pink x 6,ja,9
+72.8,"Rhododendron P13 Mix x 3 (Rood, Roze, Wit)",nee,8
+72.8p,"Rhododendron P13 Mix x 3 (Rood, Roze, Wit)",ja,8
+72.9,"Rhododendron P13 Mix x 6 (Rood, Roze, Wit)",nee,9
+72.9p,"Rhododendron P13 Mix x 6 (Rood, Roze, Wit)",ja,9
+100.1,Olijfbomen winterhard op stam XXL x 1,nee,10
+100.1p,Olijfbomen winterhard op stam XXL x 1,ja,10
+100.2,Olijfbomen winterhard op stam XXL x 2,nee,11
+100.2p,Olijfbomen winterhard op stam XXL x 2,ja,11
+100.3,Olijfbomen winterhard op stam medium x 1,nee,3
+100.3p,Olijfbomen winterhard op stam medium x 1,ja,3
+100.4,Olijfbomen winterhard op stam medium x 2,nee,3
+100.4p,Olijfbomen winterhard op stam medium x 2,ja,3
+100.5,Olijfbomen winterhard struik x1,nee,3
+100.5p,Olijfbomen winterhard struik x1,ja,3
+100.6,Olijfbomen winterhard struik x2,nee,3
+100.6p,Olijfbomen winterhard struik x2,ja,3
+101.0,Tropische oleander planten x 2,nee,15
+101.0p,Tropische oleander planten x 2,ja,1
+101.1,Tropische oleander planten x 4,nee,1
+101.1p,Tropische oleander planten x 4,ja,14
+101.2,Tropische oleander planten x 8,nee,2
+101.2p,Tropische oleander planten x 8,ja,12
+101.3,Tropische oleander planten x 2 Wit,nee,15
+101.3p,Tropische oleander planten x 2 Wit,ja,1
+101.4,Tropische oleander planten x 4 Wit,nee,1
+101.4p,Tropische oleander planten x 4 Wit,ja,14
+101.5,Tropische oleander planten x 8 Wit,nee,2
+101.5p,Tropische oleander planten x 8 Wit,ja,12
+101.6,Tropische oleander planten x 4 Mix,nee,1
+101.6p,Tropische oleander planten x 4 Mix,ja,14
+101.7,Tropische oleander planten x 8 Mix,nee,2
+101.7p,Tropische oleander planten x 8 Mix,ja,12
+102.1,Set van 3 bananenplanten,nee,9
+102.1p,Set van 3 bananenplanten,ja,9
+102.2,Set van 6 bananenplanten,nee,9
+102.2p,Set van 6 bananenplanten,ja,9
+103.1,Asimina triloba – Pawpaw / Indianenbanaan x 1,nee,15
+103.1p,Asimina triloba – Pawpaw / Indianenbanaan x 1,ja,15
+104.1,Strelitzia Reginae x 3,nee,15
+104.1p,Strelitzia Reginae x 3,ja,14 + 15
+104.2,Strelitzia Reginae x 6,nee,14
+104.2p,Strelitzia Reginae x 6,ja,2
+105.0,Calliandra surinamensis 'Dixie Pink' x 2,nee,15
+105.0p,Calliandra surinamensis 'Dixie Pink' x 2,ja,14 + 15
+105.1,Calliandra surinamensis 'Dixie Pink' x 3,nee,15
+105.1p,Calliandra surinamensis 'Dixie Pink' x 3,ja,1
+105.2,Calliandra surinamensis 'Dixie Pink' x 6,nee,14
+105.2p,Calliandra surinamensis 'Dixie Pink' x 6,ja,2
+106.0,Citrus trifoliata x 2,nee,15
+106.0p,Citrus trifoliata x 2,ja,14 + 15
+106.1,Citrus trifoliata x 3,nee,15
+106.1p,Citrus trifoliata x 3,ja,1
+106.2,Citrus trifoliata x 6,nee,14
+106.2p,Citrus trifoliata x 6,ja,2
+107.0,Choisya ternata 'Sundance' x 2,nee,15
+107.0p,Choisya ternata 'Sundance' x 2,ja,14 + 15
+107.1,Choisya ternata 'Sundance' x 3,nee,15
+107.1p,Choisya ternata 'Sundance' x 3,ja,1
+107.2,Choisya ternata 'Sundance' x 6,nee,14
+107.2p,Choisya ternata 'Sundance' x 6,ja,2
+114.1,Exotic kamerplanten mix x4,nee,9
+114.1p,Exotic kamerplanten mix x4,ja,9
+115.1,Trendy kamerplanten mix x4,nee,9
+115.1p,Trendy kamerplanten mix x4,ja,9
+116.1,Premium kamerplanten mix x4,nee,9
+116.1p,Premium kamerplanten mix x4,ja,9
+117.1,Luchtzuiverende Kamerplanten x 5,nee,9
+117.1p,Luchtzuiverende Kamerplanten x 5,ja,9
+118.1,Tropische kamerplanten x 4,nee,9
+118.1p,Tropische kamerplanten x 4,ja,9
+119.1,Onderhoudsvriendelijke kamerplanten x 4,nee,9
+119.1p,Onderhoudsvriendelijke kamerplanten x 4,ja,9
+120.1,Drakenbloedboom x 4,nee,9
+120.1p,Drakenbloedboom x 4,ja,9
+121.1,Ficus Treurvijgen kamerplantenset x 3,nee,8
+121.1p,Ficus Treurvijgen kamerplantenset x 3,ja,8
+122.1,Varen kamerplanten set x 3,nee,8
+122.1p,Varen kamerplanten set x 3,ja,8
+123.1,Oriental kamerplanten set x 3,nee,8
+123.1p,Oriental kamerplanten set x 3,ja,8
+128.1,Chamaedorea Elegans Large x 1,nee,3
+128.1p,Chamaedorea Elegans Large x 1,ja,3
+128.2,Chamaedorea Elegans Large x 2,nee,3
+128.2p,Chamaedorea Elegans Large x 2,ja,3
+141.1,Cycas Revoluta x1,nee,3
+141.1p,Cycas Revoluta x1,ja,3
+141.2,Cycas Revoluta x2,nee,3
+141.2p,Cycas Revoluta x2,ja,3
+141.3,Cycas Revoluta x 1 Large,nee,10
+141.3p,Cycas Revoluta x 1 Large,ja,10
+141.4,Cycas Revoluta x 2 Large,nee,11
+141.4p,Cycas Revoluta x 2 Large,ja,11
+150.1,Chamaerops humilis medium x 1,nee,3
+150.1p,Chamaerops humilis medium x 1,ja,3
+150.2,Chamaerops humilis medium x 2,nee,10
+150.2p,Chamaerops humilis medium x 2,ja,10
+150.3,Chamaerops humilis large x 1,nee,11
+150.3p,Chamaerops humilis large x 1,ja,11
+150.4,Chamaerops humilis large x 2,nee,11
+150.4p,Chamaerops humilis large x 2,ja,11
+151.1,Phoenix canariensis medium x 1,nee,3
+151.1p,Phoenix canariensis medium x 1,ja,3
+151.2,Phoenix canariensis medium x 2,nee,10
+151.2p,Phoenix canariensis medium x 2,ja,10
+151.3,Phoenix canariensis large x 1,nee,10
+151.3p,Phoenix canariensis large x 1,ja,10
+151.4,Phoenix canariensis large x 2,nee,11
+151.4p,Phoenix canariensis large x 2,ja,11
+152.1,Trachycarpus fortunei medium x 1,nee,3
+152.1p,Trachycarpus fortunei medium x 1,ja,3
+152.2,Trachycarpus fortunei medium x 2,nee,10
+152.2p,Trachycarpus fortunei medium x 2,ja,10
+152.3,Trachycarpus fortunei large x 1,nee,11
+152.3p,Trachycarpus fortunei large x 1,ja,11
+152.4,Trachycarpus fortunei large x 2,nee,11
+152.4p,Trachycarpus fortunei large x 2,ja,11
+153.1,Washingtonia robusta medium x 1,nee,3
+153.1p,Washingtonia robusta medium x 1,ja,3
+153.2,Washingtonia robusta medium x 2,nee,10
+153.2p,Washingtonia robusta medium x 2,ja,10
+153.3,Washingtonia robusta large x 1,nee,11
+153.3p,Washingtonia robusta large x 1,ja,11
+153.4,Washingtonia robusta large x 2,nee,11
+153.4p,Washingtonia robusta large x 2,ja,11
+160.1,Palmen mix x 4,nee,11
+160.1p,Palmen mix x 4,ja,11
+161.0,Olea europaea 1/2 stam XL x 1,nee,10
+161.0p,Olea europaea 1/2 stam XL x 1,ja,10
+161.1,Olea europaea 1/2 stam XL x 2,nee,10
+161.1p,Olea europaea 1/2 stam XL x 2,ja,10
+161.2,Olea europaea 1/2 stam XL x 4,nee,11
+161.2p,Olea europaea 1/2 stam XL x 4,ja,11
+200.0,C2 - Blauwe Bes x 2,nee,3
+200.0p,C2 - Blauwe Bes x 2,ja,3
+200.1,C2 - Braam x 2,nee,3
+200.1p,C2 - Braam x 2,ja,3
+200.2,C2 - Druif Blauw x 2,nee,3
+200.2p,C2 - Druif Blauw x 2,ja,3
+200.3,C2 - Druif Wit x 2,nee,3
+200.3p,C2 - Druif Wit x 2,ja,3
+200.4,C2 - Framboos x 2,nee,3
+200.4p,C2 - Framboos x 2,ja,3
+200.5,C2 - Rode Bes x 2,nee,3
+200.5p,C2 - Rode Bes x 2,ja,3
+200.6,C2 - Kruisbes Groen x 2,nee,3
+200.6p,C2 - Kruisbes Groen x 2,ja,3
+200.7,C2 - Kruisbes Rood x 2,nee,3
+200.7p,C2 - Kruisbes Rood x 2,ja,3
+200.8,C2 - Witte Bes x 2,nee,3
+200.8p,C2 - Witte Bes x 2,ja,3
+200.9,C2 - Zwarte Bes x 2,nee,3
+200.9p,C2 - Zwarte Bes x 2,ja,3
+201.0,"C2 - Blauwe Bes, Rode Bes, Witte Bes, Zwarte Bes",nee,9
+201.0p,"C2 - Blauwe Bes, Rode Bes, Witte Bes, Zwarte Bes",ja,9
+201.1,"C2 - Blauwe Bes, Braam, Framboos, Rode Bes",nee,9
+201.1p,"C2 - Blauwe Bes, Braam, Framboos, Rode Bes",ja,9
+201.2,"C2 - Druif Blauw, Druif Wit, Framboos, Braam",nee,9
+201.2p,"C2 - Druif Blauw, Druif Wit, Framboos, Braam",ja,9
+201.3,"C2 - Kruisbes Gr, Kruisbes Ro, Rode Bes, Zwarte Bes",nee,9
+201.3p,"C2 - Kruisbes Gr, Kruisbes Ro, Rode Bes, Zwarte Bes",ja,9
+201.4,"C2 - Blauwe Bes, Braam, Druif Wit, Framboos",nee,9
+201.4p,"C2 - Blauwe Bes, Braam, Druif Wit, Framboos",ja,9
+201.5,"C2 - Blauwe Bes, Druif Blauw, Framboos, Rode Bes",nee,9
+201.5p,"C2 - Blauwe Bes, Druif Blauw, Framboos, Rode Bes",ja,9
+201.6,"C2 - Kruisbes Gr, Kruisbes Rood, Bl Bes, Witte Bes",nee,9
+201.6p,"C2 - Kruisbes Gr, Kruisbes Rood, Bl Bes, Witte Bes",ja,9
+202.0,C4 - Zuil Appel x 2,nee,10
+202.0p,C4 - Zuil Appel x 2,ja,10
+202.1,C4 - Zuil Peer x 2,nee,10
+202.1p,C4 - Zuil Peer x 2,ja,10
+202.2,C4 - Zuil Appel en Peer Mix x 2,nee,10
+202.2p,C4 - Zuil Appel en Peer Mix x 2,ja,10
+202.3,C4 - Zuil Appel x 1,nee,10
+202.3p,C4 - Zuil Appel x 1,ja,10
+202.4,C4 - Zuil Peer x 1,nee,10
+202.4p,C4 - Zuil Peer x 1,ja,10
+204.0,C2 - Wisteria sinensis 'Alba' Wit x 2,nee,10
+204.0p,C2 - Wisteria sinensis 'Alba' Wit x 2,ja,10
+204.1,C2 - Wisteria sinensis 'Rosea' Roze x 2,nee,10
+204.1p,C2 - Wisteria sinensis 'Rosea' Roze x 2,ja,10
+204.2,C2 - Wisteria sinensis 'Prolific' Blauw x 2,nee,10
+204.2p,C2 - Wisteria sinensis 'Prolific' Blauw x 2,ja,10
+204.3,C2 - Wisteria sinensis Mix x 3,nee,10
+204.3p,C2 - Wisteria sinensis Mix x 3,ja,10
+206.1,C2 - Hydrangea macr. Blauw x 1,nee,3
+206.1p,C2 - Hydrangea macr. Blauw x 1,ja,3
+206.2,C2 - Hydrangea macr. Rood x 1,nee,3
+206.2p,C2 - Hydrangea macr. Rood x 1,ja,3
+206.3,C2 - Hydrangea macr. Roze x 1,nee,3
+206.3p,C2 - Hydrangea macr. Roze x 1,ja,3
+206.4,C2 - Hydrangea macr. Wit x 1,nee,3
+206.4p,C2 - Hydrangea macr. Wit x 1,ja,3
+207.0,C2 - Hydrangea macr. Blauw x 2,nee,3
+207.0p,C2 - Hydrangea macr. Blauw x 2,ja,3
+207.1,C2 - Hydrangea macr. Rood x 2,nee,3
+207.1p,C2 - Hydrangea macr. Rood x 2,ja,3
+207.2,C2 - Hydrangea macr. Roze x 2,nee,3
+207.2p,C2 - Hydrangea macr. Roze x 2,ja,3
+207.3,C2 - Hydrangea macr. Wit x 2,nee,3
+207.3p,C2 - Hydrangea macr. Wit x 2,ja,3
+207.4,C2 - Hydrangea macr. Mix x 4,nee,4
+207.4p,C2 - Hydrangea macr. Mix x 4,ja,4
+209.0,C2 - Cornus alba 'Siberica' x 2,nee,3
+209.0p,C2 - Cornus alba 'Siberica' x 2,ja,3
+209.1,C2 - Deutzia scabra x 2,nee,3
+209.1p,C2 - Deutzia scabra x 2,ja,3
+209.2,C2 - Forsythia int. 'Spectabilis' x 2,nee,3
+209.2p,C2 - Forsythia int. 'Spectabilis' x 2,ja,3
+209.3,C2 - Philadelphus 'Virginal' x 2,nee,3
+209.3p,C2 - Philadelphus 'Virginal' x 2,ja,3
+209.4,C2 - Weigela 'Bristol Ruby' x 2,nee,3
+209.4p,C2 - Weigela 'Bristol Ruby' x 2,ja,3
+209.5,C2 - Heester Mix x 5,nee,4
+209.5p,C2 - Heester Mix x 5,ja,4
+210.0,C3 - Hibiscus syr. 'Totus Albus' Wit x 2,nee,3
+210.0p,C3 - Hibiscus syr. 'Totus Albus' Wit x 2,ja,3
+210.1,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw x 2,nee,3
+210.1p,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw x 2,ja,3
+210.2,C3 - Hibiscus syr. 'Woodbridge' Roze x 2,nee,3
+210.2p,C3 - Hibiscus syr. 'Woodbridge' Roze x 2,ja,3
+210.3,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart x 2,nee,3
+210.3p,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart x 2,ja,3
+210.4,C3 - Hibiscus syr. Mix x 4,nee,4
+210.4p,C3 - Hibiscus syr. Mix x 4,ja,4
+230.1,Cotoneaster dammeri x 8 (per m2),nee,9
+230.1p,Cotoneaster dammeri x 8 (per m2),ja,9
+231.1,Lonicera nitida x 8 (per m2),nee,9
+231.1p,Lonicera nitida x 8 (per m2),ja,9
+232.1,Vinca minor (lila) x 8 (per m2),nee,9
+232.1p,Vinca minor (lila) x 8 (per m2),ja,9
+233.1,Vinca minor 'Albus' (wit) x 8 (per m2),nee,9
+233.1p,Vinca minor 'Albus' (wit) x 8 (per m2),ja,9
+234.1,Pachysandra terminalis x 8 (per m2),nee,9
+234.1p,Pachysandra terminalis x 8 (per m2),ja,9
+235.1,Hedera hibernica x 8 (per m2),nee,9
+235.1p,Hedera hibernica x 8 (per m2),ja,9
+236.0,Lavandula angustifolia 'Hidcote' x 4,nee,1
+236.0p,Lavandula angustifolia 'Hidcote' x 4,ja,14
+236.1,Lavandula angustifolia 'Hidcote' x 8 (per m2),nee,9
+236.1p,Lavandula angustifolia 'Hidcote' x 8 (per m2),ja,9
+237.0,Geranium 'Rozanne' x 3,nee,15
+237.0p,Geranium 'Rozanne' x 3,ja,14 + 15
+237.1,Geranium 'Rozanne' x 7 (per m2),nee,9
+237.1p,Geranium 'Rozanne' x 7 (per m2),ja,9
+249.0,Trachelospermum jasminoides P9 x 2 wit,nee,15
+249.0p,Trachelospermum jasminoides P9 x 2 wit,ja,1
+249.1,Trachelospermum jasminoides P9 x 3 wit,nee,15
+249.1p,Trachelospermum jasminoides P9 x 3 wit,ja,14 + 15
+249.2,Trachelospermum jasminoides P9 x 6 wit,nee,14
+249.2p,Trachelospermum jasminoides P9 x 6 wit,ja,2
+249.3,Trachelospermum jasminoides P9 x 3 roze,nee,15
+249.3p,Trachelospermum jasminoides P9 x 3 roze,ja,14 + 15
+249.4,Trachelospermum jasminoides P9 x 6 roze,nee,14
+249.4p,Trachelospermum jasminoides P9 x 6 roze,ja,2
+250.1,Trachelospermum jasminoides XXL wit x 1,nee,11
+250.1p,Trachelospermum jasminoides XXL wit x 1,ja,11
+250.2,Trachelospermum jasminoides XXL wit x 2,nee,11
+250.2p,Trachelospermum jasminoides XXL wit x 2,ja,11
+251.1,Trachelospermum jasminoides XXL roze x 1,nee,11
+251.1p,Trachelospermum jasminoides XXL roze x 1,ja,11
+251.2,Trachelospermum jasminoides XXL roze x 2,nee,11
+251.2p,Trachelospermum jasminoides XXL roze x 2,ja,11
+252.1,Trachelospermum jasminoides XXL geel x 1,nee,11
+252.1p,Trachelospermum jasminoides XXL geel x 1,ja,11
+252.2,Trachelospermum jasminoides XXL geel x 2,nee,11
+252.2p,Trachelospermum jasminoides XXL geel x 2,ja,11
+253.1,Ceanothus thyrsiflorus 'Repens'  XL Pyramide x 1,nee,3
+253.1p,Ceanothus thyrsiflorus 'Repens'  XL Pyramide x 1,ja,3
+253.2,Ceanothus thyrsiflorus 'Repens'  XL Pyramide x 2,nee,10
+253.2p,Ceanothus thyrsiflorus 'Repens'  XL Pyramide x 2,ja,10
+254.1,Campsis radicans 'Flava' XXL geel x 1,nee,11
+254.1p,Campsis radicans 'Flava' XXL geel x 1,ja,11
+254.2,Campsis radicans 'Flava' XXL geel x 2,nee,11
+254.2p,Campsis radicans 'Flava' XXL geel x 2,ja,11
+255.1,Campsis radicans  XXL oranje x 1,nee,11
+255.1p,Campsis radicans  XXL oranje x 1,ja,11
+255.2,Campsis radicans  XXL oranje x 2,nee,11
+255.2p,Campsis radicans  XXL oranje x 2,ja,11
+256.1,Campsis tagliabuana 'Madame Galen'  XXL rood x 1,nee,11
+256.1p,Campsis tagliabuana 'Madame Galen'  XXL rood x 1,ja,11
+256.2,Campsis tagliabuana 'Madame Galen'  XXL rood x 2,nee,11
+256.2p,Campsis tagliabuana 'Madame Galen'  XXL rood x 2,ja,11
+257.1,Lonicera henryi 'Copper Beauty' XXL geel x 1,nee,11
+257.1p,Lonicera henryi 'Copper Beauty' XXL geel x 1,ja,11
+257.2,Lonicera henryi 'Copper Beauty' XXL geel x 2,nee,11
+257.2p,Lonicera henryi 'Copper Beauty' XXL geel x 2,ja,11
+258.1,Lonicera heckrottii 'American Beauty' XXL rood/geel x 1,nee,11
+258.1p,Lonicera heckrottii 'American Beauty' XXL rood/geel x 1,ja,11
+258.2,Lonicera heckrottii 'American Beauty' XXL rood/geel x 2,nee,11
+258.2p,Lonicera heckrottii 'American Beauty' XXL rood/geel x 2,ja,11
+259.1,Eucalyptus 'Silver Dollar' XXL x 1,nee,11
+259.1p,Eucalyptus 'Silver Dollar' XXL x 1,ja,11
+259.2,Eucalyptus 'Silver Dollar' XXL x 2,nee,11
+259.2p,Eucalyptus 'Silver Dollar' XXL x 2,ja,11
+260.1,Passiflora caerulea XXL blauw x 1,nee,11
+260.1p,Passiflora caerulea XXL blauw x 1,ja,11
+260.2,Passiflora caerulea XXL blauw x 2,nee,11
+260.2p,Passiflora caerulea XXL blauw x 2,ja,11
+261.1,Passiflora caerulea 'Victoria' XXL roze/paars x 1,nee,11
+261.1p,Passiflora caerulea 'Victoria' XXL roze/paars x 1,ja,11
+261.2,Passiflora caerulea 'Victoria' roze/paars x 2,nee,11
+261.2p,Passiflora caerulea 'Victoria' roze/paars x 2,ja,11
+262.1,Passiflora caerulea 'Constance Elliot' XXL wit x 1,nee,11
+262.1p,Passiflora caerulea 'Constance Elliot' XXL wit x 1,ja,11
+262.2,Passiflora caerulea 'Constance Elliot' XXL wit x 2,nee,11
+262.2p,Passiflora caerulea 'Constance Elliot' XXL wit x 2,ja,11
+263.1,Bougainvillea glabra 'Alexandra' paars op rek x 1,nee,3
+263.1p,Bougainvillea glabra 'Alexandra' paars op rek x 1,ja,3
+263.2,Bougainvillea glabra 'Alexandra' paars op rek x 2,nee,10
+263.2p,Bougainvillea glabra 'Alexandra' paars op rek x 2,ja,10
+264.1,Ficus carica 'Brown Turkey' x 1 - P17,nee,3
+264.1p,Ficus carica 'Brown Turkey' x 1 - P17,ja,3
+264.2,Ficus carica 'Brown Turkey' x 2 - P17,nee,3
+264.2p,Ficus carica 'Brown Turkey' x 2 - P17,ja,3
+269.1,P10 - Fargesia 'Rufa' groene Bamboe x2,nee,15
+269.1p,P10 - Fargesia 'Rufa' groene Bamboe x2,ja,1
+270.0,C1 - Fargesia 'Rood'  x2,nee,8
+270.0p,C1 - Fargesia 'Rood'  x2,ja,8
+270.1,C1 - Fargesia 'Rood'  x3,nee,8
+270.1p,C1 - Fargesia 'Rood'  x3,ja,8
+270.2,C1 - Fargesia 'Rood'  x6,nee,9
+270.2p,C1 - Fargesia 'Rood'  x6,ja,9
+271.1,C1 - Fargesia 'Groen'  x3,nee,8
+271.1p,C1 - Fargesia 'Groen'  x3,ja,8
+271.2,C1 - Fargesia 'Groen'  x6,nee,9
+271.2p,C1 - Fargesia 'Groen'  x6,ja,9
+272.1,C2 - Fargesia 'Groen'  x2,nee,3
+272.1p,C2 - Fargesia 'Groen'  x2,ja,3
+272.2,C2 - Fargesia 'Groen'  x4,nee,4
+272.2p,C2 - Fargesia 'Groen'  x4,ja,4
+272.3,C2 - Fargesia 'Groen'  x6,nee,4
+272.3p,C2 - Fargesia 'Groen'  x6,ja,4
+273.1,C2 - Fargesia 'Rood'  x2,nee,3
+273.1p,C2 - Fargesia 'Rood'  x2,ja,3
+273.2,C2 - Fargesia 'Rood'  x4,nee,4
+273.2p,C2 - Fargesia 'Rood'  x4,ja,4
+273.3,C2 - Fargesia 'Rood'  x6,nee,4
+273.3p,C2 - Fargesia 'Rood'  x6,ja,4
+274.1,"Acer palmatum Mix P10,5 x4",nee,7
+274.1p,"Acer palmatum Mix P10,5 x4",ja,7
+274.2,"Acer palmatum 'Atropurpureum' P10,5  x2",nee,7
+274.2p,"Acer palmatum 'Atropurpureum' P10,5  x2",ja,7
+274.3,"Acer palmatum 'Butterfly' P10,5 x2",nee,7
+274.3p,"Acer palmatum 'Butterfly' P10,5 x2",ja,7
+274.4,"Acer palmatum 'Going Green' P10,5 x2",nee,7
+274.4p,"Acer palmatum 'Going Green' P10,5 x2",ja,7
+274.5,"Acer palmatum 'Orange Dream' P10,5 x2",nee,7
+274.5p,"Acer palmatum 'Orange Dream' P10,5 x2",ja,7
+275.1,Acer palmatum 'Atropurpureum' x1,nee,3
+275.1p,Acer palmatum 'Atropurpureum' x1,ja,3
+275.2,Acer palmatum 'Atropurpureum' x2,nee,10
+275.2p,Acer palmatum 'Atropurpureum' x2,ja,10
+276.1,Acer palmatum 'Beni-maiko' x1,nee,3
+276.1p,Acer palmatum 'Beni-maiko' x1,ja,3
+276.2,Acer palmatum 'Beni-maiko' x2,nee,10
+276.2p,Acer palmatum 'Beni-maiko' x2,ja,10
+277.1,Acer palmatum 'Butterfly' x1,nee,3
+277.1p,Acer palmatum 'Butterfly' x1,ja,3
+277.2,Acer palmatum 'Butterfly' x2,nee,10
+277.2p,Acer palmatum 'Butterfly' x2,ja,10
+278.1,Acer palmatum 'Orange Dream' x1,nee,3
+278.1p,Acer palmatum 'Orange Dream' x1,ja,3
+278.2,Acer palmatum 'Orange Dream' x2,nee,10
+278.2p,Acer palmatum 'Orange Dream' x2,ja,10
+279.1,Acer palmatum 'Shaina' x1,nee,10
+279.1p,Acer palmatum 'Shaina' x1,ja,10
+279.2,Acer palmatum 'Shaina' x2,nee,11
+279.2p,Acer palmatum 'Shaina' x2,ja,11
+279.3,Acer palmatum 'Shaina' Struik x1,nee,10
+279.3p,Acer palmatum 'Shaina' Struik x1,ja,10
+279.4,Acer palmatum 'Shaina' Struik x2,nee,10
+279.4p,Acer palmatum 'Shaina' Struik x2,ja,10
+280.1,Eucalyptus gunnii 'Azura' struik x1,nee,3
+280.1p,Eucalyptus gunnii 'Azura' struik x1,ja,3
+280.2,Eucalyptus gunnii 'Azura' struik x2,nee,3
+280.2p,Eucalyptus gunnii 'Azura' struik x2,ja,3
+281.1,Hydrangea arbo. 'Strong Annabelle'® x1,nee,3
+281.1p,Hydrangea arbo. 'Strong Annabelle'® x1,ja,3
+281.2,Hydrangea arbo. 'Strong Annabelle'® x2,nee,3
+281.2p,Hydrangea arbo. 'Strong Annabelle'® x2,ja,3
+281.3,Hydrangea arbo. 'Strong Annabelle'® x3,nee,4
+281.3p,Hydrangea arbo. 'Strong Annabelle'® x3,ja,4
+282.1,Hydrangea arbo. 'Pink Annabelle'® x1,nee,3
+282.1p,Hydrangea arbo. 'Pink Annabelle'® x1,ja,3
+282.2,Hydrangea arbo. 'Pink Annabelle'® x2,nee,3
+282.2p,Hydrangea arbo. 'Pink Annabelle'® x2,ja,3
+282.3,Hydrangea arbo. 'Pink Annabelle'® x3,nee,4
+282.3p,Hydrangea arbo. 'Pink Annabelle'® x3,ja,4
+283.1,Hydrangea arbo. 'Ruby Annabelle'® x1,nee,3
+283.1p,Hydrangea arbo. 'Ruby Annabelle'® x1,ja,3
+283.2,Hydrangea arbo. 'Ruby Annabelle'® x2,nee,3
+283.2p,Hydrangea arbo. 'Ruby Annabelle'® x2,ja,3
+283.3,Hydrangea arbo. 'Ruby Annabelle'® x3,nee,4
+283.3p,Hydrangea arbo. 'Ruby Annabelle'® x3,ja,4
+290.1,Acer palm. 'Atropurpureum' x1 - P15,nee,3
+290.1p,Acer palm. 'Atropurpureum' x1 - P15,ja,3
+290.2,Acer palm. 'Atropurpureum' x2 - P15,nee,3
+290.2p,Acer palm. 'Atropurpureum' x2 - P15,ja,3
+291.1,Acer palm. 'Butterfly' x1 - P15,nee,3
+291.1p,Acer palm. 'Butterfly' x1 - P15,ja,3
+291.2,Acer palm. 'Butterfly' x2 - P15,nee,3
+291.2p,Acer palm. 'Butterfly' x2 - P15,ja,3
+292.1,Acer palm. 'Going Green' x1 - P15,nee,3
+292.1p,Acer palm. 'Going Green' x1 - P15,ja,3
+292.2,Acer palm. 'Going Green' x2 - P15,nee,3
+292.2p,Acer palm. 'Going Green' x2 - P15,ja,3
+293.1,Acer palm. 'Orange Dream' x1 - P15,nee,3
+293.1p,Acer palm. 'Orange Dream' x1 - P15,ja,3
+293.2,Acer palm. 'Orange Dream' x2 - P15,nee,3
+293.2p,Acer palm. 'Orange Dream' x2 - P15,ja,3
+294.1,Acer palm. 'Extravaganza' x1 - P15,nee,3
+294.1p,Acer palm. 'Extravaganza' x1 - P15,ja,3
+294.2,Acer palm. 'Extravaganza' x2 - P15,nee,3
+294.2p,Acer palm. 'Extravaganza' x2 - P15,ja,3
+295.1,Acer palm. 'Taylor' x1 - P15,nee,3
+295.1p,Acer palm. 'Taylor' x1 - P15,ja,3
+295.2,Acer palm. 'Taylor' x2 - P15,nee,3
+295.2p,Acer palm. 'Taylor' x2 - P15,ja,3
+296.1,Acer shir. 'Moonrise' x1 - P15,nee,3
+296.1p,Acer shir. 'Moonrise' x1 - P15,ja,3
+296.2,Acer shir. 'Moonrise' x2 - P15,nee,3
+296.2p,Acer shir. 'Moonrise' x2 - P15,ja,3
+297.1,Acer cons. 'Red Flamingo' x1 - P19,nee,3
+297.1p,Acer cons. 'Red Flamingo' x1 - P19,ja,3
+297.2,Acer cons. 'Red Flamingo' x2 - P19,nee,10
+297.2p,Acer cons. 'Red Flamingo' x2 - P19,ja,10
+298.1,Acer palm. 'Dissectum' x1 - P19,nee,3
+298.1p,Acer palm. 'Dissectum' x1 - P19,ja,3
+298.2,Acer palm. 'Dissectum' x2 - P19,nee,10
+298.2p,Acer palm. 'Dissectum' x2 - P19,ja,10
+299.1,Acer palm. 'Extravaganza' x1 - P19,nee,3
+299.1p,Acer palm. 'Extravaganza' x1 - P19,ja,3
+299.2,Acer palm. 'Extravaganza' x2 - P19,nee,10
+299.2p,Acer palm. 'Extravaganza' x2 - P19,ja,10
+300.1,Acer palm. 'Garnet' x1 - P19,nee,3
+300.1p,Acer palm. 'Garnet' x1 - P19,ja,3
+300.2,Acer palm. 'Garnet' x2 - P19,nee,10
+300.2p,Acer palm. 'Garnet' x2 - P19,ja,10
+301.1,Acer palm. 'Orange Lace' x1 - P19,nee,3
+301.1p,Acer palm. 'Orange Lace' x1 - P19,ja,3
+301.2,Acer palm. 'Orange Lace' x2 - P19,nee,10
+301.2p,Acer palm. 'Orange Lace' x2 - P19,ja,10
+302.1,Acer palm. 'Taylor' x1 - P19,nee,3
+302.1p,Acer palm. 'Taylor' x1 - P19,ja,3
+302.2,Acer palm. 'Taylor' x2 - P19,nee,10
+302.2p,Acer palm. 'Taylor' x2 - P19,ja,10
+303.1,Acer palm. 'Trompenburg' x1 - P19,nee,3
+303.1p,Acer palm. 'Trompenburg' x1 - P19,ja,3
+303.2,Acer palm. 'Trompenburg' x2 - P19,nee,10
+303.2p,Acer palm. 'Trompenburg' x2 - P19,ja,10
+304.1,Acer palm. 'Ukigumo' x1 - P19,nee,3
+304.1p,Acer palm. 'Ukigumo' x1 - P19,ja,3
+304.2,Acer palm. 'Ukigumo' x2 - P19,nee,10
+304.2p,Acer palm. 'Ukigumo' x2 - P19,ja,10
+305.1,Acer shir. 'Aureum' x1 - P19,nee,3
+305.1p,Acer shir. 'Aureum' x1 - P19,ja,3
+305.2,Acer shir. 'Aureum' x2 - P19,nee,10
+305.2p,Acer shir. 'Aureum' x2 - P19,ja,10
+306.1,Acer shir. 'Moonrise' x1 stam - P19,nee,10
+306.1p,Acer shir. 'Moonrise' x1 stam - P19,ja,10
+306.2,Acer shir. 'Moonrise' x2 stam - P19,nee,10
+306.2p,Acer shir. 'Moonrise' x2 stam - P19,ja,10
+306.3,Acer shir. 'Moonrise' x1 struik - P19,nee,3
+306.3p,Acer shir. 'Moonrise' x1 struik - P19,ja,3
+306.4,Acer shir. 'Moonrise' x2 struik - P19,nee,3
+306.4p,Acer shir. 'Moonrise' x2 struik - P19,ja,3
+310.1,Acer palm. 'Emerald Lace' x1 - P24,nee,KB
+310.1p,Acer palm. 'Emerald Lace' x1 - P24,ja,KB
+310.2,Acer palm. 'Garnet' x1 - P24,nee,KB
+310.2p,Acer palm. 'Garnet' x1 - P24,ja,KB
+330.1,Buddleja Butterfly Candy® 'Little Magenta' x1 - P19,nee,3
+330.1p,Buddleja Butterfly Candy® 'Little Magenta' x1 - P19,ja,3
+330.2,Buddleja Butterfly Candy® 'Little Magenta' x2 - P19,nee,3
+330.2p,Buddleja Butterfly Candy® 'Little Magenta' x2 - P19,ja,3
+331.1,Buddleja Butterfly Candy® 'Little Pink' x1 - P19,nee,3
+331.1p,Buddleja Butterfly Candy® 'Little Pink' x1 - P19,ja,3
+331.2,Buddleja Butterfly Candy® 'Little Pink' x2 - P19,nee,3
+331.2p,Buddleja Butterfly Candy® 'Little Pink' x2 - P19,ja,3
+332.1,Buddleja Butterfly Candy® 'Little Ruby' x1 - P19,nee,3
+332.1p,Buddleja Butterfly Candy® 'Little Ruby' x1 - P19,ja,3
+332.2,Buddleja Butterfly Candy® 'Little Ruby' x2 - P19,nee,3
+332.2p,Buddleja Butterfly Candy® 'Little Ruby' x2 - P19,ja,3
+333.1,Buddleja Butterfly Candy® 'Little White' x1 - P19,nee,3
+333.1p,Buddleja Butterfly Candy® 'Little White' x1 - P19,ja,3
+333.2,Buddleja Butterfly Candy® 'Little White' x2 - P19,nee,3
+333.2p,Buddleja Butterfly Candy® 'Little White' x2 - P19,ja,3
+340.1,Nandina dom. 'Magical Lemon and Lime' x1 - P15,nee,3
+340.1p,Nandina dom. 'Magical Lemon and Lime' x1 - P15,ja,3
+340.2,Nandina dom. 'Magical Lemon and Lime' x2- P15,nee,3
+340.2p,Nandina dom. 'Magical Lemon and Lime' x2- P15,ja,3
+341.1,Nandina dom. 'Magical Sunrise' x1- P15,nee,3
+341.1p,Nandina dom. 'Magical Sunrise' x1- P15,ja,3
+341.2,Nandina dom. 'Magical Sunrise' x2- P15,nee,3
+341.2p,Nandina dom. 'Magical Sunrise' x2- P15,ja,3
+342.1,Nandina dom. 'Obsessed' x1- P15,nee,3
+342.1p,Nandina dom. 'Obsessed' x1- P15,ja,3
+342.2,Nandina dom. 'Obsessed' x2- P15,nee,3
+342.2p,Nandina dom. 'Obsessed' x2- P15,ja,3
+343.1,Nandina dom. 'Twilight' x1- P15,nee,3
+343.1p,Nandina dom. 'Twilight' x1- P15,ja,3
+343.2,Nandina dom. 'Twilight' x2- P15,nee,3
+343.2p,Nandina dom. 'Twilight' x2- P15,ja,3
+345.1,Nandina dom. 'Magical Lemon and Lime' x1 - P19,nee,3
+345.1p,Nandina dom. 'Magical Lemon and Lime' x1 - P19,ja,3
+345.2,Nandina dom. 'Magical Lemon and Lime' x2 - P19,nee,3
+345.2p,Nandina dom. 'Magical Lemon and Lime' x2 - P19,ja,3
+346.1,Nandina dom. 'Magical Sunrise' x1 - P19,nee,3
+346.1p,Nandina dom. 'Magical Sunrise' x1 - P19,ja,3
+346.2,Nandina dom. 'Magical Sunrise' x2 - P19,nee,3
+346.2p,Nandina dom. 'Magical Sunrise' x2 - P19,ja,3
+347.1,Nandina dom. 'Obsessed' x1 - P19,nee,3
+347.1p,Nandina dom. 'Obsessed' x1 - P19,ja,3
+347.2,Nandina dom. 'Obsessed' x2 - P19,nee,3
+347.2p,Nandina dom. 'Obsessed' x2 - P19,ja,3
+348.1,Nandina dom. 'Twilight' x1 - P19,nee,3
+348.1p,Nandina dom. 'Twilight' x1 - P19,ja,3
+348.2,Nandina dom. 'Twilight' x2 - P19,nee,3
+348.2p,Nandina dom. 'Twilight' x2 - P19,ja,3
+T001,Camellia japonica P19 Roze - x 1,nee,3
+T001p,Camellia japonica P19 Roze - x 1,ja,3
+T002,Camellia japonica P19 Roze - x 2,nee,10
+T002p,Camellia japonica P19 Roze - x 2,ja,10
+T003,Camellia japonica P19 Wit - x 1,nee,3
+T003p,Camellia japonica P19 Wit - x 1,ja,3
+T004,Camellia japonica P19 Wit - x 2,nee,10
+T004p,Camellia japonica P19 Wit - x 2,ja,10
+T005,Camellia japonica P19 Mix x 2 (1x Wit + 1x Roze),nee,10
+T005p,Camellia japonica P19 Mix x 2 (1x Wit + 1x Roze),ja,10
+T006,Acer palm. 'Atropurpureum' Bonsai P23 - patio,nee,KB
+T006p,Acer palm. 'Atropurpureum' Bonsai P23 - patio,ja,KB
+T007,Acer palm. 'Beni-maiko' Bonsai P23 - patio,nee,KB
+T007p,Acer palm. 'Beni-maiko' Bonsai P23 - patio,ja,KB
+T008,Acer palm. 'Katsura' Bonsai P23 - patio,nee,KB
+T008p,Acer palm. 'Katsura' Bonsai P23 - patio,ja,KB
+T009,Acer palm. 'Little Princess' Bonsai P23 - patio,nee,KB
+T009p,Acer palm. 'Little Princess' Bonsai P23 - patio,ja,KB
+T010,Lavendel C2 x 4,nee,4
+T010p,Lavendel C2 x 4,ja,4
+T011,Lavendel C2 x 6,nee,EUR40
+T011p,Lavendel C2 x 6,ja,EUR40
+T012,Lavendel C2 x 8,nee,EUR40
+T012p,Lavendel C2 x 8,ja,EUR40
