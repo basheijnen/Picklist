@@ -1101,7 +1101,7 @@ real day.
 
 ---
 
-## Amendment (post-final-review): category grouping and DOZEN pallets
+## Amendment 1 (post-final-review): category grouping and DOZEN pallets
 
 The final whole-branch review (after Task 9) found that `write_picklist.py`
 flattens each gebied's items into one alphabetical list, dropping two things the
@@ -1619,3 +1619,207 @@ and a `Totaal` row.
 git add write_picklist.py generate_picklist.py tests/test_write_picklist.py tests/test_generate_picklist.py
 git commit -m "feat: group area-sheet output by category and add DOZEN pallet totals"
 ```
+
+---
+
+## Amendment 2 (post-launch): alternate CSV order source
+
+The user shared a real order export file
+(`Export-2026-09-15_1101.csv`, semicolon-delimited, one row per order, columns
+include `"Package Number"` = pakketnummer and `"Status"` = `"Printed"` for every
+row in the sample) and asked whether the tool could generate the picklist from
+that instead of `Bron.xlsm`. Verified directly: this file's per-pakketnummer order
+counts match what `Bron.xlsm`'s own aggregation produced for the same day exactly
+(spot-checked pakketnummer `9.11`: 24 in both). Confirmed with the user: this
+export is a full day's data across all channels, and going forward the tool should
+support BOTH `Bron.xlsm` (auto-located on the K: drive, as today) AND a manually
+supplied CSV of this shape — not a replacement, an alternative.
+
+### Task 12: Alternate CSV order import
+
+**Files:**
+- Create: `C:\picklist\import_csv.py`
+- Modify: `C:\picklist\generate_picklist.py`
+- Modify: `C:\picklist\run_picklist.bat`
+- Modify: `C:\picklist\README.md`
+- Test: `C:\picklist\tests\test_import_csv.py`, `C:\picklist\tests\test_generate_picklist.py`
+
+**Interfaces:**
+- Produces: `read_order_export_csv(csv_path) -> dict[str, float]` — counts order
+  rows per pakketnummer (`"Package Number"` column), one order = 1 unit, exactly
+  like `import_orders.read_totaal_alles`'s return shape. `generate_picklist.main`
+  gains an optional `source_csv_path` parameter; when given, it replaces the
+  `Bron.xlsm` lookup entirely for that run.
+
+- [ ] **Step 1: Write the failing test**
+
+`C:\picklist\tests\test_import_csv.py`:
+```python
+from import_csv import read_order_export_csv
+
+
+def test_read_order_export_csv_counts_orders_per_pakketnummer(tmp_path):
+    csv_path = tmp_path / "Export-2026-09-15_1101.csv"
+    csv_path.write_text(
+        '"Ordernr. intern";"Package Number";"Status"\n'
+        '"1";"9.11";"Printed"\n'
+        '"2";"9.11";"Printed"\n'
+        '"3";"3.1";"Printed"\n',
+        encoding="utf-8-sig",
+    )
+
+    aantallen = read_order_export_csv(csv_path)
+
+    assert aantallen == {"9.11": 2, "3.1": 1}
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_import_csv.py -v`
+Expected: FAIL with `ModuleNotFoundError: No module named 'import_csv'`
+
+- [ ] **Step 3: Implement `import_csv.py`**
+
+`C:\picklist\import_csv.py`:
+```python
+import csv
+
+
+def read_order_export_csv(csv_path):
+    aantallen = {}
+    with open(csv_path, encoding="utf-8-sig", newline="") as csv_file:
+        reader = csv.DictReader(csv_file, delimiter=";")
+        for row in reader:
+            pakketnummer = row["Package Number"].strip()
+            if not pakketnummer:
+                continue
+            aantallen[pakketnummer] = aantallen.get(pakketnummer, 0) + 1
+    return aantallen
+```
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `python -m pytest tests/test_import_csv.py -v`
+Expected: PASS
+
+- [ ] **Step 5: Write the failing end-to-end test for the CSV source path**
+
+Append to `C:\picklist\tests\test_generate_picklist.py`:
+```python
+def test_main_uses_source_csv_path_instead_of_bron_when_given(tmp_path, capsys):
+    csv_path = tmp_path / "export.csv"
+    csv_path.write_text(
+        '"Ordernr. intern";"Package Number";"Status"\n'
+        '"1";"1.3";"Printed"\n'
+        '"2";"1.3";"Printed"\n',
+        encoding="utf-8-sig",
+    )
+
+    bom_csv_path = tmp_path / "bom.csv"
+    write_bom_csv([BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0)], bom_csv_path)
+
+    output_path = tmp_path / "Picklist.xlsx"
+
+    exit_code = main(
+        base_order_dir=tmp_path / "unused",
+        bom_csv_path=bom_csv_path,
+        output_path=output_path,
+        today=date(2026, 9, 16),
+        source_csv_path=csv_path,
+    )
+
+    assert exit_code == 0
+    assert output_path.exists()
+    workbook = openpyxl.load_workbook(output_path)
+    assert workbook["KOELING"]["A5"].value == "Parade"
+    assert workbook["KOELING"]["C5"].value == 2
+```
+(`base_order_dir` points at a folder that doesn't exist, to prove the `Bron.xlsm`
+lookup is genuinely skipped rather than coincidentally succeeding)
+
+- [ ] **Step 6: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_generate_picklist.py -v`
+Expected: FAIL — `main() got an unexpected keyword argument 'source_csv_path'`
+
+- [ ] **Step 7: Wire `source_csv_path` through `generate_picklist.py`**
+
+In `C:\picklist\generate_picklist.py`, add the import:
+```python
+from import_csv import read_order_export_csv
+```
+
+Replace the `main` signature and its first `try` block:
+```python
+def main(base_order_dir=BASE_ORDER_DIR, bom_csv_path=BOM_CSV_PATH,
+          output_path=OUTPUT_PATH, today=None, source_csv_path=None):
+    today = today or date.today()
+
+    try:
+        if source_csv_path is not None:
+            aantallen = read_order_export_csv(source_csv_path)
+        else:
+            bron_path = find_bron_file(base_order_dir, today)
+            aantallen = read_totaal_alles(bron_path)
+    except FileNotFoundError as error:
+        print(f"FOUT: {error}")
+        return 1
+```
+(the rest of `main` — the second `try` block computing and writing the picklist —
+is unchanged)
+
+Replace the `__main__` block:
+```python
+if __name__ == "__main__":
+    csv_arg = Path(sys.argv[1]) if len(sys.argv) > 1 else None
+    sys.exit(main(source_csv_path=csv_arg))
+```
+
+- [ ] **Step 8: Run tests to verify they pass**
+
+Run: `python -m pytest -v`
+Expected: all tests pass.
+
+- [ ] **Step 9: Let the launcher accept a dragged-on CSV file**
+
+`C:\picklist\run_picklist.bat`:
+```bat
+@echo off
+cd /d "%~dp0"
+python generate_picklist.py %1
+echo.
+pause
+```
+(Windows passes a file dragged onto a `.bat` icon as `%1`; with no argument,
+`%1` expands to nothing and `sys.argv` stays length 1, so the existing
+`Bron.xlsm`-lookup behavior is unchanged)
+
+- [ ] **Step 10: Document the alternate source in `README.md`**
+
+Add a short section to `C:\picklist\README.md`, after the existing "Gebruik"
+section:
+```markdown
+## Alternatieve bron: los CSV-bestand
+
+In plaats van automatisch `Bron.xlsm` van vandaag te zoeken, kun je ook een los
+CSV-bestand met orderregels (bijv. een `Export-JJJJ-MM-DD_UUMM.csv`-export) op
+`run_picklist.bat` slepen. De tool telt dan zelf het aantal orders per
+pakketnummer (kolom "Package Number") en negeert `Bron.xlsm` voor die run. Het
+CSV-bestand moet puntkomma-gescheiden zijn met minimaal een kolom
+"Package Number".
+```
+
+- [ ] **Step 11: Manually verify with the real file**
+
+Run: `python generate_picklist.py "C:\Users\bheijnen\Downloads\Export-2026-09-15_1101.csv"`
+Expected: succeeds, prints the output path, and `Picklist.xlsx` reflects the CSV's
+order counts (spot-check: pakketnummer `9.11` should contribute 24 units to
+whatever item(s) it maps to in `bom.csv`).
+
+- [ ] **Step 12: Commit**
+
+```bash
+git add import_csv.py generate_picklist.py run_picklist.bat README.md tests/test_import_csv.py tests/test_generate_picklist.py
+git commit -m "feat: support a manually supplied CSV order export as an alternate source"
+```
+
