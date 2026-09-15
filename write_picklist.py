@@ -53,13 +53,28 @@ def _write_dozen_sheet(ws, totals_for_gebied, item_order_for_gebied):
     )
     total_pallets = 0.0
     total_dozen = 0.0
+    warned_doosnummers = set()
     for (item, _soort), aantal in rows:
         divisor = BOXES_PER_PALLET.get(item)
-        pallets = aantal / divisor if divisor else 0.0
-        total_pallets += pallets
         total_dozen += aantal
-        ws.append([item, _display_aantal(pallets), _display_aantal(aantal)])
+        if divisor:
+            pallets = aantal / divisor
+            total_pallets += pallets
+            ws.append([item, _display_aantal(pallets), _display_aantal(aantal)])
+            ws.cell(row=ws.max_row, column=2).number_format = "0.00"
+        else:
+            # Unknown doosnummer: the dozen count is still accurate and known,
+            # so keep the row, but don't guess a pallet count — "?" makes the
+            # gap visually obvious instead of a silently-wrong 0, and it's
+            # excluded from total_pallets so the total doesn't look complete.
+            if item not in warned_doosnummers:
+                print(
+                    f"LET OP: onbekend doosnummer '{item}', aantal pallets niet berekend."
+                )
+                warned_doosnummers.add(item)
+            ws.append([item, "?", _display_aantal(aantal)])
     ws.append(["Totaal", _display_aantal(total_pallets), _display_aantal(total_dozen)])
+    ws.cell(row=ws.max_row, column=2).number_format = "0.00"
 
 
 def write_picklist(totals, unknown, output_path, for_date, item_order):

@@ -11,8 +11,22 @@ consolevenster en op het tabblad "Onbekende pakketten".
 
 ## Nieuw product/pakket toevoegen
 
-Voeg een regel toe aan `bom.csv`: `pakketnummer,gebied,item,soort,aantal_per_pakket`.
+Voeg een regel toe aan `bom.csv`:
+`pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde`.
 `gebied` is een van `KOELING`, `KAS`, `KAMER`, `POKON`, `DOZEN`.
+
+`groep` en `volgorde` bepalen hoe het item op de picklist wordt getoond:
+
+- `groep` is de tekst van de categorie-kop waar het item op de picklist onder
+  moet komen te staan (bijvoorbeeld `Rozen 38CM:`). Laat dit leeg (`""`) voor
+  DOZEN-regels, of als het item geen eigen categorie-kop nodig heeft.
+- `volgorde` is een getal dat bepaalt waar het item binnen zijn `gebied`
+  terechtkomt (lager = eerder). Kies een getal tussen de `volgorde`-waardes
+  van de twee regels waar het item tussen moet komen te staan. Laat je dit op
+  `0` (of `groep` op `""`) staan, dan krijgt het item geen categorie-kop en
+  komt het vóór alle andere items in zijn `gebied` te staan — voor
+  gebiedslijsten is het daarom beter om een echte `volgorde` te kiezen, in de
+  buurt van de categorie waar het item bij hoort.
 
 ## Ontwikkelaars
 

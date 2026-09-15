@@ -47,8 +47,11 @@ def load_bom_csv(path):
                     item=row["item"],
                     soort=row["soort"],
                     aantal_per_pakket=float(row["aantal_per_pakket"]),
-                    groep=row["groep"],
-                    volgorde=int(row["volgorde"]),
+                    # groep/volgorde are tolerant of a missing column (an old
+                    # 5-column bom.csv row) or an empty value, defaulting the
+                    # same way BomEntry itself does, rather than crashing.
+                    groep=row.get("groep") or "",
+                    volgorde=int(row.get("volgorde") or 0),
                 )
             )
     return entries
