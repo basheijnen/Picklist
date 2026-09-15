@@ -410,6 +410,8 @@ function showResults(file, orderCounts, calculated) {
   tabs.replaceChildren(); panels.replaceChildren();
   const views = ["PAKKETTEN", ...DEPARTMENTS];
   panels.append(renderPackages(orderCounts));
+  const pokonDozenPage = document.createElement("div");
+  pokonDozenPage.className = "pokon-dozen-page";
   views.forEach((name, index) => {
     const tab = document.createElement("button");
     tab.type = "button"; tab.className = "tab"; tab.role = "tab";
@@ -418,7 +420,12 @@ function showResults(file, orderCounts, calculated) {
     tab.style.setProperty("--accent", { PAKKETTEN: "#163d32", KOELING: "#2576a6", KAS: "#4e8b45", KAMER: "#9a5a9e", POKON: "#d17b2a", DOZEN: "#6f6254" }[name]);
     tab.addEventListener("click", () => selectDepartment(name));
     tabs.append(tab);
-    if (name !== "PAKKETTEN") panels.append(renderDepartment(name, calculated.departments[name]));
+    if (name === "POKON" || name === "DOZEN") {
+      pokonDozenPage.append(renderDepartment(name, calculated.departments[name]));
+      if (name === "DOZEN") panels.append(pokonDozenPage);
+    } else if (name !== "PAKKETTEN") {
+      panels.append(renderDepartment(name, calculated.departments[name]));
+    }
   });
   const unknownPanel = document.querySelector("#unknownPanel");
   const unknownList = document.querySelector("#unknownList");
