@@ -95,6 +95,18 @@ function createComponentRow() {
   componentRows.append(row);
 }
 
+function syncPokonAmountField() {
+  const pokonSelect = document.querySelector("#newPackagePokon");
+  const amountField = document.querySelector("#newPackagePokonAmount");
+  if (pokonSelect.value) {
+    amountField.disabled = false;
+    if (!amountField.value) amountField.value = 1;
+  } else {
+    amountField.disabled = true;
+    amountField.value = "";
+  }
+}
+
 function openPackageForm(pakketnummer = "") {
   editingPakketnummer = null;
   packageForm.reset();
@@ -102,6 +114,7 @@ function openPackageForm(pakketnummer = "") {
   createComponentRow();
   document.querySelector("#newPackageNumber").value = pakketnummer;
   document.querySelector("#newPackageNumber").disabled = false;
+  syncPokonAmountField();
   document.querySelector("#packageDialogTitle").textContent = "Nieuw pakket toevoegen";
   document.querySelector("#savePackageButton").textContent = "Pakket opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
@@ -137,7 +150,8 @@ function openEditPackageForm(pakketnummer) {
   document.querySelector("#newPackageName").value = info.pakketnaam;
   document.querySelector("#newPackageBoxes").value = doosEntries.map((entry) => entry.item).join(" + ");
   document.querySelector("#newPackagePokon").value = pokonEntry ? pokonEntry.item : "";
-  document.querySelector("#newPackagePokonAmount").value = pokonEntry ? pokonEntry.aantal_per_pakket : 1;
+  document.querySelector("#newPackagePokonAmount").value = pokonEntry ? pokonEntry.aantal_per_pakket : "";
+  syncPokonAmountField();
   document.querySelector("#packageDialogTitle").textContent = "Pakket bewerken";
   document.querySelector("#savePackageButton").textContent = "Wijzigingen opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
@@ -528,6 +542,7 @@ document.querySelector("#addComponentButton").addEventListener("click", createCo
 document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
 document.querySelector("#cancelPackageButton").addEventListener("click", () => packageDialog.close());
 packageForm.addEventListener("submit", saveNewPackage);
+document.querySelector("#newPackagePokon").addEventListener("change", syncPokonAmountField);
 document.querySelector("#managePackagesButton").addEventListener("click", () => {
   document.querySelector("#managePackagesSearch").value = "";
   renderManagePackagesList();
