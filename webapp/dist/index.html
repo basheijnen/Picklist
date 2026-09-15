@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lokale picklistmaker voor orderexports">
+  <title>Picklistmaker</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23163d32'/%3E%3Cpath d='M18 18h28v28H18z' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Cpath d='m24 32 6 6 11-13' fill='none' stroke='%23e6b85c' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <img class="header-logo eurogreen-logo" src="assets/eurogreen-logo.jpg" alt="Eurogreen International BV">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">✓</span>
+      <div>
+        <h1>E-Commerce PICKLIST</h1>
+        <p>Dagoverzicht voor magazijn en kwekerij</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="gardenzo-card">
+        <img class="header-logo gardenzo-logo" src="assets/gardenzo-logo.png" alt="Gardenzo">
+      </div>
+      <button id="printButton" class="button button-secondary" type="button" disabled>
+        Printen / PDF opslaan
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="import-panel" aria-labelledby="import-title">
+      <div>
+        <span class="eyebrow">Nieuwe picklist</span>
+        <h2 id="import-title">Sleep de orderexport hierheen</h2>
+        <p>Gebruik een puntkomma-gescheiden CSV met de kolom <strong>Package Number</strong>. De pakkettenlijst verschijnt als eerste.</p>
+        <button id="addPackageButton" class="button button-primary manage-button" type="button">+ Pakket aan database toevoegen</button>
+      </div>
+      <label id="dropZone" class="drop-zone" for="fileInput">
+        <span class="upload-icon" aria-hidden="true">↑</span>
+        <span><strong>Kies een CSV-bestand</strong> of sleep het hierheen</span>
+        <input id="fileInput" type="file" accept=".csv,text/csv">
+      </label>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="emptyState" class="empty-state">
+      <div class="empty-grid" aria-hidden="true">
+        <span>PAKKETTEN</span><span>KOELING</span><span>KAS</span><span>KAMER</span><span>POKON</span><span>DOZEN</span>
+      </div>
+      <h2>Nog geen bestand ingelezen</h2>
+      <p>Na het inlezen verschijnen hier direct de aantallen per afdeling.</p>
+    </section>
+
+    <section id="results" class="results" hidden>
+      <div class="summary-bar">
+        <div><span>Bestand</span><strong id="fileName">—</strong></div>
+        <div><span>Orders</span><strong id="orderCount">0</strong></div>
+        <div><span>Pakketten</span><strong id="packageCount">0</strong></div>
+        <div><span>Datum</span><strong id="runDate">—</strong></div>
+      </div>
+      <div id="departmentTabs" class="tabs" role="tablist" aria-label="Afdelingen"></div>
+      <div id="departmentPanels"></div>
+      <section id="unknownPanel" class="unknown-panel" hidden>
+        <div>
+          <span class="eyebrow eyebrow-warning">Controle nodig</span>
+          <h2>Onbekende pakketnummers</h2>
+          <p>Deze nummers staan niet in <code>bom.csv</code> en zijn niet meegerekend.</p>
+        </div>
+        <div id="unknownList" class="unknown-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="packageDialog" class="package-dialog">
+    <form id="packageForm" method="dialog">
+      <div class="dialog-header">
+        <div><span class="eyebrow">Lokale database</span><h2>Nieuw pakket toevoegen</h2></div>
+        <button id="closePackageDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+      </div>
+
+      <section class="form-section">
+        <span class="step-number">1</span>
+        <div class="form-section-content">
+          <h3>Pakket</h3>
+          <div class="form-grid two-columns">
+            <label>Pakketnummer<input id="newPackageNumber" required placeholder="Bijv. 281.1"></label>
+            <label>Pakketnaam<input id="newPackageName" required placeholder="Bijv. Klimroos rood x3"></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <span class="step-number">2</span>
+        <div class="form-section-content">
+          <div class="section-title-row"><h3>Wat zit erin?</h3><button id="addComponentButton" class="text-button" type="button">+ Regel toevoegen</button></div>
+          <div id="componentRows" class="component-rows"></div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <span class="step-number">3</span>
+        <div class="form-section-content">
+          <h3>Pokon en doos</h3>
+          <div class="form-grid pokon-grid">
+            <label>Welke Pokon?<select id="newPackagePokon"><option value="">Geen Pokon</option></select></label>
+            <label>Aantal Pokon<input id="newPackagePokonAmount" type="number" min="0.01" step="0.01" value="1"></label>
+            <label>Doosnummer(s)<input id="newPackageBoxes" required placeholder="Bijv. 14 of 14 + 15"></label>
+          </div>
+        </div>
+      </section>
+
+      <p id="packageFormMessage" class="dialog-message" role="alert"></p>
+      <div class="dialog-actions">
+        <button id="cancelPackageButton" class="button button-quiet" type="button">Annuleren</button>
+        <button class="button button-primary" type="submit">Pakket opslaan</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>Alles blijft op deze computer; het CSV-bestand wordt niet geüpload.</footer>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
