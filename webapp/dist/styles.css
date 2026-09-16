@@ -118,12 +118,9 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .pakketten-title .picklist-date { text-align: center; }
 .badge { position: absolute; top: 20px; right: 28px; padding: 8px 18px; border-radius: 999px; background: var(--accent); color: white; font-size: 1.05rem; }
 .group { break-inside: avoid; }
-.group-title { display: grid; grid-template-columns: 1fr 120px; padding: 8px 22px; color: white; background: var(--accent); font-weight: 800; }
-@media screen {
-  .group-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 22px; color: inherit; background: color-mix(in srgb, var(--accent) 8%, white); border-bottom: 1px solid var(--line); }
-  .group-title span:first-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: white; background: var(--accent); font-size: 1.05rem; letter-spacing: .02em; }
-  .group-title span:last-child { color: var(--accent); font-size: 1.15rem; }
-}
+.group-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 22px; color: inherit; background: color-mix(in srgb, var(--accent) 8%, white); border-bottom: 1px solid var(--line); }
+.group-title span:first-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: white; background: var(--accent); font-weight: 800; font-size: 1.05rem; letter-spacing: .02em; }
+.group-title span:last-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: var(--accent); background: white; font-weight: 800; font-size: 1.15rem; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 8px 22px; border-bottom: 1px solid #edf1ee; text-align: left; line-height: 1.25; }
@@ -319,7 +316,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .department-total { font-size: 12pt; }
   .pakketten-title h2 { font-size: 26pt; }
   .badge { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .group-title { padding: 3px 7px; font-size: 8.5pt; line-height: 1.15; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .group-title { padding: 4px 7px; line-height: 1.15; border-bottom: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .group-title span:first-child, .group-title span:last-child { padding: 3px 11px; border-width: 1.3pt; font-size: 8.5pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   th, td { padding: 3px 7px; font-size: 8.5pt; line-height: 1.15; }
   th { font-size: 7.5pt; }
   .box-cell { font-size: 7.5pt; }
