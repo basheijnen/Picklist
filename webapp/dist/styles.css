@@ -133,6 +133,8 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart { display: flex; flex-direction: column; min-height: 275mm; padding: 16mm 14mm; break-after: page; background: white; color: var(--ink); }
 .pakketkaart:last-child { break-after: auto; }
 .pakketkaart-label { font-size: 20pt; font-weight: 800; letter-spacing: .04em; }
+.pakketkaart-nazending-badge { display: inline-block; padding: 2px 12px; border-radius: 999px; background: #e8842c; color: white; font-size: 11pt; font-weight: 800; letter-spacing: .04em; vertical-align: middle; }
+.pakketkaart-nazending { border: 4pt solid #e8842c; border-radius: 8pt; }
 .pakketkaart-nummer { margin: 10mm 0; font-size: 80pt; font-weight: 800; line-height: 1; text-align: center; }
 .pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }

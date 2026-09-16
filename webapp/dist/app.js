@@ -464,6 +464,11 @@ function saveNazending() {
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     volledig: pakketten.every((p) => p.volledig),
     entries: pakketten.flatMap((p) => p.entries),
+    // Kept per pakket (not just flattened into `entries`) so pakketkaarten
+    // can print one card per doos: a pakket whose doos was unchecked has no
+    // way to say which other box it physically ships in besides "the one
+    // its bundle-mate kept", which only this per-pakket breakdown captures.
+    pakketten: pakketten.map((p) => ({ pakketnummer: p.pakketnummer, pakketnaam: p.pakketnaam, entries: p.entries })),
   });
   saveNazendingen();
   nazendingDialog.close();
@@ -845,10 +850,56 @@ function buildPakketkaarten(orderCounts) {
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>`;
     pakketkaartenPanel.append(card);
   });
+  nazendingen.forEach((nz) => appendNazendingPakketkaarten(nz));
+}
+
+// Splits a klacht into one card per physical doos: a sub-pakket whose own
+// doos was unchecked has no record of which box it ships in besides "the
+// one its bundle-mate kept", so its content folds into the first doos the
+// klacht has. A klacht with no doos at all becomes a single "—" card.
+function groupNazendingByDoos(nz) {
+  const subPakketten = nz.pakketten || [{ pakketnummer: nz.pakketnummer, pakketnaam: nz.pakketnaam, entries: nz.entries }];
+  const withDoos = subPakketten.map((sub) => ({
+    pakketnummer: sub.pakketnummer,
+    pakketnaam: sub.pakketnaam,
+    doosnummer: (sub.entries.find((entry) => entry.gebied === "DOZEN") || {}).item || null,
+    content: sub.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied)),
+  }));
+  const fallbackDoos = (withDoos.find((sub) => sub.doosnummer) || {}).doosnummer || null;
+  const groups = new Map();
+  withDoos.forEach((sub) => {
+    const key = sub.doosnummer || fallbackDoos || "—";
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(sub);
+  });
+  return [...groups.entries()].map(([doosnummer, subs]) => ({
+    doosnummer,
+    pakketnummer: subs.map((sub) => sub.pakketnummer).join(" + "),
+    pakketnaam: subs.map((sub) => sub.pakketnaam).join(" + "),
+    content: subs.flatMap((sub) => sub.content).sort((a, b) => a.volgorde - b.volgorde),
+  }));
+}
+
+function appendNazendingPakketkaarten(nz) {
+  groupNazendingByDoos(nz).forEach((group) => {
+    const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
+    const itemsHtml = group.content
+      .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
+      .join("");
+    const card = document.createElement("div");
+    card.className = "pakketkaart pakketkaart-nazending";
+    card.innerHTML = `
+      <div class="pakketkaart-label">PAKKETNUMMER: <span class="pakketkaart-nazending-badge">Nazending</span></div>
+      <div class="pakketkaart-nummer">${escapeHtml(group.pakketnummer)}</div>
+      <div class="pakketkaart-naam"><span>${escapeHtml(group.pakketnaam)}</span><span>x ${displayNumber(totalCount)}</span></div>
+      <ul class="pakketkaart-items">${itemsHtml}</ul>
+      <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>`;
+    pakketkaartenPanel.append(card);
+  });
 }
 
 function printPakketkaarten() {
-  if (!imports.length) return;
+  if (!imports.length && !nazendingen.length) return;
   buildPakketkaarten(mergedActiveOrderCounts());
   document.body.classList.add("printing-pakketkaarten");
   window.print();
@@ -952,7 +1003,7 @@ function renderAll() {
   unknownPanel.hidden = calculated.unknown.length === 0;
   emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
   printButton.disabled = orderCounts.size === 0 && nazendingen.length === 0;
-  printPakketkaartenButton.disabled = orderCounts.size === 0;
+  printPakketkaartenButton.disabled = orderCounts.size === 0 && nazendingen.length === 0;
 }
 
 function selectDepartment(name) {

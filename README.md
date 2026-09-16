@@ -51,6 +51,11 @@ aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten — de
 betreffende regels daar krijgen een oranje randje zodat duidelijk is dat er
 een nazending in zit.
 
+**Pakketkaarten printen** werkt ook voor klachten: er komt één kaart per
+doos, met alleen de inhoud die daadwerkelijk in die doos gaat. Vink je bij
+een gebundelde klacht één doosje uit, dan schuift die inhoud mee op de kaart
+van de doos die je wél aanhoudt.
+
 ### Pakketdatabase
 
 Nieuwe pakketten voeg je in de browser-app toe met **Pakket aan database
