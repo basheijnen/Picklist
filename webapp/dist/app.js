@@ -331,7 +331,7 @@ function loadNazendingComponents() {
       row.innerHTML = `
         <input type="checkbox" checked data-gebied="${escapeHtml(entry.gebied)}" data-item="${escapeHtml(entry.item)}" data-soort="${escapeHtml(entry.soort || "")}" data-groep="${escapeHtml(entry.groep || "")}" data-volgorde="${entry.volgorde}">
         <span class="nazending-component-label">${escapeHtml(label)}<small>${escapeHtml(entry.gebied)}</small></span>
-        <input type="number" class="nazending-aantal" min="0" step="0.01" value="${entry.aantal_per_pakket}">`;
+        <input type="number" class="nazending-aantal" min="0" step="1" value="${Math.round(entry.aantal_per_pakket)}">`;
       const checkbox = row.querySelector("input[type=checkbox]");
       checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
       nazendingComponentRowsEl.append(row);
@@ -345,7 +345,7 @@ function saveNazending() {
   const entries = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")]
     .map((row) => {
       const checkbox = row.querySelector("input[type=checkbox]");
-      const aantal = Number(row.querySelector(".nazending-aantal").value);
+      const aantal = Math.round(Number(row.querySelector(".nazending-aantal").value));
       if (!checkbox.checked || !(aantal > 0)) return null;
       return {
         gebied: checkbox.dataset.gebied,
