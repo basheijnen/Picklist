@@ -56,7 +56,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .empty-state h2 { margin-bottom: 6px; }
 .empty-state p { color: var(--muted); }
 .results { margin-top: 28px; }
-.imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: clamp(24px, 4vw, 42px) 0 0; }
+.imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
 .imports-panel .eyebrow { margin-bottom: 14px; }
 .imports-list { display: grid; gap: 8px; }
 .import-row {
