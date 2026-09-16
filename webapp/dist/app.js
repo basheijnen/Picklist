@@ -1089,7 +1089,9 @@ function renderImportsList() {
       saveNazendingen();
       renderAll();
     });
-    importsList.append(groupRow);
+    const klachtenGroup = document.createElement("div");
+    klachtenGroup.className = "imports-group";
+    klachtenGroup.append(groupRow);
 
     const subList = document.createElement("div");
     subList.className = "nazending-sublist";
@@ -1114,7 +1116,8 @@ function renderImportsList() {
       });
       subList.append(subRow);
     });
-    importsList.append(subList);
+    klachtenGroup.append(subList);
+    importsList.append(klachtenGroup);
   }
 }
 
