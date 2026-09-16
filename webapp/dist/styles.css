@@ -155,8 +155,8 @@ tbody tr:hover { background: #f5faf7; }
 .department[data-department="PAKKETTEN"] td:nth-child(6) { width: 50px; padding-left: 4px; padding-right: 8px; text-align: center; }
 .package-total-row td { border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f1f7f3; font-weight: 850; }
 .package-total-row .package-grand-total { padding-right: 22px; font-size: 2rem; line-height: 1; text-align: right; vertical-align: middle; }
-.department[data-department="DOZEN"] td { padding: 10px 22px; font-size: 1.3rem; font-weight: 700; }
-.dozen-total-row td { padding-top: 13px; padding-bottom: 13px; border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f5f3f1; font-size: 1.3rem; font-weight: 900; }
+.department[data-department="DOZEN"] td { padding: 6px 22px; font-size: 1.15rem; font-weight: 700; line-height: 1.1; }
+.dozen-total-row td { padding-top: 9px; padding-bottom: 9px; border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f5f3f1; font-size: 1.15rem; font-weight: 900; }
 .empty-department { padding: 48px 28px; color: var(--muted); text-align: center; }
 .pakketkaart { display: flex; flex-direction: column; min-height: 275mm; padding: 16mm 14mm; break-after: page; background: white; color: var(--ink); }
 .pakketkaart:last-child { break-after: auto; }
