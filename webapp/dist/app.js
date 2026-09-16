@@ -624,9 +624,7 @@ function renderPackages(orderCounts) {
   const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0) + nazendingen.length;
   section.innerHTML = `
     <header class="department-header pakketten-header">
-      <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p>
-        <button id="addNazendingButton" class="text-button nazending-add-button" type="button">+ Klacht aanmaken</button>
-      </div>
+      <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p></div>
       <div class="department-total badge">${displayNumber(total)} pakketten</div>
     </header>
     <div class="table-wrap"><table>
@@ -645,7 +643,6 @@ function renderPackages(orderCounts) {
     saveNazendingen();
     renderAll();
   });
-  section.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
   return section;
 }
 
@@ -891,6 +888,7 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
 });
 document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
+document.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
 nazendingPakketnummerInput.addEventListener("input", loadNazendingComponents);
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 
