@@ -205,6 +205,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-row:hover { background: #ffecd4 !important; }
 .nazending-row .package-number { color: #a05617; }
 .nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #e8842c; color: white; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
+.nazending-full-badge { display: inline-block; min-width: 20px; padding: 3px 11px; border-radius: 999px; background: var(--brand); color: white; font-weight: 800; text-align: center; }
 .nazending-delete-button { width: 30px; height: 30px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.1rem; cursor: pointer; }
 tr.has-nazending { border-left: 4px solid #e8842c; }
 

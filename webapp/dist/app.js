@@ -342,7 +342,12 @@ function saveNazending() {
   const pakketnummer = nazendingPakketnummerInput.value.trim();
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   if (!info) { nazendingMessage.textContent = "Kies eerst een geldig pakketnummer."; return; }
-  const entries = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")]
+  const allRows = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")];
+  // A nazending with every standard row still checked is a full resend of
+  // the package, not a partial one — shown later as "1 pakket" instead of a
+  // raw item count.
+  const volledig = allRows.length > 0 && allRows.every((row) => row.querySelector("input[type=checkbox]").checked);
+  const entries = allRows
     .map((row) => {
       const checkbox = row.querySelector("input[type=checkbox]");
       const aantal = Math.round(Number(row.querySelector(".nazending-aantal").value));
@@ -358,7 +363,7 @@ function saveNazending() {
     })
     .filter(Boolean);
   if (!entries.length) { nazendingMessage.textContent = "Vink minstens één regel aan met een geldig aantal."; return; }
-  nazendingen.push({ id: makeImportId(), pakketnummer, pakketnaam: info.pakketnaam, entries });
+  nazendingen.push({ id: makeImportId(), pakketnummer, pakketnaam: info.pakketnaam, volledig, entries });
   saveNazendingen();
   nazendingDialog.close();
   renderAll();
@@ -601,11 +606,14 @@ function renderPackages(orderCounts) {
         .reduce((sum, entry) => sum + entry.aantal, 0);
       const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
       const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
+      const countCell = nz.volledig
+        ? '<span class="nazending-full-badge">1</span>'
+        : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row">
         <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
         <td class="package-name">${escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
         <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
-        <td class="package-count">${displayNumber(stukAantal)}</td>
+        <td class="package-count">${countCell}</td>
         <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
         <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="Nazending verwijderen">×</button></td>
       </tr>`;
