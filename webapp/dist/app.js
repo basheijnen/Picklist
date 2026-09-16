@@ -572,37 +572,45 @@ function renderPackages(orderCounts) {
   const pokonPakketten = new Set(
     (window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "POKON").map((entry) => entry.pakketnummer)
   );
-  const rows = [...orderCounts.entries()]
-    .sort(([a], [b]) => a.localeCompare(b, "nl", { numeric: true }))
-    .map(([pakketnummer, aantal]) => {
-      const info = packageInfo.get(pakketnummer) || {};
-      const needsPokon = pokonPakketten.has(pakketnummer);
-      return `<tr class="${needsPokon ? "needs-pokon" : ""}">
-        <td class="package-number">${escapeHtml(pakketnummer)}</td>
-        <td class="package-name">${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
-        <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
-        <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${aantal}" data-pakketnummer="${escapeHtml(pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(pakketnummer)}"></td>
-        <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
-        <td></td>
+  const normalRows = [...orderCounts.entries()].map(([pakketnummer, aantal]) => ({ type: "normal", pakketnummer, aantal }));
+  const nazendingRows = nazendingen.map((nz) => ({ type: "nazending", pakketnummer: nz.pakketnummer, nz }));
+  const rows = [...normalRows, ...nazendingRows]
+    .sort((a, b) => {
+      const cmp = a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true });
+      if (cmp !== 0) return cmp;
+      if (a.type === b.type) return 0;
+      return a.type === "normal" ? -1 : 1;
+    })
+    .map((row) => {
+      if (row.type === "normal") {
+        const info = packageInfo.get(row.pakketnummer) || {};
+        const needsPokon = pokonPakketten.has(row.pakketnummer);
+        return `<tr class="${needsPokon ? "needs-pokon" : ""}">
+          <td class="package-number">${escapeHtml(row.pakketnummer)}</td>
+          <td class="package-name">${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
+          <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
+          <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${row.aantal}" data-pakketnummer="${escapeHtml(row.pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(row.pakketnummer)}"></td>
+          <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
+          <td></td>
+        </tr>`;
+      }
+      const nz = row.nz;
+      const info = packageInfo.get(nz.pakketnummer) || {};
+      const stukAantal = nz.entries
+        .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
+        .reduce((sum, entry) => sum + entry.aantal, 0);
+      const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
+      const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
+      return `<tr class="nazending-row">
+        <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
+        <td class="package-name">${escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
+        <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
+        <td class="package-count">${displayNumber(stukAantal)}</td>
+        <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
+        <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="Nazending verwijderen">×</button></td>
       </tr>`;
     })
     .join("");
-  const nazendingRows = nazendingen.map((nz) => {
-    const info = packageInfo.get(nz.pakketnummer) || {};
-    const stukAantal = nz.entries
-      .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
-      .reduce((sum, entry) => sum + entry.aantal, 0);
-    const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
-    const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
-    return `<tr class="nazending-row">
-      <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
-      <td class="package-name">${escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
-      <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
-      <td class="package-count">${displayNumber(stukAantal)}</td>
-      <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
-      <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="Nazending verwijderen">×</button></td>
-    </tr>`;
-  }).join("");
   const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0);
   section.innerHTML = `
     <header class="department-header pakketten-header">
@@ -613,7 +621,7 @@ function renderPackages(orderCounts) {
     </header>
     <div class="table-wrap"><table>
       <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th><th></th></tr></thead>
-      <tbody>${rows}${nazendingRows}<tr class="package-total-row"><td>Totaal</td><td colspan="2"></td><td class="package-grand-total">${displayNumber(total)}</td><td></td><td></td></tr></tbody>
+      <tbody>${rows}<tr class="package-total-row"><td>Totaal</td><td colspan="2"></td><td class="package-grand-total">${displayNumber(total)}</td><td></td><td></td></tr></tbody>
     </table></div>`;
   section.querySelector("tbody").addEventListener("change", (event) => {
     const input = event.target.closest(".package-count-input");
