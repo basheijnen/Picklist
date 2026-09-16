@@ -27,6 +27,9 @@ const nazendingPakketList = document.querySelector("#nazendingPakketList");
 const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
 const nazendingComponentRowsEl = document.querySelector("#nazendingComponentRows");
 const nazendingMessage = document.querySelector("#nazendingMessage");
+const nazendingDraftListEl = document.querySelector("#nazendingDraftList");
+const addAnotherNazendingPakketButton = document.querySelector("#addAnotherNazendingPakketButton");
+let nazendingDraft = [];
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 let imports = [];
@@ -301,18 +304,26 @@ function populateNazendingPakketList() {
 }
 
 function openNazendingDialog() {
-  nazendingPakketnummerInput.value = "";
-  nazendingPakketNaamEl.textContent = "";
-  nazendingComponentRowsEl.replaceChildren();
+  nazendingDraft = [];
+  renderNazendingDraftList();
+  resetNazendingPakketPicker();
   nazendingMessage.textContent = "";
   if (!nazendingDialog.open) nazendingDialog.showModal();
   nazendingPakketnummerInput.focus();
+}
+
+function resetNazendingPakketPicker() {
+  nazendingPakketnummerInput.value = "";
+  nazendingPakketNaamEl.textContent = "";
+  nazendingComponentRowsEl.replaceChildren();
+  addAnotherNazendingPakketButton.hidden = true;
 }
 
 function loadNazendingComponents() {
   const pakketnummer = nazendingPakketnummerInput.value.trim();
   nazendingComponentRowsEl.replaceChildren();
   nazendingMessage.textContent = "";
+  addAnotherNazendingPakketButton.hidden = true;
   if (!pakketnummer) { nazendingPakketNaamEl.textContent = ""; return; }
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
@@ -321,6 +332,7 @@ function loadNazendingComponents() {
     return;
   }
   nazendingPakketNaamEl.textContent = info.pakketnaam;
+  addAnotherNazendingPakketButton.hidden = false;
   relatedEntries
     .slice()
     .sort((a, b) => a.volgorde - b.volgorde)
@@ -340,17 +352,19 @@ function loadNazendingComponents() {
     });
 }
 
-function saveNazending() {
+// Reads whatever pakket is currently shown in the picker (not yet added to
+// the draft list). Used both by "nog een pakket toevoegen" and by the final
+// save, which folds in the last pakket without forcing an extra click.
+function readCurrentNazendingSelection() {
   const pakketnummer = nazendingPakketnummerInput.value.trim();
+  if (!pakketnummer) return { status: "empty" };
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
-  if (!info) { nazendingMessage.textContent = "Kies eerst een geldig pakketnummer."; return; }
+  if (!info) return { status: "invalid", message: `Onbekend pakketnummer: ${pakketnummer}.` };
   const allRows = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")];
-  // A nazending is a full resend of the package (shown later as "1 pakket"
-  // instead of a raw item count) when every plant/Pokon row is still
-  // checked. The doosnummer row doesn't count towards that — leaving the
-  // box unchecked (it ships combined in another box) shouldn't turn a
-  // complete resend into a "partial" one.
   const contentRows = allRows.filter((row) => row.querySelector("input[type=checkbox]").dataset.gebied !== "DOZEN");
+  // A full resend keeps every plant/Pokon row checked — the doosnummer row
+  // doesn't count towards that, since leaving the box unchecked (it ships
+  // combined in another pakket's box) shouldn't turn it into a "partial" one.
   const volledig = contentRows.length > 0 && contentRows.every((row) => row.querySelector("input[type=checkbox]").checked);
   const entries = allRows
     .map((row) => {
@@ -370,8 +384,54 @@ function saveNazending() {
       };
     })
     .filter(Boolean);
-  if (!entries.length) { nazendingMessage.textContent = "Vink minstens één regel aan met een geldig aantal."; return; }
-  nazendingen.push({ id: makeImportId(), pakketnummer, pakketnaam: info.pakketnaam, volledig, entries });
+  if (!entries.length) return { status: "invalid", message: `Vink minstens één regel aan met een geldig aantal voor ${pakketnummer}.` };
+  return { status: "ok", data: { pakketnummer, pakketnaam: info.pakketnaam, volledig, entries } };
+}
+
+function renderNazendingDraftList() {
+  nazendingDraftListEl.hidden = nazendingDraft.length === 0;
+  nazendingDraftListEl.replaceChildren();
+  nazendingDraft.forEach((entry, index) => {
+    const stukAantal = entry.entries
+      .filter((e) => ["KOELING", "KAS", "KAMER"].includes(e.gebied))
+      .reduce((sum, e) => sum + e.aantal, 0);
+    const summary = entry.volledig ? "volledig pakket" : `${displayNumber(stukAantal)} stuks`;
+    const row = document.createElement("div");
+    row.className = "nazending-draft-row";
+    row.innerHTML = `<span>${escapeHtml(entry.pakketnummer)} – ${escapeHtml(entry.pakketnaam)} <small>(${summary})</small></span><button type="button" class="nazending-draft-remove" aria-label="Verwijderen uit klacht">×</button>`;
+    row.querySelector(".nazending-draft-remove").addEventListener("click", () => {
+      nazendingDraft.splice(index, 1);
+      renderNazendingDraftList();
+    });
+    nazendingDraftListEl.append(row);
+  });
+}
+
+function addAnotherNazendingPakket() {
+  const current = readCurrentNazendingSelection();
+  if (current.status === "invalid") { nazendingMessage.textContent = current.message; return; }
+  if (current.status === "empty") { nazendingMessage.textContent = "Kies eerst een pakketnummer om toe te voegen."; return; }
+  nazendingDraft.push(current.data);
+  nazendingMessage.textContent = "";
+  renderNazendingDraftList();
+  resetNazendingPakketPicker();
+  nazendingPakketnummerInput.focus();
+}
+
+function saveNazending() {
+  const current = readCurrentNazendingSelection();
+  if (current.status === "invalid") { nazendingMessage.textContent = current.message; return; }
+  const pakketten = [...nazendingDraft];
+  if (current.status === "ok") pakketten.push(current.data);
+  if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe aan de klacht."; return; }
+  nazendingen.push({
+    id: makeImportId(),
+    pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
+    pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
+    volledig: pakketten.every((p) => p.volledig),
+    aantalPakketten: pakketten.length,
+    entries: pakketten.flatMap((p) => p.entries),
+  });
   saveNazendingen();
   nazendingDialog.close();
   renderAll();
@@ -615,7 +675,7 @@ function renderPackages(orderCounts) {
       const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
       const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
       const countCell = nz.volledig
-        ? '<span class="nazending-full-badge">1</span>'
+        ? `<span class="nazending-full-badge">${nz.aantalPakketten || 1}</span>`
         : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row">
         <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
@@ -899,6 +959,7 @@ document.querySelector("#cancelNazendingButton").addEventListener("click", () =>
 document.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
 nazendingPakketnummerInput.addEventListener("input", loadNazendingComponents);
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
+addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
 
 populatePokonOptions();
 populateNazendingPakketList();

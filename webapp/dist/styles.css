@@ -201,6 +201,11 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-doosnummer { width: 70px; min-height: 30px; padding: 3px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; }
 .nazending-component-row .nazending-aantal { width: 72px; min-height: 34px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; text-align: right; }
 .nazending-component-row.is-unchecked { opacity: .55; }
+.nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
+.nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }
+.nazending-draft-row small { color: var(--muted); font-weight: 550; }
+.nazending-draft-remove { width: 26px; height: 26px; flex-shrink: 0; border: 0; border-radius: 7px; color: var(--danger); background: #f9e9e7; font-size: 1rem; cursor: pointer; }
+.nazending-add-another-button { margin-top: 12px; color: #2f7058; }
 .package-total-row.nazending-total-row { background: transparent; }
 .nazending-row { background: #fff4e6 !important; }
 .nazending-row:hover { background: #ffecd4 !important; }

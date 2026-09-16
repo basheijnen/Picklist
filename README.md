@@ -31,17 +31,25 @@ meteen naar een (nieuwe of bestaande) in-de-wacht-lijst verplaatsen in plaats
 van het gewoon te laten vervallen. De lijst blijft bewaard totdat je hem zelf
 verwijdert of op **Alles wissen** klikt.
 
-### Nazending (los, deels pakket toevoegen)
+### Klacht / nazending (los, deels pakket toevoegen)
 
 Moet er buiten de normale bestelling om iets nagestuurd worden (bijv. een
-klacht waarbij 2 van de 5 bomen uit pakket 11.1 opnieuw moeten)? Klik in de
-pakkettentabel op **+ Nazending toevoegen**, kies het bestaande pakketnummer
-en de app laadt de standaardinhoud. Vink uit wat niet mee hoeft en pas
-aantallen aan. Het pakket verschijnt dan als aparte, oranje **NAZENDING**-regel
-naast de normale regel (zo mag hetzelfde pakketnummer dubbel voorkomen), en de
-gekozen aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten —
-de betreffende regels daar krijgen een oranje randje zodat duidelijk is dat
-er een nazending in zit.
+klacht waarbij 2 van de 5 bomen uit pakket 11.1 opnieuw moeten)? Klik op
+**+ Klacht aanmaken** (staat altijd bovenaan, ook zonder ingeladen picklist),
+kies het bestaande pakketnummer en de app laadt de standaardinhoud. Vink uit
+wat niet mee hoeft, pas aantallen aan en wijzig zo nodig het doosnummer (een
+nazending gaat vaak in een andere doos dan het volledige pakket). Moeten er
+meerdere pakketten in dezelfde klacht (voor dezelfde klant) mee? Klik op
+**+ Nog een pakket toevoegen aan deze klacht** om er nog een pakketnummer bij
+te zoeken, met een eigen doosje per toegevoegd pakket — handig als de klacht
+in meerdere dozen verstuurd wordt.
+
+De klacht verschijnt als aparte, oranje **NAZENDING**-regel naast de normale
+regel (zo mag hetzelfde pakketnummer dubbel voorkomen), met een badge met het
+aantal volledig meegestuurde pakketten of anders het aantal stuks. De gekozen
+aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten — de
+betreffende regels daar krijgen een oranje randje zodat duidelijk is dat er
+een nazending in zit.
 
 ### Pakketdatabase
 

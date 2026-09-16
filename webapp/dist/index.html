@@ -158,21 +158,23 @@
 
   <dialog id="nazendingDialog" class="package-dialog nazending-dialog">
     <div class="dialog-header">
-      <div><span class="eyebrow">Extra regel</span><h2>Nazending toevoegen</h2></div>
+      <div><span class="eyebrow">Extra regel</span><h2>Klacht aanmaken</h2></div>
       <button id="closeNazendingDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
     </div>
     <div class="nazending-dialog-body">
+      <div id="nazendingDraftList" class="nazending-draft-list" hidden></div>
       <label class="nazending-pakket-field">Pakketnummer
         <input id="nazendingPakketnummer" list="nazendingPakketList" placeholder="Bijv. 11.1" autocomplete="off">
       </label>
       <datalist id="nazendingPakketList"></datalist>
       <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
       <div id="nazendingComponentRows" class="nazending-component-rows"></div>
+      <button id="addAnotherNazendingPakketButton" class="text-button nazending-add-another-button" type="button" hidden>+ Nog een pakket toevoegen aan deze klacht</button>
       <p id="nazendingMessage" class="dialog-message" role="alert"></p>
     </div>
     <div class="dialog-actions">
       <button id="cancelNazendingButton" class="button button-quiet" type="button">Annuleren</button>
-      <button id="saveNazendingButton" class="button button-primary" type="button">Nazending toevoegen</button>
+      <button id="saveNazendingButton" class="button button-primary" type="button">Klacht opslaan</button>
     </div>
   </dialog>
 
