@@ -31,8 +31,8 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.15rem); letter-spacing: -.03em; }
 .brand p { margin: 0; color: #c9dbd3; font-size: .9rem; }
 main { width: min(1180px, calc(100% - 32px)); margin: 36px auto 64px; }
-.top-row { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
-.import-panel { align-self: stretch; display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 4vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
+.imports-panel-row { display: flex; justify-content: flex-end; padding: 24px clamp(20px, 5vw, 72px) 0; }
+.import-panel { display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 4vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0 0 4px; font-size: clamp(1.3rem, 2.6vw, 1.8rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .eyebrow { display: block; margin-bottom: 8px; color: #397560; font-size: .75rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
