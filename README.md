@@ -46,10 +46,14 @@ in meerdere dozen verstuurd wordt.
 
 De klacht verschijnt als aparte, oranje **NAZENDING**-regel naast de normale
 regel (zo mag hetzelfde pakketnummer dubbel voorkomen), met een badge met het
-aantal volledig meegestuurde pakketten of anders het aantal stuks. De gekozen
-aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten — de
-betreffende regels daar krijgen een oranje randje zodat duidelijk is dat er
+aantal dozen dat de klacht echt meestuurt (of anders het aantal stuks). De
+gekozen aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten —
+de betreffende regels daar krijgen een oranje randje zodat duidelijk is dat er
 een nazending in zit.
+
+Elke klacht staat ook als eigen regel onder **Ingeladen lijsten**, net als een
+ingelezen CSV: met een "Meetellen"-vinkje om 'm tijdelijk buiten de telling te
+zetten zonder 'm te verwijderen, en een kruisje om 'm definitief weg te halen.
 
 **Pakketkaarten printen** werkt ook voor klachten: er komt één kaart per
 doos, met alleen de inhoud die daadwerkelijk in die doos gaat. Vink je bij

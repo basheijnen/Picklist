@@ -110,6 +110,12 @@ function createHeldImport(name) {
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 
+// A klacht is active by default; older saved records simply have no
+// `active` field at all, which should still mean "counts".
+function activeNazendingen() {
+  return nazendingen.filter((nz) => nz.active !== false);
+}
+
 function saveNazendingen() {
   try {
     if (!nazendingen.length) { localStorage.removeItem(NAZENDINGEN_STORAGE_KEY); return; }
@@ -460,6 +466,7 @@ function saveNazending() {
   if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe aan de klacht."; return; }
   nazendingen.push({
     id: makeImportId(),
+    active: true,
     pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     volledig: pakketten.every((p) => p.volledig),
@@ -583,7 +590,7 @@ function calculate(orderCounts) {
     current.aantal += orders * entry.aantal_per_pakket;
     departments[entry.gebied].set(key, current);
   });
-  nazendingen.forEach((nz) => {
+  activeNazendingen().forEach((nz) => {
     nz.entries.forEach((entry) => {
       if (!departments[entry.gebied]) return;
       const key = `${entry.item}\u0000${entry.soort}`;
@@ -684,7 +691,7 @@ function renderPackages(orderCounts) {
     (window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "POKON").map((entry) => entry.pakketnummer)
   );
   const normalRows = [...orderCounts.entries()].map(([pakketnummer, aantal]) => ({ type: "normal", pakketnummer, aantal }));
-  const nazendingRows = nazendingen.map((nz) => ({ type: "nazending", pakketnummer: nz.pakketnummer, nz }));
+  const nazendingRows = activeNazendingen().map((nz) => ({ type: "nazending", pakketnummer: nz.pakketnummer, nz }));
   const rows = [...normalRows, ...nazendingRows]
     .sort((a, b) => {
       const cmp = a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true });
@@ -733,7 +740,7 @@ function renderPackages(orderCounts) {
   // Each box a nazending actually ships in is its own extra package to
   // prepare — a klacht bundling two pakketten in two separate dozen counts
   // as +2, one that shares a single doos (or drops it entirely) as +1 or +0.
-  const nazendingBoxes = nazendingen.reduce((sum, nz) => sum + nz.entries
+  const nazendingBoxes = activeNazendingen().reduce((sum, nz) => sum + nz.entries
     .filter((entry) => entry.gebied === "DOZEN")
     .reduce((boxSum, entry) => boxSum + entry.aantal, 0), 0);
   const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0) + nazendingBoxes;
@@ -850,7 +857,7 @@ function buildPakketkaarten(orderCounts) {
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>`;
     pakketkaartenPanel.append(card);
   });
-  nazendingen.forEach((nz) => appendNazendingPakketkaarten(nz));
+  activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz));
 }
 
 // Splits a klacht into one card per physical doos: a sub-pakket whose own
@@ -912,10 +919,11 @@ function escapeHtml(value) {
 }
 
 function renderImportsList() {
-  const activeCount = imports.filter((imp) => imp.active).length;
-  importsPanel.hidden = imports.length === 0;
-  document.querySelector("#fileName").textContent = imports.length ? `${activeCount} van ${imports.length} actief` : "—";
-  if (!imports.length) { importsList.replaceChildren(); return; }
+  const totalCount = imports.length + nazendingen.length;
+  const activeCount = imports.filter((imp) => imp.active).length + activeNazendingen().length;
+  importsPanel.hidden = totalCount === 0;
+  document.querySelector("#fileName").textContent = totalCount ? `${activeCount} van ${totalCount} actief` : "—";
+  if (!totalCount) { importsList.replaceChildren(); return; }
   importsList.replaceChildren();
   imports.forEach((imp) => {
     const total = [...imp.orderCounts.values()].reduce((a, b) => a + b, 0);
@@ -941,7 +949,39 @@ function renderImportsList() {
       if (!confirm(`Lijst "${imp.name}" verwijderen?`)) return;
       imports = imports.filter((entry) => entry.id !== imp.id);
       saveImportState();
-      if (imports.length) renderAll(); else resetImport();
+      if (imports.length || nazendingen.length) renderAll(); else resetImport();
+    });
+    importsList.append(row);
+  });
+  nazendingen.forEach((nz) => {
+    const active = nz.active !== false;
+    const stukAantal = nz.entries
+      .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
+      .reduce((sum, entry) => sum + entry.aantal, 0);
+    const doosAantal = nz.entries
+      .filter((entry) => entry.gebied === "DOZEN")
+      .reduce((sum, entry) => sum + entry.aantal, 0);
+    const totalLabel = nz.volledig
+      ? `${displayNumber(doosAantal)} ${doosAantal === 1 ? "doos" : "dozen"}`
+      : `${displayNumber(stukAantal)} stuks`;
+    const row = document.createElement("div");
+    row.className = `import-row${active ? "" : " is-held"}`;
+    row.innerHTML = `
+      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${active ? "checked" : ""}><span>Meetellen</span></label>
+      <span class="nazending-list-label">${escapeHtml(nz.pakketnummer)}<span class="nazending-badge">Klacht</span></span>
+      <span class="import-order-total">${totalLabel}</span>
+      <button type="button" class="import-delete-button" aria-label="Klacht verwijderen">×</button>`;
+    row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
+      nz.active = event.target.checked;
+      closeCountDiffMenu();
+      saveNazendingen();
+      renderAll();
+    });
+    row.querySelector(".import-delete-button").addEventListener("click", () => {
+      if (!confirm(`Klacht "${nz.pakketnummer}" verwijderen?`)) return;
+      nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
+      saveNazendingen();
+      if (imports.length || nazendingen.length) renderAll(); else resetImport();
     });
     importsList.append(row);
   });
@@ -1002,8 +1042,8 @@ function renderAll() {
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
   emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
-  printButton.disabled = orderCounts.size === 0 && nazendingen.length === 0;
-  printPakketkaartenButton.disabled = orderCounts.size === 0 && nazendingen.length === 0;
+  printButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
+  printPakketkaartenButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
 }
 
 function selectDepartment(name) {
