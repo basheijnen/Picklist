@@ -145,8 +145,8 @@ tbody tr:hover { background: #f5faf7; }
 .department[data-department="PAKKETTEN"] td:nth-child(4) { width: 75px; text-align: right; }
 .department[data-department="PAKKETTEN"] th:nth-child(5),
 .department[data-department="PAKKETTEN"] td:nth-child(5) { width: 85px; text-align: center; }
-.department[data-department="PAKKETTEN"] th:last-child,
-.department[data-department="PAKKETTEN"] td:last-child { text-align: center; }
+.department[data-department="PAKKETTEN"] th:nth-child(6),
+.department[data-department="PAKKETTEN"] td:nth-child(6) { width: 40px; text-align: center; }
 .package-total-row td { border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f1f7f3; font-weight: 850; }
 .package-total-row .package-grand-total { padding-right: 22px; font-size: 2rem; line-height: 1; text-align: right; vertical-align: middle; }
 .dozen-total-row td { padding-top: 13px; padding-bottom: 13px; border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f5f3f1; font-size: 1.12rem; font-weight: 900; }
@@ -316,5 +316,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .dozen-total-row td { padding-top: 6px; padding-bottom: 6px; font-size: 10pt; }
   tbody tr:hover { background: transparent; }
   .nazending-add-button, .nazending-delete-button { display: none !important; }
+  .department[data-department="PAKKETTEN"] th:nth-child(6),
+  .department[data-department="PAKKETTEN"] td:nth-child(6) { display: none; }
   .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
