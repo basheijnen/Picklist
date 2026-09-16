@@ -22,6 +22,7 @@ button, input { font: inherit; }
 .header-logos { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 12px; }
 .eurogreen-logo { width: min(220px, 100%); height: 56px; padding: 7px 10px; border: 1px solid rgba(190, 230, 205, .75); border-radius: 11px; background: #eef9f2; box-shadow: 0 5px 18px rgba(0, 0, 0, .14); filter: none; mix-blend-mode: normal; }
 .header-actions { grid-column: 3; display: flex; align-items: center; justify-self: end; gap: 18px; }
+.header-actions .button { font-size: .82rem; }
 .backup-status { max-width: 220px; color: #c9dbd3; font-size: .8rem; font-weight: 650; text-align: right; }
 .backup-status.is-error { color: #f3a99a; }
 .gardenzo-card { display: grid; place-items: center; width: 150px; height: 56px; padding: 7px 10px; overflow: hidden; border: 1px solid rgba(190, 230, 205, .75); border-radius: 11px; background: #eef9f2; box-shadow: 0 5px 18px rgba(0, 0, 0, .14); isolation: isolate; }
@@ -147,7 +148,7 @@ tbody tr:hover { background: #f5faf7; }
 .department[data-department="PAKKETTEN"] th:nth-child(4),
 .department[data-department="PAKKETTEN"] td:nth-child(4) { width: 75px; text-align: right; }
 .department[data-department="PAKKETTEN"] th:nth-child(5),
-.department[data-department="PAKKETTEN"] td:nth-child(5) { width: 85px; text-align: center; }
+.department[data-department="PAKKETTEN"] td:nth-child(5) { width: 150px; text-align: center; }
 .department[data-department="PAKKETTEN"] th:nth-child(6),
 .department[data-department="PAKKETTEN"] td:nth-child(6) { width: 40px; text-align: center; }
 .package-total-row td { border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f1f7f3; font-weight: 850; }

@@ -14,7 +14,7 @@ consolevenster en op het tabblad "Onbekende pakketten".
 Dubbelklik `open_picklist_app.bat`. De picklistmaker opent lokaal in Chrome of
 Edge. Sleep de orderexport-CSV naar het venster om eerst de pakkettenlijst met
 pakketnaam, Pokon-markering en doosnummer(s), en daarna de picklists per afdeling
-te bekijken. Met **Printen / PDF opslaan** kun je de pakkettenlijst en alle
+te bekijken. Met **Afdrukken** kun je de pakkettenlijst en alle
 afdelingen printen of in het Windows-afdrukvenster kiezen voor **Opslaan als
 PDF**. De ordergegevens blijven op de computer en worden niet geüpload.
 
@@ -29,7 +29,7 @@ aantallen in de picklist zijn altijd de som van alleen de aangevinkte lijsten
 Verlaag je in de pakkettentabel een aantal handmatig, dan kun je het verschil
 meteen naar een (nieuwe of bestaande) in-de-wacht-lijst verplaatsen in plaats
 van het gewoon te laten vervallen. De lijst blijft bewaard totdat je hem zelf
-verwijdert of op **Alles wissen** klikt.
+verwijdert of op **Alle lijsten wissen** klikt.
 
 ### Klacht / nazending (los, deels pakket toevoegen)
 
@@ -55,7 +55,7 @@ Elke klacht staat ook als eigen regel onder **Ingeladen lijsten**, net als een
 ingelezen CSV: met een "Meetellen"-vinkje om 'm tijdelijk buiten de telling te
 zetten zonder 'm te verwijderen, en een kruisje om 'm definitief weg te halen.
 
-**Pakketkaarten printen** werkt ook voor klachten: er komt één kaart per
+**Pakketkaarten afdrukken** werkt ook voor klachten: er komt één kaart per
 doos, met alleen de inhoud die daadwerkelijk in die doos gaat. Vink je bij
 een gebundelde klacht één doosje uit, dan schuift die inhoud mee op de kaart
 van de doos die je wél aanhoudt.
