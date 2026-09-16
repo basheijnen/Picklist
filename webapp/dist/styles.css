@@ -188,7 +188,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-number { font-weight: 800; color: var(--brand); }
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
-.nazending-add-button { margin-top: 6px; }
+.nazending-add-button { margin-top: 6px; color: var(--danger); }
 .nazending-dialog-body { padding: 22px 28px 6px; }
 .nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
 .nazending-pakket-field input { min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }

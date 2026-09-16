@@ -611,11 +611,13 @@ function renderPackages(orderCounts) {
       </tr>`;
     })
     .join("");
-  const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0);
+  // Each nazending is its own extra box to prepare, so it counts as +1
+  // package on top of the regular order total.
+  const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0) + nazendingen.length;
   section.innerHTML = `
     <header class="department-header pakketten-header">
       <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p>
-        <button id="addNazendingButton" class="text-button nazending-add-button" type="button">+ Nazending toevoegen</button>
+        <button id="addNazendingButton" class="text-button nazending-add-button" type="button">+ Klacht aanmaken</button>
       </div>
       <div class="department-total badge">${displayNumber(total)} pakketten</div>
     </header>
