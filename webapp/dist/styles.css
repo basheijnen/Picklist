@@ -119,6 +119,11 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .badge { position: absolute; top: 20px; right: 28px; padding: 8px 18px; border-radius: 999px; background: var(--accent); color: white; font-size: 1.05rem; }
 .group { break-inside: avoid; }
 .group-title { display: grid; grid-template-columns: 1fr 120px; padding: 8px 22px; color: white; background: var(--accent); font-weight: 800; }
+@media screen {
+  .group-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 22px; color: inherit; background: color-mix(in srgb, var(--accent) 8%, white); border-bottom: 1px solid var(--line); }
+  .group-title span:first-child { display: inline-block; padding: 4px 15px; border-radius: 999px; color: white; background: var(--accent); font-size: .85rem; letter-spacing: .02em; }
+  .group-title span:last-child { color: var(--accent); font-size: 1.08rem; }
+}
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 8px 22px; border-bottom: 1px solid #edf1ee; text-align: left; line-height: 1.25; }
@@ -229,9 +234,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
 .nazending-add-button { margin-left: auto; color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
-.manage-packages-button { display: inline-flex; align-items: center; gap: 9px; color: var(--brand); border: 1.5px solid #bcdccb; background: #eef6f1; }
-.manage-packages-button:hover { border-color: var(--brand); background: #e2f0e8; }
-.manage-packages-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; color: white; background: var(--brand); font-size: .68rem; }
+.manage-packages-button { color: white; font-weight: 800; border: 2px solid #000; background: var(--brand); }
 .nazending-dialog-body { padding: 22px 28px 6px; }
 .nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
 .nazending-pakket-field input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
