@@ -463,7 +463,6 @@ function saveNazending() {
     pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     volledig: pakketten.every((p) => p.volledig),
-    aantalPakketten: pakketten.length,
     entries: pakketten.flatMap((p) => p.entries),
   });
   saveNazendingen();
@@ -707,9 +706,14 @@ function renderPackages(orderCounts) {
         .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
         .reduce((sum, entry) => sum + entry.aantal, 0);
       const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
-      const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
+      const doosEntries = nz.entries.filter((entry) => entry.gebied === "DOZEN");
+      const doosnummers = doosEntries.map((entry) => entry.item).join(" + ");
+      // The badge for a "volledig" klacht shows how many boxes it actually
+      // ships in — not how many pakketten were bundled into it — since
+      // that's what determines whether it reads as 1 pakket or more.
+      const doosAantal = doosEntries.reduce((sum, entry) => sum + entry.aantal, 0);
       const countCell = nz.volledig
-        ? `<span class="nazending-full-badge">${nz.aantalPakketten || 1}</span>`
+        ? `<span class="nazending-full-badge">${doosAantal}</span>`
         : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row">
         <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
