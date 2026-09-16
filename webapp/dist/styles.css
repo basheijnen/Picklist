@@ -33,6 +33,7 @@ h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3
 .brand p { margin: 0; color: #c9dbd3; font-size: .9rem; }
 .page-body { display: flex; align-items: flex-start; gap: 38px; padding: 36px clamp(20px, 5vw, 72px) 64px; }
 main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
+.page-body:has(#importsPanel[hidden]) main { margin: 0 auto; }
 .import-panel { display: flex; flex-direction: column; gap: 10px; padding: clamp(16px, 2.4vw, 24px); border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
