@@ -27,9 +27,16 @@ BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = DIST_DIR / "data.js"
 
-# The "Back-up" button in the app: commits/pushes whatever's changed, then
-# mirrors the project onto the K: drive as a second, non-git copy.
-BACKUP_TARGET_DIR = Path(r"K:\Bas Heijnen\PICKLIST CLAUDE")
+# The "Back-up" button in the app. Bas and a colleague both run the app from
+# the shared K: copy, so bom.csv/package_info.csv there can be newer than
+# this git checkout at any moment — the button pulls those two files in
+# before committing, never the other way round, so an in-app edit made from
+# K: can never get clobbered by an older version from here. Once committed,
+# everything *except* those two files gets mirrored back out to K: so a
+# colleague launching from there also gets the latest app code.
+CANONICAL_REPO_DIR = Path(r"C:\picklist")
+SHARED_COPY_DIR = Path(r"K:\Bas Heijnen\PICKLIST CLAUDE")
+SHARED_DATA_FILES = ["bom.csv", "package_info.csv"]
 BACKUP_EXCLUDE_NAMES = {".git", ".claude", "__pycache__", ".pytest_cache"}
 
 NEW_ITEMS_GROEP = "Nieuwe artikelen:"
@@ -248,19 +255,39 @@ def update_package(pakketnummer, payload, bom_csv_path=BOM_CSV_PATH, package_inf
 
 
 def _run_git(args):
+    # Always targets the canonical checkout, never `PROJECT_DIR` — the
+    # server (and this same button) can just as well be running from the
+    # K: copy, which deliberately has no .git of its own.
     return subprocess.run(
-        ["git", *args], cwd=PROJECT_DIR, capture_output=True, text=True
+        ["git", *args], cwd=CANONICAL_REPO_DIR, capture_output=True, text=True
     )
 
 
-def _copy_to_backup_drive(target_dir):
-    if not target_dir.parent.exists():
-        raise RuntimeError(f"{target_dir.parent} is niet bereikbaar. Staat de K:-schijf aangekoppeld?")
-    target_dir.mkdir(parents=True, exist_ok=True)
-    for item in PROJECT_DIR.iterdir():
-        if item.name in BACKUP_EXCLUDE_NAMES:
+def _pull_shared_data():
+    """Copy bom.csv/package_info.csv FROM the shared K: copy INTO the git
+    checkout — the only direction that can't lose a colleague's in-app edit,
+    since they run the app from K:, not from this checkout.
+    """
+    for filename in SHARED_DATA_FILES:
+        source = SHARED_COPY_DIR / filename
+        if source.exists():
+            shutil.copy2(source, CANONICAL_REPO_DIR / filename)
+    build_data_js(
+        CANONICAL_REPO_DIR / "bom.csv",
+        CANONICAL_REPO_DIR / "package_info.csv",
+        CANONICAL_REPO_DIR / "webapp" / "dist" / "data.js",
+    )
+
+
+def _push_code_to_shared_copy():
+    """Mirror everything except the shared data files onto K:, so launching
+    the app from there picks up the latest code too.
+    """
+    SHARED_COPY_DIR.mkdir(parents=True, exist_ok=True)
+    for item in CANONICAL_REPO_DIR.iterdir():
+        if item.name in BACKUP_EXCLUDE_NAMES or item.name in SHARED_DATA_FILES:
             continue
-        destination = target_dir / item.name
+        destination = SHARED_COPY_DIR / item.name
         if item.is_dir():
             shutil.copytree(item, destination, dirs_exist_ok=True)
         else:
@@ -268,9 +295,19 @@ def _copy_to_backup_drive(target_dir):
 
 
 def run_backup():
-    """Commit anything pending, push it, then mirror the project onto K:.
-    Runs under `_write_lock` so it can't interleave with a package save.
+    """Pull the shared data files in, commit/push whatever changed, then
+    mirror the (now up to date) code back out to K:. Runs under
+    `_write_lock` so it can't interleave with a package save.
     """
+    k_sync_error = None
+    if not SHARED_COPY_DIR.exists():
+        k_sync_error = f"{SHARED_COPY_DIR} is niet bereikbaar. Staat de K:-schijf aangekoppeld?"
+    else:
+        try:
+            _pull_shared_data()
+        except Exception as error:
+            k_sync_error = f"Ophalen van K: mislukt: {error}"
+
     status = _run_git(["status", "--porcelain"])
     if status.returncode != 0:
         raise RuntimeError(f"git status mislukt: {status.stderr.strip()}")
@@ -289,15 +326,13 @@ def run_backup():
     if push.returncode != 0:
         raise RuntimeError(f"git push mislukt: {push.stderr.strip()}")
 
-    try:
-        _copy_to_backup_drive(BACKUP_TARGET_DIR)
-        copy_error = None
-    except Exception as error:
-        # git already succeeded by this point — report that, rather than
-        # hiding it behind a drive that happens to not be mounted right now.
-        copy_error = str(error)
+    if k_sync_error is None:
+        try:
+            _push_code_to_shared_copy()
+        except Exception as error:
+            k_sync_error = f"Wegschrijven naar K: mislukt: {error}"
 
-    return {"committed": committed, "copied": copy_error is None, "copy_error": copy_error}
+    return {"committed": committed, "k_synced": k_sync_error is None, "k_sync_error": k_sync_error}
 
 
 class PicklistRequestHandler(SimpleHTTPRequestHandler):

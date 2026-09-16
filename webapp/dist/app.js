@@ -1207,11 +1207,11 @@ async function runBackup() {
     const result = await response.json();
     if (!response.ok || !result.ok) throw new Error(result.error || "Back-up mislukt.");
     const time = new Intl.DateTimeFormat("nl-NL", { hour: "2-digit", minute: "2-digit" }).format(new Date());
-    if (result.copied) {
+    if (result.k_synced) {
       backupStatus.textContent = `Back-up gelukt (${time})`;
     } else {
       backupStatus.classList.add("is-error");
-      backupStatus.textContent = `Gepusht naar GitHub, maar kopie naar K: mislukt: ${result.copy_error}`;
+      backupStatus.textContent = `Gepusht naar GitHub, maar K:-synchronisatie mislukt: ${result.k_sync_error}`;
     }
   } catch (error) {
     backupStatus.classList.add("is-error");
