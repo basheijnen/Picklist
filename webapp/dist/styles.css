@@ -324,5 +324,22 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .nazending-add-button, .nazending-delete-button { display: none !important; }
   .department[data-department="PAKKETTEN"] th:nth-child(6),
   .department[data-department="PAKKETTEN"] td:nth-child(6) { display: none; }
+  /* The screen widths (tuned for a wide monitor) are needless overkill at
+     print's tiny font size, starving Pakketnaam of room on actual A4 paper
+     — percentages instead of px so it holds up regardless of the printer's
+     real margins/DPI. */
+  .department[data-department="PAKKETTEN"] th:nth-child(1),
+  .department[data-department="PAKKETTEN"] td:nth-child(1) { width: 14%; }
+  .department[data-department="PAKKETTEN"] th:nth-child(2),
+  .department[data-department="PAKKETTEN"] td:nth-child(2) { width: 55%; }
+  .department[data-department="PAKKETTEN"] th:nth-child(3),
+  .department[data-department="PAKKETTEN"] td:nth-child(3) { width: 8%; }
+  .department[data-department="PAKKETTEN"] th:nth-child(4),
+  .department[data-department="PAKKETTEN"] td:nth-child(4) { width: 8%; }
+  .department[data-department="PAKKETTEN"] th:nth-child(5),
+  .department[data-department="PAKKETTEN"] td:nth-child(5) { width: 15%; }
+  .department[data-department="PAKKETTEN"] th:nth-child(6),
+  .department[data-department="PAKKETTEN"] td:nth-child(6) { width: 0; }
+  .department[data-department="PAKKETTEN"] table { min-width: 0; }
   .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
