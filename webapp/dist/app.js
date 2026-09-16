@@ -398,13 +398,47 @@ function renderNazendingDraftList() {
     const summary = entry.volledig ? "volledig pakket" : `${displayNumber(stukAantal)} stuks`;
     const row = document.createElement("div");
     row.className = "nazending-draft-row";
-    row.innerHTML = `<span>${escapeHtml(entry.pakketnummer)} – ${escapeHtml(entry.pakketnaam)} <small>(${summary})</small></span><button type="button" class="nazending-draft-remove" aria-label="Verwijderen uit klacht">×</button>`;
+    row.innerHTML = `<button type="button" class="nazending-draft-edit">${escapeHtml(entry.pakketnummer)} – ${escapeHtml(entry.pakketnaam)} <small>(${summary})</small></button><button type="button" class="nazending-draft-remove" aria-label="Verwijderen uit klacht">×</button>`;
+    row.querySelector(".nazending-draft-edit").addEventListener("click", () => switchToNazendingDraftItem(index));
     row.querySelector(".nazending-draft-remove").addEventListener("click", () => {
       nazendingDraft.splice(index, 1);
       renderNazendingDraftList();
     });
     nazendingDraftListEl.append(row);
   });
+}
+
+// Restores checkbox/aantal/doosnummer state onto the freshly rendered rows
+// for a pakket, matching by volgorde since a doosnummer's text may have
+// been edited (so its item no longer matches the row's default box number).
+function applyNazendingSelectionToRows(entries) {
+  const byVolgorde = new Map(entries.map((entry) => [entry.volgorde, entry]));
+  [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")].forEach((row) => {
+    const checkbox = row.querySelector("input[type=checkbox]");
+    const match = byVolgorde.get(Number(checkbox.dataset.volgorde));
+    checkbox.checked = Boolean(match);
+    row.classList.toggle("is-unchecked", !checkbox.checked);
+    if (!match) return;
+    row.querySelector(".nazending-aantal").value = match.aantal;
+    const doosnummerInput = row.querySelector(".nazending-doosnummer");
+    if (doosnummerInput) doosnummerInput.value = match.item;
+  });
+}
+
+// Lets you switch back to editing an already-added pakket (e.g. to uncheck
+// its doos after all) without losing whatever you're currently filling in —
+// the pakket you're on gets folded back into the draft list first.
+function switchToNazendingDraftItem(index) {
+  const current = readCurrentNazendingSelection();
+  if (current.status === "ok") nazendingDraft.push(current.data);
+  const entry = nazendingDraft[index];
+  nazendingDraft.splice(index, 1);
+  renderNazendingDraftList();
+  nazendingMessage.textContent = "";
+  nazendingPakketnummerInput.value = entry.pakketnummer;
+  loadNazendingComponents();
+  applyNazendingSelectionToRows(entry.entries);
+  nazendingPakketnummerInput.focus();
 }
 
 function addAnotherNazendingPakket() {
@@ -687,9 +721,13 @@ function renderPackages(orderCounts) {
       </tr>`;
     })
     .join("");
-  // Each nazending is its own extra box to prepare, so it counts as +1
-  // package on top of the regular order total.
-  const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0) + nazendingen.length;
+  // Each box a nazending actually ships in is its own extra package to
+  // prepare — a klacht bundling two pakketten in two separate dozen counts
+  // as +2, one that shares a single doos (or drops it entirely) as +1 or +0.
+  const nazendingBoxes = nazendingen.reduce((sum, nz) => sum + nz.entries
+    .filter((entry) => entry.gebied === "DOZEN")
+    .reduce((boxSum, entry) => boxSum + entry.aantal, 0), 0);
+  const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0) + nazendingBoxes;
   section.innerHTML = `
     <header class="department-header pakketten-header">
       <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p></div>
