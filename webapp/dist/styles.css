@@ -229,7 +229,9 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
 .nazending-add-button { margin-left: auto; color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
-.intro-actions .button-quiet { border-color: #000; }
+.manage-packages-button { display: inline-flex; align-items: center; gap: 9px; color: var(--brand); border: 1.5px solid #bcdccb; background: #eef6f1; }
+.manage-packages-button:hover { border-color: var(--brand); background: #e2f0e8; }
+.manage-packages-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; color: white; background: var(--brand); font-size: .68rem; }
 .nazending-dialog-body { padding: 22px 28px 6px; }
 .nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
 .nazending-pakket-field input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
