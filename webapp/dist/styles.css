@@ -151,7 +151,7 @@ tbody tr:hover { background: #f5faf7; }
 .department[data-department="PAKKETTEN"] th:nth-child(5),
 .department[data-department="PAKKETTEN"] td:nth-child(5) { width: 150px; text-align: center; }
 .department[data-department="PAKKETTEN"] th:nth-child(6),
-.department[data-department="PAKKETTEN"] td:nth-child(6) { width: 40px; text-align: center; }
+.department[data-department="PAKKETTEN"] td:nth-child(6) { width: 50px; padding-left: 4px; padding-right: 8px; text-align: center; }
 .package-total-row td { border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f1f7f3; font-weight: 850; }
 .package-total-row .package-grand-total { padding-right: 22px; font-size: 2rem; line-height: 1; text-align: right; vertical-align: middle; }
 .dozen-total-row td { padding-top: 13px; padding-bottom: 13px; border-top: 3px solid var(--accent); border-bottom: 0; color: var(--accent); background: #f5f3f1; font-size: 1.12rem; font-weight: 900; }
@@ -256,7 +256,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-row:hover { background: #ffecd4 !important; }
 .nazending-row .package-number { color: #a05617; }
 .nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #e8842c; color: white; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
-.nazending-full-badge { display: inline-block; min-width: 20px; padding: 3px 11px; border-radius: 999px; background: var(--brand); color: white; font-weight: 800; text-align: center; }
+.nazending-full-badge { display: inline-flex; align-items: center; justify-content: center; width: 64px; min-height: 34px; padding: 4px 8px; border-radius: 7px; background: var(--brand); color: white; font-weight: 800; text-align: center; }
 .nazending-delete-button { width: 30px; height: 30px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.1rem; cursor: pointer; }
 tr.has-nazending { border-left: 4px solid #e8842c; }
 
