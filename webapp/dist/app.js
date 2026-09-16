@@ -345,10 +345,13 @@ function saveNazending() {
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   if (!info) { nazendingMessage.textContent = "Kies eerst een geldig pakketnummer."; return; }
   const allRows = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")];
-  // A nazending with every standard row still checked is a full resend of
-  // the package, not a partial one — shown later as "1 pakket" instead of a
-  // raw item count.
-  const volledig = allRows.length > 0 && allRows.every((row) => row.querySelector("input[type=checkbox]").checked);
+  // A nazending is a full resend of the package (shown later as "1 pakket"
+  // instead of a raw item count) when every plant/Pokon row is still
+  // checked. The doosnummer row doesn't count towards that — leaving the
+  // box unchecked (it ships combined in another box) shouldn't turn a
+  // complete resend into a "partial" one.
+  const contentRows = allRows.filter((row) => row.querySelector("input[type=checkbox]").dataset.gebied !== "DOZEN");
+  const volledig = contentRows.length > 0 && contentRows.every((row) => row.querySelector("input[type=checkbox]").checked);
   const entries = allRows
     .map((row) => {
       const checkbox = row.querySelector("input[type=checkbox]");
