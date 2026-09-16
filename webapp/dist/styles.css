@@ -30,13 +30,13 @@ button, input { font: inherit; }
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.15rem); letter-spacing: -.03em; }
 .brand p { margin: 0; color: #c9dbd3; font-size: .9rem; }
-main { width: min(1180px, calc(100% - 32px)); margin: 36px auto 64px; }
-.top-row { display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap; }
-.import-panel { flex: 3 1 520px; display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 4vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
+.page-body { display: flex; align-items: flex-start; gap: 38px; padding: 36px clamp(20px, 5vw, 72px) 64px; }
+main { flex: 1 1 auto; min-width: 0; }
+.import-panel { display: flex; flex-direction: column; gap: 14px; padding: clamp(24px, 4vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0 0 4px; font-size: clamp(1.3rem, 2.6vw, 1.8rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.55; }
 .eyebrow { display: block; margin-bottom: 8px; color: #397560; font-size: .75rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-.drop-zone { min-height: 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 22px; border: 2px dashed #88aa9d; border-radius: 18px; color: var(--brand); background: #f4faf6; text-align: center; cursor: pointer; transition: .2s ease; }
+.drop-zone { min-height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 16px; border: 2px dashed #88aa9d; border-radius: 18px; color: var(--brand); background: #f4faf6; text-align: center; cursor: pointer; transition: .2s ease; }
 .drop-zone:hover, .drop-zone.is-dragging { border-color: var(--brand); background: #e8f4ed; transform: translateY(-2px); }
 .upload-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: white; background: var(--brand); font-weight: 800; }
 .drop-zone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
@@ -53,7 +53,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 36px auto 64px; }
 .empty-state h2 { margin-bottom: 6px; }
 .empty-state p { color: var(--muted); }
 .results { margin-top: 28px; }
-.imports-panel { flex: 1 1 280px; max-width: 340px; padding: clamp(24px, 4vw, 42px) 0 0; }
+.imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: clamp(24px, 4vw, 42px) 0 0; }
 .imports-panel .eyebrow { margin-bottom: 14px; }
 .imports-list { display: grid; gap: 8px; }
 .import-row {
@@ -139,9 +139,9 @@ tbody tr:hover { background: #f5faf7; }
 .pokon-cell { font-style: italic; }
 .department tbody tr:nth-child(even) { background: color-mix(in srgb, var(--accent) 14%, white); }
 .box-cell { white-space: nowrap; color: var(--muted); font-size: .82rem; font-style: italic; font-weight: 650; }
-.department[data-department="PAKKETTEN"] table { table-layout: fixed; }
+.department[data-department="PAKKETTEN"] table { table-layout: fixed; min-width: 620px; }
 .department[data-department="PAKKETTEN"] th:nth-child(1),
-.department[data-department="PAKKETTEN"] td:nth-child(1) { width: 95px; }
+.department[data-department="PAKKETTEN"] td:nth-child(1) { width: 150px; }
 .department[data-department="PAKKETTEN"] th:nth-child(3),
 .department[data-department="PAKKETTEN"] td:nth-child(3) { width: 65px; text-align: center; }
 .department[data-department="PAKKETTEN"] th:nth-child(4),
@@ -267,6 +267,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 }
 
 @media (max-width: 720px) {
+  .page-body { flex-wrap: wrap; }
+  .imports-panel { flex-basis: 100%; max-width: none; }
   .topbar { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   .header-logos, .brand, .header-actions { grid-column: 1; justify-self: center; }
   .header-logos { order: 1; }
@@ -286,7 +288,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   @page { size: A4 portrait; margin: 11mm; }
   :root, body { background: white; }
   .topbar, .import-panel, .imports-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
-  main, .results { width: 100%; margin: 0; }
+  .page-body { display: block; width: 100%; padding: 0; margin: 0; }
+  main, .results { width: 100%; max-width: none; margin: 0; }
   body, main, .results, #departmentPanels, .table-wrap { overflow: visible !important; }
   #departmentPanels { display: block; }
   .department[hidden] { display: block !important; }

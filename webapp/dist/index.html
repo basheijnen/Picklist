@@ -40,8 +40,8 @@
     </div>
   </header>
 
-  <main>
-    <div class="top-row">
+  <div class="page-body">
+    <main>
       <section class="import-panel" aria-labelledby="import-title">
         <span class="eyebrow">Nieuwe picklist</span>
         <h2 id="import-title">Sleep de orderexport hierheen</h2>
@@ -57,12 +57,6 @@
           <button id="addNazendingButton" class="button button-quiet nazending-add-button" type="button">+ Klacht aanmaken</button>
         </div>
       </section>
-
-      <section id="importsPanel" class="imports-panel" hidden>
-        <span class="eyebrow">Ingeladen lijsten</span>
-        <div id="importsList" class="imports-list"></div>
-      </section>
-    </div>
 
     <section id="emptyState" class="empty-state">
       <div class="empty-grid" aria-hidden="true">
@@ -91,7 +85,13 @@
         <div id="unknownList" class="unknown-list"></div>
       </section>
     </section>
-  </main>
+    </main>
+
+    <section id="importsPanel" class="imports-panel" hidden>
+      <span class="eyebrow">Ingeladen lijsten</span>
+      <div id="importsList" class="imports-list"></div>
+    </section>
+  </div>
 
   <div id="pakketkaartenPanel" hidden></div>
 
