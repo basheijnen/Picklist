@@ -654,6 +654,20 @@ function displayTwoDecimals(value) {
   });
 }
 
+function formatShortDate(date) {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}-${month}-${date.getFullYear()}`;
+}
+
+function uniqueImportName(baseName) {
+  const existingNames = new Set(imports.map((imp) => imp.name));
+  if (!existingNames.has(baseName)) return baseName;
+  let counter = 2;
+  while (existingNames.has(`${baseName} (${counter})`)) counter += 1;
+  return `${baseName} (${counter})`;
+}
+
 function formatLongDate(date) {
   return new Intl.DateTimeFormat("nl-NL", {
     weekday: "long",
@@ -1116,7 +1130,8 @@ async function handleFile(file) {
   if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
   try {
     const orderCounts = readOrders(await file.text());
-    imports.push({ id: makeImportId(), name: file.name, active: true, orderCounts });
+    const name = uniqueImportName(formatShortDate(new Date()));
+    imports.push({ id: makeImportId(), name, active: true, orderCounts });
     saveImportState();
     renderAll();
   } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
