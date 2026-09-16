@@ -120,7 +120,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .group { break-inside: avoid; }
 .group-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 22px; color: inherit; background: color-mix(in srgb, var(--accent) 8%, white); border-bottom: 1px solid var(--line); }
 .group-title span:first-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: white; background: var(--accent); font-weight: 800; font-size: 1.05rem; letter-spacing: .02em; }
-.group-title span:last-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: var(--accent); background: white; font-weight: 800; font-size: 1.15rem; }
+.group-title span:last-child { display: inline-block; padding: 6px 18px; border: 2px solid #000; border-radius: 999px; color: white; background: var(--accent); font-weight: 800; font-size: 1.15rem; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; }
 th, td { padding: 8px 22px; border-bottom: 1px solid #edf1ee; text-align: left; line-height: 1.25; }
