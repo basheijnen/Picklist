@@ -153,6 +153,26 @@
     </div>
   </dialog>
 
+  <dialog id="nazendingDialog" class="package-dialog nazending-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Extra regel</span><h2>Nazending toevoegen</h2></div>
+      <button id="closeNazendingDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="nazending-dialog-body">
+      <label class="nazending-pakket-field">Pakketnummer
+        <input id="nazendingPakketnummer" list="nazendingPakketList" placeholder="Bijv. 11.1" autocomplete="off">
+      </label>
+      <datalist id="nazendingPakketList"></datalist>
+      <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
+      <div id="nazendingComponentRows" class="nazending-component-rows"></div>
+      <p id="nazendingMessage" class="dialog-message" role="alert"></p>
+    </div>
+    <div class="dialog-actions">
+      <button id="cancelNazendingButton" class="button button-quiet" type="button">Annuleren</button>
+      <button id="saveNazendingButton" class="button button-primary" type="button">Nazending toevoegen</button>
+    </div>
+  </dialog>
+
   <footer>Alles blijft op deze computer; het CSV-bestand wordt niet geüpload.</footer>
   <script src="data.js"></script>
   <script src="app.js"></script>

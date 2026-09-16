@@ -31,6 +31,18 @@ meteen naar een (nieuwe of bestaande) in-de-wacht-lijst verplaatsen in plaats
 van het gewoon te laten vervallen. De lijst blijft bewaard totdat je hem zelf
 verwijdert of op **Alles wissen** klikt.
 
+### Nazending (los, deels pakket toevoegen)
+
+Moet er buiten de normale bestelling om iets nagestuurd worden (bijv. een
+klacht waarbij 2 van de 5 bomen uit pakket 11.1 opnieuw moeten)? Klik in de
+pakkettentabel op **+ Nazending toevoegen**, kies het bestaande pakketnummer
+en de app laadt de standaardinhoud. Vink uit wat niet mee hoeft en pas
+aantallen aan. Het pakket verschijnt dan als aparte, oranje **NAZENDING**-regel
+naast de normale regel (zo mag hetzelfde pakketnummer dubbel voorkomen), en de
+gekozen aantallen tellen ook mee in de KOELING/KAS/KAMER/POKON/DOZEN-lijsten —
+de betreffende regels daar krijgen een oranje randje zodat duidelijk is dat
+er een nazending in zit.
+
 ### Pakketdatabase
 
 Nieuwe pakketten voeg je in de browser-app toe met **Pakket aan database

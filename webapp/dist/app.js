@@ -21,6 +21,12 @@ const importsPanel = document.querySelector("#importsPanel");
 const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
+const nazendingDialog = document.querySelector("#nazendingDialog");
+const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
+const nazendingPakketList = document.querySelector("#nazendingPakketList");
+const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
+const nazendingComponentRowsEl = document.querySelector("#nazendingComponentRows");
+const nazendingMessage = document.querySelector("#nazendingMessage");
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 let imports = [];
@@ -98,9 +104,34 @@ function createHeldImport(name) {
   return held;
 }
 
+const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
+let nazendingen = [];
+
+function saveNazendingen() {
+  try {
+    if (!nazendingen.length) { localStorage.removeItem(NAZENDINGEN_STORAGE_KEY); return; }
+    localStorage.setItem(NAZENDINGEN_STORAGE_KEY, JSON.stringify(nazendingen));
+  } catch (_error) {
+    // See saveImportState — best effort only.
+  }
+}
+
+function loadNazendingen() {
+  try {
+    const raw = localStorage.getItem(NAZENDINGEN_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_error) {
+    return [];
+  }
+}
+
 function resetImport() {
   imports = [];
+  nazendingen = [];
   saveImportState();
+  saveNazendingen();
   renderAll();
   message.textContent = "";
 }
@@ -264,6 +295,75 @@ function populatePokonOptions() {
   names.forEach((name) => select.add(new Option(name, name)));
 }
 
+function populateNazendingPakketList() {
+  nazendingPakketList.replaceChildren();
+  getPakketnummerList().forEach((pakketnummer) => nazendingPakketList.append(new Option(pakketnummer, pakketnummer)));
+}
+
+function openNazendingDialog() {
+  nazendingPakketnummerInput.value = "";
+  nazendingPakketNaamEl.textContent = "";
+  nazendingComponentRowsEl.replaceChildren();
+  nazendingMessage.textContent = "";
+  if (!nazendingDialog.open) nazendingDialog.showModal();
+  nazendingPakketnummerInput.focus();
+}
+
+function loadNazendingComponents() {
+  const pakketnummer = nazendingPakketnummerInput.value.trim();
+  nazendingComponentRowsEl.replaceChildren();
+  nazendingMessage.textContent = "";
+  if (!pakketnummer) { nazendingPakketNaamEl.textContent = ""; return; }
+  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
+  const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
+  if (!info || !relatedEntries.length) {
+    nazendingPakketNaamEl.textContent = "Onbekend pakketnummer.";
+    return;
+  }
+  nazendingPakketNaamEl.textContent = info.pakketnaam;
+  relatedEntries
+    .slice()
+    .sort((a, b) => a.volgorde - b.volgorde)
+    .forEach((entry) => {
+      const row = document.createElement("label");
+      row.className = "nazending-component-row";
+      const label = entry.gebied === "DOZEN" ? `Doos ${entry.item}` : `${entry.item}${entry.soort ? ` – ${entry.soort}` : ""}`;
+      row.innerHTML = `
+        <input type="checkbox" checked data-gebied="${escapeHtml(entry.gebied)}" data-item="${escapeHtml(entry.item)}" data-soort="${escapeHtml(entry.soort || "")}" data-groep="${escapeHtml(entry.groep || "")}" data-volgorde="${entry.volgorde}">
+        <span class="nazending-component-label">${escapeHtml(label)}<small>${escapeHtml(entry.gebied)}</small></span>
+        <input type="number" class="nazending-aantal" min="0" step="0.01" value="${entry.aantal_per_pakket}">`;
+      const checkbox = row.querySelector("input[type=checkbox]");
+      checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
+      nazendingComponentRowsEl.append(row);
+    });
+}
+
+function saveNazending() {
+  const pakketnummer = nazendingPakketnummerInput.value.trim();
+  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
+  if (!info) { nazendingMessage.textContent = "Kies eerst een geldig pakketnummer."; return; }
+  const entries = [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")]
+    .map((row) => {
+      const checkbox = row.querySelector("input[type=checkbox]");
+      const aantal = Number(row.querySelector(".nazending-aantal").value);
+      if (!checkbox.checked || !(aantal > 0)) return null;
+      return {
+        gebied: checkbox.dataset.gebied,
+        item: checkbox.dataset.item,
+        soort: checkbox.dataset.soort,
+        groep: checkbox.dataset.groep,
+        volgorde: Number(checkbox.dataset.volgorde),
+        aantal,
+      };
+    })
+    .filter(Boolean);
+  if (!entries.length) { nazendingMessage.textContent = "Vink minstens één regel aan met een geldig aantal."; return; }
+  nazendingen.push({ id: makeImportId(), pakketnummer, pakketnaam: info.pakketnaam, entries });
+  saveNazendingen();
+  nazendingDialog.close();
+  renderAll();
+}
+
 async function saveNewPackage(event) {
   event.preventDefault();
   const pakketnummer = document.querySelector("#newPackageNumber").value.trim();
@@ -362,6 +462,7 @@ function readOrders(text) {
 function calculate(orderCounts) {
   const knownPackages = new Set();
   const departments = Object.fromEntries(DEPARTMENTS.map((name) => [name, new Map()]));
+  const nazendingKeys = Object.fromEntries(DEPARTMENTS.map((name) => [name, new Set()]));
   (window.PICKLIST_BOM || []).forEach((entry) => {
     knownPackages.add(entry.pakketnummer);
     const orders = orderCounts.get(entry.pakketnummer) || 0;
@@ -371,8 +472,18 @@ function calculate(orderCounts) {
     current.aantal += orders * entry.aantal_per_pakket;
     departments[entry.gebied].set(key, current);
   });
+  nazendingen.forEach((nz) => {
+    nz.entries.forEach((entry) => {
+      if (!departments[entry.gebied]) return;
+      const key = `${entry.item}\u0000${entry.soort}`;
+      const current = departments[entry.gebied].get(key) || { ...entry, aantal: 0 };
+      current.aantal += entry.aantal;
+      departments[entry.gebied].set(key, current);
+      nazendingKeys[entry.gebied].add(key);
+    });
+  });
   const unknown = [...orderCounts.entries()].filter(([pakketnummer]) => !knownPackages.has(pakketnummer));
-  return { departments, unknown };
+  return { departments, unknown, nazendingKeys };
 }
 
 function displayNumber(value) {
@@ -409,7 +520,12 @@ function groupEntries(entries) {
     }, []);
 }
 
-function renderDepartment(name, entries) {
+function nazendingRowAttrs(entry, nazendingKeys) {
+  const key = `${entry.item}\u0000${entry.soort}`;
+  return nazendingKeys && nazendingKeys.has(key) ? ' class="has-nazending" title="Bevat een nazending"' : "";
+}
+
+function renderDepartment(name, entries, nazendingKeys) {
   const section = document.createElement("section");
   section.className = "department";
   section.dataset.department = name;
@@ -431,7 +547,7 @@ function renderDepartment(name, entries) {
       if (palletsValue !== null) totalPallets += palletsValue;
       totalBoxes += entry.aantal;
       const pallets = palletsValue !== null ? displayNumber(palletsValue) : "?";
-      return `<tr><td>${escapeHtml(entry.item)}</td><td>${pallets}</td><td>${displayNumber(entry.aantal)}</td></tr>`;
+      return `<tr${nazendingRowAttrs(entry, nazendingKeys)}><td>${escapeHtml(entry.item)}</td><td>${pallets}</td><td>${displayNumber(entry.aantal)}</td></tr>`;
     }).join("");
     const totalRow = `<tr class="dozen-total-row"><td>Totaal</td><td>${displayTwoDecimals(totalPallets)}</td><td>${displayNumber(totalBoxes)}</td></tr>`;
     section.insertAdjacentHTML("beforeend", `<div class="table-wrap"><table><thead><tr><th>Doosnummer</th><th>Pallets</th><th>Dozen</th></tr></thead><tbody>${rows}${totalRow}</tbody></table></div>`);
@@ -439,7 +555,7 @@ function renderDepartment(name, entries) {
   }
   groupEntries(entries).forEach((group) => {
     const subtotal = group.entries.reduce((sum, entry) => sum + entry.aantal, 0);
-    const rows = group.entries.map((entry) => `<tr><td>${escapeHtml(entry.item)}</td><td>${escapeHtml(entry.soort)}</td><td>${displayNumber(entry.aantal)}</td></tr>`).join("");
+    const rows = group.entries.map((entry) => `<tr${nazendingRowAttrs(entry, nazendingKeys)}><td>${escapeHtml(entry.item)}</td><td>${escapeHtml(entry.soort)}</td><td>${displayNumber(entry.aantal)}</td></tr>`).join("");
     section.insertAdjacentHTML("beforeend", `<div class="group"><div class="group-title"><span>${escapeHtml(group.name)}</span><span>${displayNumber(subtotal)}</span></div><div class="table-wrap"><table><tbody>${rows}</tbody></table></div></div>`);
   });
   return section;
@@ -467,24 +583,51 @@ function renderPackages(orderCounts) {
         <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
         <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${aantal}" data-pakketnummer="${escapeHtml(pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(pakketnummer)}"></td>
         <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
+        <td></td>
       </tr>`;
     })
     .join("");
+  const nazendingRows = nazendingen.map((nz) => {
+    const info = packageInfo.get(nz.pakketnummer) || {};
+    const stukAantal = nz.entries
+      .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
+      .reduce((sum, entry) => sum + entry.aantal, 0);
+    const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
+    const doosnummers = nz.entries.filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item).join(" + ");
+    return `<tr class="nazending-row">
+      <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
+      <td class="package-name">${escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
+      <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
+      <td class="package-count">${displayNumber(stukAantal)}</td>
+      <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
+      <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="Nazending verwijderen">×</button></td>
+    </tr>`;
+  }).join("");
   const total = [...orderCounts.values()].reduce((sum, aantal) => sum + aantal, 0);
   section.innerHTML = `
     <header class="department-header pakketten-header">
-      <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p></div>
+      <div class="pakketten-title"><h2>E-COMMERCE BESTELLING</h2><p class="picklist-date">${formatLongDate(new Date())}</p>
+        <button id="addNazendingButton" class="text-button nazending-add-button" type="button">+ Nazending toevoegen</button>
+      </div>
       <div class="department-total badge">${displayNumber(total)} pakketten</div>
     </header>
     <div class="table-wrap"><table>
-      <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th></tr></thead>
-      <tbody>${rows}<tr class="package-total-row"><td>Totaal</td><td colspan="2"></td><td class="package-grand-total">${displayNumber(total)}</td><td></td></tr></tbody>
+      <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th><th></th></tr></thead>
+      <tbody>${rows}${nazendingRows}<tr class="package-total-row"><td>Totaal</td><td colspan="2"></td><td class="package-grand-total">${displayNumber(total)}</td><td></td><td></td></tr></tbody>
     </table></div>`;
   section.querySelector("tbody").addEventListener("change", (event) => {
     const input = event.target.closest(".package-count-input");
     if (!input) return;
     handleCountChange(input.dataset.pakketnummer, Math.max(0, Math.floor(Number(input.value) || 0)), input);
   });
+  section.querySelector("tbody").addEventListener("click", (event) => {
+    const button = event.target.closest(".nazending-delete-button");
+    if (!button) return;
+    nazendingen = nazendingen.filter((nz) => nz.id !== button.dataset.id);
+    saveNazendingen();
+    renderAll();
+  });
+  section.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
   return section;
 }
 
@@ -629,7 +772,7 @@ function renderImportsList() {
 }
 
 function renderAll() {
-  if (!imports.length) {
+  if (!imports.length && !nazendingen.length) {
     importsPanel.hidden = true;
     importsList.replaceChildren();
     results.hidden = true;
@@ -661,10 +804,10 @@ function renderAll() {
     tab.addEventListener("click", () => selectDepartment(name));
     tabs.append(tab);
     if (name === "POKON" || name === "DOZEN") {
-      pokonDozenPage.append(renderDepartment(name, calculated.departments[name]));
+      pokonDozenPage.append(renderDepartment(name, calculated.departments[name], calculated.nazendingKeys[name]));
       if (name === "DOZEN") panels.append(pokonDozenPage);
     } else if (name !== "PAKKETTEN") {
-      panels.append(renderDepartment(name, calculated.departments[name]));
+      panels.append(renderDepartment(name, calculated.departments[name], calculated.nazendingKeys[name]));
     }
   });
   const unknownPanel = document.querySelector("#unknownPanel");
@@ -683,7 +826,8 @@ function renderAll() {
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
   emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
-  printButton.disabled = orderCounts.size === 0; printPakketkaartenButton.disabled = orderCounts.size === 0;
+  printButton.disabled = orderCounts.size === 0 && nazendingen.length === 0;
+  printPakketkaartenButton.disabled = orderCounts.size === 0;
 }
 
 function selectDepartment(name) {
@@ -727,8 +871,14 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
   managePackagesDialog.close();
   openPackageForm();
 });
+document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
+document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
+nazendingPakketnummerInput.addEventListener("input", loadNazendingComponents);
+document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 
 populatePokonOptions();
+populateNazendingPakketList();
 
 imports = loadImportState();
+nazendingen = loadNazendingen();
 renderAll();

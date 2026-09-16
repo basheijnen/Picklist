@@ -188,6 +188,25 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-number { font-weight: 800; color: var(--brand); }
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
+.nazending-add-button { margin-top: 6px; }
+.nazending-dialog-body { padding: 22px 28px 6px; }
+.nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
+.nazending-pakket-field input { min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
+.nazending-pakket-naam { margin: 6px 0 0; color: var(--brand); font-weight: 750; min-height: 1.2em; }
+.nazending-component-rows { display: grid; gap: 8px; margin-top: 16px; }
+.nazending-component-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px; background: #f4f8f5; }
+.nazending-component-row input[type="checkbox"] { width: 18px; height: 18px; }
+.nazending-component-row .nazending-component-label { min-width: 0; font-size: .92rem; }
+.nazending-component-row .nazending-component-label small { display: block; color: var(--muted); }
+.nazending-component-row .nazending-aantal { width: 72px; min-height: 34px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; text-align: right; }
+.nazending-component-row.is-unchecked { opacity: .55; }
+.package-total-row.nazending-total-row { background: transparent; }
+.nazending-row { background: #fff4e6 !important; }
+.nazending-row:hover { background: #ffecd4 !important; }
+.nazending-row .package-number { color: #a05617; }
+.nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #e8842c; color: white; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
+.nazending-delete-button { width: 30px; height: 30px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.1rem; cursor: pointer; }
+tr.has-nazending { border-left: 4px solid #e8842c; }
 
 @media (max-width: 1100px) {
   .topbar { gap: 14px; }
@@ -251,4 +270,6 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
   .package-total-row .package-grand-total { padding-right: 7px; font-size: 19pt; }
   .dozen-total-row td { padding-top: 6px; padding-bottom: 6px; font-size: 10pt; }
   tbody tr:hover { background: transparent; }
+  .nazending-add-button, .nazending-delete-button { display: none !important; }
+  .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
