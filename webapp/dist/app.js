@@ -327,10 +327,12 @@ function loadNazendingComponents() {
     .forEach((entry) => {
       const row = document.createElement("label");
       row.className = "nazending-component-row";
-      const label = entry.gebied === "DOZEN" ? `Doos ${entry.item}` : `${entry.item}${entry.soort ? ` – ${entry.soort}` : ""}`;
+      const labelHtml = entry.gebied === "DOZEN"
+        ? `Doos <input type="text" class="nazending-doosnummer" value="${escapeHtml(entry.item)}" aria-label="Doosnummer">`
+        : `${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}`;
       row.innerHTML = `
         <input type="checkbox" checked data-gebied="${escapeHtml(entry.gebied)}" data-item="${escapeHtml(entry.item)}" data-soort="${escapeHtml(entry.soort || "")}" data-groep="${escapeHtml(entry.groep || "")}" data-volgorde="${entry.volgorde}">
-        <span class="nazending-component-label">${escapeHtml(label)}<small>${escapeHtml(entry.gebied)}</small></span>
+        <span class="nazending-component-label">${labelHtml}<small>${escapeHtml(entry.gebied)}</small></span>
         <input type="number" class="nazending-aantal" min="0" step="1" value="${Math.round(entry.aantal_per_pakket)}">`;
       const checkbox = row.querySelector("input[type=checkbox]");
       checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
@@ -352,9 +354,12 @@ function saveNazending() {
       const checkbox = row.querySelector("input[type=checkbox]");
       const aantal = Math.round(Number(row.querySelector(".nazending-aantal").value));
       if (!checkbox.checked || !(aantal > 0)) return null;
+      const doosnummerInput = row.querySelector(".nazending-doosnummer");
+      const item = doosnummerInput ? doosnummerInput.value.trim() : checkbox.dataset.item;
+      if (!item) return null;
       return {
         gebied: checkbox.dataset.gebied,
-        item: checkbox.dataset.item,
+        item,
         soort: checkbox.dataset.soort,
         groep: checkbox.dataset.groep,
         volgorde: Number(checkbox.dataset.volgorde),
