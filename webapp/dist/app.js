@@ -1080,8 +1080,7 @@ function renderImportsList() {
     groupRow.innerHTML = `
       <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${allActive ? "checked" : ""}><span>Meetellen</span></label>
       <span class="nazending-list-label">Klachten (${nazendingen.length})<span class="nazending-badge">Klacht</span></span>
-      <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>
-      <span></span>`;
+      <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>`;
     const groupCheckbox = groupRow.querySelector(".import-active-checkbox");
     groupCheckbox.indeterminate = someActive && !allActive;
     groupCheckbox.addEventListener("change", (event) => {
