@@ -116,7 +116,7 @@ tbody tr:hover { background: #f5faf7; }
 .package-count-input:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
 .needs-pokon .package-number, .pokon-cell { color: #d82c25; font-weight: 850; }
 .pokon-cell { font-style: italic; }
-.department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { background: #f3f8f4; }
+.department tbody tr:nth-child(even) { background: color-mix(in srgb, var(--accent) 14%, white); }
 .box-cell { white-space: nowrap; color: var(--muted); font-size: .82rem; font-style: italic; font-weight: 650; }
 .department[data-department="PAKKETTEN"] th:nth-child(3),
 .department[data-department="PAKKETTEN"] td:nth-child(3) { width: 65px; text-align: center; }
@@ -247,7 +247,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
   .package-name { font-size: 10.5pt; }
   .package-number, .package-count { font-size: 11pt; }
   .package-count-input { width: 40px; min-height: auto; padding: 0; border: 0; background: transparent; }
-  .department[data-department="PAKKETTEN"] tbody tr:nth-child(even) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .department tbody tr:nth-child(even) { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .package-total-row .package-grand-total { padding-right: 7px; font-size: 19pt; }
   .dozen-total-row td { padding-top: 6px; padding-bottom: 6px; font-size: 10pt; }
   tbody tr:hover { background: transparent; }
