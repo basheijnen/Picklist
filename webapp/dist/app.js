@@ -17,20 +17,28 @@ const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
+const importsPanel = document.querySelector("#importsPanel");
+const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
-const IMPORT_STORAGE_KEY = "picklist-current-import-v1";
-let currentImport = null;
+const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
+let imports = [];
 let editingPakketnummer = null;
+
+function makeImportId() {
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+}
 
 function saveImportState() {
   try {
-    if (!currentImport) { localStorage.removeItem(IMPORT_STORAGE_KEY); return; }
-    localStorage.setItem(IMPORT_STORAGE_KEY, JSON.stringify({
-      fileLabel: currentImport.file.name,
-      orderCounts: Object.fromEntries(currentImport.orderCounts),
-    }));
+    if (!imports.length) { localStorage.removeItem(IMPORTS_STORAGE_KEY); return; }
+    localStorage.setItem(IMPORTS_STORAGE_KEY, JSON.stringify(imports.map((imp) => ({
+      id: imp.id,
+      name: imp.name,
+      active: imp.active,
+      orderCounts: Object.fromEntries(imp.orderCounts),
+    }))));
   } catch (_error) {
     // localStorage unavailable (private browsing, quota, ...) — the session
     // just won't be remembered on reload, not fatal for the current run.
@@ -39,23 +47,61 @@ function saveImportState() {
 
 function loadImportState() {
   try {
-    const raw = localStorage.getItem(IMPORT_STORAGE_KEY);
-    if (!raw) return null;
+    const raw = localStorage.getItem(IMPORTS_STORAGE_KEY);
+    if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return { file: { name: parsed.fileLabel }, orderCounts: new Map(Object.entries(parsed.orderCounts)) };
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((imp) => ({
+      id: imp.id || makeImportId(),
+      name: imp.name,
+      active: Boolean(imp.active),
+      orderCounts: new Map(Object.entries(imp.orderCounts || {})),
+    }));
   } catch (_error) {
-    return null;
+    return [];
   }
 }
 
+function mergedActiveOrderCounts() {
+  const merged = new Map();
+  imports.filter((imp) => imp.active).forEach((imp) => {
+    imp.orderCounts.forEach((aantal, pakketnummer) => {
+      merged.set(pakketnummer, (merged.get(pakketnummer) || 0) + aantal);
+    });
+  });
+  return merged;
+}
+
+function addToActiveImports(pakketnummer, delta) {
+  const activeImports = imports.filter((imp) => imp.active);
+  if (!activeImports.length) return;
+  const target = activeImports.find((imp) => imp.orderCounts.has(pakketnummer)) || activeImports[0];
+  target.orderCounts.set(pakketnummer, (target.orderCounts.get(pakketnummer) || 0) + delta);
+}
+
+function subtractFromActiveImports(pakketnummer, delta) {
+  let remaining = delta;
+  imports.filter((imp) => imp.active).forEach((imp) => {
+    if (remaining <= 0) return;
+    const current = imp.orderCounts.get(pakketnummer) || 0;
+    if (!current) return;
+    const take = Math.min(current, remaining);
+    if (take === current) imp.orderCounts.delete(pakketnummer);
+    else imp.orderCounts.set(pakketnummer, current - take);
+    remaining -= take;
+  });
+}
+
+function createHeldImport(name) {
+  const held = { id: makeImportId(), name, active: false, orderCounts: new Map() };
+  imports.push(held);
+  return held;
+}
+
 function resetImport() {
-  currentImport = null;
+  imports = [];
   saveImportState();
-  results.hidden = true;
-  emptyState.hidden = false;
-  printButton.disabled = true;
-  newImportButton.disabled = true;
-  printPakketkaartenButton.disabled = true;
+  renderAll();
   message.textContent = "";
 }
 
@@ -268,7 +314,7 @@ async function saveNewPackage(event) {
     message.textContent = editingPakketnummer
       ? `Pakket ${pakketnummer} is bijgewerkt.`
       : `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
-    if (currentImport) showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
+    if (imports.length) renderAll();
   } catch (_error) {
     formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
   } finally {
@@ -437,17 +483,71 @@ function renderPackages(orderCounts) {
   section.querySelector("tbody").addEventListener("change", (event) => {
     const input = event.target.closest(".package-count-input");
     if (!input) return;
-    adjustOrderCount(input.dataset.pakketnummer, Math.max(0, Math.floor(Number(input.value) || 0)));
+    handleCountChange(input.dataset.pakketnummer, Math.max(0, Math.floor(Number(input.value) || 0)), input);
   });
   return section;
 }
 
-function adjustOrderCount(pakketnummer, newValue) {
-  if (!currentImport) return;
-  if (newValue > 0) currentImport.orderCounts.set(pakketnummer, newValue);
-  else currentImport.orderCounts.delete(pakketnummer);
+function handleCountChange(pakketnummer, newValue, input) {
+  const merged = mergedActiveOrderCounts();
+  const oldValue = merged.get(pakketnummer) || 0;
+  if (newValue === oldValue) return;
+  if (newValue > oldValue) {
+    addToActiveImports(pakketnummer, newValue - oldValue);
+    saveImportState();
+    renderAll();
+    return;
+  }
+  // A redundant blur/change can refire while the diff menu for this exact
+  // input is already open (seen with programmatic value changes) — ignore it
+  // instead of rebuilding the menu and losing whatever the user just typed.
+  if (input.dataset.diffPending === String(oldValue - newValue)) return;
+  openCountDiffMenu(input, pakketnummer, oldValue - newValue);
+}
+
+function closeCountDiffMenu() {
+  document.querySelectorAll(".count-diff-row").forEach((row) => row.remove());
+  document.querySelectorAll(".package-count-input").forEach((el) => delete el.dataset.diffPending);
+}
+
+function openCountDiffMenu(input, pakketnummer, diff) {
+  closeCountDiffMenu();
+  input.dataset.diffPending = String(diff);
+  const row = input.closest("tr");
+  const heldImports = imports.filter((imp) => !imp.active);
+  const existingButtons = heldImports
+    .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
+    .join("");
+  const diffRow = document.createElement("tr");
+  diffRow.className = "count-diff-row";
+  diffRow.innerHTML = `<td colspan="5"><div class="count-diff-menu">
+    <span>Verschil (${diff}) verplaatsen naar wachtlijst:</span>
+    ${existingButtons}
+    <input type="text" class="count-diff-new-name" placeholder="Nieuwe naam…">
+    <button type="button" class="count-diff-new-confirm">Aanmaken &amp; verplaatsen</button>
+    <button type="button" class="count-diff-cancel">Negeren</button>
+  </div></td>`;
+  row.insertAdjacentElement("afterend", diffRow);
+  diffRow.querySelectorAll(".count-diff-target").forEach((button) => {
+    button.addEventListener("click", () => finalizeDecrease(pakketnummer, diff, button.dataset.id, null));
+  });
+  diffRow.querySelector(".count-diff-new-confirm").addEventListener("click", () => {
+    const nameInput = diffRow.querySelector(".count-diff-new-name");
+    const name = nameInput.value.trim();
+    if (!name) { nameInput.focus(); return; }
+    finalizeDecrease(pakketnummer, diff, null, name);
+  });
+  diffRow.querySelector(".count-diff-cancel").addEventListener("click", () => finalizeDecrease(pakketnummer, diff, null, null));
+}
+
+function finalizeDecrease(pakketnummer, diff, targetImportId, newName) {
+  subtractFromActiveImports(pakketnummer, diff);
+  if (targetImportId || newName) {
+    const target = targetImportId ? imports.find((imp) => imp.id === targetImportId) : createHeldImport(newName);
+    if (target) target.orderCounts.set(pakketnummer, (target.orderCounts.get(pakketnummer) || 0) + diff);
+  }
   saveImportState();
-  showResults(currentImport.file, currentImport.orderCounts, calculate(currentImport.orderCounts));
+  renderAll();
 }
 
 function buildPakketkaarten(orderCounts) {
@@ -480,8 +580,8 @@ function buildPakketkaarten(orderCounts) {
 }
 
 function printPakketkaarten() {
-  if (!currentImport) return;
-  buildPakketkaarten(currentImport.orderCounts);
+  if (!imports.length) return;
+  buildPakketkaarten(mergedActiveOrderCounts());
   document.body.classList.add("printing-pakketkaarten");
   window.print();
 }
@@ -492,8 +592,56 @@ function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 }
 
-function showResults(file, orderCounts, calculated) {
-  document.querySelector("#fileName").textContent = file.name;
+function renderImportsList() {
+  const activeCount = imports.filter((imp) => imp.active).length;
+  importsPanel.hidden = imports.length === 0;
+  document.querySelector("#fileName").textContent = imports.length ? `${activeCount} van ${imports.length} actief` : "—";
+  if (!imports.length) { importsList.replaceChildren(); return; }
+  importsList.replaceChildren();
+  imports.forEach((imp) => {
+    const total = [...imp.orderCounts.values()].reduce((a, b) => a + b, 0);
+    const row = document.createElement("div");
+    row.className = `import-row${imp.active ? "" : " is-held"}`;
+    row.innerHTML = `
+      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${imp.active ? "checked" : ""}><span>Meetellen</span></label>
+      <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst">
+      <span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>
+      <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
+    row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
+      imp.active = event.target.checked;
+      closeCountDiffMenu();
+      saveImportState();
+      renderAll();
+    });
+    row.querySelector(".import-name-input").addEventListener("change", (event) => {
+      imp.name = event.target.value.trim() || imp.name;
+      event.target.value = imp.name;
+      saveImportState();
+    });
+    row.querySelector(".import-delete-button").addEventListener("click", () => {
+      if (!confirm(`Lijst "${imp.name}" verwijderen?`)) return;
+      imports = imports.filter((entry) => entry.id !== imp.id);
+      saveImportState();
+      if (imports.length) renderAll(); else resetImport();
+    });
+    importsList.append(row);
+  });
+}
+
+function renderAll() {
+  if (!imports.length) {
+    importsPanel.hidden = true;
+    importsList.replaceChildren();
+    results.hidden = true;
+    emptyState.hidden = false;
+    printButton.disabled = true;
+    newImportButton.disabled = true;
+    printPakketkaartenButton.disabled = true;
+    return;
+  }
+  const orderCounts = mergedActiveOrderCounts();
+  const calculated = calculate(orderCounts);
+  renderImportsList();
   document.querySelector("#orderCount").textContent = [...orderCounts.values()].reduce((a, b) => a + b, 0);
   document.querySelector("#packageCount").textContent = orderCounts.size;
   document.querySelector("#runDate").textContent = new Intl.DateTimeFormat("nl-NL").format(new Date());
@@ -534,7 +682,8 @@ function showResults(file, orderCounts, calculated) {
     unknownList.append(item);
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
-  emptyState.hidden = true; results.hidden = false; printButton.disabled = false; newImportButton.disabled = false; printPakketkaartenButton.disabled = false;
+  emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
+  printButton.disabled = orderCounts.size === 0; printPakketkaartenButton.disabled = orderCounts.size === 0;
 }
 
 function selectDepartment(name) {
@@ -546,19 +695,10 @@ async function handleFile(file) {
   message.textContent = "";
   if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
   try {
-    const newCounts = readOrders(await file.text());
-    let orderCounts, fileLabel;
-    if (currentImport) {
-      orderCounts = new Map(currentImport.orderCounts);
-      newCounts.forEach((aantal, pakketnummer) => orderCounts.set(pakketnummer, (orderCounts.get(pakketnummer) || 0) + aantal));
-      fileLabel = `${currentImport.file.name} + ${file.name}`;
-    } else {
-      orderCounts = newCounts;
-      fileLabel = file.name;
-    }
-    currentImport = { file: { name: fileLabel }, orderCounts };
+    const orderCounts = readOrders(await file.text());
+    imports.push({ id: makeImportId(), name: file.name, active: true, orderCounts });
     saveImportState();
-    showResults(currentImport.file, orderCounts, calculate(orderCounts));
+    renderAll();
   } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
 }
 
@@ -590,8 +730,5 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
 
 populatePokonOptions();
 
-const restoredImport = loadImportState();
-if (restoredImport) {
-  currentImport = restoredImport;
-  showResults(restoredImport.file, restoredImport.orderCounts, calculate(restoredImport.orderCounts));
-}
+imports = loadImportState();
+renderAll();

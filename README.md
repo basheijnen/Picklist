@@ -18,6 +18,19 @@ te bekijken. Met **Printen / PDF opslaan** kun je de pakkettenlijst en alle
 afdelingen printen of in het Windows-afdrukvenster kiezen voor **Opslaan als
 PDF**. De ordergegevens blijven op de computer en worden niet geüpload.
 
+### Meerdere picklisten tegelijk
+
+Sleep je meerdere CSV-exports achter elkaar, dan verschijnt elke export als
+eigen regel onder **Ingeladen lijsten**, met een vinkje **Meetellen**, een
+naam (standaard de bestandsnaam, zelf aan te passen) en een verwijderknop. De
+aantallen in de picklist zijn altijd de som van alleen de aangevinkte lijsten
+— vink een lijst uit om hem in de wacht te zetten zonder hem kwijt te raken.
+
+Verlaag je in de pakkettentabel een aantal handmatig, dan kun je het verschil
+meteen naar een (nieuwe of bestaande) in-de-wacht-lijst verplaatsen in plaats
+van het gewoon te laten vervallen. De lijst blijft bewaard totdat je hem zelf
+verwijdert of op **Alles wissen** klikt.
+
 ### Pakketdatabase
 
 Nieuwe pakketten voeg je in de browser-app toe met **Pakket aan database
