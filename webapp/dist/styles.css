@@ -191,6 +191,14 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-dialog-body { padding: 0 28px 28px; }
 .nazending-dialog .dialog-header { padding: 24px 28px 20px; }
 .nazending-dialog .dialog-actions { padding: 16px 28px 24px; }
+.confirm-dialog { width: min(420px, calc(100% - 24px)); }
+.confirm-dialog .dialog-header { padding: 22px 24px 16px; }
+.confirm-dialog-message { margin: 0; padding: 0 24px 22px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+.confirm-dialog-message p { margin: 0 0 14px; }
+.confirm-dialog .dialog-actions { padding: 0 24px 22px; }
+.button-danger { color: white; background: var(--danger); }
+.import-name-dialog-field { display: grid; gap: 6px; color: var(--muted); font-size: .82rem; font-weight: 750; }
+.import-name-dialog-field input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; color: var(--ink); font-weight: 650; }
 .manage-dialog-toolbar { display: flex; gap: 10px; margin-bottom: 14px; }
 #managePackagesSearch { flex: 1; min-width: 0; min-height: 42px; padding: 8px 12px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
 .manage-dialog-toolbar .button { flex-shrink: 0; }

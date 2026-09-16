@@ -38,6 +38,11 @@
 
   <main>
     <div class="top-row">
+      <section id="importsPanel" class="imports-panel" hidden>
+        <span class="eyebrow">Ingeladen lijsten</span>
+        <div id="importsList" class="imports-list"></div>
+      </section>
+
       <section class="import-panel" aria-labelledby="import-title">
         <span class="eyebrow">Nieuwe picklist</span>
         <h2 id="import-title">Sleep de orderexport hierheen</h2>
@@ -52,11 +57,6 @@
           <button id="managePackagesButton" class="button button-quiet" type="button">Pakketten beheren</button>
           <button id="addNazendingButton" class="button button-quiet nazending-add-button" type="button">+ Klacht aanmaken</button>
         </div>
-      </section>
-
-      <section id="importsPanel" class="imports-panel" hidden>
-        <span class="eyebrow">Ingeladen lijsten</span>
-        <div id="importsList" class="imports-list"></div>
       </section>
     </div>
 
@@ -176,6 +176,35 @@
     <div class="dialog-actions">
       <button id="cancelNazendingButton" class="button button-quiet" type="button">Annuleren</button>
       <button id="saveNazendingButton" class="button button-primary" type="button">Klacht opslaan</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirmDialog" class="package-dialog confirm-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Bevestigen</span><h2 id="confirmDialogTitle">Weet je het zeker?</h2></div>
+      <button id="closeConfirmDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <p id="confirmDialogMessage" class="confirm-dialog-message"></p>
+    <div class="dialog-actions">
+      <button id="confirmDialogCancel" class="button button-quiet" type="button">Annuleren</button>
+      <button id="confirmDialogOk" class="button button-danger" type="button">Verwijderen</button>
+    </div>
+  </dialog>
+
+  <dialog id="importNameDialog" class="package-dialog confirm-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Nieuwe lijst</span><h2>Hoe wil je deze lijst noemen?</h2></div>
+      <button id="closeImportNameDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="confirm-dialog-message">
+      <p>Er is al een lijst met de datum van vandaag. Geef deze een eigen naam.</p>
+      <label class="import-name-dialog-field">Naam
+        <input id="importNameDialogInput" type="text">
+      </label>
+    </div>
+    <div class="dialog-actions">
+      <button id="importNameDialogCancel" class="button button-quiet" type="button">Standaardnaam gebruiken</button>
+      <button id="importNameDialogOk" class="button button-primary" type="button">Opslaan</button>
     </div>
   </dialog>
 

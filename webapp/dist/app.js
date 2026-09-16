@@ -971,6 +971,63 @@ function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 }
 
+// Styled stand-in for the native confirm() — that one shows the page's own
+// URL ("127.0.0.1:8765 meldt het volgende"), which reads as a browser
+// warning rather than part of the app.
+function confirmDialog(message, confirmLabel = "Verwijderen") {
+  const dialog = document.querySelector("#confirmDialog");
+  document.querySelector("#confirmDialogMessage").textContent = message;
+  document.querySelector("#confirmDialogOk").textContent = confirmLabel;
+  return new Promise((resolve) => {
+    const okButton = document.querySelector("#confirmDialogOk");
+    const cancelButton = document.querySelector("#confirmDialogCancel");
+    const closeButton = document.querySelector("#closeConfirmDialog");
+    let settled = false;
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      dialog.close();
+      resolve(result);
+    };
+    okButton.addEventListener("click", () => finish(true), { once: true });
+    cancelButton.addEventListener("click", () => finish(false), { once: true });
+    closeButton.addEventListener("click", () => finish(false), { once: true });
+    dialog.addEventListener("close", () => finish(false), { once: true });
+    dialog.showModal();
+  });
+}
+
+// Asks for a name when the date-based default would collide with an
+// existing import; cancelling just falls back to the suggested name
+// instead of blocking the import.
+function promptImportName(suggestedName) {
+  const dialog = document.querySelector("#importNameDialog");
+  const input = document.querySelector("#importNameDialogInput");
+  input.value = suggestedName;
+  return new Promise((resolve) => {
+    const okButton = document.querySelector("#importNameDialogOk");
+    const cancelButton = document.querySelector("#importNameDialogCancel");
+    const closeButton = document.querySelector("#closeImportNameDialog");
+    let settled = false;
+    const onKeydown = (event) => { if (event.key === "Enter") { event.preventDefault(); okButton.click(); } };
+    const finish = (result) => {
+      if (settled) return;
+      settled = true;
+      input.removeEventListener("keydown", onKeydown);
+      dialog.close();
+      resolve(result);
+    };
+    okButton.addEventListener("click", () => finish(input.value.trim() || suggestedName), { once: true });
+    cancelButton.addEventListener("click", () => finish(suggestedName), { once: true });
+    closeButton.addEventListener("click", () => finish(suggestedName), { once: true });
+    dialog.addEventListener("close", () => finish(suggestedName), { once: true });
+    input.addEventListener("keydown", onKeydown);
+    dialog.showModal();
+    input.focus();
+    input.select();
+  });
+}
+
 function renderImportsList() {
   const totalCount = imports.length + nazendingen.length;
   const activeCount = imports.filter((imp) => imp.active).length + activeNazendingen().length;
@@ -998,8 +1055,8 @@ function renderImportsList() {
       event.target.value = imp.name;
       saveImportState();
     });
-    row.querySelector(".import-delete-button").addEventListener("click", () => {
-      if (!confirm(`Lijst "${imp.name}" verwijderen?`)) return;
+    row.querySelector(".import-delete-button").addEventListener("click", async () => {
+      if (!(await confirmDialog(`Lijst "${imp.name}" verwijderen?`))) return;
       imports = imports.filter((entry) => entry.id !== imp.id);
       saveImportState();
       if (imports.length || nazendingen.length) renderAll(); else resetImport();
@@ -1048,8 +1105,8 @@ function renderImportsList() {
         saveNazendingen();
         renderAll();
       });
-      subRow.querySelector(".nazending-delete-button").addEventListener("click", () => {
-        if (!confirm(`Klacht "${nz.pakketnummer}" verwijderen?`)) return;
+      subRow.querySelector(".nazending-delete-button").addEventListener("click", async () => {
+        if (!(await confirmDialog(`Klacht "${nz.pakketnummer}" verwijderen?`))) return;
         nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
         saveNazendingen();
         if (imports.length || nazendingen.length) renderAll(); else resetImport();
@@ -1130,7 +1187,10 @@ async function handleFile(file) {
   if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
   try {
     const orderCounts = readOrders(await file.text());
-    const name = uniqueImportName(formatShortDate(new Date()));
+    const baseName = formatShortDate(new Date());
+    const name = imports.some((imp) => imp.name === baseName)
+      ? await promptImportName(uniqueImportName(baseName))
+      : baseName;
     imports.push({ id: makeImportId(), name, active: true, orderCounts });
     saveImportState();
     renderAll();
