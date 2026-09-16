@@ -6,11 +6,14 @@ instead of one browser's localStorage.
 
 import argparse
 import json
+import shutil
+import subprocess
 import sys
 import threading
 import urllib.parse
 import webbrowser
 from dataclasses import asdict, replace
+from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -23,6 +26,11 @@ DIST_DIR = PROJECT_DIR / "webapp" / "dist"
 BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = DIST_DIR / "data.js"
+
+# The "Back-up" button in the app: commits/pushes whatever's changed, then
+# mirrors the project onto the K: drive as a second, non-git copy.
+BACKUP_TARGET_DIR = Path(r"K:\Bas Heijnen\PICKLIST CLAUDE")
+BACKUP_EXCLUDE_NAMES = {".git", ".claude", "__pycache__", ".pytest_cache"}
 
 NEW_ITEMS_GROEP = "Nieuwe artikelen:"
 POKON_GROEP = "Pokon:"
@@ -239,17 +247,81 @@ def update_package(pakketnummer, payload, bom_csv_path=BOM_CSV_PATH, package_inf
     return new_package, new_entries
 
 
+def _run_git(args):
+    return subprocess.run(
+        ["git", *args], cwd=PROJECT_DIR, capture_output=True, text=True
+    )
+
+
+def _copy_to_backup_drive(target_dir):
+    if not target_dir.parent.exists():
+        raise RuntimeError(f"{target_dir.parent} is niet bereikbaar. Staat de K:-schijf aangekoppeld?")
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for item in PROJECT_DIR.iterdir():
+        if item.name in BACKUP_EXCLUDE_NAMES:
+            continue
+        destination = target_dir / item.name
+        if item.is_dir():
+            shutil.copytree(item, destination, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, destination)
+
+
+def run_backup():
+    """Commit anything pending, push it, then mirror the project onto K:.
+    Runs under `_write_lock` so it can't interleave with a package save.
+    """
+    status = _run_git(["status", "--porcelain"])
+    if status.returncode != 0:
+        raise RuntimeError(f"git status mislukt: {status.stderr.strip()}")
+
+    committed = bool(status.stdout.strip())
+    if committed:
+        add = _run_git(["add", "-A"])
+        if add.returncode != 0:
+            raise RuntimeError(f"git add mislukt: {add.stderr.strip()}")
+        message = f"Back-up {datetime.now():%d-%m-%Y %H:%M}"
+        commit = _run_git(["commit", "-m", message])
+        if commit.returncode != 0:
+            raise RuntimeError(f"git commit mislukt: {commit.stderr.strip()}")
+
+    push = _run_git(["push"])
+    if push.returncode != 0:
+        raise RuntimeError(f"git push mislukt: {push.stderr.strip()}")
+
+    try:
+        _copy_to_backup_drive(BACKUP_TARGET_DIR)
+        copy_error = None
+    except Exception as error:
+        # git already succeeded by this point — report that, rather than
+        # hiding it behind a drive that happens to not be mounted right now.
+        copy_error = str(error)
+
+    return {"committed": committed, "copied": copy_error is None, "copy_error": copy_error}
+
+
 class PicklistRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(DIST_DIR), **kwargs)
 
     def do_POST(self):
+        if self.path == "/api/backup":
+            self._handle_backup()
+            return
         if self.path != "/api/pakketten":
             self._send_json(404, {"error": "Onbekend endpoint."})
             return
         self._handle_pakketten_write(
             lambda payload: add_package(payload, BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH)
         )
+
+    def _handle_backup(self):
+        try:
+            with _write_lock:
+                result = run_backup()
+            self._send_json(200, {"ok": True, **result})
+        except Exception as error:
+            self._send_json(500, {"ok": False, "error": str(error)})
 
     def do_PUT(self):
         prefix = "/api/pakketten/"

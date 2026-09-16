@@ -13,6 +13,8 @@ const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
 const newImportButton = document.querySelector("#newImportButton");
 const printPakketkaartenButton = document.querySelector("#printPakketkaartenButton");
+const backupButton = document.querySelector("#backupButton");
+const backupStatus = document.querySelector("#backupStatus");
 const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
@@ -1197,11 +1199,35 @@ async function handleFile(file) {
   } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
 }
 
+async function runBackup() {
+  backupButton.disabled = true;
+  backupStatus.classList.remove("is-error");
+  backupStatus.textContent = "Bezig met back-uppen…";
+  try {
+    const response = await fetch("/api/backup", { method: "POST" });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || "Back-up mislukt.");
+    const time = new Intl.DateTimeFormat("nl-NL", { hour: "2-digit", minute: "2-digit" }).format(new Date());
+    if (result.copied) {
+      backupStatus.textContent = `Back-up gelukt (${time})`;
+    } else {
+      backupStatus.classList.add("is-error");
+      backupStatus.textContent = `Gepusht naar GitHub, maar kopie naar K: mislukt: ${result.copy_error}`;
+    }
+  } catch (error) {
+    backupStatus.classList.add("is-error");
+    backupStatus.textContent = `Back-up mislukt: ${error.message}`;
+  } finally {
+    backupButton.disabled = false;
+  }
+}
+
 fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
 ["dragenter", "dragover"].forEach((event) => dropZone.addEventListener(event, (e) => { e.preventDefault(); dropZone.classList.add("is-dragging"); }));
 ["dragleave", "drop"].forEach((event) => dropZone.addEventListener(event, (e) => { e.preventDefault(); dropZone.classList.remove("is-dragging"); }));
 dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files[0]));
 printButton.addEventListener("click", () => window.print());
+backupButton.addEventListener("click", runBackup);
 newImportButton.addEventListener("click", resetImport);
 printPakketkaartenButton.addEventListener("click", printPakketkaarten);
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
