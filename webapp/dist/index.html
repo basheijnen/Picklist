@@ -37,23 +37,28 @@
   </header>
 
   <main>
-    <section class="import-panel" aria-labelledby="import-title">
-      <div>
+    <div class="top-row">
+      <section class="import-panel" aria-labelledby="import-title">
         <span class="eyebrow">Nieuwe picklist</span>
         <h2 id="import-title">Sleep de orderexport hierheen</h2>
-        <p>Gebruik een puntkomma-gescheiden CSV met de kolom <strong>Package Number</strong>. Sleep je nog een export erbij, dan verschijnt hij als aparte lijst hieronder die je los aan of uit kunt zetten, of in de wacht kunt zetten onder een eigen naam. Klik op <strong>Alles wissen</strong> om helemaal opnieuw te beginnen.</p>
+        <p>Gebruik een puntkomma-gescheiden CSV met de kolom <strong>Package Number</strong>. Sleep je nog een export erbij, dan verschijnt hij als aparte lijst bij "Ingeladen lijsten" die je los aan of uit kunt zetten, of in de wacht kunt zetten onder een eigen naam. Klik op <strong>Alles wissen</strong> om helemaal opnieuw te beginnen.</p>
+        <label id="dropZone" class="drop-zone" for="fileInput">
+          <span class="upload-icon" aria-hidden="true">↑</span>
+          <span><strong>Kies een CSV-bestand</strong> of sleep het hierheen</span>
+          <input id="fileInput" type="file" accept=".csv,text/csv">
+        </label>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
         <div class="intro-actions">
           <button id="managePackagesButton" class="button button-quiet" type="button">Pakketten beheren</button>
           <button id="addNazendingButton" class="button button-quiet nazending-add-button" type="button">+ Klacht aanmaken</button>
         </div>
-      </div>
-      <label id="dropZone" class="drop-zone" for="fileInput">
-        <span class="upload-icon" aria-hidden="true">↑</span>
-        <span><strong>Kies een CSV-bestand</strong> of sleep het hierheen</span>
-        <input id="fileInput" type="file" accept=".csv,text/csv">
-      </label>
-      <p id="message" class="message" role="status" aria-live="polite"></p>
-    </section>
+      </section>
+
+      <section id="importsPanel" class="imports-panel" hidden>
+        <span class="eyebrow">Ingeladen lijsten</span>
+        <div id="importsList" class="imports-list"></div>
+      </section>
+    </div>
 
     <section id="emptyState" class="empty-state">
       <div class="empty-grid" aria-hidden="true">
@@ -64,13 +69,6 @@
     </section>
 
     <section id="results" class="results" hidden>
-      <section id="importsPanel" class="imports-panel" hidden>
-        <div class="imports-panel-header">
-          <span class="eyebrow">Ingeladen lijsten</span>
-          <h2>Kies welke lijsten meetellen</h2>
-        </div>
-        <div id="importsList" class="imports-list"></div>
-      </section>
       <div class="summary-bar">
         <div><span>Lijsten</span><strong id="fileName">—</strong></div>
         <div><span>Orders</span><strong id="orderCount">0</strong></div>
