@@ -74,6 +74,7 @@
       <div class="summary-bar">
         <div><span>Lijsten</span><strong id="fileName">—</strong></div>
         <div><span>Orders</span><strong id="orderCount">0</strong></div>
+        <div><span>Klachten</span><strong id="klachtCount">0</strong></div>
         <div><span>Pakketten</span><strong id="packageCount">0</strong></div>
         <div><span>Datum</span><strong id="runDate">—</strong></div>
       </div>
@@ -164,9 +165,11 @@
     <div class="nazending-dialog-body">
       <div id="nazendingDraftList" class="nazending-draft-list" hidden></div>
       <label class="nazending-pakket-field">Pakketnummer
-        <input id="nazendingPakketnummer" list="nazendingPakketList" placeholder="Bijv. 11.1" autocomplete="off">
+        <div class="nazending-pakket-input-wrap">
+          <input id="nazendingPakketnummer" placeholder="Bijv. 11.1" autocomplete="off">
+          <ul id="nazendingPakketSuggestions" class="nazending-suggestions" hidden></ul>
+        </div>
       </label>
-      <datalist id="nazendingPakketList"></datalist>
       <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
       <div id="nazendingComponentRows" class="nazending-component-rows"></div>
       <button id="addAnotherNazendingPakketButton" class="text-button nazending-add-another-button" type="button" hidden>+ Nog een pakket toevoegen aan deze klacht</button>

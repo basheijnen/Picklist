@@ -23,7 +23,7 @@ const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const nazendingDialog = document.querySelector("#nazendingDialog");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
-const nazendingPakketList = document.querySelector("#nazendingPakketList");
+const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
 const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
 const nazendingComponentRowsEl = document.querySelector("#nazendingComponentRows");
 const nazendingMessage = document.querySelector("#nazendingMessage");
@@ -304,9 +304,38 @@ function populatePokonOptions() {
   names.forEach((name) => select.add(new Option(name, name)));
 }
 
-function populateNazendingPakketList() {
-  nazendingPakketList.replaceChildren();
-  getPakketnummerList().forEach((pakketnummer) => nazendingPakketList.append(new Option(pakketnummer, pakketnummer)));
+function hideNazendingPakketSuggestions() {
+  nazendingPakketSuggestionsEl.hidden = true;
+  nazendingPakketSuggestionsEl.replaceChildren();
+}
+
+function renderNazendingPakketSuggestions() {
+  const rawValue = nazendingPakketnummerInput.value.trim();
+  const query = rawValue.toLowerCase();
+  const allPakketten = getPakketnummerList();
+  // An exact match already has its content loaded below — keeping the
+  // suggestion list open then would just sit on top of it for no reason.
+  if (!query || allPakketten.includes(rawValue)) { hideNazendingPakketSuggestions(); return; }
+  const matches = allPakketten.filter((pakketnummer) => pakketnummer.toLowerCase().includes(query)).slice(0, 8);
+  if (!matches.length) { hideNazendingPakketSuggestions(); return; }
+  nazendingPakketSuggestionsEl.replaceChildren();
+  matches.forEach((pakketnummer) => {
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = pakketnummer;
+    // mousedown (not click) fires before the input's blur, so the list is
+    // still there to read from when the handler runs.
+    button.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      nazendingPakketnummerInput.value = pakketnummer;
+      hideNazendingPakketSuggestions();
+      loadNazendingComponents();
+    });
+    item.append(button);
+    nazendingPakketSuggestionsEl.append(item);
+  });
+  nazendingPakketSuggestionsEl.hidden = false;
 }
 
 function openNazendingDialog() {
@@ -323,6 +352,12 @@ function resetNazendingPakketPicker() {
   nazendingPakketNaamEl.textContent = "";
   nazendingComponentRowsEl.replaceChildren();
   addAnotherNazendingPakketButton.hidden = true;
+  hideNazendingPakketSuggestions();
+}
+
+function getKnownDoosnummers() {
+  const known = new Set((window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item));
+  return [...known].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
 function loadNazendingComponents() {
@@ -346,7 +381,11 @@ function loadNazendingComponents() {
       const row = document.createElement("label");
       row.className = "nazending-component-row";
       const labelHtml = entry.gebied === "DOZEN"
-        ? `Doos <input type="text" class="nazending-doosnummer" value="${escapeHtml(entry.item)}" aria-label="Doosnummer">`
+        ? `Doos <select class="nazending-doosnummer" aria-label="Doosnummer">${
+            getKnownDoosnummers()
+              .map((doosnummer) => `<option value="${escapeHtml(doosnummer)}"${doosnummer === entry.item ? " selected" : ""}>${escapeHtml(doosnummer)}</option>`)
+              .join("")
+          }</select>`
         : `${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}`;
       row.innerHTML = `
         <input type="checkbox" checked data-gebied="${escapeHtml(entry.gebied)}" data-item="${escapeHtml(entry.item)}" data-soort="${escapeHtml(entry.soort || "")}" data-groep="${escapeHtml(entry.groep || "")}" data-volgorde="${entry.volgorde}">
@@ -953,38 +992,58 @@ function renderImportsList() {
     });
     importsList.append(row);
   });
-  nazendingen.forEach((nz) => {
-    const active = nz.active !== false;
-    const stukAantal = nz.entries
-      .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
-      .reduce((sum, entry) => sum + entry.aantal, 0);
-    const doosAantal = nz.entries
+  // Klachten count/toggle together as one group — they're all "extra
+  // stuff on top of the normal order" the same way, so one Meetellen
+  // switch for all of them is simpler than one per klacht. Removing a
+  // specific klacht is still possible, just per-item in the sublist below.
+  if (nazendingen.length) {
+    const allActive = nazendingen.every((nz) => nz.active !== false);
+    const totalDoos = nazendingen.reduce((sum, nz) => sum + nz.entries
       .filter((entry) => entry.gebied === "DOZEN")
-      .reduce((sum, entry) => sum + entry.aantal, 0);
-    const totalLabel = nz.volledig
-      ? `${displayNumber(doosAantal)} ${doosAantal === 1 ? "doos" : "dozen"}`
-      : `${displayNumber(stukAantal)} stuks`;
-    const row = document.createElement("div");
-    row.className = `import-row${active ? "" : " is-held"}`;
-    row.innerHTML = `
-      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${active ? "checked" : ""}><span>Meetellen</span></label>
-      <span class="nazending-list-label">${escapeHtml(nz.pakketnummer)}<span class="nazending-badge">Klacht</span></span>
-      <span class="import-order-total">${totalLabel}</span>
-      <button type="button" class="import-delete-button" aria-label="Klacht verwijderen">×</button>`;
-    row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
-      nz.active = event.target.checked;
+      .reduce((boxSum, entry) => boxSum + entry.aantal, 0), 0);
+    const someActive = nazendingen.some((nz) => nz.active !== false);
+    const groupRow = document.createElement("div");
+    groupRow.className = `import-row${allActive ? "" : " is-held"}`;
+    groupRow.innerHTML = `
+      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${allActive ? "checked" : ""}><span>Meetellen</span></label>
+      <span class="nazending-list-label">Klachten (${nazendingen.length})<span class="nazending-badge">Klacht</span></span>
+      <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>
+      <span></span>`;
+    const groupCheckbox = groupRow.querySelector(".import-active-checkbox");
+    groupCheckbox.indeterminate = someActive && !allActive;
+    groupCheckbox.addEventListener("change", (event) => {
+      nazendingen.forEach((nz) => { nz.active = event.target.checked; });
       closeCountDiffMenu();
       saveNazendingen();
       renderAll();
     });
-    row.querySelector(".import-delete-button").addEventListener("click", () => {
-      if (!confirm(`Klacht "${nz.pakketnummer}" verwijderen?`)) return;
-      nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
-      saveNazendingen();
-      if (imports.length || nazendingen.length) renderAll(); else resetImport();
+    importsList.append(groupRow);
+
+    const subList = document.createElement("div");
+    subList.className = "nazending-sublist";
+    nazendingen.forEach((nz) => {
+      const nzActive = nz.active !== false;
+      const subRow = document.createElement("div");
+      subRow.className = `nazending-subrow${nzActive ? "" : " is-held"}`;
+      subRow.innerHTML = `
+        <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span>${escapeHtml(nz.pakketnummer)}</span></label>
+        <button type="button" class="nazending-delete-button" aria-label="Klacht verwijderen">×</button>`;
+      subRow.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
+        nz.active = event.target.checked;
+        closeCountDiffMenu();
+        saveNazendingen();
+        renderAll();
+      });
+      subRow.querySelector(".nazending-delete-button").addEventListener("click", () => {
+        if (!confirm(`Klacht "${nz.pakketnummer}" verwijderen?`)) return;
+        nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
+        saveNazendingen();
+        if (imports.length || nazendingen.length) renderAll(); else resetImport();
+      });
+      subList.append(subRow);
     });
-    importsList.append(row);
-  });
+    importsList.append(subList);
+  }
 }
 
 function renderAll() {
@@ -1002,7 +1061,8 @@ function renderAll() {
   const calculated = calculate(orderCounts);
   renderImportsList();
   document.querySelector("#orderCount").textContent = [...orderCounts.values()].reduce((a, b) => a + b, 0);
-  document.querySelector("#packageCount").textContent = orderCounts.size;
+  document.querySelector("#klachtCount").textContent = activeNazendingen().length;
+  document.querySelector("#packageCount").textContent = orderCounts.size + activeNazendingen().length;
   document.querySelector("#runDate").textContent = new Intl.DateTimeFormat("nl-NL").format(new Date());
   const tabs = document.querySelector("#departmentTabs");
   const panels = document.querySelector("#departmentPanels");
@@ -1090,12 +1150,16 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
 document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
-nazendingPakketnummerInput.addEventListener("input", loadNazendingComponents);
+nazendingPakketnummerInput.addEventListener("input", () => {
+  loadNazendingComponents();
+  renderNazendingPakketSuggestions();
+});
+nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
+nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
 
 populatePokonOptions();
-populateNazendingPakketList();
 
 imports = loadImportState();
 nazendingen = loadNazendingen();
