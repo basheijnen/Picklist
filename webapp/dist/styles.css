@@ -98,7 +98,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .summary-bar span { display: block; margin-bottom: 5px; color: var(--muted); font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .summary-bar strong { display: block; overflow: hidden; color: var(--brand); text-overflow: ellipsis; white-space: nowrap; font-size: 1.08rem; }
 .tabs { display: flex; gap: 8px; margin: 28px 0 14px; overflow-x: auto; padding-bottom: 2px; }
-.tab { flex: 1 0 auto; min-height: 44px; padding: 0 18px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: white; font-weight: 800; cursor: pointer; }
+.tab { flex: 1 0 auto; min-height: 44px; padding: 0 18px; border: 2px solid var(--accent, var(--line)); border-radius: 12px; color: var(--ink); background: white; font-weight: 800; cursor: pointer; }
 .tab[aria-selected="true"] { color: white; border-color: var(--accent); background: var(--accent); }
 .department { --accent: #397560; overflow: hidden; border: 1px solid var(--line); border-top: 6px solid var(--accent); border-radius: 18px; background: white; box-shadow: 0 12px 38px rgba(25,52,43,.07); }
 .department[data-department="KOELING"] { --accent: #2576a6; }
