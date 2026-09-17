@@ -605,6 +605,75 @@ function parseDelimited(text, delimiter = ";") {
   return rows;
 }
 
+const KANAAL_REGIO = {
+  "amazon": "BENELUX",
+  "bol.com": "BENELUX",
+  "groupon nl": "BENELUX",
+  "groupon be": "BENELUX",
+  "ibood": "BENELUX",
+  "mediahuis": "BENELUX",
+  "newreturns": "BENELUX",
+  "vakantieveilingen": "BENELUX",
+  "pvw": "BENELUX",
+  "voordeelvanger": "BENELUX",
+  "groupon fr": "EUROPA",
+  "groupon de": "EUROPA",
+  "groupon it": "EUROPA",
+  "groupon es": "EUROPA",
+  "limango": "EUROPA",
+  "maison privee": "EUROPA",
+  "westwing": "EUROPA",
+  "outspot": "EUROPA",
+  "veepee": "EUROPA",
+};
+
+function regioVoorKanaal(kanaal) {
+  return KANAAL_REGIO[String(kanaal || "").trim().toLowerCase()] || "Onbekend";
+}
+
+// Client=Amazon rows carry the marketplace in Shop ("Amazon.de", "Amazon.es",
+// ...) but all count toward one "Amazon" total. Client=GroupON rows instead
+// carry the *country code* in Shop ("BE", "NL", ...), which picks the
+// per-country channel ("Groupon BE"). Every other client is already a
+// distinct channel name as-is.
+function normalizeKanaal(client, shop) {
+  const trimmedClient = String(client || "").trim();
+  const lowerClient = trimmedClient.toLowerCase();
+  if (lowerClient === "amazon") return "Amazon";
+  if (lowerClient === "groupon") {
+    const land = String(shop || "").trim().toUpperCase();
+    return land ? `Groupon ${land}` : "Groupon";
+  }
+  return trimmedClient;
+}
+
+function parseVerkoopExport(text) {
+  const rows = parseDelimited(text);
+  if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
+  const header = rows[0].map((value) => value.trim());
+  const kolomIndex = {
+    ordernummer: header.indexOf("Ordernr. intern"),
+    pakketnummer: header.indexOf("Package Number"),
+    client: header.indexOf("Client"),
+    shop: header.indexOf("Shop"),
+  };
+  if (kolomIndex.ordernummer < 0 || kolomIndex.pakketnummer < 0 || kolomIndex.client < 0) {
+    throw new Error('De kolommen "Ordernr. intern", "Package Number" en "Client" zijn verplicht.');
+  }
+  const orders = [];
+  rows.slice(1).forEach((row) => {
+    const ordernummer = (row[kolomIndex.ordernummer] || "").trim();
+    const pakketnummer = (row[kolomIndex.pakketnummer] || "").trim();
+    if (!ordernummer || !pakketnummer) return;
+    const client = row[kolomIndex.client] || "";
+    const shop = kolomIndex.shop >= 0 ? row[kolomIndex.shop] || "" : "";
+    let kanaal = normalizeKanaal(client, shop);
+    if (regioVoorKanaal(kanaal) === "Onbekend") kanaal = `Onbekend: ${kanaal || "?"}`;
+    orders.push({ ordernummer, kanaal, pakketnummer });
+  });
+  return orders;
+}
+
 function readOrders(text) {
   const rows = parseDelimited(text);
   if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
