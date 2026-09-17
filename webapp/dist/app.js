@@ -630,6 +630,8 @@ const KANAAL_REGIO = {
   "westwing": "EUROPA",
   "outspot": "EUROPA",
   "veepee": "EUROPA",
+  "aldi": "EUROPA",
+  "essim": "BENELUX",
 };
 
 function regioVoorKanaal(kanaal) {
@@ -649,6 +651,7 @@ function normalizeKanaal(client, shop) {
     const land = String(shop || "").trim().toUpperCase();
     return land ? `Groupon ${land}` : "Groupon";
   }
+  if (lowerClient === "tmg") return "Mediahuis";
   return trimmedClient;
 }
 
@@ -670,6 +673,8 @@ function parseVerkoopExport(text) {
     const ordernummer = (row[kolomIndex.ordernummer] || "").trim();
     const pakketnummer = (row[kolomIndex.pakketnummer] || "").trim();
     if (!ordernummer || !pakketnummer) return;
+    const rawClient = row[kolomIndex.client] || "";
+    if (rawClient.trim().toLowerCase() === "klachten e-commerce") return;
     const client = row[kolomIndex.client] || "";
     const shop = kolomIndex.shop >= 0 ? row[kolomIndex.shop] || "" : "";
     let kanaal = normalizeKanaal(client, shop);
