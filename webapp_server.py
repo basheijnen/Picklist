@@ -6,6 +6,7 @@ instead of one browser's localStorage.
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -264,6 +265,8 @@ def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH):
     rows = payload.get("rows") or []
     if not datum or not rows:
         raise ValueError("Kies een datum en upload minstens één orderregel.")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", datum):
+        raise ValueError("Datum moet het formaat JJJJ-MM-DD hebben.")
 
     new_orders = []
     for row in rows:
@@ -291,12 +294,32 @@ def _run_git(args):
     )
 
 
+def _merge_verkoop_orders():
+    """verkoop_orders.csv can grow on either side — an upload from this
+    checkout, or one from a colleague running the app off K: — so unlike
+    bom.csv/package_info.csv it can't just be pulled one-way. Both sides
+    get unioned by ordernummer and each gets the merged result written
+    back, so neither side's uploads are ever lost.
+    """
+    c_path = CANONICAL_REPO_DIR / "verkoop_orders.csv"
+    k_path = SHARED_COPY_DIR / "verkoop_orders.csv"
+    c_orders = load_verkoop_csv(c_path)
+    k_orders = load_verkoop_csv(k_path)
+    merged, _, _ = merge_new_orders(c_orders, k_orders)
+    write_verkoop_csv(merged, c_path)
+    write_verkoop_csv(merged, k_path)
+
+
 def _pull_shared_data():
     """Copy bom.csv/package_info.csv FROM the shared K: copy INTO the git
     checkout — the only direction that can't lose a colleague's in-app edit,
-    since they run the app from K:, not from this checkout.
+    since they run the app from K:, not from this checkout. verkoop_orders.csv
+    is handled separately (see _merge_verkoop_orders) since, unlike those two
+    files, it can grow independently on either side.
     """
     for filename in SHARED_DATA_FILES:
+        if filename == "verkoop_orders.csv":
+            continue
         source = SHARED_COPY_DIR / filename
         if source.exists():
             shutil.copy2(source, CANONICAL_REPO_DIR / filename)
@@ -305,10 +328,24 @@ def _pull_shared_data():
         CANONICAL_REPO_DIR / "package_info.csv",
         CANONICAL_REPO_DIR / "webapp" / "dist" / "data.js",
     )
-    build_verkoop_data_js(
-        CANONICAL_REPO_DIR / "verkoop_orders.csv",
-        CANONICAL_REPO_DIR / "webapp" / "dist" / "verkoop_data.js",
-    )
+    _merge_verkoop_orders()
+    # A sales-data problem should never block the Back-up flow's core job of
+    # committing/pushing/pulling code, so this gets its own try/except
+    # separate from the bom.csv/package_info.csv build above.
+    try:
+        build_verkoop_data_js(
+            CANONICAL_REPO_DIR / "verkoop_orders.csv",
+            CANONICAL_REPO_DIR / "webapp" / "dist" / "verkoop_data.js",
+        )
+    except Exception as error:
+        print(f"WAARSCHUWING: kan verkoop_orders.csv niet inlezen: {error}")
+    try:
+        build_verkoop_data_js(
+            SHARED_COPY_DIR / "verkoop_orders.csv",
+            SHARED_COPY_DIR / "webapp" / "dist" / "verkoop_data.js",
+        )
+    except Exception as error:
+        print(f"WAARSCHUWING: kan verkoop_orders.csv niet inlezen: {error}")
 
 
 def _push_code_to_shared_copy():
@@ -447,8 +484,12 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             self._send_json(400, {"error": "Ongeldige aanvraag: kan de gegevens niet lezen."})
             return
         try:
+            # Holding the lock across the read-modify-write means two
+            # concurrent requests (e.g. a double-clicked upload) can't both
+            # read the same "before" state and each append their own copy
+            # of the uploaded rows.
             with _write_lock:
-                all_orders, toegevoegd, overgeslagen = add_verkoop_orders(payload)
+                all_orders, toegevoegd, overgeslagen = add_verkoop_orders(payload, VERKOOP_CSV_PATH)
                 build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
             self._send_json(200, {
                 "toegevoegd": toegevoegd,
@@ -475,10 +516,13 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
 def main(port=8765, open_browser=True):
     try:
         build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
-        build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
     except Exception as error:
         print(f"FOUT: kan bom.csv/package_info.csv niet inlezen: {error}")
         return 1
+    try:
+        build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
+    except Exception as error:
+        print(f"WAARSCHUWING: kan verkoop_orders.csv niet inlezen: {error}")
     try:
         server = ThreadingHTTPServer(("127.0.0.1", port), PicklistRequestHandler)
     except OSError as error:
