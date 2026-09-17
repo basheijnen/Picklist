@@ -115,6 +115,7 @@ function createHeldImport(name) {
 
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
+let verkoopSort = { kolom: "aantal", richting: "desc" };
 
 // A klacht is active by default; older saved records simply have no
 // `active` field at all, which should still mean "counts".
@@ -721,6 +722,136 @@ async function handleVerkoopUpload(file) {
   } catch (error) {
     verkoopUploadMessage.textContent = `Kan bestand niet verwerken: ${error.message}`;
   }
+}
+
+function verkoopIsoWeek(datumStr) {
+  const date = new Date(`${datumStr}T00:00:00`);
+  const target = new Date(date.valueOf());
+  const dayNr = (date.getDay() + 6) % 7;
+  target.setDate(target.getDate() - dayNr + 3);
+  const firstThursday = new Date(target.getFullYear(), 0, 4);
+  const diff = target - firstThursday;
+  const week = 1 + Math.round(diff / (7 * 24 * 3600 * 1000));
+  return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
+}
+
+function verkoopPakketnaam(pakketnummer) {
+  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
+  return info ? info.pakketnaam : "—";
+}
+
+function verkoopBinnenPeriode(datum, periode) {
+  if (periode === "alles") return true;
+  const vandaag = todayIso();
+  if (periode === "vandaag") return datum === vandaag;
+  if (periode === "week") return verkoopIsoWeek(datum) === verkoopIsoWeek(vandaag);
+  if (periode === "maand") return datum.slice(0, 7) === vandaag.slice(0, 7);
+  return true;
+}
+
+function verkoopGefilterdeOrders() {
+  const periode = document.querySelector("#verkoopPeriodeFilter").value;
+  const kanaal = document.querySelector("#verkoopKanaalFilter").value;
+  const zoek = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase();
+  return (window.PICKLIST_VERKOOP || []).filter((order) => {
+    if (!verkoopBinnenPeriode(order.datum, periode)) return false;
+    if (kanaal && order.kanaal !== kanaal) return false;
+    if (zoek) {
+      const naam = verkoopPakketnaam(order.pakketnummer).toLowerCase();
+      if (!order.pakketnummer.toLowerCase().includes(zoek) && !naam.includes(zoek)) return false;
+    }
+    return true;
+  });
+}
+
+function renderVerkoopTiles() {
+  const alleOrders = window.PICKLIST_VERKOOP || [];
+  const vandaag = todayIso();
+  const totaalSeizoen = alleOrders.reduce((sum, o) => sum + o.aantal, 0);
+  const totaalVandaag = alleOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
+  const dezeWeekKey = verkoopIsoWeek(vandaag);
+  const totaalDezeWeek = alleOrders.filter((o) => verkoopIsoWeek(o.datum) === dezeWeekKey).reduce((sum, o) => sum + o.aantal, 0);
+  const europa = alleOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
+  const benelux = alleOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
+
+  const tegels = [
+    ["Totaal seizoen", displayNumber(totaalSeizoen)],
+    ["Vandaag", displayNumber(totaalVandaag)],
+    ["Deze week", displayNumber(totaalDezeWeek)],
+    ["Europa · Benelux", `${displayNumber(europa)} · ${displayNumber(benelux)}`],
+  ];
+  document.querySelector("#verkoopTiles").innerHTML = tegels
+    .map(([label, value]) => `<div class="verkoop-tile"><span class="verkoop-tile-label">${escapeHtml(label)}</span><span class="verkoop-tile-value">${escapeHtml(value)}</span></div>`)
+    .join("");
+}
+
+function renderVerkoopChart(orders) {
+  const perWeek = new Map();
+  orders.forEach((order) => {
+    const week = verkoopIsoWeek(order.datum);
+    perWeek.set(week, (perWeek.get(week) || 0) + order.aantal);
+  });
+  const weken = [...perWeek.keys()].sort().slice(-12);
+  const max = Math.max(1, ...weken.map((week) => perWeek.get(week)));
+  document.querySelector("#verkoopChart").innerHTML = weken
+    .map((week) => {
+      const waarde = perWeek.get(week);
+      const hoogte = Math.round((waarde / max) * 100);
+      const label = week.split("-W")[1];
+      return `<div class="verkoop-chart-bar" title="${escapeHtml(week)}: ${displayNumber(waarde)}">
+        <div class="verkoop-chart-bar-fill" style="height:${hoogte}%"></div>
+        <span class="verkoop-chart-bar-label">wk ${escapeHtml(label)}</span>
+      </div>`;
+    })
+    .join("");
+}
+
+function renderVerkoopKanaalOpties() {
+  const select = document.querySelector("#verkoopKanaalFilter");
+  const huidige = select.value;
+  const kanalen = [...new Set((window.PICKLIST_VERKOOP || []).map((o) => o.kanaal))].sort((a, b) => a.localeCompare(b, "nl"));
+  select.innerHTML = '<option value="">Alle kanalen</option>' + kanalen.map((kanaal) => `<option value="${escapeHtml(kanaal)}">${escapeHtml(kanaal)}</option>`).join("");
+  if (kanalen.includes(huidige)) select.value = huidige;
+}
+
+function verkoopAggregeerPerPakketEnKanaal(orders) {
+  const groepen = new Map();
+  orders.forEach((order) => {
+    const key = `${order.pakketnummer} ${order.kanaal}`;
+    groepen.set(key, (groepen.get(key) || 0) + order.aantal);
+  });
+  return [...groepen.entries()].map(([key, aantal]) => {
+    const [pakketnummer, kanaal] = key.split(" ");
+    return { pakketnummer, kanaal, naam: verkoopPakketnaam(pakketnummer), aantal };
+  });
+}
+
+function renderVerkoopTable(orders) {
+  const rijen = verkoopAggregeerPerPakketEnKanaal(orders);
+  const { kolom, richting } = verkoopSort;
+  rijen.sort((a, b) => {
+    const factor = richting === "asc" ? 1 : -1;
+    if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
+    return String(a[kolom]).localeCompare(String(b[kolom]), "nl") * factor;
+  });
+  document.querySelector("#verkoopTableBody").innerHTML = rijen
+    .map((rij) => `<tr>
+      <td>${escapeHtml(rij.pakketnummer)}</td>
+      <td>${escapeHtml(rij.naam)}</td>
+      <td>${escapeHtml(rij.kanaal)}</td>
+      <td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td>
+    </tr>`)
+    .join("");
+  const totaal = orders.reduce((sum, order) => sum + order.aantal, 0);
+  document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
+}
+
+function renderVerkoopDialog() {
+  renderVerkoopTiles();
+  renderVerkoopKanaalOpties();
+  const gefilterd = verkoopGefilterdeOrders();
+  renderVerkoopChart(gefilterd);
+  renderVerkoopTable(gefilterd);
 }
 
 function readOrders(text) {
@@ -1387,6 +1518,20 @@ document.querySelector("#closeVerkoopDialog").addEventListener("click", () => ve
 verkoopUploadInput.addEventListener("change", () => {
   handleVerkoopUpload(verkoopUploadInput.files[0]);
   verkoopUploadInput.value = "";
+});
+["#verkoopPeriodeFilter", "#verkoopKanaalFilter"].forEach((selector) => {
+  document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
+});
+document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
+document.querySelectorAll(".verkoop-table th[data-sort]").forEach((th) => {
+  th.addEventListener("click", () => {
+    const kolom = th.dataset.sort;
+    verkoopSort = {
+      kolom,
+      richting: verkoopSort.kolom === kolom && verkoopSort.richting === "desc" ? "asc" : "desc",
+    };
+    renderVerkoopDialog();
+  });
 });
 document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
