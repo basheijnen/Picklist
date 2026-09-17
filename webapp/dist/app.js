@@ -961,7 +961,7 @@ function appendNazendingPakketkaarten(nz) {
     // so that summary bar is dropped and the item list becomes the headline.
     card.className = `pakketkaart pakketkaart-nazending${nz.volledig ? "" : " pakketkaart-incomplete"}`;
     card.innerHTML = `
-      <div class="pakketkaart-label">PAKKETNUMMER: <span class="pakketkaart-nazending-badge">Nazending</span></div>
+      <div class="pakketkaart-label">${nz.volledig ? "PAKKETNUMMER: " : ""}<span class="pakketkaart-nazending-badge">Nazending</span></div>
       <div class="pakketkaart-nummer">${nz.volledig ? escapeHtml(group.pakketnummer) : ""}</div>
       ${nz.volledig ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
