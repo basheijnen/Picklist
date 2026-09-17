@@ -365,6 +365,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 
 .verkoop-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
+.verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
+.verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
 

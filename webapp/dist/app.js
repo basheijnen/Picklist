@@ -807,16 +807,28 @@ function renderVerkoopTiles() {
   const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
+  // periode/zoek: clicking a tile jumps the filters below straight to what
+  // that tile is showing, instead of making you set them by hand.
   const tegels = [
-    ["Totaal seizoen", displayNumber(totaalSeizoen)],
-    ["Vandaag", displayNumber(totaalVandaag)],
-    ["Deze week", displayNumber(totaalDezeWeek)],
-    ["Europa · Benelux", `${displayNumber(europa)} · ${displayNumber(benelux)}`],
-    ["Pokon", displayNumber(totaalPokon)],
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), periode: "alles" },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), periode: "vandaag" },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), periode: "week" },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, periode: null },
+    { label: "Pokon", waarde: displayNumber(totaalPokon), periode: "alles", zoek: "Pokon" },
   ];
-  document.querySelector("#verkoopTiles").innerHTML = tegels
-    .map(([label, value]) => `<div class="verkoop-tile"><span class="verkoop-tile-label">${escapeHtml(label)}</span><span class="verkoop-tile-value">${escapeHtml(value)}</span></div>`)
+  const tilesEl = document.querySelector("#verkoopTiles");
+  tilesEl.innerHTML = tegels
+    .map((tegel) => `<div class="verkoop-tile${tegel.periode ? " verkoop-tile-klikbaar" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`)
     .join("");
+  [...tilesEl.children].forEach((el, index) => {
+    const tegel = tegels[index];
+    if (!tegel.periode) return;
+    el.addEventListener("click", () => {
+      document.querySelector("#verkoopPeriodeFilter").value = tegel.periode;
+      document.querySelector("#verkoopZoekInput").value = tegel.zoek || "";
+      renderVerkoopDialog();
+    });
+  });
 }
 
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
