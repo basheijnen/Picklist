@@ -1595,6 +1595,15 @@ document.querySelector("#closeVerkoopDialog").addEventListener("click", () => ve
 ["#verkoopVanDatum", "#verkoopTotDatum", "#verkoopKanaalFilter"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
+["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
+  const input = document.querySelector(selector);
+  // A plain click on a date input only selects the segment under the
+  // cursor (day/month/year) — open the native picker straight away instead,
+  // so one click anywhere on the field is enough.
+  input.addEventListener("click", () => {
+    if (typeof input.showPicker === "function") input.showPicker();
+  });
+});
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
