@@ -352,3 +352,37 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .department[data-department="PAKKETTEN"] table { min-width: 0; }
   .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+.verkoop-dialog { width: min(1100px, calc(100% - 24px)); }
+.verkoop-dialog .dialog-header { padding: 24px 28px 20px; }
+.verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
+
+.verkoop-upload-row { display: flex; align-items: end; gap: 12px; }
+.verkoop-upload-datum-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
+.verkoop-upload-datum-field input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.verkoop-upload-button { cursor: pointer; }
+
+.verkoop-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
+.verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+.verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
+
+.verkoop-chart { display: flex; align-items: flex-end; gap: 4px; height: 90px; padding: 8px 4px 0; border-bottom: 1px solid var(--line); }
+.verkoop-chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; }
+.verkoop-chart-bar-fill { width: 100%; min-height: 2px; border-radius: 3px 3px 0 0; background: var(--brand); }
+.verkoop-chart-bar-label { font-size: .62rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+
+.verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
+.verkoop-filters select, .verkoop-filters input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.verkoop-filters input[type="search"] { min-width: 220px; }
+
+.verkoop-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.verkoop-table th, .verkoop-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+.verkoop-table th { cursor: pointer; user-select: none; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
+.verkoop-table .verkoop-col-aantal { text-align: right; }
+.verkoop-table tfoot td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
+
+@media (max-width: 720px) {
+  .verkoop-tiles { grid-template-columns: 1fr 1fr; }
+}
