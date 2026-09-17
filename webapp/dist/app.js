@@ -574,6 +574,7 @@ async function saveNewPackage(event) {
     }
     window.PICKLIST_PACKAGES.push(result.package);
     window.PICKLIST_BOM.push(...result.bom);
+    verkoopPakketnaamMap = null;
     packageDialog.close();
     message.textContent = editingPakketnummer
       ? `Pakket ${pakketnummer} is bijgewerkt.`
