@@ -817,11 +817,11 @@ function renderVerkoopKanaalOpties() {
 function verkoopAggregeerPerPakketEnKanaal(orders) {
   const groepen = new Map();
   orders.forEach((order) => {
-    const key = `${order.pakketnummer} ${order.kanaal}`;
+    const key = `${order.pakketnummer}\u0000${order.kanaal}`;
     groepen.set(key, (groepen.get(key) || 0) + order.aantal);
   });
   return [...groepen.entries()].map(([key, aantal]) => {
-    const [pakketnummer, kanaal] = key.split(" ");
+    const [pakketnummer, kanaal] = key.split("\u0000");
     return { pakketnummer, kanaal, naam: verkoopPakketnaam(pakketnummer), aantal };
   });
 }
