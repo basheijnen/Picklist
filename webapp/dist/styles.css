@@ -394,6 +394,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-filters select, .verkoop-filters input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 .verkoop-filters input[type="search"] { min-width: 220px; }
+.verkoop-bereik-velden { display: flex; gap: 12px; }
 
 .verkoop-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .verkoop-table th, .verkoop-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }

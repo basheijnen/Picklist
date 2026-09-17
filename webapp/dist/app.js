@@ -784,8 +784,16 @@ function verkoopGefilterdeOrders() {
   const periode = document.querySelector("#verkoopPeriodeFilter").value;
   const kanaal = document.querySelector("#verkoopKanaalFilter").value;
   const zoek = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase();
+  const bereikVan = document.querySelector("#verkoopBereikVan").value;
+  const bereikTot = document.querySelector("#verkoopBereikTot").value;
   return (window.PICKLIST_VERKOOP || []).filter((order) => {
-    if (!verkoopBinnenPeriode(order.datum, periode)) return false;
+    if (periode === "bereik") {
+      // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
+      if (bereikVan && order.datum < bereikVan) return false;
+      if (bereikTot && order.datum > bereikTot) return false;
+    } else if (!verkoopBinnenPeriode(order.datum, periode)) {
+      return false;
+    }
     if (kanaal && order.kanaal !== kanaal) return false;
     if (zoek) {
       const naam = verkoopPakketnaam(order.pakketnummer).toLowerCase();
@@ -964,6 +972,11 @@ function renderVerkoopKalender() {
 function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKanaalOpties();
+  const isBereik = document.querySelector("#verkoopPeriodeFilter").value === "bereik";
+  document.querySelector("#verkoopBereikVelden").hidden = !isBereik;
+  if (isBereik && !document.querySelector("#verkoopBereikTot").value) {
+    document.querySelector("#verkoopBereikTot").value = verkoopWeergaveDatumWaarde();
+  }
   const gefilterd = verkoopGefilterdeOrders();
   renderVerkoopChart(gefilterd);
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
@@ -1653,7 +1666,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
 verkoopWeergaveDatum.addEventListener("change", renderVerkoopDialog);
-["#verkoopPeriodeFilter", "#verkoopKanaalFilter"].forEach((selector) => {
+["#verkoopPeriodeFilter", "#verkoopKanaalFilter", "#verkoopBereikVan", "#verkoopBereikTot"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
 document.querySelector("#verkoopGrafiekGranulariteit").addEventListener("change", renderVerkoopDialog);
