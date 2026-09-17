@@ -19,13 +19,16 @@ from pathlib import Path
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
-from tools.build_webapp_data import build_data_js
+from sales import VerkoopOrder, load_verkoop_csv, merge_new_orders, write_verkoop_csv
+from tools.build_webapp_data import build_data_js, build_verkoop_data_js
 
 PROJECT_DIR = Path(__file__).resolve().parent
 DIST_DIR = PROJECT_DIR / "webapp" / "dist"
 BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = DIST_DIR / "data.js"
+VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
+VERKOOP_DATA_JS_PATH = DIST_DIR / "verkoop_data.js"
 
 # The "Back-up" button in the app. Bas and a colleague both run the app from
 # the shared K: copy, so bom.csv/package_info.csv there can be newer than
@@ -36,7 +39,7 @@ DATA_JS_PATH = DIST_DIR / "data.js"
 # colleague launching from there also gets the latest app code.
 CANONICAL_REPO_DIR = Path(r"C:\picklist")
 SHARED_COPY_DIR = Path(r"K:\Bas Heijnen\PICKLIST CLAUDE")
-SHARED_DATA_FILES = ["bom.csv", "package_info.csv"]
+SHARED_DATA_FILES = ["bom.csv", "package_info.csv", "verkoop_orders.csv"]
 BACKUP_EXCLUDE_NAMES = {".git", ".claude", "__pycache__", ".pytest_cache"}
 
 NEW_ITEMS_GROEP = "Nieuwe artikelen:"
@@ -254,6 +257,31 @@ def update_package(pakketnummer, payload, bom_csv_path=BOM_CSV_PATH, package_inf
     return new_package, new_entries
 
 
+def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH):
+    if not isinstance(payload, dict):
+        raise ValueError("Ongeldige aanvraag.")
+    datum = str(payload.get("datum", "")).strip()
+    rows = payload.get("rows") or []
+    if not datum or not rows:
+        raise ValueError("Kies een datum en upload minstens één orderregel.")
+
+    new_orders = []
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("Elke orderregel moet een ordernummer, kanaal en pakketnummer hebben.")
+        ordernummer = str(row.get("ordernummer", "")).strip()
+        kanaal = str(row.get("kanaal", "")).strip()
+        pakketnummer = str(row.get("pakketnummer", "")).strip()
+        if not ordernummer or not kanaal or not pakketnummer:
+            raise ValueError("Elke orderregel moet een ordernummer, kanaal en pakketnummer hebben.")
+        new_orders.append(VerkoopOrder(ordernummer, datum, kanaal, pakketnummer, 1.0))
+
+    existing = load_verkoop_csv(verkoop_csv_path)
+    all_orders, toegevoegd, overgeslagen = merge_new_orders(existing, new_orders)
+    write_verkoop_csv(all_orders, verkoop_csv_path)
+    return all_orders, toegevoegd, overgeslagen
+
+
 def _run_git(args):
     # Always targets the canonical checkout, never `PROJECT_DIR` — the
     # server (and this same button) can just as well be running from the
@@ -276,6 +304,10 @@ def _pull_shared_data():
         CANONICAL_REPO_DIR / "bom.csv",
         CANONICAL_REPO_DIR / "package_info.csv",
         CANONICAL_REPO_DIR / "webapp" / "dist" / "data.js",
+    )
+    build_verkoop_data_js(
+        CANONICAL_REPO_DIR / "verkoop_orders.csv",
+        CANONICAL_REPO_DIR / "webapp" / "dist" / "verkoop_data.js",
     )
 
 
@@ -350,6 +382,9 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/backup":
             self._handle_backup()
             return
+        if self.path == "/api/verkoop":
+            self._handle_verkoop_upload()
+            return
         if self.path != "/api/pakketten":
             self._send_json(404, {"error": "Onbekend endpoint."})
             return
@@ -404,6 +439,27 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             # a bare connection reset.
             self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
 
+    def _handle_verkoop_upload(self):
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            payload = json.loads(self.rfile.read(length) or b"{}")
+        except (TypeError, ValueError):
+            self._send_json(400, {"error": "Ongeldige aanvraag: kan de gegevens niet lezen."})
+            return
+        try:
+            with _write_lock:
+                all_orders, toegevoegd, overgeslagen = add_verkoop_orders(payload)
+                build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
+            self._send_json(200, {
+                "toegevoegd": toegevoegd,
+                "overgeslagen": overgeslagen,
+                "orders": [asdict(order) for order in all_orders],
+            })
+        except ValueError as error:
+            self._send_json(400, {"error": str(error)})
+        except Exception as error:
+            self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
+
     def _send_json(self, status, payload):
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
@@ -419,6 +475,7 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
 def main(port=8765, open_browser=True):
     try:
         build_data_js(BOM_CSV_PATH, PACKAGE_INFO_CSV_PATH, DATA_JS_PATH)
+        build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
     except Exception as error:
         print(f"FOUT: kan bom.csv/package_info.csv niet inlezen: {error}")
         return 1

@@ -2,7 +2,8 @@ import pytest
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
-from webapp_server import add_package, update_package
+from sales import VerkoopOrder, load_verkoop_csv, write_verkoop_csv
+from webapp_server import add_package, add_verkoop_orders, update_package
 
 
 def _empty_csvs(tmp_path):
@@ -665,3 +666,57 @@ def test_server_serializes_concurrent_posts_for_same_pakketnummer(tmp_path, monk
     # exist, never two — a doubled write would leave 4 rows instead of 2.
     entries = load_bom_csv(bom_csv_path)
     assert len([entry for entry in entries if entry.pakketnummer == "281.1"]) == 2
+
+
+def test_add_verkoop_orders_appends_and_forces_aantal_to_one(tmp_path):
+    verkoop_csv_path = tmp_path / "verkoop_orders.csv"
+    write_verkoop_csv([], verkoop_csv_path)
+
+    all_orders, toegevoegd, overgeslagen = add_verkoop_orders(
+        {
+            "datum": "2026-09-17",
+            "rows": [
+                {"ordernummer": "123", "kanaal": "Amazon", "pakketnummer": "9.1", "aantal": 999},
+                {"ordernummer": "124", "kanaal": "Bol.com", "pakketnummer": "70.12"},
+            ],
+        },
+        verkoop_csv_path,
+    )
+
+    assert toegevoegd == 2
+    assert overgeslagen == 0
+    assert all_orders == [
+        VerkoopOrder("123", "2026-09-17", "Amazon", "9.1", 1.0),
+        VerkoopOrder("124", "2026-09-17", "Bol.com", "70.12", 1.0),
+    ]
+    assert load_verkoop_csv(verkoop_csv_path) == all_orders
+
+
+def test_add_verkoop_orders_dedupes_against_existing_ordernummers(tmp_path):
+    verkoop_csv_path = tmp_path / "verkoop_orders.csv"
+    write_verkoop_csv([VerkoopOrder("123", "2026-09-16", "Amazon", "9.1", 1.0)], verkoop_csv_path)
+
+    all_orders, toegevoegd, overgeslagen = add_verkoop_orders(
+        {"datum": "2026-09-17", "rows": [{"ordernummer": "123", "kanaal": "Amazon", "pakketnummer": "9.1"}]},
+        verkoop_csv_path,
+    )
+
+    assert toegevoegd == 0
+    assert overgeslagen == 1
+    assert all_orders == [VerkoopOrder("123", "2026-09-16", "Amazon", "9.1", 1.0)]
+
+
+@pytest.mark.parametrize("payload", [
+    {},
+    {"datum": "", "rows": [{"ordernummer": "1", "kanaal": "Amazon", "pakketnummer": "9.1"}]},
+    {"datum": "2026-09-17", "rows": []},
+    {"datum": "2026-09-17", "rows": [{"ordernummer": "", "kanaal": "Amazon", "pakketnummer": "9.1"}]},
+    {"datum": "2026-09-17", "rows": [{"ordernummer": "1", "kanaal": "", "pakketnummer": "9.1"}]},
+    {"datum": "2026-09-17", "rows": [{"ordernummer": "1", "kanaal": "Amazon", "pakketnummer": ""}]},
+])
+def test_add_verkoop_orders_rejects_invalid_payloads(tmp_path, payload):
+    verkoop_csv_path = tmp_path / "verkoop_orders.csv"
+    write_verkoop_csv([], verkoop_csv_path)
+
+    with pytest.raises(ValueError):
+        add_verkoop_orders(payload, verkoop_csv_path)
