@@ -920,10 +920,9 @@ function buildPakketkaarten(orderCounts) {
 // one its bundle-mate kept", so its content folds into the first doos the
 // klacht has. A klacht with no doos at all becomes a single "—" card.
 function groupNazendingByDoos(nz) {
-  const subPakketten = nz.pakketten || [{ pakketnummer: nz.pakketnummer, pakketnaam: nz.pakketnaam, entries: nz.entries }];
+  const subPakketten = nz.pakketten || [{ pakketnummer: nz.pakketnummer, entries: nz.entries }];
   const withDoos = subPakketten.map((sub) => ({
     pakketnummer: sub.pakketnummer,
-    pakketnaam: sub.pakketnaam,
     doosnummer: (sub.entries.find((entry) => entry.gebied === "DOZEN") || {}).item || null,
     content: sub.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied)),
   }));
@@ -937,9 +936,18 @@ function groupNazendingByDoos(nz) {
   return [...groups.entries()].map(([doosnummer, subs]) => ({
     doosnummer,
     pakketnummer: subs.map((sub) => sub.pakketnummer).join(" + "),
-    pakketnaam: subs.map((sub) => sub.pakketnaam).join(" + "),
     content: subs.flatMap((sub) => sub.content).sort((a, b) => a.volgorde - b.volgorde),
   }));
+}
+
+// Nazending cards ship only part of their original package(s), so the
+// nominal pakketnaam (e.g. "Camelia x 3") can overstate what's actually in
+// this box. Build the header from the real content instead, so it always
+// matches the itemized list and the x-total below it.
+function nazendingContentNaam(content) {
+  return content
+    .map((entry) => `${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}`)
+    .join(" + ");
 }
 
 function appendNazendingPakketkaarten(nz) {
@@ -953,7 +961,7 @@ function appendNazendingPakketkaarten(nz) {
     card.innerHTML = `
       <div class="pakketkaart-label">PAKKETNUMMER: <span class="pakketkaart-nazending-badge">Nazending</span></div>
       <div class="pakketkaart-nummer">${escapeHtml(group.pakketnummer)}</div>
-      <div class="pakketkaart-naam"><span>${escapeHtml(group.pakketnaam)}</span><span>x ${displayNumber(totalCount)}</span></div>
+      <div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>`;
     pakketkaartenPanel.append(card);
