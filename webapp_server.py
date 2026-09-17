@@ -339,6 +339,13 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(DIST_DIR), **kwargs)
 
+    def end_headers(self):
+        # This app's own code changes underneath the same file names
+        # (app.js, index.html, ...), so a browser caching them "normally"
+        # can keep showing behavior from before the last edit indefinitely.
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def do_POST(self):
         if self.path == "/api/backup":
             self._handle_backup()
