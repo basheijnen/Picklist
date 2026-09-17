@@ -848,7 +848,7 @@ function renderVerkoopTable(orders) {
   rijen.sort((a, b) => {
     const factor = richting === "asc" ? 1 : -1;
     if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
-    return String(a[kolom]).localeCompare(String(b[kolom]), "nl") * factor;
+    return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
   });
   document.querySelector("#verkoopTableBody").innerHTML = rijen
     .map((rij) => `<tr>
