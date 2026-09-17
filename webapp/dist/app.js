@@ -892,9 +892,12 @@ function renderVerkoopKalender() {
         const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
         return `<tr${isWeekend ? ' class="verkoop-kalender-weekend"' : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
+      // Pad every month out to 31 rows so "Totaal" lines up on the same
+      // horizontal row across all 12 columns, regardless of month length.
+      const vulRijen = Array.from({ length: 31 - dagenInMaand }, () => `<tr><td>&nbsp;</td><td></td></tr>`).join("");
       return `<div class="verkoop-kalender-maand">
         <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])}</div>
-        <table><tbody>${rijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table>
+        <table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table>
       </div>`;
     })
     .join("");
