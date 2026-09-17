@@ -959,7 +959,8 @@ function renderVerkoopKalender() {
         const datum = `${jaar}-${String(maand).padStart(2, "0")}-${String(dag).padStart(2, "0")}`;
         const waarde = perDag.get(datum) || 0;
         totaalMaand += waarde;
-        return `<tr><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+        const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
+        return `<tr${isWeekend ? ' class="verkoop-kalender-weekend"' : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
       return `<div class="verkoop-kalender-maand">
         <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])}</div>

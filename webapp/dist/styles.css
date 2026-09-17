@@ -356,7 +356,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
 
-.verkoop-dialog { width: min(1100px, calc(100% - 24px)); }
+.verkoop-dialog { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; }
 .verkoop-dialog .dialog-header { padding: 24px 28px 20px; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
 
@@ -382,12 +382,13 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
 .verkoop-view-button.is-actief { color: white; border-color: var(--brand); background: var(--brand); }
 
-.verkoop-kalender { display: flex; flex-wrap: wrap; gap: 14px; max-height: 60vh; overflow-y: auto; padding: 4px 2px; }
+.verkoop-kalender { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 2px; }
 .verkoop-kalender-maand { flex: 0 0 150px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .verkoop-kalender-maand-titel { padding: 6px 10px; background: var(--brand); color: white; font-size: .78rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
 .verkoop-kalender-maand table { width: 100%; border-collapse: collapse; font-size: .76rem; }
 .verkoop-kalender-maand td { padding: 3px 8px; border-bottom: 1px solid var(--line); }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; }
+.verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
