@@ -24,7 +24,6 @@ const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const verkoopDialog = document.querySelector("#verkoopDialog");
-const verkoopWeergaveDatum = document.querySelector("#verkoopWeergaveDatum");
 const nazendingDialog = document.querySelector("#nazendingDialog");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
 const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
@@ -752,17 +751,6 @@ async function verstuurNaarVerkoop(imp, buttonEl) {
   }
 }
 
-function verkoopIsoWeek(datumStr) {
-  const date = new Date(`${datumStr}T00:00:00`);
-  const target = new Date(date.valueOf());
-  const dayNr = (date.getDay() + 6) % 7;
-  target.setDate(target.getDate() - dayNr + 3);
-  const firstThursday = new Date(target.getFullYear(), 0, 4);
-  const diff = target - firstThursday;
-  const week = 1 + Math.round(diff / (7 * 24 * 3600 * 1000));
-  return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
-}
-
 let verkoopPakketnaamMap = null;
 function verkoopPakketnaam(pakketnummer) {
   if (!verkoopPakketnaamMap) {
@@ -793,33 +781,34 @@ function renderVerkoopTiles() {
   const alleOrders = window.PICKLIST_VERKOOP || [];
   const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
   const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
-  const vandaag = verkoopWeergaveDatumWaarde();
+  const vandaag = todayIso();
   const totaalSeizoen = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
-  const dezeWeekKey = verkoopIsoWeek(vandaag);
-  const totaalDezeWeek = pakketOrders.filter((o) => verkoopIsoWeek(o.datum) === dezeWeekKey).reduce((sum, o) => sum + o.aantal, 0);
+  const dezeWeek = verkoopWeekBereik(vandaag);
+  const totaalDezeWeek = pakketOrders.filter((o) => o.datum >= dezeWeek.van && o.datum <= dezeWeek.tot).reduce((sum, o) => sum + o.aantal, 0);
   const europa = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
   const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
-  // periode/zoek: clicking a tile jumps the filters below straight to what
-  // that tile is showing, instead of making you set them by hand.
+  // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
+  // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), periode: "alles", view: "kalender" },
-    { label: "Vandaag", waarde: displayNumber(totaalVandaag), periode: "vandaag" },
-    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), periode: "week" },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, periode: null },
-    { label: "Pokon", waarde: displayNumber(totaalPokon), periode: "alles", zoek: "Pokon" },
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: "", tot: "", view: "kalender" },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), van: vandaag, tot: vandaag },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), van: dezeWeek.van, tot: dezeWeek.tot },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}` },
+    { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];
   const tilesEl = document.querySelector("#verkoopTiles");
   tilesEl.innerHTML = tegels
-    .map((tegel) => `<div class="verkoop-tile${tegel.periode ? " verkoop-tile-klikbaar" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`)
+    .map((tegel) => `<div class="verkoop-tile${tegel.van !== undefined ? " verkoop-tile-klikbaar" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`)
     .join("");
   [...tilesEl.children].forEach((el, index) => {
     const tegel = tegels[index];
-    if (!tegel.periode) return;
+    if (tegel.van === undefined) return;
     el.addEventListener("click", () => {
-      document.querySelector("#verkoopPeriodeFilter").value = tegel.periode;
+      document.querySelector("#verkoopVanDatum").value = tegel.van;
+      document.querySelector("#verkoopTotDatum").value = tegel.tot;
       document.querySelector("#verkoopZoekInput").value = tegel.zoek || "";
       verkoopView = tegel.view || "tabel";
       renderVerkoopDialog();
@@ -831,51 +820,6 @@ function verkoopVerschuifDatum(datumStr, aantalDagen) {
   const [jaar, maand, dag] = datumStr.split("-").map(Number);
   const d = new Date(jaar, maand - 1, dag + aantalDagen);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function verkoopPeriodeKey(datumStr, granulariteit) {
-  if (granulariteit === "dag") return datumStr;
-  if (granulariteit === "maand") return datumStr.slice(0, 7);
-  return verkoopIsoWeek(datumStr);
-}
-
-function verkoopRecentePeriodes(granulariteit, aantal) {
-  const vandaag = verkoopWeergaveDatumWaarde();
-  if (granulariteit === "dag") {
-    return Array.from({ length: aantal }, (_, i) => verkoopVerschuifDatum(vandaag, i - (aantal - 1)));
-  }
-  if (granulariteit === "maand") {
-    const [jaar, maand] = vandaag.split("-").map(Number);
-    return Array.from({ length: aantal }, (_, i) => {
-      const d = new Date(jaar, maand - 1 - (aantal - 1 - i), 1);
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    });
-  }
-  const weken = Array.from({ length: aantal }, (_, i) => verkoopIsoWeek(verkoopVerschuifDatum(vandaag, (i - (aantal - 1)) * 7)));
-  return [...new Set(weken)];
-}
-
-function renderVerkoopChart(orders) {
-  const granulariteit = document.querySelector("#verkoopGrafiekGranulariteit").value;
-  const aantalPeriodes = granulariteit === "dag" ? 30 : 12;
-  const perPeriode = new Map();
-  orders.forEach((order) => {
-    const key = verkoopPeriodeKey(order.datum, granulariteit);
-    perPeriode.set(key, (perPeriode.get(key) || 0) + order.aantal);
-  });
-  const periodes = verkoopRecentePeriodes(granulariteit, aantalPeriodes);
-  const max = Math.max(1, ...periodes.map((key) => perPeriode.get(key) || 0));
-  document.querySelector("#verkoopChart").innerHTML = periodes
-    .map((key) => {
-      const waarde = perPeriode.get(key) || 0;
-      const hoogte = Math.round((waarde / max) * 100);
-      const label = granulariteit === "dag" ? key.slice(8, 10) : granulariteit === "maand" ? key.slice(5, 7) : key.split("-W")[1];
-      return `<div class="verkoop-chart-bar" title="${escapeHtml(key)}: ${displayNumber(waarde)}">
-        <div class="verkoop-chart-bar-fill" style="height:${hoogte}%"></div>
-        <span class="verkoop-chart-bar-label">${escapeHtml(label)}</span>
-      </div>`;
-    })
-    .join("");
 }
 
 function renderVerkoopKanaalOpties() {
@@ -959,13 +903,7 @@ function renderVerkoopKalender() {
 function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKanaalOpties();
-  const isBereik = document.querySelector("#verkoopPeriodeFilter").value === "bereik";
-  document.querySelector("#verkoopBereikVelden").hidden = !isBereik;
-  if (isBereik && !document.querySelector("#verkoopBereikTot").value) {
-    document.querySelector("#verkoopBereikTot").value = verkoopWeergaveDatumWaarde();
-  }
   const gefilterd = verkoopGefilterdeOrders();
-  renderVerkoopChart(gefilterd);
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
   });
@@ -1647,16 +1585,16 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
   openPackageForm();
 });
 document.querySelector("#openVerkoopButton").addEventListener("click", () => {
-  verkoopWeergaveDatum.value = todayIso();
+  const vandaag = todayIso();
+  document.querySelector("#verkoopVanDatum").value = vandaag;
+  document.querySelector("#verkoopTotDatum").value = vandaag;
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
-verkoopWeergaveDatum.addEventListener("change", renderVerkoopDialog);
-["#verkoopPeriodeFilter", "#verkoopKanaalFilter", "#verkoopBereikVan", "#verkoopBereikTot"].forEach((selector) => {
+["#verkoopVanDatum", "#verkoopTotDatum", "#verkoopKanaalFilter"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
-document.querySelector("#verkoopGrafiekGranulariteit").addEventListener("change", renderVerkoopDialog);
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
