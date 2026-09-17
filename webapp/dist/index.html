@@ -185,40 +185,49 @@
       </label>
       <div id="verkoopChart" class="verkoop-chart"></div>
 
-      <div class="verkoop-filters">
-        <label>Periode
-          <select id="verkoopPeriodeFilter">
-            <option value="alles">Alles</option>
-            <option value="vandaag">Vandaag</option>
-            <option value="week">Deze week</option>
-            <option value="maand">Deze maand</option>
-          </select>
-        </label>
-        <label>Kanaal
-          <select id="verkoopKanaalFilter">
-            <option value="">Alle kanalen</option>
-          </select>
-        </label>
-        <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer of naam…">
+      <div class="verkoop-view-toggle">
+        <button type="button" class="verkoop-view-button is-actief" data-view="tabel">Tabel</button>
+        <button type="button" class="verkoop-view-button" data-view="kalender">Kalenderoverzicht</button>
       </div>
 
-      <table class="verkoop-table">
-        <thead>
-          <tr>
-            <th data-sort="pakketnummer">Pakketnummer</th>
-            <th data-sort="naam">Naam</th>
-            <th data-sort="kanaal">Kanaal</th>
-            <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
-          </tr>
-        </thead>
-        <tbody id="verkoopTableBody"></tbody>
-        <tfoot>
-          <tr>
-            <td colspan="3">Totaal (huidige filter)</td>
-            <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
-          </tr>
-        </tfoot>
-      </table>
+      <div id="verkoopTabelView">
+        <div class="verkoop-filters">
+          <label>Periode
+            <select id="verkoopPeriodeFilter">
+              <option value="alles">Alles</option>
+              <option value="vandaag">Vandaag</option>
+              <option value="week">Deze week</option>
+              <option value="maand">Deze maand</option>
+            </select>
+          </label>
+          <label>Kanaal
+            <select id="verkoopKanaalFilter">
+              <option value="">Alle kanalen</option>
+            </select>
+          </label>
+          <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer of naam…">
+        </div>
+
+        <table class="verkoop-table">
+          <thead>
+            <tr>
+              <th data-sort="pakketnummer">Pakketnummer</th>
+              <th data-sort="naam">Naam</th>
+              <th data-sort="kanaal">Kanaal</th>
+              <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
+            </tr>
+          </thead>
+          <tbody id="verkoopTableBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Totaal (huidige filter)</td>
+              <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div id="verkoopKalenderView" class="verkoop-kalender" hidden></div>
 
     </div>
   </dialog>

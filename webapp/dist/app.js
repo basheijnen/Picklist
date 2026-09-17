@@ -118,6 +118,7 @@ function createHeldImport(name) {
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
+let verkoopView = "tabel";
 
 // A klacht is active by default; older saved records simply have no
 // `active` field at all, which should still mean "counts".
@@ -810,7 +811,7 @@ function renderVerkoopTiles() {
   // periode/zoek: clicking a tile jumps the filters below straight to what
   // that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), periode: "alles" },
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), periode: "alles", view: "kalender" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), periode: "vandaag" },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), periode: "week" },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, periode: null },
@@ -826,6 +827,7 @@ function renderVerkoopTiles() {
     el.addEventListener("click", () => {
       document.querySelector("#verkoopPeriodeFilter").value = tegel.periode;
       document.querySelector("#verkoopZoekInput").value = tegel.zoek || "";
+      verkoopView = tegel.view || "tabel";
       renderVerkoopDialog();
     });
   });
@@ -922,12 +924,58 @@ function renderVerkoopTable(orders) {
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
 }
 
+// The season is fixed to what this dashboard is named after, matching how
+// the old Excel workbook laid out one column-group per month regardless of
+// whether that month had data yet.
+const VERKOOP_SEIZOEN_MAANDEN = [
+  [2026, 7], [2026, 8], [2026, 9], [2026, 10], [2026, 11], [2026, 12],
+  [2027, 1], [2027, 2], [2027, 3], [2027, 4], [2027, 5], [2027, 6],
+];
+const VERKOOP_MAAND_NAMEN = [
+  "januari", "februari", "maart", "april", "mei", "juni",
+  "juli", "augustus", "september", "oktober", "november", "december",
+];
+
+function renderVerkoopKalender() {
+  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon");
+  const perDag = new Map();
+  pakketOrders.forEach((order) => {
+    perDag.set(order.datum, (perDag.get(order.datum) || 0) + order.aantal);
+  });
+  document.querySelector("#verkoopKalenderView").innerHTML = VERKOOP_SEIZOEN_MAANDEN
+    .map(([jaar, maand]) => {
+      const dagenInMaand = new Date(jaar, maand, 0).getDate();
+      let totaalMaand = 0;
+      const rijen = Array.from({ length: dagenInMaand }, (_, i) => {
+        const dag = i + 1;
+        const datum = `${jaar}-${String(maand).padStart(2, "0")}-${String(dag).padStart(2, "0")}`;
+        const waarde = perDag.get(datum) || 0;
+        totaalMaand += waarde;
+        return `<tr><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+      }).join("");
+      return `<div class="verkoop-kalender-maand">
+        <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])}</div>
+        <table><tbody>${rijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table>
+      </div>`;
+    })
+    .join("");
+}
+
 function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKanaalOpties();
   const gefilterd = verkoopGefilterdeOrders();
   renderVerkoopChart(gefilterd);
-  renderVerkoopTable(gefilterd);
+  document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
+    knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
+  });
+  document.querySelector("#verkoopTabelView").hidden = verkoopView !== "tabel";
+  document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
+  if (verkoopView === "kalender") {
+    renderVerkoopKalender();
+  } else {
+    renderVerkoopTable(gefilterd);
+  }
 }
 
 function readOrders(text) {
@@ -1610,6 +1658,12 @@ verkoopWeergaveDatum.addEventListener("change", renderVerkoopDialog);
 });
 document.querySelector("#verkoopGrafiekGranulariteit").addEventListener("change", renderVerkoopDialog);
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
+document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
+  knop.addEventListener("click", () => {
+    verkoopView = knop.dataset.view;
+    renderVerkoopDialog();
+  });
+});
 document.querySelectorAll(".verkoop-table th[data-sort]").forEach((th) => {
   th.addEventListener("click", () => {
     const kolom = th.dataset.sort;
