@@ -50,10 +50,16 @@ Vaste tabel in `app.js` (analoog aan bestaande constants zoals
 
 ```
 EUROPA:  Groupon FR, Groupon DE, Groupon IT, Groupon ES,
-         Limango, Maison Privee, WestWing, Outspot, VeePee
+         Limango, Maison Privee, WestWing, Outspot, VeePee, ALDI
 BENELUX: Bol.com, Groupon NL, Groupon BE, iBood, Mediahuis,
-         NewReturns, VakantieVeilingen, PVW, Voordeelvanger, Amazon
+         NewReturns, VakantieVeilingen, PVW, Voordeelvanger, Amazon, ESSIM
 ```
+
+Twee extra normalisatieregels, ontdekt tijdens de eindreview door alle
+243 echte exportbestanden na te lopen: `Client == "TMG"` normaliseert
+naar het bestaande kanaal `"Mediahuis"` (TMG is Mediahuis onder haar
+exportnaam), en rijen met `Client == "Klachten E-Commerce"` worden
+volledig genegeerd (retouren/klachten, geen verkoop).
 
 Normalisatie van de ruwe `Client`/`Shop`-kolommen naar een kanaalnaam uit
 bovenstaande tabel:
@@ -104,11 +110,22 @@ tegen dubbele uploads van hetzelfde bestand.
   vertrouwen voor dat veld) — alleen de migratiescript schrijft rechtstreeks
   grotere `aantal`-waarden weg. De server leest `verkoop_orders.csv`,
   filtert op nieuwe `ordernummer`s, appendt, herbouwt `verkoop_data.js`, en
-  retourneert `{"toegevoegd": n, "overgeslagen": n, "onbekendeKanalen":
-  {...}}`.
+  retourneert `{"toegevoegd": n, "overgeslagen": n, "orders": [...]}` —
+  de volledige, samengevoegde orderslijst, zodat de browser
+  `window.PICKLIST_VERKOOP` na een upload meteen kan vervangen zonder
+  een paginaverversing (de "onbekend kanaal"-telling voor de
+  uploadbevestiging wordt client-side afgeleid uit diezelfde lijst, niet
+  apart door de server meegestuurd).
 - `verkoop_orders.csv` toegevoegd aan `SHARED_DATA_FILES`, zodat de
-  bestaande Back-up-knop 'm meeneemt (pull van K: vóór commit, push erna
-  — zelfde tweerichtingsveiligheid als `bom.csv`/`package_info.csv`).
+  bestaande Back-up-knop 'm meeneemt. Anders dan `bom.csv`/`package_info.csv`
+  (waar K: leidend is en pull dus eenrichtingsverkeer K→C mag zijn) kan
+  dit bestand op *beide* kanten onafhankelijk groeien — een upload vanaf
+  deze checkout, of een upload door een collega die de app vanaf K: draait
+  — dus wordt het bij elke Back-up in beide richtingen samengevoegd
+  (dedupe op `ordernummer`, resultaat teruggeschreven naar zowel C: als
+  K:), in plaats van dat de ene kant de andere overschrijft. Dit gat werd
+  pas bij de eindreview ontdekt (K: bleek het bestand nog helemaal niet
+  te hebben) en is toen alsnog zo gefixt.
 - `build_data_js`-equivalent uitgebreid (of een parallelle functie) om
   naast `data.js` ook `verkoop_data.js` met `window.PICKLIST_VERKOOP` te
   schrijven, zodat de pagina bij een gewone paginaverversing altijd de
