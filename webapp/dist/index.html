@@ -28,6 +28,9 @@
       <button id="backupButton" class="button button-secondary" type="button">
         Back-up
       </button>
+      <button id="openVerkoopButton" class="button button-secondary" type="button">
+        Verkopen 2026-2027
+      </button>
       <button id="newImportButton" class="button button-secondary" type="button" disabled>
         Alle lijsten wissen
       </button>
@@ -159,6 +162,67 @@
     </div>
   </dialog>
 
+  <dialog id="verkoopDialog" class="package-dialog verkoop-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Verkoopadministratie</span><h2>Verkopen 2026-2027</h2></div>
+      <button id="closeVerkoopDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="verkoop-dialog-body">
+
+      <div class="verkoop-upload-row">
+        <label class="verkoop-upload-datum-field">
+          Datum
+          <input id="verkoopUploadDatum" type="date">
+        </label>
+        <label id="verkoopUploadButton" class="button button-primary verkoop-upload-button" for="verkoopUploadInput">
+          ⬆ Upload naar Verkoop
+          <input id="verkoopUploadInput" type="file" accept=".csv,text/csv" hidden>
+        </label>
+      </div>
+      <p id="verkoopUploadMessage" class="dialog-message" role="status" aria-live="polite"></p>
+
+      <div id="verkoopTiles" class="verkoop-tiles"></div>
+
+      <div id="verkoopChart" class="verkoop-chart"></div>
+
+      <div class="verkoop-filters">
+        <label>Periode
+          <select id="verkoopPeriodeFilter">
+            <option value="alles">Alles</option>
+            <option value="vandaag">Vandaag</option>
+            <option value="week">Deze week</option>
+            <option value="maand">Deze maand</option>
+          </select>
+        </label>
+        <label>Kanaal
+          <select id="verkoopKanaalFilter">
+            <option value="">Alle kanalen</option>
+          </select>
+        </label>
+        <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer of naam…">
+      </div>
+
+      <table class="verkoop-table">
+        <thead>
+          <tr>
+            <th data-sort="pakketnummer">Pakketnummer</th>
+            <th data-sort="naam">Naam</th>
+            <th data-sort="kanaal">Kanaal</th>
+            <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
+          </tr>
+        </thead>
+        <tbody id="verkoopTableBody"></tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Totaal (huidige filter)</td>
+            <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+  </dialog>
+
   <dialog id="nazendingDialog" class="package-dialog nazending-dialog">
     <div class="dialog-header">
       <div><span class="eyebrow">Extra regel</span><h2>Klacht aanmaken</h2></div>
@@ -214,6 +278,7 @@
 
   <footer>Alles blijft op deze computer; het CSV-bestand wordt niet geüpload.</footer>
   <script src="data.js"></script>
+  <script src="verkoop_data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
