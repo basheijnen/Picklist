@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 Picklist.xlsx
 webapp/dist/data.js
+webapp/dist/verkoop_data.js
