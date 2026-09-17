@@ -769,9 +769,8 @@ function renderPackages(orderCounts) {
       }
       const nz = row.nz;
       const info = packageInfo.get(nz.pakketnummer) || {};
-      const stukAantal = nz.entries
-        .filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
-        .reduce((sum, entry) => sum + entry.aantal, 0);
+      const nzContent = nz.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied));
+      const stukAantal = nzContent.reduce((sum, entry) => sum + entry.aantal, 0);
       const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
       const doosEntries = nz.entries.filter((entry) => entry.gebied === "DOZEN");
       const doosnummers = doosEntries.map((entry) => entry.item).join(" + ");
@@ -784,7 +783,7 @@ function renderPackages(orderCounts) {
         : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row">
         <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
-        <td class="package-name">${escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
+        <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
         <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
         <td class="package-count">${countCell}</td>
         <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
