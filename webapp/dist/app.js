@@ -24,9 +24,7 @@ const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const verkoopDialog = document.querySelector("#verkoopDialog");
-const verkoopUploadDatum = document.querySelector("#verkoopUploadDatum");
-const verkoopUploadInput = document.querySelector("#verkoopUploadInput");
-const verkoopUploadMessage = document.querySelector("#verkoopUploadMessage");
+const verkoopWeergaveDatum = document.querySelector("#verkoopWeergaveDatum");
 const nazendingDialog = document.querySelector("#nazendingDialog");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
 const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
@@ -53,6 +51,8 @@ function saveImportState() {
       name: imp.name,
       active: imp.active,
       orderCounts: Object.fromEntries(imp.orderCounts),
+      verkoopOrders: imp.verkoopOrders || null,
+      verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }))));
   } catch (_error) {
     // localStorage unavailable (private browsing, quota, ...) — the session
@@ -71,6 +71,8 @@ function loadImportState() {
       name: imp.name,
       active: Boolean(imp.active),
       orderCounts: new Map(Object.entries(imp.orderCounts || {})),
+      verkoopOrders: imp.verkoopOrders || null,
+      verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }));
   } catch (_error) {
     return [];
@@ -705,42 +707,47 @@ function todayIso() {
   return new Date(now - offsetMs).toISOString().slice(0, 10);
 }
 
-async function handleVerkoopUpload(file) {
-  verkoopUploadMessage.textContent = "";
-  if (!file || !file.name.toLowerCase().endsWith(".csv")) {
-    verkoopUploadMessage.textContent = "Kies een CSV-bestand.";
-    return;
-  }
-  const datum = verkoopUploadDatum.value || todayIso();
-  try {
-    const orders = parseVerkoopExport(await file.text());
-    if (!orders.length) throw new Error("Geen orderregels gevonden in dit bestand.");
+// The Verkopen dialog's own date field doubles as a "viewing anchor": once
+// set, "Vandaag"/"Deze week"/"Deze maand" (and the chart) are relative to
+// this date, not the real calendar today — set it to 16 juli and "Vandaag"
+// shows 16 juli's orders, so you can review an earlier day the same way.
+function verkoopWeergaveDatumWaarde() {
+  return verkoopWeergaveDatum.value || todayIso();
+}
 
+async function verstuurNaarVerkoop(imp, buttonEl) {
+  if (!imp.verkoopOrders || !imp.verkoopOrders.length) return;
+  buttonEl.disabled = true;
+  const datum = todayIso();
+  try {
     const onbekend = {};
-    orders.forEach((order) => {
+    imp.verkoopOrders.forEach((order) => {
       if (order.kanaal.startsWith("Onbekend: ")) onbekend[order.kanaal] = (onbekend[order.kanaal] || 0) + 1;
     });
 
     const response = await fetch("/api/verkoop", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ datum, rows: orders }),
+      body: JSON.stringify({ datum, rows: imp.verkoopOrders }),
     });
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Upload mislukt.");
+    if (!response.ok) throw new Error(result.error || "Versturen naar Verkopen mislukt.");
 
     window.PICKLIST_VERKOOP = result.orders;
-    renderVerkoopDialog();
+    imp.verkoopVerstuurd = true;
+    saveImportState();
+    renderImportsList();
 
-    let text = `${result.toegevoegd} orderregels verwerkt, ${result.overgeslagen} overgeslagen (al eerder geüpload).`;
+    let text = `Lijst "${imp.name}" naar Verkopen gestuurd: ${result.toegevoegd} orderregels verwerkt, ${result.overgeslagen} overgeslagen (al eerder geüpload).`;
     const onbekendeNamen = Object.keys(onbekend);
     if (onbekendeNamen.length) {
       const detail = onbekendeNamen.map((naam) => `${naam} (${onbekend[naam]}×)`).join(", ");
       text += ` Let op, onbekend kanaal: ${detail}.`;
     }
-    verkoopUploadMessage.textContent = text;
+    message.textContent = text;
   } catch (error) {
-    verkoopUploadMessage.textContent = `Kan bestand niet verwerken: ${error.message}`;
+    buttonEl.disabled = false;
+    message.textContent = `Kan niet naar Verkopen sturen: ${error.message}`;
   }
 }
 
@@ -765,7 +772,7 @@ function verkoopPakketnaam(pakketnummer) {
 
 function verkoopBinnenPeriode(datum, periode) {
   if (periode === "alles") return true;
-  const vandaag = todayIso();
+  const vandaag = verkoopWeergaveDatumWaarde();
   if (periode === "vandaag") return datum === vandaag;
   if (periode === "week") return verkoopIsoWeek(datum) === verkoopIsoWeek(vandaag);
   if (periode === "maand") return datum.slice(0, 7) === vandaag.slice(0, 7);
@@ -791,7 +798,7 @@ function renderVerkoopTiles() {
   const alleOrders = window.PICKLIST_VERKOOP || [];
   const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
   const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
-  const vandaag = todayIso();
+  const vandaag = verkoopWeergaveDatumWaarde();
   const totaalSeizoen = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
   const dezeWeekKey = verkoopIsoWeek(vandaag);
@@ -825,7 +832,7 @@ function verkoopPeriodeKey(datumStr, granulariteit) {
 }
 
 function verkoopRecentePeriodes(granulariteit, aantal) {
-  const vandaag = todayIso();
+  const vandaag = verkoopWeergaveDatumWaarde();
   if (granulariteit === "dag") {
     return Array.from({ length: aantal }, (_, i) => verkoopVerschuifDatum(vandaag, i - (aantal - 1)));
   }
@@ -1355,12 +1362,17 @@ function renderImportsList() {
   importsList.replaceChildren();
   imports.forEach((imp) => {
     const total = [...imp.orderCounts.values()].reduce((a, b) => a + b, 0);
+    const verkoopKnopHtml = !imp.verkoopOrders
+      ? ""
+      : imp.verkoopVerstuurd
+        ? `<span class="import-verkoop-status">✓ in Verkopen</span>`
+        : `<button type="button" class="import-verkoop-button">Naar Verkopen →</button>`;
     const row = document.createElement("div");
     row.className = `import-row${imp.active ? "" : " is-held"}`;
     row.innerHTML = `
       <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${imp.active ? "checked" : ""}><span>Meetellen</span></label>
       <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst">
-      <span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>
+      <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}</span>
       <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
     row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
       imp.active = event.target.checked;
@@ -1373,6 +1385,8 @@ function renderImportsList() {
       event.target.value = imp.name;
       saveImportState();
     });
+    const verkoopButton = row.querySelector(".import-verkoop-button");
+    if (verkoopButton) verkoopButton.addEventListener("click", () => verstuurNaarVerkoop(imp, verkoopButton));
     row.querySelector(".import-delete-button").addEventListener("click", async () => {
       if (!(await confirmDialog(`Lijst "${imp.name}" verwijderen?`))) return;
       imports = imports.filter((entry) => entry.id !== imp.id);
@@ -1506,12 +1520,18 @@ async function handleFile(file) {
   message.textContent = "";
   if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
   try {
-    const orderCounts = readOrders(await file.text());
+    const text = await file.text();
+    const orderCounts = readOrders(text);
+    // Also parse the same file for Verkopen, so a lijst can be sent there
+    // later without re-uploading — an older export format that's missing a
+    // required column just means no "Naar Verkopen" button for this lijst.
+    let verkoopOrders = null;
+    try { verkoopOrders = parseVerkoopExport(text); } catch (_error) { verkoopOrders = null; }
     const baseName = formatShortDate(new Date());
     const name = imports.some((imp) => imp.name === baseName)
       ? await promptImportName(uniqueImportName(baseName))
       : baseName;
-    imports.push({ id: makeImportId(), name, active: true, orderCounts });
+    imports.push({ id: makeImportId(), name, active: true, orderCounts, verkoopOrders, verkoopVerstuurd: false });
     saveImportState();
     renderAll();
   } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
@@ -1567,15 +1587,12 @@ document.querySelector("#addPackageFromManageButton").addEventListener("click", 
   openPackageForm();
 });
 document.querySelector("#openVerkoopButton").addEventListener("click", () => {
-  verkoopUploadDatum.value = todayIso();
+  verkoopWeergaveDatum.value = todayIso();
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
-verkoopUploadInput.addEventListener("change", () => {
-  handleVerkoopUpload(verkoopUploadInput.files[0]);
-  verkoopUploadInput.value = "";
-});
+verkoopWeergaveDatum.addEventListener("change", renderVerkoopDialog);
 ["#verkoopPeriodeFilter", "#verkoopKanaalFilter"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });

@@ -83,7 +83,10 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .nazending-subrow-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .nazending-subrow-toggle input { width: 15px; height: 15px; }
 .nazending-subrow .nazending-delete-button { width: 22px; height: 22px; font-size: .9rem; }
-.import-order-total { grid-area: meta; color: var(--muted); font-size: .74rem; white-space: nowrap; }
+.import-meta-row { grid-area: meta; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.import-order-total { color: var(--muted); font-size: .74rem; white-space: nowrap; }
+.import-verkoop-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.import-verkoop-status { color: var(--brand); font-size: .72rem; font-weight: 700; white-space: nowrap; }
 .import-delete-button { grid-area: delete; width: 32px; height: 32px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.15rem; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
@@ -357,10 +360,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-dialog .dialog-header { padding: 24px 28px 20px; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
 
-.verkoop-upload-row { display: flex; align-items: end; gap: 12px; }
-.verkoop-upload-datum-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
-.verkoop-upload-datum-field input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
-.verkoop-upload-button { cursor: pointer; }
+.verkoop-weergave-datum-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); width: fit-content; }
+.verkoop-weergave-datum-field input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 
 .verkoop-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
