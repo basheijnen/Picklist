@@ -678,6 +678,51 @@ function parseVerkoopExport(text) {
   return orders;
 }
 
+function todayIso() {
+  const now = new Date();
+  const offsetMs = now.getTimezoneOffset() * 60000;
+  return new Date(now - offsetMs).toISOString().slice(0, 10);
+}
+
+async function handleVerkoopUpload(file) {
+  verkoopUploadMessage.textContent = "";
+  if (!file || !file.name.toLowerCase().endsWith(".csv")) {
+    verkoopUploadMessage.textContent = "Kies een CSV-bestand.";
+    return;
+  }
+  const datum = verkoopUploadDatum.value || todayIso();
+  try {
+    const orders = parseVerkoopExport(await file.text());
+    if (!orders.length) throw new Error("Geen orderregels gevonden in dit bestand.");
+
+    const onbekend = {};
+    orders.forEach((order) => {
+      if (order.kanaal.startsWith("Onbekend: ")) onbekend[order.kanaal] = (onbekend[order.kanaal] || 0) + 1;
+    });
+
+    const response = await fetch("/api/verkoop", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ datum, rows: orders }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Upload mislukt.");
+
+    window.PICKLIST_VERKOOP = result.orders;
+    renderVerkoopDialog();
+
+    let text = `${result.toegevoegd} orderregels verwerkt, ${result.overgeslagen} overgeslagen (al eerder geüpload).`;
+    const onbekendeNamen = Object.keys(onbekend);
+    if (onbekendeNamen.length) {
+      const detail = onbekendeNamen.map((naam) => `${naam} (${onbekend[naam]}×)`).join(", ");
+      text += ` Let op, onbekend kanaal: ${detail}.`;
+    }
+    verkoopUploadMessage.textContent = text;
+  } catch (error) {
+    verkoopUploadMessage.textContent = `Kan bestand niet verwerken: ${error.message}`;
+  }
+}
+
 function readOrders(text) {
   const rows = parseDelimited(text);
   if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
@@ -1332,6 +1377,16 @@ document.querySelector("#managePackagesSearch").addEventListener("input", (event
 document.querySelector("#addPackageFromManageButton").addEventListener("click", () => {
   managePackagesDialog.close();
   openPackageForm();
+});
+document.querySelector("#openVerkoopButton").addEventListener("click", () => {
+  verkoopUploadDatum.value = todayIso();
+  renderVerkoopDialog();
+  verkoopDialog.showModal();
+});
+document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
+verkoopUploadInput.addEventListener("change", () => {
+  handleVerkoopUpload(verkoopUploadInput.files[0]);
+  verkoopUploadInput.value = "";
 });
 document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
