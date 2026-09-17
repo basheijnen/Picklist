@@ -46,13 +46,15 @@ def test_migreer_writes_orders_and_is_idempotent(tmp_path):
     _make_workbook(workbook_path)
     verkoop_csv_path = tmp_path / "verkoop_orders.csv"
 
-    toegevoegd, overgeslagen = migreer(workbook_path, verkoop_csv_path)
+    toegevoegd, overgeslagen, kanalen = migreer(workbook_path, verkoop_csv_path)
     assert toegevoegd == 1
     assert overgeslagen == 0
+    assert kanalen == {"Amazon"}
     assert len(load_verkoop_csv(verkoop_csv_path)) == 1
 
     # Running it again must not duplicate rows.
-    toegevoegd, overgeslagen = migreer(workbook_path, verkoop_csv_path)
+    toegevoegd, overgeslagen, kanalen = migreer(workbook_path, verkoop_csv_path)
     assert toegevoegd == 0
     assert overgeslagen == 1
+    assert kanalen == {"Amazon"}
     assert len(load_verkoop_csv(verkoop_csv_path)) == 1

@@ -83,15 +83,17 @@ def migreer(workbook_path, verkoop_csv_path=VERKOOP_CSV_PATH):
     bestaande_orders = load_verkoop_csv(verkoop_csv_path)
     alle_orders, toegevoegd, overgeslagen = merge_new_orders(bestaande_orders, nieuwe_orders)
     write_verkoop_csv(alle_orders, verkoop_csv_path)
-    return toegevoegd, overgeslagen
+    kanalen = {order.kanaal for order in nieuwe_orders}
+    return toegevoegd, overgeslagen, kanalen
 
 
 def main():
     if len(sys.argv) != 2:
         print("Gebruik: python tools/migrate_verkopen_historie.py <pad-naar-totaaloverzicht.xlsm>")
         return 1
-    toegevoegd, overgeslagen = migreer(Path(sys.argv[1]))
+    toegevoegd, overgeslagen, kanalen = migreer(Path(sys.argv[1]))
     print(f"{toegevoegd} historische orders toegevoegd, {overgeslagen} overgeslagen (al aanwezig).")
+    print(f"Kanalen gevonden in het Excel-bestand: {', '.join(sorted(kanalen))}")
     return 0
 
 
