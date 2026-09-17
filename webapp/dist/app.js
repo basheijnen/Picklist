@@ -796,7 +796,7 @@ function renderVerkoopTiles() {
     { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: "", tot: "", view: "kalender" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), van: vandaag, tot: vandaag },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), van: dezeWeek.van, tot: dezeWeek.tot },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}` },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: "", tot: "", view: "regio" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];
   const tilesEl = document.querySelector("#verkoopTiles");
@@ -903,6 +903,67 @@ function renderVerkoopKalender() {
     .join("");
 }
 
+// Fixed display order per region, matching KANAAL_REGIO's entries — shown
+// even at 0 so a channel with no sales yet still has its row, like the old
+// Excel's "Verkopen per pakketnummer" region breakdown did.
+const VERKOOP_KANAAL_REGIO_VOLGORDE = [
+  ["Groupon FR", "EUROPA"], ["Groupon DE", "EUROPA"], ["Groupon IT", "EUROPA"], ["Groupon ES", "EUROPA"],
+  ["Limango", "EUROPA"], ["Maison Privee", "EUROPA"], ["WestWing", "EUROPA"], ["Outspot", "EUROPA"],
+  ["VeePee", "EUROPA"], ["ALDI", "EUROPA"],
+  ["Bol.com", "BENELUX"], ["Groupon NL", "BENELUX"], ["Groupon BE", "BENELUX"], ["iBood", "BENELUX"],
+  ["Mediahuis", "BENELUX"], ["NewReturns", "BENELUX"], ["VakantieVeilingen", "BENELUX"], ["PVW", "BENELUX"],
+  ["Voordeelvanger", "BENELUX"], ["Amazon", "BENELUX"], ["ESSIM", "BENELUX"],
+];
+
+function renderVerkoopRegio() {
+  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon");
+  const perKanaal = new Map();
+  pakketOrders.forEach((order) => {
+    perKanaal.set(order.kanaal, (perKanaal.get(order.kanaal) || 0) + order.aantal);
+  });
+  const gekendeKanalen = new Set(VERKOOP_KANAAL_REGIO_VOLGORDE.map(([naam]) => naam));
+  const onbekendeKanalen = [...perKanaal.keys()]
+    .filter((kanaal) => !gekendeKanalen.has(kanaal))
+    .sort((a, b) => a.localeCompare(b, "nl"));
+
+  const sectie = (titel, kanalen) => {
+    let totaal = 0;
+    const rijen = kanalen.map((kanaal) => {
+      const waarde = perKanaal.get(kanaal) || 0;
+      totaal += waarde;
+      return `<tr><td>${escapeHtml(kanaal)}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+    }).join("");
+    const html = `<div class="verkoop-regio-sectie">
+      <div class="verkoop-regio-titel">${escapeHtml(titel)}</div>
+      <table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
+        <tbody>${rijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(totaal)}</td></tr></tbody>
+      </table>
+    </div>`;
+    return { html, totaal };
+  };
+
+  const europa = sectie("EUROPA", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "EUROPA").map(([naam]) => naam));
+  const benelux = sectie("BENELUX", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "BENELUX").map(([naam]) => naam));
+  let html = europa.html + benelux.html;
+
+  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr>`;
+  let grandTotaal = europa.totaal + benelux.totaal;
+  if (onbekendeKanalen.length) {
+    const onbekend = sectie("ONBEKEND KANAAL", onbekendeKanalen);
+    html += onbekend.html;
+    eindTotaalRijen += `<tr><td>Onbekend</td><td>${displayNumber(onbekend.totaal)}</td></tr>`;
+    grandTotaal += onbekend.totaal;
+  }
+  html += `<div class="verkoop-regio-sectie verkoop-regio-eindtotaal">
+    <div class="verkoop-regio-titel">TOTAAL</div>
+    <table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
+      <tbody>${eindTotaalRijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(grandTotaal)}</td></tr></tbody>
+    </table>
+  </div>`;
+
+  document.querySelector("#verkoopRegioView").innerHTML = html;
+}
+
 function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKanaalOpties();
@@ -912,8 +973,11 @@ function renderVerkoopDialog() {
   });
   document.querySelector("#verkoopTabelView").hidden = verkoopView !== "tabel";
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
+  document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
+  } else if (verkoopView === "regio") {
+    renderVerkoopRegio();
   } else {
     renderVerkoopTable(gefilterd);
   }
