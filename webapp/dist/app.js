@@ -659,10 +659,10 @@ function normalizeKanaal(client, shop) {
 // A pakketnummer ending in "p"/"P" means "this package, with a box of Pokon
 // added" — the base package still counts as itself, and the Pokon box counts
 // separately (visible per kanaal in the dashboard, never as its own pakket).
-// A bare "P<nummer>" (no dot, e.g. "P004") is Pokon sold with no package at
-// all, so there's no base pakket to also count.
+// A bare "P<nummer>" (no dot, e.g. "P004") is a fixed internal code series
+// unrelated to real Pokon-with-a-package sales — ignored entirely.
 function verkoopPakketPokonSplitsing(pakketnummer) {
-  if (/^[Pp]\d+$/.test(pakketnummer)) return { basis: null, pokon: true };
+  if (/^[Pp]\d+$/.test(pakketnummer)) return { basis: null, pokon: false };
   const metPokon = pakketnummer.match(/^(\d+\.\d+)[Pp]$/);
   if (metPokon) return { basis: metPokon[1], pokon: true };
   return { basis: pakketnummer, pokon: false };

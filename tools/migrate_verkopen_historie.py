@@ -33,11 +33,12 @@ MET_POKON = re.compile(r"^(\d+\.\d+)[Pp]$")
 def _split_pokon(pakketnummer):
     """A pakketnummer ending in "p"/"P" is that package with a box of Pokon
     added — the base package still counts as itself, and the Pokon box
-    counts separately. A bare "P<nummer>" has no base package at all.
-    Returns (basis_pakketnummer_or_None, is_pokon).
+    counts separately. A bare "P<nummer>" (e.g. "P004") is a fixed internal
+    code series unrelated to real Pokon-with-a-package sales — ignored
+    entirely. Returns (basis_pakketnummer_or_None, is_pokon).
     """
     if PUUR_POKON.fullmatch(pakketnummer):
-        return None, True
+        return None, False
     match = MET_POKON.fullmatch(pakketnummer)
     if match:
         return match.group(1), True
