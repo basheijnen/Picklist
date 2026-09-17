@@ -956,11 +956,14 @@ function appendNazendingPakketkaarten(nz) {
       .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
     const card = document.createElement("div");
-    card.className = "pakketkaart pakketkaart-nazending";
+    // An incomplete klacht has no meaningful pakketnummer or nominal naam to
+    // show (see nazendingContentNaam) — only the plants being picked matter,
+    // so that summary bar is dropped and the item list becomes the headline.
+    card.className = `pakketkaart pakketkaart-nazending${nz.volledig ? "" : " pakketkaart-incomplete"}`;
     card.innerHTML = `
       <div class="pakketkaart-label">PAKKETNUMMER: <span class="pakketkaart-nazending-badge">Nazending</span></div>
       <div class="pakketkaart-nummer">${nz.volledig ? escapeHtml(group.pakketnummer) : ""}</div>
-      <div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>
+      ${nz.volledig ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>`;
     pakketkaartenPanel.append(card);

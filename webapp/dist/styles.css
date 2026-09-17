@@ -168,6 +168,7 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart-nummer { margin: 10mm 0; font-size: 80pt; font-weight: 800; line-height: 1; text-align: center; }
 .pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
+.pakketkaart-incomplete .pakketkaart-items { font-size: 26pt; font-weight: 800; }
 .pakketkaart-doos { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; margin-top: auto; }
 .pakketkaart-doos-label { font-size: 12pt; font-weight: 700; }
 .pakketkaart-doos-nummer { font-size: 40pt; font-weight: 800; }
