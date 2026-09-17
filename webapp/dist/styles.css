@@ -372,6 +372,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-chart-bar-fill { width: 100%; min-height: 2px; border-radius: 3px 3px 0 0; background: var(--brand); }
 .verkoop-chart-bar-label { font-size: .62rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
+.verkoop-chart-toggle { display: block; margin-bottom: 6px; font-size: .8rem; font-weight: 700; color: var(--muted); }
+.verkoop-chart-toggle select { font: inherit; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; margin-left: 6px; }
+
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-filters select, .verkoop-filters input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }

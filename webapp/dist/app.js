@@ -740,9 +740,12 @@ function verkoopIsoWeek(datumStr) {
   return `${target.getFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 
+let verkoopPakketnaamMap = null;
 function verkoopPakketnaam(pakketnummer) {
-  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
-  return info ? info.pakketnaam : "—";
+  if (!verkoopPakketnaamMap) {
+    verkoopPakketnaamMap = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry.pakketnaam]));
+  }
+  return verkoopPakketnaamMap.get(pakketnummer) || "—";
 }
 
 function verkoopBinnenPeriode(datum, periode) {
@@ -790,22 +793,52 @@ function renderVerkoopTiles() {
     .join("");
 }
 
+function verkoopVerschuifDatum(datumStr, aantalDagen) {
+  const [jaar, maand, dag] = datumStr.split("-").map(Number);
+  const d = new Date(jaar, maand - 1, dag + aantalDagen);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function verkoopPeriodeKey(datumStr, granulariteit) {
+  if (granulariteit === "dag") return datumStr;
+  if (granulariteit === "maand") return datumStr.slice(0, 7);
+  return verkoopIsoWeek(datumStr);
+}
+
+function verkoopRecentePeriodes(granulariteit, aantal) {
+  const vandaag = todayIso();
+  if (granulariteit === "dag") {
+    return Array.from({ length: aantal }, (_, i) => verkoopVerschuifDatum(vandaag, i - (aantal - 1)));
+  }
+  if (granulariteit === "maand") {
+    const [jaar, maand] = vandaag.split("-").map(Number);
+    return Array.from({ length: aantal }, (_, i) => {
+      const d = new Date(jaar, maand - 1 - (aantal - 1 - i), 1);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    });
+  }
+  const weken = Array.from({ length: aantal }, (_, i) => verkoopIsoWeek(verkoopVerschuifDatum(vandaag, (i - (aantal - 1)) * 7)));
+  return [...new Set(weken)];
+}
+
 function renderVerkoopChart(orders) {
-  const perWeek = new Map();
+  const granulariteit = document.querySelector("#verkoopGrafiekGranulariteit").value;
+  const aantalPeriodes = granulariteit === "dag" ? 30 : 12;
+  const perPeriode = new Map();
   orders.forEach((order) => {
-    const week = verkoopIsoWeek(order.datum);
-    perWeek.set(week, (perWeek.get(week) || 0) + order.aantal);
+    const key = verkoopPeriodeKey(order.datum, granulariteit);
+    perPeriode.set(key, (perPeriode.get(key) || 0) + order.aantal);
   });
-  const weken = [...perWeek.keys()].sort().slice(-12);
-  const max = Math.max(1, ...weken.map((week) => perWeek.get(week)));
-  document.querySelector("#verkoopChart").innerHTML = weken
-    .map((week) => {
-      const waarde = perWeek.get(week);
+  const periodes = verkoopRecentePeriodes(granulariteit, aantalPeriodes);
+  const max = Math.max(1, ...periodes.map((key) => perPeriode.get(key) || 0));
+  document.querySelector("#verkoopChart").innerHTML = periodes
+    .map((key) => {
+      const waarde = perPeriode.get(key) || 0;
       const hoogte = Math.round((waarde / max) * 100);
-      const label = week.split("-W")[1];
-      return `<div class="verkoop-chart-bar" title="${escapeHtml(week)}: ${displayNumber(waarde)}">
+      const label = granulariteit === "dag" ? key.slice(8, 10) : granulariteit === "maand" ? key.slice(5, 7) : key.split("-W")[1];
+      return `<div class="verkoop-chart-bar" title="${escapeHtml(key)}: ${displayNumber(waarde)}">
         <div class="verkoop-chart-bar-fill" style="height:${hoogte}%"></div>
-        <span class="verkoop-chart-bar-label">wk ${escapeHtml(label)}</span>
+        <span class="verkoop-chart-bar-label">${escapeHtml(label)}</span>
       </div>`;
     })
     .join("");
@@ -1527,6 +1560,7 @@ verkoopUploadInput.addEventListener("change", () => {
 ["#verkoopPeriodeFilter", "#verkoopKanaalFilter"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
+document.querySelector("#verkoopGrafiekGranulariteit").addEventListener("change", renderVerkoopDialog);
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
 document.querySelectorAll(".verkoop-table th[data-sort]").forEach((th) => {
   th.addEventListener("click", () => {
