@@ -656,6 +656,18 @@ function normalizeKanaal(client, shop) {
   return trimmedClient;
 }
 
+// A pakketnummer ending in "p"/"P" means "this package, with a box of Pokon
+// added" — the base package still counts as itself, and the Pokon box counts
+// separately (visible per kanaal in the dashboard, never as its own pakket).
+// A bare "P<nummer>" (no dot, e.g. "P004") is Pokon sold with no package at
+// all, so there's no base pakket to also count.
+function verkoopPakketPokonSplitsing(pakketnummer) {
+  if (/^[Pp]\d+$/.test(pakketnummer)) return { basis: null, pokon: true };
+  const metPokon = pakketnummer.match(/^(\d+\.\d+)[Pp]$/);
+  if (metPokon) return { basis: metPokon[1], pokon: true };
+  return { basis: pakketnummer, pokon: false };
+}
+
 function parseVerkoopExport(text) {
   const rows = parseDelimited(text);
   if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
@@ -680,7 +692,9 @@ function parseVerkoopExport(text) {
     const shop = kolomIndex.shop >= 0 ? row[kolomIndex.shop] || "" : "";
     let kanaal = normalizeKanaal(client, shop);
     if (regioVoorKanaal(kanaal) === "Onbekend") kanaal = `Onbekend: ${kanaal || "?"}`;
-    orders.push({ ordernummer, kanaal, pakketnummer });
+    const { basis, pokon } = verkoopPakketPokonSplitsing(pakketnummer);
+    if (basis) orders.push({ ordernummer, kanaal, pakketnummer: basis });
+    if (pokon) orders.push({ ordernummer: `${ordernummer}-pokon`, kanaal, pakketnummer: "Pokon" });
   });
   return orders;
 }
@@ -775,19 +789,23 @@ function verkoopGefilterdeOrders() {
 
 function renderVerkoopTiles() {
   const alleOrders = window.PICKLIST_VERKOOP || [];
+  const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
+  const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
   const vandaag = todayIso();
-  const totaalSeizoen = alleOrders.reduce((sum, o) => sum + o.aantal, 0);
-  const totaalVandaag = alleOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
+  const totaalSeizoen = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
+  const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
   const dezeWeekKey = verkoopIsoWeek(vandaag);
-  const totaalDezeWeek = alleOrders.filter((o) => verkoopIsoWeek(o.datum) === dezeWeekKey).reduce((sum, o) => sum + o.aantal, 0);
-  const europa = alleOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
-  const benelux = alleOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
+  const totaalDezeWeek = pakketOrders.filter((o) => verkoopIsoWeek(o.datum) === dezeWeekKey).reduce((sum, o) => sum + o.aantal, 0);
+  const europa = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
+  const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
+  const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
   const tegels = [
     ["Totaal seizoen", displayNumber(totaalSeizoen)],
     ["Vandaag", displayNumber(totaalVandaag)],
     ["Deze week", displayNumber(totaalDezeWeek)],
     ["Europa · Benelux", `${displayNumber(europa)} · ${displayNumber(benelux)}`],
+    ["Pokon", displayNumber(totaalPokon)],
   ];
   document.querySelector("#verkoopTiles").innerHTML = tegels
     .map(([label, value]) => `<div class="verkoop-tile"><span class="verkoop-tile-label">${escapeHtml(label)}</span><span class="verkoop-tile-value">${escapeHtml(value)}</span></div>`)

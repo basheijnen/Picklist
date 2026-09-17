@@ -362,7 +362,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-upload-datum-field input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 .verkoop-upload-button { cursor: pointer; }
 
-.verkoop-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.verkoop-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
