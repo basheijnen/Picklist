@@ -782,7 +782,7 @@ function renderPackages(orderCounts) {
         ? `<span class="nazending-full-badge">${doosAantal}</span>`
         : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row">
-        <td class="package-number">${escapeHtml(nz.pakketnummer)}</td>
+        <td class="package-number">${nz.volledig ? escapeHtml(nz.pakketnummer) : "—"}</td>
         <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
         <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
         <td class="package-count">${countCell}</td>
@@ -959,7 +959,7 @@ function appendNazendingPakketkaarten(nz) {
     card.className = "pakketkaart pakketkaart-nazending";
     card.innerHTML = `
       <div class="pakketkaart-label">PAKKETNUMMER: <span class="pakketkaart-nazending-badge">Nazending</span></div>
-      <div class="pakketkaart-nummer">${escapeHtml(group.pakketnummer)}</div>
+      <div class="pakketkaart-nummer">${nz.volledig ? escapeHtml(group.pakketnummer) : "—"}</div>
       <div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>`;
