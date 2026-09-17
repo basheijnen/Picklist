@@ -708,12 +708,12 @@ function todayIso() {
   return new Date(now - offsetMs).toISOString().slice(0, 10);
 }
 
-// The Verkopen dialog's own date field doubles as a "viewing anchor": once
-// set, "Vandaag"/"Deze week"/"Deze maand" (and the chart) are relative to
-// this date, not the real calendar today — set it to 16 juli and "Vandaag"
-// shows 16 juli's orders, so you can review an earlier day the same way.
-function verkoopWeergaveDatumWaarde() {
-  return verkoopWeergaveDatum.value || todayIso();
+// Monday..Sunday of the week containing datumStr, as a {van, tot} range —
+// used to fill in the top Van/Tot fields when "Deze week" is clicked.
+function verkoopWeekBereik(datumStr) {
+  const [jaar, maand, dag] = datumStr.split("-").map(Number);
+  const dayNr = (new Date(jaar, maand - 1, dag).getDay() + 6) % 7;
+  return { van: verkoopVerschuifDatum(datumStr, -dayNr), tot: verkoopVerschuifDatum(datumStr, 6 - dayNr) };
 }
 
 async function verstuurNaarVerkoop(imp, buttonEl) {
@@ -771,29 +771,15 @@ function verkoopPakketnaam(pakketnummer) {
   return verkoopPakketnaamMap.get(pakketnummer) || "—";
 }
 
-function verkoopBinnenPeriode(datum, periode) {
-  if (periode === "alles") return true;
-  const vandaag = verkoopWeergaveDatumWaarde();
-  if (periode === "vandaag") return datum === vandaag;
-  if (periode === "week") return verkoopIsoWeek(datum) === verkoopIsoWeek(vandaag);
-  if (periode === "maand") return datum.slice(0, 7) === vandaag.slice(0, 7);
-  return true;
-}
-
 function verkoopGefilterdeOrders() {
-  const periode = document.querySelector("#verkoopPeriodeFilter").value;
+  const van = document.querySelector("#verkoopVanDatum").value;
+  const tot = document.querySelector("#verkoopTotDatum").value;
   const kanaal = document.querySelector("#verkoopKanaalFilter").value;
   const zoek = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase();
-  const bereikVan = document.querySelector("#verkoopBereikVan").value;
-  const bereikTot = document.querySelector("#verkoopBereikTot").value;
   return (window.PICKLIST_VERKOOP || []).filter((order) => {
-    if (periode === "bereik") {
-      // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
-      if (bereikVan && order.datum < bereikVan) return false;
-      if (bereikTot && order.datum > bereikTot) return false;
-    } else if (!verkoopBinnenPeriode(order.datum, periode)) {
-      return false;
-    }
+    // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
+    if (van && order.datum < van) return false;
+    if (tot && order.datum > tot) return false;
     if (kanaal && order.kanaal !== kanaal) return false;
     if (zoek) {
       const naam = verkoopPakketnaam(order.pakketnummer).toLowerCase();

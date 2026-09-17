@@ -360,8 +360,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-dialog .dialog-header { padding: 24px 28px 20px; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
 
-.verkoop-weergave-datum-field { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); width: fit-content; }
-.verkoop-weergave-datum-field input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.verkoop-datum-bereik { display: flex; gap: 12px; }
+.verkoop-datum-bereik label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
+.verkoop-datum-bereik input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 
 .verkoop-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
@@ -370,23 +371,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
 
-.verkoop-chart { display: flex; align-items: flex-end; gap: 4px; height: 90px; padding: 8px 4px 0; border-bottom: 1px solid var(--line); }
-.verkoop-chart-bar { flex: 1; height: calc(100% - 14px); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-width: 0; }
-.verkoop-chart-bar-fill { width: 100%; min-height: 2px; border-radius: 3px 3px 0 0; background: var(--brand); }
-.verkoop-chart-bar-label { font-size: .62rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-
-.verkoop-chart-toggle { display: block; margin-bottom: 6px; font-size: .8rem; font-weight: 700; color: var(--muted); }
-.verkoop-chart-toggle select { font: inherit; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; margin-left: 6px; }
-
 .verkoop-view-toggle { display: flex; gap: 8px; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
 .verkoop-view-button.is-actief { color: white; border-color: var(--brand); background: var(--brand); }
 
 .verkoop-kalender { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 2px; }
-.verkoop-kalender-maand { flex: 0 0 150px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.verkoop-kalender-maand { flex: 0 0 175px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
 .verkoop-kalender-maand-titel { padding: 6px 10px; background: var(--brand); color: white; font-size: .78rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
 .verkoop-kalender-maand table { width: 100%; border-collapse: collapse; font-size: .76rem; }
-.verkoop-kalender-maand td { padding: 3px 8px; border-bottom: 1px solid var(--line); }
+.verkoop-kalender-maand td { padding: 2px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
@@ -395,7 +388,6 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-filters select, .verkoop-filters input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 .verkoop-filters input[type="search"] { min-width: 220px; }
-.verkoop-bereik-velden { display: flex; gap: 12px; }
 
 .verkoop-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .verkoop-table th, .verkoop-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }

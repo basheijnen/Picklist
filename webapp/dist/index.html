@@ -169,21 +169,12 @@
     </div>
     <div class="verkoop-dialog-body">
 
-      <label class="verkoop-weergave-datum-field">
-        Datum
-        <input id="verkoopWeergaveDatum" type="date">
-      </label>
+      <div class="verkoop-datum-bereik">
+        <label>Van <input id="verkoopVanDatum" type="date"></label>
+        <label>Tot <input id="verkoopTotDatum" type="date"></label>
+      </div>
 
       <div id="verkoopTiles" class="verkoop-tiles"></div>
-
-      <label class="verkoop-chart-toggle">Grafiek per
-        <select id="verkoopGrafiekGranulariteit">
-          <option value="dag">Dag</option>
-          <option value="week" selected>Week</option>
-          <option value="maand">Maand</option>
-        </select>
-      </label>
-      <div id="verkoopChart" class="verkoop-chart"></div>
 
       <div class="verkoop-view-toggle">
         <button type="button" class="verkoop-view-button is-actief" data-view="tabel">Tabel</button>
@@ -192,19 +183,6 @@
 
       <div id="verkoopTabelView">
         <div class="verkoop-filters">
-          <label>Periode
-            <select id="verkoopPeriodeFilter">
-              <option value="alles">Alles</option>
-              <option value="vandaag">Vandaag</option>
-              <option value="week">Deze week</option>
-              <option value="maand">Deze maand</option>
-              <option value="bereik">Periode kiezen…</option>
-            </select>
-          </label>
-          <div id="verkoopBereikVelden" class="verkoop-bereik-velden" hidden>
-            <label>Van <input id="verkoopBereikVan" type="date"></label>
-            <label>Tot <input id="verkoopBereikTot" type="date"></label>
-          </div>
           <label>Kanaal
             <select id="verkoopKanaalFilter">
               <option value="">Alle kanalen</option>
