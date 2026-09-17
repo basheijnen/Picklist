@@ -117,7 +117,7 @@ function createHeldImport(name) {
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
-let verkoopView = "tabel";
+let verkoopView = "kalender";
 
 // A klacht is active by default; older saved records simply have no
 // `active` field at all, which should still mean "counts".
@@ -1588,6 +1588,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   const vandaag = todayIso();
   document.querySelector("#verkoopVanDatum").value = vandaag;
   document.querySelector("#verkoopTotDatum").value = vandaag;
+  verkoopView = "kalender";
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });

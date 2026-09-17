@@ -375,12 +375,17 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
 .verkoop-view-button.is-actief { color: white; border-color: var(--brand); background: var(--brand); }
 
-.verkoop-kalender { display: flex; flex-wrap: wrap; gap: 14px; padding: 4px 2px; }
-.verkoop-kalender-maand { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.verkoop-kalender-maand-titel { padding: 6px 10px; background: var(--brand); color: white; font-size: .78rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
-.verkoop-kalender-maand table { border-collapse: collapse; font-size: .76rem; }
-.verkoop-kalender-maand td { padding: 2px 6px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-.verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 4px; }
+/* 12 equal columns spanning the full fullscreen dialog width, instead of
+   fixed-width blocks that wrap/scroll once more than ~9 fit — so all
+   months of the season are visible at once, at whatever width that gives
+   each one. */
+.verkoop-kalender { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; padding: 4px 2px; }
+.verkoop-kalender-maand { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.verkoop-kalender-maand-titel { padding: 4px 2px; background: var(--brand); color: white; font-size: .66rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verkoop-kalender-maand table { width: 100%; border-collapse: collapse; font-size: .62rem; table-layout: fixed; }
+.verkoop-kalender-maand td { padding: 1px 3px; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verkoop-kalender-maand td:first-child { width: 65%; }
+.verkoop-kalender-maand td:last-child { width: 35%; text-align: right; font-weight: 650; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
