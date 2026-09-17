@@ -9,10 +9,13 @@ sys.path.insert(0, str(PROJECT_DIR))
 
 from bom import load_bom_csv
 from packages import load_package_info_csv
+from sales import load_verkoop_csv
 
 BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "data.js"
+VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
+VERKOOP_DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "verkoop_data.js"
 
 
 def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH,
@@ -51,9 +54,33 @@ def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_
     return len(entries), len(packages)
 
 
+def build_verkoop_data_js(verkoop_csv_path=VERKOOP_CSV_PATH, output_path=VERKOOP_DATA_JS_PATH):
+    orders = [
+        {
+            "ordernummer": order.ordernummer,
+            "datum": order.datum,
+            "kanaal": order.kanaal,
+            "pakketnummer": order.pakketnummer,
+            "aantal": order.aantal,
+        }
+        for order in load_verkoop_csv(verkoop_csv_path)
+    ]
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        "window.PICKLIST_VERKOOP = "
+        + json.dumps(orders, ensure_ascii=False, separators=(",", ":"))
+        + ";\n",
+        encoding="utf-8",
+    )
+    return len(orders)
+
+
 def main():
     bom_count, package_count = build_data_js()
+    verkoop_count = build_verkoop_data_js()
     print(f"{bom_count} BOM-regels en {package_count} pakketten geschreven naar {DATA_JS_PATH}")
+    print(f"{verkoop_count} verkooporders geschreven naar {VERKOOP_DATA_JS_PATH}")
 
 
 if __name__ == "__main__":
