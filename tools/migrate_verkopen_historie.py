@@ -38,7 +38,11 @@ def read_kanaal_historie(workbook_path):
     for ws in workbook.worksheets:
         if ws.title.strip().lower() in SUMMARY_SHEETS:
             continue
-        kanaal = str(ws["B6"].value or "").strip()
+        # The tab name, not B6, is the canonical channel identity: B6 holds a
+        # Dutch display label ("Groupon Duitsland", "TMG") that doesn't match
+        # what the live app's channel table expects ("Groupon DE", "Mediahuis")
+        # — confirmed by comparing every tab name against its own B6 value.
+        kanaal = ws.title.strip()
         if not kanaal:
             continue
         laatste_kolom = _laatste_pakket_kolom(ws)
@@ -49,13 +53,16 @@ def read_kanaal_historie(workbook_path):
             for kolom in range(4, laatste_kolom + 1)
         }
         rij = 9
-        while True:
+        laatste_rij = ws.max_row
+        while rij <= laatste_rij:
             datum_waarde = ws.cell(row=rij, column=1).value
             if isinstance(datum_waarde, str) and datum_waarde.strip().lower() == "totaal":
                 break
             if not isinstance(datum_waarde, (datetime.date, datetime.datetime)):
-                if datum_waarde is None:
-                    break
+                # A blank (or otherwise non-date) row before the real dates
+                # start does happen in real sheets (e.g. a leftover week-52
+                # subtotal row with no date) — skip it rather than stopping,
+                # and rely on the "Totaal" sentinel (or ws.max_row) to end.
                 rij += 1
                 continue
             datum = datum_waarde.strftime("%Y-%m-%d")
