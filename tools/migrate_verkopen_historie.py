@@ -5,6 +5,7 @@ instead of an empty slate. Safe to re-run — dedupes on ordernummer.
 """
 
 import datetime
+import re
 import sys
 from pathlib import Path
 
@@ -23,6 +24,24 @@ SUMMARY_SHEETS = {
     "verkopen per pakketnummer",
     "cbs periode en land",
 }
+
+
+PUUR_POKON = re.compile(r"^[Pp]\d+$")
+MET_POKON = re.compile(r"^(\d+\.\d+)[Pp]$")
+
+
+def _split_pokon(pakketnummer):
+    """A pakketnummer ending in "p"/"P" is that package with a box of Pokon
+    added — the base package still counts as itself, and the Pokon box
+    counts separately. A bare "P<nummer>" has no base package at all.
+    Returns (basis_pakketnummer_or_None, is_pokon).
+    """
+    if PUUR_POKON.fullmatch(pakketnummer):
+        return None, True
+    match = MET_POKON.fullmatch(pakketnummer)
+    if match:
+        return match.group(1), True
+    return pakketnummer, False
 
 
 def _laatste_pakket_kolom(ws):
@@ -72,15 +91,27 @@ def read_kanaal_historie(workbook_path):
                 waarde = ws.cell(row=rij, column=kolom).value
                 if not waarde:
                     continue
-                orders.append(
-                    VerkoopOrder(
-                        ordernummer=f"migratie-{ws.title}-{datum}-{pakketnummer}",
-                        datum=datum,
-                        kanaal=kanaal,
-                        pakketnummer=pakketnummer,
-                        aantal=float(waarde),
+                basis, pokon = _split_pokon(pakketnummer)
+                if basis:
+                    orders.append(
+                        VerkoopOrder(
+                            ordernummer=f"migratie-{ws.title}-{datum}-{pakketnummer}",
+                            datum=datum,
+                            kanaal=kanaal,
+                            pakketnummer=basis,
+                            aantal=float(waarde),
+                        )
                     )
-                )
+                if pokon:
+                    orders.append(
+                        VerkoopOrder(
+                            ordernummer=f"migratie-{ws.title}-{datum}-{pakketnummer}-pokon",
+                            datum=datum,
+                            kanaal=kanaal,
+                            pakketnummer="Pokon",
+                            aantal=float(waarde),
+                        )
+                    )
             rij += 1
     return orders
 

@@ -61,6 +61,36 @@ def test_read_kanaal_historie_skips_summary_sheets_and_zero_cells(tmp_path):
     assert groupon_order.aantal == 3.0
 
 
+def test_read_kanaal_historie_splits_pokon_from_pakket(tmp_path):
+    wb = openpyxl.Workbook()
+    wb.remove(wb.active)
+    bol = wb.create_sheet("Bol.com")
+    bol["B6"] = "Bol.com"
+    bol["D8"] = "9.1"
+    bol["E8"] = "9.1P"  # package 9.1 sold with a box of Pokon added
+    bol["F8"] = "P004"  # Pokon sold on its own, no package
+    bol["A9"] = datetime.date(2026, 7, 6)
+    bol["D9"] = 30
+    bol["E9"] = 1
+    bol["F9"] = 1
+    bol["A10"] = "Totaal"
+    workbook_path = tmp_path / "historie.xlsm"
+    wb.save(workbook_path)
+
+    orders = read_kanaal_historie(workbook_path)
+
+    by_pakketnummer = {}
+    for order in orders:
+        by_pakketnummer.setdefault(order.pakketnummer, 0)
+        by_pakketnummer[order.pakketnummer] += order.aantal
+    # 30 plain "9.1" + 1 "9.1P" (counts toward "9.1" itself) = 31.
+    assert by_pakketnummer["9.1"] == 31.0
+    # 1 from "9.1P" + 1 from the standalone "P004" = 2, tracked separately.
+    assert by_pakketnummer["Pokon"] == 2.0
+    assert "9.1P" not in by_pakketnummer
+    assert "P004" not in by_pakketnummer
+
+
 def test_migreer_writes_orders_and_is_idempotent(tmp_path):
     workbook_path = tmp_path / "historie.xlsm"
     _make_workbook(workbook_path)
