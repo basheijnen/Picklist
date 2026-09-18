@@ -8,6 +8,12 @@ const BOXES_PER_PALLET = {
 const fileInput = document.querySelector("#fileInput");
 const dropZone = document.querySelector("#dropZone");
 const message = document.querySelector("#message");
+let messageTimeoutId = null;
+function setMessage(text) {
+  message.textContent = text;
+  clearTimeout(messageTimeoutId);
+  messageTimeoutId = text ? setTimeout(() => { message.textContent = ""; }, 10000) : null;
+}
 const results = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
@@ -176,7 +182,7 @@ function resetImport() {
   saveImportState();
   saveNazendingen();
   renderAll();
-  message.textContent = "";
+  setMessage("");
 }
 
 function populateGroepOptions(gebied, select) {
@@ -755,7 +761,7 @@ async function saveNewPackage(event) {
 
     verkoopPakketnaamMap = null;
     closePackageDialogAndReturn();
-    message.textContent = bevestiging;
+    setMessage(bevestiging);
     if (imports.length) renderAll();
   } catch (_error) {
     formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
@@ -927,10 +933,10 @@ async function verstuurNaarVerkoop(imp, buttonEl) {
       const detail = onbekendeNamen.map((naam) => `${naam} (${onbekend[naam]}×)`).join(", ");
       text += ` Let op, onbekend kanaal: ${detail}.`;
     }
-    message.textContent = text;
+    setMessage(text);
   } catch (error) {
     buttonEl.disabled = false;
-    message.textContent = `Kan niet naar Verkopen sturen: ${error.message}`;
+    setMessage(`Kan niet naar Verkopen sturen: ${error.message}`);
   }
 }
 
@@ -1602,7 +1608,7 @@ function printPakketkaarten() {
   });
   const nieuweOrderCounts = new Map([...orderCounts].filter(([pakketnummer]) => !printedPakketnummers.has(pakketnummer)));
   if (!nieuweOrderCounts.size && !activeNazendingen().length) {
-    message.textContent = "Alle pakketkaarten voor de huidige lijsten zijn al geprint.";
+    setMessage("Alle pakketkaarten voor de huidige lijsten zijn al geprint.");
     return;
   }
   buildPakketkaarten(nieuweOrderCounts);
@@ -1839,8 +1845,8 @@ function selectDepartment(name) {
 }
 
 async function handleFile(file) {
-  message.textContent = "";
-  if (!file || !file.name.toLowerCase().endsWith(".csv")) { message.textContent = "Kies een CSV-bestand."; return; }
+  setMessage("");
+  if (!file || !file.name.toLowerCase().endsWith(".csv")) { setMessage("Kies een CSV-bestand."); return; }
   try {
     const text = await file.text();
     const orderCounts = readOrders(text);
@@ -1856,7 +1862,7 @@ async function handleFile(file) {
     imports.push({ id: makeImportId(), name, active: true, orderCounts, verkoopOrders, verkoopVerstuurd: false });
     saveImportState();
     renderAll();
-  } catch (error) { message.textContent = `Kan bestand niet lezen: ${error.message}`; }
+  } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
 }
 
 async function runBackup() {
