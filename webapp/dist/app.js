@@ -697,8 +697,8 @@ async function saveNewPackage(event) {
   const onbekendeDoosnummers = (waarde) => waarde.split("+").map((deel) => deel.trim()).filter(Boolean).filter((deel) => !getDoosnummerList().includes(deel));
   const onbekendInDoosnummers = onbekendeDoosnummers(doosnummers);
   if (onbekendInDoosnummers.length) {
-    formMessage.textContent = `Onbekend doosnummer: ${onbekendInDoosnummers.join(", ")}. Kies een bestaand doosnummer.`;
-    return;
+    const ok = await confirmDialog(`Doosnummer ${onbekendInDoosnummers.join(", ")} bestaat nog niet. Toch gebruiken?`, "Toch gebruiken");
+    if (!ok) return;
   }
   // Een nieuw pakket met Pokon krijgt zelf geen Pokon-regel — in plaats
   // daarvan maakt de app automatisch de "...p"-variant aan met dezelfde
@@ -711,8 +711,8 @@ async function saveNewPackage(event) {
     }
     const onbekendInPokonDoos = onbekendeDoosnummers(pokonDoos);
     if (onbekendInPokonDoos.length) {
-      formMessage.textContent = `Onbekend doosnummer: ${onbekendInPokonDoos.join(", ")}. Kies een bestaand doosnummer.`;
-      return;
+      const ok = await confirmDialog(`Doosnummer ${onbekendInPokonDoos.join(", ")} bestaat nog niet. Toch gebruiken?`, "Toch gebruiken");
+      if (!ok) return;
     }
   }
   formMessage.textContent = "Opslaan...";
