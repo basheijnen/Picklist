@@ -19,8 +19,6 @@ const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
-const newPackageBoxesInput = document.querySelector("#newPackageBoxes");
-const newPackageBoxesSuggestionsEl = document.querySelector("#newPackageBoxesSuggestions");
 const importsPanel = document.querySelector("#importsPanel");
 const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
@@ -227,13 +225,34 @@ function createComponentRow() {
 function syncPokonAmountField() {
   const pokonSelect = document.querySelector("#newPackagePokon");
   const amountField = document.querySelector("#newPackagePokonAmount");
+  const pokonDoosField = document.querySelector("#newPackagePokonDoos");
+  const pakketnummer = document.querySelector("#newPackageNumber").value.trim();
+  const isPVariant = /p$/i.test(pakketnummer);
+
+  // Bewerken van een bestaand basispakket kan nooit een p-variant aanmaken
+  // (dat gebeurt alleen bij het aanmaken van een nieuw pakket) — Pokon is dan
+  // dus niet relevant en het hele blok verdwijnt. Bewerk je de p-variant
+  // zelf, dan blijven "Welke Pokon?"/"Aantal Pokon" bruikbaar om die te
+  // wijzigen, maar is er geen apart doosnummer-veld nodig: dit pakket hééft
+  // al zijn eigen "Doosnummer(s)" hierboven.
+  document.querySelector("#pokonVariantBox").hidden = Boolean(editingPakketnummer) && !isPVariant;
+  document.querySelector("#pokonVariantDoosField").hidden = Boolean(editingPakketnummer);
+  document.querySelector("#pokonVariantHint").textContent = editingPakketnummer
+    ? "De Pokon van deze pakketvariant."
+    : 'Kies een Pokon om automatisch een apart "…p"-pakket met dezelfde inhoud + Pokon aan te maken. Dit pakket zelf blijft zonder Pokon.';
+
   if (pokonSelect.value) {
     amountField.disabled = false;
     if (!amountField.value) amountField.value = 1;
+    pokonDoosField.disabled = false;
   } else {
     amountField.disabled = true;
     amountField.value = "";
+    pokonDoosField.disabled = true;
+    pokonDoosField.value = "";
   }
+  const maaktPokonVariantAan = Boolean(pokonSelect.value) && pakketnummer && !editingPakketnummer && !isPVariant;
+  document.querySelector("#pokonVariantPreview").textContent = maaktPokonVariantAan ? `→ wordt aangemaakt als ${pakketnummer}p` : "";
 }
 
 function getPakketnummerList() {
@@ -253,31 +272,37 @@ function getDoosnummerList() {
   return [...doosnummers].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
-function hideNewPackageBoxesSuggestions() {
-  newPackageBoxesSuggestionsEl.hidden = true;
-  newPackageBoxesSuggestionsEl.replaceChildren();
-}
-
-function renderNewPackageBoxesSuggestions() {
-  const alleDoosnummers = getDoosnummerList();
-  if (!alleDoosnummers.length) { hideNewPackageBoxesSuggestions(); return; }
-  newPackageBoxesSuggestionsEl.replaceChildren();
-  alleDoosnummers.forEach((doosnummer) => {
-    const item = document.createElement("li");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = doosnummer;
-    // mousedown (not click) fires before the input's blur, so the list is
-    // still there to read from when the handler runs.
-    button.addEventListener("mousedown", (event) => {
-      event.preventDefault();
-      newPackageBoxesInput.value = doosnummer;
-      hideNewPackageBoxesSuggestions();
+// Reused for both the normal doosnummer field and the Pokon-variant's own
+// doosnummer field: shows every known box number on click/focus (there's no
+// point filtering — a box number doesn't have a "search term" the way a
+// pakketnummer does) and closes as soon as you start typing.
+function wireDoosnummerSuggestions(inputEl, listEl) {
+  const hide = () => { listEl.hidden = true; listEl.replaceChildren(); };
+  const render = () => {
+    const alleDoosnummers = getDoosnummerList();
+    if (!alleDoosnummers.length) { hide(); return; }
+    listEl.replaceChildren();
+    alleDoosnummers.forEach((doosnummer) => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = doosnummer;
+      // mousedown (not click) fires before the input's blur, so the list is
+      // still there to read from when the handler runs.
+      button.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        inputEl.value = doosnummer;
+        hide();
+      });
+      item.append(button);
+      listEl.append(item);
     });
-    item.append(button);
-    newPackageBoxesSuggestionsEl.append(item);
-  });
-  newPackageBoxesSuggestionsEl.hidden = false;
+    listEl.hidden = false;
+  };
+  inputEl.addEventListener("focus", render);
+  inputEl.addEventListener("click", render);
+  inputEl.addEventListener("input", hide);
+  inputEl.addEventListener("blur", hide);
 }
 
 function updatePackageNavButtons(pakketnummer) {
@@ -326,6 +351,7 @@ function copyCurrentPackage() {
   // Cursor achteraan zetten in plaats van de hele waarde te selecteren, zodat
   // je meteen kan doortypen (bijv. een "p" achter het gekopieerde nummer).
   numberInput.setSelectionRange(numberInput.value.length, numberInput.value.length);
+  syncPokonAmountField();
 }
 
 function openPackageForm(pakketnummer = "") {
@@ -645,6 +671,7 @@ async function saveNewPackage(event) {
   const doosnummers = document.querySelector("#newPackageBoxes").value.trim();
   const pokonName = document.querySelector("#newPackagePokon").value;
   const pokonAmount = Number(document.querySelector("#newPackagePokonAmount").value || 1);
+  const pokonDoos = document.querySelector("#newPackagePokonDoos").value.trim();
   const formMessage = document.querySelector("#packageFormMessage");
   if (!editingPakketnummer && (window.PICKLIST_PACKAGES || []).some((entry) => entry.pakketnummer === pakketnummer)) {
     formMessage.textContent = `Pakketnummer ${pakketnummer} bestaat al.`;
@@ -661,22 +688,47 @@ async function saveNewPackage(event) {
     formMessage.textContent = "Vul alle verplichte velden en geldige aantallen in.";
     return;
   }
+  const onbekendeDoosnummers = (waarde) => waarde.split("+").map((deel) => deel.trim()).filter(Boolean).filter((deel) => !getDoosnummerList().includes(deel));
+  const onbekendInDoosnummers = onbekendeDoosnummers(doosnummers);
+  if (onbekendInDoosnummers.length) {
+    formMessage.textContent = `Onbekend doosnummer: ${onbekendInDoosnummers.join(", ")}. Kies een bestaand doosnummer.`;
+    return;
+  }
+  // Een nieuw pakket met Pokon krijgt zelf geen Pokon-regel — in plaats
+  // daarvan maakt de app automatisch de "...p"-variant aan met dezelfde
+  // planteninhoud plus Pokon, zoals dat ook bij alle bestaande pakketten gaat.
+  const maaktPokonVariantAan = !editingPakketnummer && pokonName && !/p$/i.test(pakketnummer);
+  if (maaktPokonVariantAan) {
+    if (!pokonDoos) {
+      formMessage.textContent = "Vul het doosnummer voor de Pokon-variant in.";
+      return;
+    }
+    const onbekendInPokonDoos = onbekendeDoosnummers(pokonDoos);
+    if (onbekendInPokonDoos.length) {
+      formMessage.textContent = `Onbekend doosnummer: ${onbekendInPokonDoos.join(", ")}. Kies een bestaand doosnummer.`;
+      return;
+    }
+  }
   formMessage.textContent = "Opslaan...";
   const submitButton = packageForm.querySelector('button[type="submit"]');
   if (submitButton) submitButton.disabled = true;
   try {
-    const url = editingPakketnummer ? `/api/pakketten/${encodeURIComponent(editingPakketnummer)}` : "/api/pakketten";
-    const method = editingPakketnummer ? "PUT" : "POST";
-    const response = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        pakketnummer, pakketnaam, doosnummers,
-        pokon: pokonName ? { naam: pokonName, aantal: pokonAmount } : null,
-        components,
-      }),
-    });
-    const result = await response.json();
+    const postPakket = async (nummer, doos, magPokon) => {
+      const url = editingPakketnummer ? `/api/pakketten/${encodeURIComponent(editingPakketnummer)}` : "/api/pakketten";
+      const method = editingPakketnummer ? "PUT" : "POST";
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pakketnummer: nummer, pakketnaam, doosnummers: doos,
+          pokon: magPokon && pokonName ? { naam: pokonName, aantal: pokonAmount } : null,
+          components,
+        }),
+      });
+      return { response, result: await response.json() };
+    };
+
+    const { response, result } = await postPakket(pakketnummer, doosnummers, !maaktPokonVariantAan);
     if (!response.ok) { formMessage.textContent = result.error || "Opslaan mislukt."; return; }
     if (editingPakketnummer) {
       window.PICKLIST_PACKAGES = window.PICKLIST_PACKAGES.filter((entry) => entry.pakketnummer !== editingPakketnummer);
@@ -685,9 +737,21 @@ async function saveNewPackage(event) {
     window.PICKLIST_PACKAGES.push(result.package);
     window.PICKLIST_BOM.push(...result.bom);
 
-    const bevestiging = editingPakketnummer
+    let bevestiging = editingPakketnummer
       ? `Pakket ${pakketnummer} is bijgewerkt.`
       : `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
+
+    if (maaktPokonVariantAan) {
+      const pPakketnummer = `${pakketnummer}p`;
+      const { response: pResponse, result: pResult } = await postPakket(pPakketnummer, pokonDoos, true);
+      if (!pResponse.ok) {
+        bevestiging += ` Let op: Pokon-variant ${pPakketnummer} kon niet worden aangemaakt (${pResult.error || "onbekende fout"}).`;
+      } else {
+        window.PICKLIST_PACKAGES.push(pResult.package);
+        window.PICKLIST_BOM.push(...pResult.bom);
+        bevestiging += ` Pokon-variant ${pPakketnummer} is automatisch meegemaakt.`;
+      }
+    }
 
     verkoopPakketnaamMap = null;
     closePackageDialogAndReturn();
@@ -1831,6 +1895,7 @@ document.querySelector("#closePackageDialog").addEventListener("click", closePac
 document.querySelector("#cancelPackageButton").addEventListener("click", closePackageDialogAndReturn);
 packageForm.addEventListener("submit", saveNewPackage);
 document.querySelector("#newPackagePokon").addEventListener("change", syncPokonAmountField);
+document.querySelector("#newPackageNumber").addEventListener("input", syncPokonAmountField);
 document.querySelector("#prevPackageButton").addEventListener("click", () => navigatePackage(-1));
 document.querySelector("#nextPackageButton").addEventListener("click", () => navigatePackage(1));
 document.querySelector("#copyPackageButton").addEventListener("click", copyCurrentPackage);
@@ -1898,10 +1963,8 @@ nazendingPakketnummerInput.addEventListener("input", () => {
 });
 nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
 nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
-newPackageBoxesInput.addEventListener("input", hideNewPackageBoxesSuggestions);
-newPackageBoxesInput.addEventListener("focus", renderNewPackageBoxesSuggestions);
-newPackageBoxesInput.addEventListener("click", renderNewPackageBoxesSuggestions);
-newPackageBoxesInput.addEventListener("blur", hideNewPackageBoxesSuggestions);
+wireDoosnummerSuggestions(document.querySelector("#newPackageBoxes"), document.querySelector("#newPackageBoxesSuggestions"));
+wireDoosnummerSuggestions(document.querySelector("#newPackagePokonDoos"), document.querySelector("#newPackagePokonDoosSuggestions"));
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
 
