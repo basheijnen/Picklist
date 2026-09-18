@@ -105,6 +105,7 @@
         <div class="package-nav">
           <button id="prevPackageButton" class="button button-quiet" type="button" hidden>‹ Vorige</button>
           <button id="nextPackageButton" class="button button-quiet" type="button" hidden>Volgende ›</button>
+          <button id="copyPackageButton" class="button button-quiet" type="button" hidden>⧉ Kopiëren</button>
         </div>
         <button id="closePackageDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
       </div>
@@ -135,7 +136,12 @@
           <div class="form-grid pokon-grid">
             <label>Welke Pokon?<select id="newPackagePokon"><option value="">Geen Pokon</option></select></label>
             <label>Aantal Pokon<input id="newPackagePokonAmount" type="number" min="0" step="0.01" value="1"></label>
-            <label>Doosnummer(s)<input id="newPackageBoxes" required placeholder="Bijv. 14 of 14 + 15"></label>
+            <label>Doosnummer(s)
+              <div class="nazending-pakket-input-wrap">
+                <input id="newPackageBoxes" required placeholder="Bijv. 14 of 14 + 15" autocomplete="off">
+                <ul id="newPackageBoxesSuggestions" class="nazending-suggestions" hidden></ul>
+              </div>
+            </label>
           </div>
         </div>
       </section>

@@ -19,6 +19,8 @@ const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
 const packageDialog = document.querySelector("#packageDialog");
 const packageForm = document.querySelector("#packageForm");
 const componentRows = document.querySelector("#componentRows");
+const newPackageBoxesInput = document.querySelector("#newPackageBoxes");
+const newPackageBoxesSuggestionsEl = document.querySelector("#newPackageBoxesSuggestions");
 const importsPanel = document.querySelector("#importsPanel");
 const importsList = document.querySelector("#importsList");
 const managePackagesDialog = document.querySelector("#managePackagesDialog");
@@ -233,15 +235,63 @@ function getPakketnummerList() {
     .sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
+function getDoosnummerList() {
+  const doosnummers = new Set();
+  (window.PICKLIST_PACKAGES || []).forEach((entry) => {
+    (entry.doosnummers || "").split("+").forEach((deel) => {
+      const doosnummer = deel.trim();
+      if (doosnummer) doosnummers.add(doosnummer);
+    });
+  });
+  return [...doosnummers].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
+}
+
+function hideNewPackageBoxesSuggestions() {
+  newPackageBoxesSuggestionsEl.hidden = true;
+  newPackageBoxesSuggestionsEl.replaceChildren();
+}
+
+function renderNewPackageBoxesSuggestions() {
+  const query = newPackageBoxesInput.value.trim().toLowerCase();
+  if (!query) { hideNewPackageBoxesSuggestions(); return; }
+  const matches = getDoosnummerList().filter((doosnummer) => doosnummer.toLowerCase().includes(query)).slice(0, 8);
+  if (!matches.length || (matches.length === 1 && matches[0].toLowerCase() === query)) {
+    hideNewPackageBoxesSuggestions();
+    return;
+  }
+  newPackageBoxesSuggestionsEl.replaceChildren();
+  matches.forEach((doosnummer) => {
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = doosnummer;
+    // mousedown (not click) fires before the input's blur, so the list is
+    // still there to read from when the handler runs.
+    button.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      newPackageBoxesInput.value = doosnummer;
+      hideNewPackageBoxesSuggestions();
+    });
+    item.append(button);
+    newPackageBoxesSuggestionsEl.append(item);
+  });
+  newPackageBoxesSuggestionsEl.hidden = false;
+}
+
 function updatePackageNavButtons(pakketnummer) {
   const nav = document.querySelector(".package-nav");
   const prevButton = document.querySelector("#prevPackageButton");
   const nextButton = document.querySelector("#nextPackageButton");
+  const copyButton = document.querySelector("#copyPackageButton");
   const list = getPakketnummerList();
   const index = list.indexOf(pakketnummer);
-  const show = Boolean(editingPakketnummer) && index !== -1 && list.length > 1;
-  nav.hidden = !show;
-  if (show) {
+  const showNav = Boolean(editingPakketnummer) && index !== -1 && list.length > 1;
+  const showCopy = Boolean(editingPakketnummer);
+  nav.hidden = !showNav && !showCopy;
+  prevButton.hidden = !showNav;
+  nextButton.hidden = !showNav;
+  copyButton.hidden = !showCopy;
+  if (showNav) {
     prevButton.disabled = index <= 0;
     nextButton.disabled = index >= list.length - 1;
   }
@@ -254,6 +304,22 @@ function navigatePackage(step) {
   const nextIndex = index + step;
   if (nextIndex < 0 || nextIndex >= list.length) return;
   openEditPackageForm(list[nextIndex]);
+}
+
+// Turns the currently open edit form into a "nieuw pakket"-form without
+// touching any of the filled-in fields, so je alles (planten, doosnummer,
+// Pokon) kan hergebruiken en alleen het pakketnummer hoeft aan te passen —
+// bijvoorbeeld om van 110.9 een 110.9p met Pokon te maken.
+function copyCurrentPackage() {
+  editingPakketnummer = null;
+  const numberInput = document.querySelector("#newPackageNumber");
+  numberInput.disabled = false;
+  numberInput.value = "";
+  document.querySelector("#packageDialogTitle").textContent = "Nieuw pakket toevoegen";
+  document.querySelector("#savePackageButton").textContent = "Pakket opslaan";
+  document.querySelector("#packageFormMessage").textContent = "";
+  updatePackageNavButtons("");
+  numberInput.focus();
 }
 
 function openPackageForm(pakketnummer = "") {
@@ -611,11 +677,14 @@ async function saveNewPackage(event) {
     }
     window.PICKLIST_PACKAGES.push(result.package);
     window.PICKLIST_BOM.push(...result.bom);
-    verkoopPakketnaamMap = null;
-    closePackageDialogAndReturn();
-    message.textContent = editingPakketnummer
+
+    const bevestiging = editingPakketnummer
       ? `Pakket ${pakketnummer} is bijgewerkt.`
       : `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
+
+    verkoopPakketnaamMap = null;
+    closePackageDialogAndReturn();
+    message.textContent = bevestiging;
     if (imports.length) renderAll();
   } catch (_error) {
     formMessage.textContent = "Kan de server niet bereiken. Is de app gestart via open_picklist_app.bat?";
@@ -1757,6 +1826,7 @@ packageForm.addEventListener("submit", saveNewPackage);
 document.querySelector("#newPackagePokon").addEventListener("change", syncPokonAmountField);
 document.querySelector("#prevPackageButton").addEventListener("click", () => navigatePackage(-1));
 document.querySelector("#nextPackageButton").addEventListener("click", () => navigatePackage(1));
+document.querySelector("#copyPackageButton").addEventListener("click", copyCurrentPackage);
 document.querySelector("#managePackagesButton").addEventListener("click", () => {
   document.querySelector("#managePackagesSearch").value = managePackagesSearchTerm;
   renderManagePackagesList(managePackagesSearchTerm);
@@ -1821,6 +1891,9 @@ nazendingPakketnummerInput.addEventListener("input", () => {
 });
 nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
 nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
+newPackageBoxesInput.addEventListener("input", renderNewPackageBoxesSuggestions);
+newPackageBoxesInput.addEventListener("focus", renderNewPackageBoxesSuggestions);
+newPackageBoxesInput.addEventListener("blur", hideNewPackageBoxesSuggestions);
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
 
