@@ -35,10 +35,32 @@ const addAnotherNazendingPakketButton = document.querySelector("#addAnotherNazen
 let nazendingDraft = [];
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
+const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
 let imports = [];
 let editingPakketnummer = null;
 let managePackagesSearchTerm = "";
 let packageFormOpenedFromManageList = false;
+let printedPakketnummers = new Set();
+
+function savePrintedPakketnummers() {
+  try {
+    if (!printedPakketnummers.size) { localStorage.removeItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY); return; }
+    localStorage.setItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY, JSON.stringify([...printedPakketnummers]));
+  } catch (_error) {
+    // localStorage unavailable — the "al geprint"-status wordt dan gewoon niet onthouden.
+  }
+}
+
+function loadPrintedPakketnummers() {
+  try {
+    const raw = localStorage.getItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (_error) {
+    return new Set();
+  }
+}
 
 function makeImportId() {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
@@ -799,7 +821,12 @@ function verkoopGefilterdeOrders() {
 }
 
 function verkoopExporteren() {
-  const orders = [...verkoopGefilterdeOrders()].sort((a, b) => a.datum.localeCompare(b.datum) || a.ordernummer.localeCompare(b.ordernummer));
+  // Pokon telt nergens mee in de export, tenzij de Pokon-tegel zelf actief
+  // is (die zet de zoekterm op exact "Pokon") — dan is dat juist wat je wil.
+  const pokonGeselecteerd = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() === "pokon";
+  const orders = verkoopGefilterdeOrders()
+    .filter((order) => pokonGeselecteerd || order.pakketnummer !== "Pokon")
+    .sort((a, b) => a.datum.localeCompare(b.datum) || a.ordernummer.localeCompare(b.ordernummer));
   const header = ["Ordernummer", "Datum", "Kanaal", "Pakketnummer", "Pakketnaam", "Aantal"];
   // Eén rij per stuk: gemigreerde historie heeft een aantal > 1 per regel
   // (een dagtotaal uit de oude Excel), losse orders hebben altijd aantal 1 —
@@ -1426,7 +1453,21 @@ function appendNazendingPakketkaarten(nz) {
 
 function printPakketkaarten() {
   if (!imports.length && !nazendingen.length) return;
-  buildPakketkaarten(mergedActiveOrderCounts());
+  const orderCounts = mergedActiveOrderCounts();
+  // Een pakket dat uit alle actieve lijsten is verdwenen (lijst verwijderd of
+  // uitgevinkt) telt niet meer als "al geprint" — komt het later terug via
+  // een nieuwe lijst, dan moet de kaart gewoon weer meeprinten.
+  [...printedPakketnummers].forEach((pakketnummer) => {
+    if (!orderCounts.has(pakketnummer)) printedPakketnummers.delete(pakketnummer);
+  });
+  const nieuweOrderCounts = new Map([...orderCounts].filter(([pakketnummer]) => !printedPakketnummers.has(pakketnummer)));
+  if (!nieuweOrderCounts.size && !activeNazendingen().length) {
+    message.textContent = "Alle pakketkaarten voor de huidige lijsten zijn al geprint.";
+    return;
+  }
+  buildPakketkaarten(nieuweOrderCounts);
+  orderCounts.forEach((_aantal, pakketnummer) => printedPakketnummers.add(pakketnummer));
+  savePrintedPakketnummers();
   document.body.classList.add("printing-pakketkaarten");
   window.print();
 }
@@ -1787,4 +1828,5 @@ populatePokonOptions();
 
 imports = loadImportState();
 nazendingen = loadNazendingen();
+printedPakketnummers = loadPrintedPakketnummers();
 renderAll();

@@ -364,7 +364,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
 
 .verkoop-datum-bereik { display: flex; align-items: end; gap: 12px; }
-.verkoop-filter-totaal { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 2px solid var(--brand); border-radius: 12px; background: #e8f4ed; color: var(--brand); font-weight: 800; font-size: .95rem; white-space: nowrap; }
+.verkoop-filter-totaal { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 2px solid #000; border-radius: 12px; background: color-mix(in srgb, #2576a6 12%, white); color: #2576a6; font-weight: 800; font-size: .95rem; white-space: nowrap; }
 .verkoop-datum-bereik label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-datum-bereik input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 
