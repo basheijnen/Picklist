@@ -798,6 +798,33 @@ function verkoopGefilterdeOrders() {
   });
 }
 
+function verkoopExporteren() {
+  const orders = [...verkoopGefilterdeOrders()].sort((a, b) => a.datum.localeCompare(b.datum) || a.ordernummer.localeCompare(b.ordernummer));
+  const header = ["Ordernummer", "Datum", "Kanaal", "Pakketnummer", "Pakketnaam", "Aantal"];
+  // Eén rij per stuk: gemigreerde historie heeft een aantal > 1 per regel
+  // (een dagtotaal uit de oude Excel), losse orders hebben altijd aantal 1 —
+  // in de export moet elke regel dus precies 1 stuk voorstellen.
+  const rijen = [];
+  orders.forEach((order) => {
+    const naam = verkoopPakketnaam(order.pakketnummer);
+    for (let i = 0; i < Math.round(order.aantal); i += 1) {
+      rijen.push([order.ordernummer, order.datum, order.kanaal, order.pakketnummer, naam, 1]);
+    }
+  });
+  const csv = [header, ...rijen]
+    .map((rij) => rij.map((waarde) => `"${String(waarde).replace(/"/g, '""')}"`).join(";"))
+    .join("\r\n");
+  const van = document.querySelector("#verkoopVanDatum").value || "alles";
+  const tot = document.querySelector("#verkoopTotDatum").value || "alles";
+  const kanaalDeel = verkoopActiefKanaal ? `${verkoopActiefKanaal.replace(/[^a-z0-9]+/gi, "-")}_` : "";
+  const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `verkopen_${kanaalDeel}${van}_tot_${tot}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function renderVerkoopTiles() {
   const alleOrders = (window.PICKLIST_VERKOOP || []).filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal);
   const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
@@ -1013,6 +1040,10 @@ function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKlantFilters();
   const gefilterd = verkoopGefilterdeOrders();
+  // Pokon telt overal elders (tegels, kalenderoverzicht) apart mee, niet bij
+  // de pakketten — deze totaal-chip moet daarom hetzelfde uitsluiten.
+  const totaalGefilterd = gefilterd.filter((o) => o.pakketnummer !== "Pokon").reduce((sum, order) => sum + order.aantal, 0);
+  document.querySelector("#verkoopFilterTotaal").textContent = `Totaal (huidige filter): ${displayNumber(totaalGefilterd)}`;
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
   });
@@ -1710,6 +1741,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   verkoopDialog.showModal();
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
+document.querySelector("#verkoopExportButton").addEventListener("click", verkoopExporteren);
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });

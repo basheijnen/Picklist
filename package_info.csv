@@ -557,18 +557,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 100.5p,Olijfbomen winterhard struik x1,ja,3
 100.6,Olijfbomen winterhard struik x2,nee,3
 100.6p,Olijfbomen winterhard struik x2,ja,3
-101.0,Tropische oleander planten x 2,nee,15
-101.0p,Tropische oleander planten x 2,ja,1
-101.1,Tropische oleander planten x 4,nee,1
-101.1p,Tropische oleander planten x 4,ja,14
-101.2,Tropische oleander planten x 8,nee,2
-101.2p,Tropische oleander planten x 8,ja,12
-101.3,Tropische oleander planten x 2 Wit,nee,15
-101.3p,Tropische oleander planten x 2 Wit,ja,1
-101.4,Tropische oleander planten x 4 Wit,nee,1
-101.4p,Tropische oleander planten x 4 Wit,ja,14
-101.5,Tropische oleander planten x 8 Wit,nee,2
-101.5p,Tropische oleander planten x 8 Wit,ja,12
 101.6,Tropische oleander planten x 4 Mix,nee,1
 101.6p,Tropische oleander planten x 4 Mix,ja,14
 101.7,Tropische oleander planten x 8 Mix,nee,2
@@ -1083,3 +1071,15 @@ T011,Lavendel C2 x 6,nee,EUR40
 T011p,Lavendel C2 x 6,ja,EUR40
 T012,Lavendel C2 x 8,nee,EUR40
 T012p,Lavendel C2 x 8,ja,EUR40
+101.1,Tropische oleander planten x 4 (roze),nee,1
+101.2p,Tropische oleander planten x 8 (roze),ja,12
+101.1p,Tropische oleander planten x 4 (roze),ja,14
+101.0,Tropische oleander planten x 2 (roze),nee,15
+101.0p,Tropische oleander planten x 2 (roze),ja,1
+101.2,Tropische oleander planten x 8 (roze),nee,2
+101.3,Tropische oleander planten x 2 (wit),nee,15
+101.3p,Tropische oleander planten x 2 (wit),ja,1
+101.4,Tropische oleander planten x 4 (wit),nee,1
+101.4p,Tropische oleander planten x 4 (wit),ja,14
+101.5,Tropische oleander planten x 8 (wit),nee,2
+101.5p,Tropische oleander planten x 8 (wit),ja,12
