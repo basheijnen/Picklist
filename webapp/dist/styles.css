@@ -48,6 +48,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .button-secondary { border-color: rgba(255,255,255,.35); color: white; background: rgba(255,255,255,.08); }
 .button-primary { color: white; background: var(--brand); }
 .button-quiet { color: var(--ink); border-color: var(--line); background: white; }
+.button-terug { color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
 .intro-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
 .button:disabled { opacity: .45; cursor: not-allowed; }
 .empty-state { margin-top: 28px; padding: 56px 24px; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.66); text-align: center; }
@@ -368,18 +369,24 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-tile { padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
 .verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
 .verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
+.verkoop-tile.is-actief { background: #e8f4ed; border-color: var(--brand); }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
 
-.verkoop-view-toggle { display: flex; gap: 8px; }
+.verkoop-view-toggle { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
 .verkoop-view-button.is-actief { color: white; border-color: var(--brand); background: var(--brand); }
+
+.verkoop-klant-filters { display: contents; }
+.verkoop-klant-button { padding: 6px 14px; border: 2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
+.verkoop-klant-button.is-actief { color: white; background: var(--brand); border-color: var(--brand); }
 
 /* 12 equal columns spanning the full fullscreen dialog width, instead of
    fixed-width blocks that wrap/scroll once more than ~9 fit — so all
    months of the season are visible at once, at whatever width that gives
    each one. */
 .verkoop-kalender { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; padding: 4px 2px; }
+.verkoop-kalender[hidden] { display: none; }
 .verkoop-kalender-maand { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .verkoop-kalender-maand-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .verkoop-kalender-maand table { border-collapse: collapse; font-size: .82rem; }
@@ -387,6 +394,16 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
+
+.verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
+.verkoop-regio[hidden] { display: none; }
+.verkoop-regio-sectie { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.verkoop-regio-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; }
+.verkoop-regio-sectie table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.verkoop-regio-sectie th, .verkoop-regio-sectie td { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.verkoop-regio-sectie th:last-child, .verkoop-regio-sectie td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
+.verkoop-regio-sectie tr.verkoop-regio-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
+.verkoop-regio-eindtotaal { justify-self: stretch; }
 
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }

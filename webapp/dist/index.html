@@ -165,7 +165,7 @@
   <dialog id="verkoopDialog" class="package-dialog verkoop-dialog">
     <div class="dialog-header">
       <div><span class="eyebrow">Verkoopadministratie</span><h2>Verkopen 2026-2027</h2></div>
-      <button id="closeVerkoopDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+      <button id="closeVerkoopDialog" class="button button-terug" type="button">← Terug naar picklisten</button>
     </div>
     <div class="verkoop-dialog-body">
 
@@ -179,16 +179,11 @@
       <div class="verkoop-view-toggle">
         <button type="button" class="verkoop-view-button" data-view="tabel">Tabel</button>
         <button type="button" class="verkoop-view-button is-actief" data-view="kalender">Kalenderoverzicht</button>
-        <button type="button" class="verkoop-view-button" data-view="regio">Europa · Benelux</button>
+        <div id="verkoopKlantFilters" class="verkoop-klant-filters"></div>
       </div>
 
       <div id="verkoopTabelView" hidden>
         <div class="verkoop-filters">
-          <label>Kanaal
-            <select id="verkoopKanaalFilter">
-              <option value="">Alle kanalen</option>
-            </select>
-          </label>
           <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer of naam…">
         </div>
 

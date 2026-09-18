@@ -37,6 +37,8 @@ const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 let imports = [];
 let editingPakketnummer = null;
+let managePackagesSearchTerm = "";
+let packageFormOpenedFromManageList = false;
 
 function makeImportId() {
   return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
@@ -117,6 +119,7 @@ function createHeldImport(name) {
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
+let verkoopActiefKanaal = "";
 let verkoopView = "kalender";
 
 // A klacht is active by default; older saved records simply have no
@@ -284,6 +287,15 @@ function openEditPackageForm(pakketnummer) {
   if (!packageDialog.open) packageDialog.showModal();
 }
 
+function closePackageDialogAndReturn() {
+  packageDialog.close();
+  if (!packageFormOpenedFromManageList) return;
+  packageFormOpenedFromManageList = false;
+  document.querySelector("#managePackagesSearch").value = managePackagesSearchTerm;
+  renderManagePackagesList(managePackagesSearchTerm);
+  managePackagesDialog.showModal();
+}
+
 function renderManagePackagesList(filter = "") {
   const term = filter.trim().toLowerCase();
   const packages = [...(window.PICKLIST_PACKAGES || [])]
@@ -301,6 +313,7 @@ function renderManagePackagesList(filter = "") {
     row.innerHTML = `<span class="manage-package-number">${escapeHtml(entry.pakketnummer)}</span><span class="manage-package-name">${escapeHtml(entry.pakketnaam)}</span>`;
     row.addEventListener("click", () => {
       managePackagesDialog.close();
+      packageFormOpenedFromManageList = true;
       openEditPackageForm(entry.pakketnummer);
     });
     managePackagesList.append(row);
@@ -577,7 +590,7 @@ async function saveNewPackage(event) {
     window.PICKLIST_PACKAGES.push(result.package);
     window.PICKLIST_BOM.push(...result.bom);
     verkoopPakketnaamMap = null;
-    packageDialog.close();
+    closePackageDialogAndReturn();
     message.textContent = editingPakketnummer
       ? `Pakket ${pakketnummer} is bijgewerkt.`
       : `Pakket ${pakketnummer} is opgeslagen in bom.csv/package_info.csv.`;
@@ -715,6 +728,14 @@ function verkoopWeekBereik(datumStr) {
   return { van: verkoopVerschuifDatum(datumStr, -dayNr), tot: verkoopVerschuifDatum(datumStr, 6 - dayNr) };
 }
 
+// The verkoopseizoen loopt van 1 juli t/m 30 juni — vóór juli hoort een datum
+// dus bij het seizoen dat al in het voorgaande kalenderjaar begon.
+function verkoopHuidigSeizoenStart(datumStr) {
+  const [jaar, maand] = datumStr.split("-").map(Number);
+  const seizoenJaar = maand >= 7 ? jaar : jaar - 1;
+  return `${seizoenJaar}-07-01`;
+}
+
 async function verstuurNaarVerkoop(imp, buttonEl) {
   if (!imp.verkoopOrders || !imp.verkoopOrders.length) return;
   buttonEl.disabled = true;
@@ -762,7 +783,7 @@ function verkoopPakketnaam(pakketnummer) {
 function verkoopGefilterdeOrders() {
   const van = document.querySelector("#verkoopVanDatum").value;
   const tot = document.querySelector("#verkoopTotDatum").value;
-  const kanaal = document.querySelector("#verkoopKanaalFilter").value;
+  const kanaal = verkoopActiefKanaal;
   const zoek = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase();
   return (window.PICKLIST_VERKOOP || []).filter((order) => {
     // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
@@ -778,7 +799,7 @@ function verkoopGefilterdeOrders() {
 }
 
 function renderVerkoopTiles() {
-  const alleOrders = window.PICKLIST_VERKOOP || [];
+  const alleOrders = (window.PICKLIST_VERKOOP || []).filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal);
   const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
   const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
   const vandaag = todayIso();
@@ -793,15 +814,22 @@ function renderVerkoopTiles() {
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: "", tot: "", view: "kalender" },
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: verkoopHuidigSeizoenStart(vandaag), tot: vandaag, view: "tabel" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), van: vandaag, tot: vandaag },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), van: dezeWeek.van, tot: dezeWeek.tot },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: "", tot: "", view: "regio" },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: verkoopHuidigSeizoenStart(vandaag), tot: vandaag, view: "regio" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];
+  const huidigeVan = document.querySelector("#verkoopVanDatum").value;
+  const huidigeTot = document.querySelector("#verkoopTotDatum").value;
+  const huidigeZoek = document.querySelector("#verkoopZoekInput").value;
   const tilesEl = document.querySelector("#verkoopTiles");
   tilesEl.innerHTML = tegels
-    .map((tegel) => `<div class="verkoop-tile${tegel.van !== undefined ? " verkoop-tile-klikbaar" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`)
+    .map((tegel) => {
+      const klikbaar = tegel.van !== undefined;
+      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && (tegel.zoek || "") === huidigeZoek;
+      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`;
+    })
     .join("");
   [...tilesEl.children].forEach((el, index) => {
     const tegel = tegels[index];
@@ -822,12 +850,29 @@ function verkoopVerschuifDatum(datumStr, aantalDagen) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function renderVerkoopKanaalOpties() {
-  const select = document.querySelector("#verkoopKanaalFilter");
-  const huidige = select.value;
+const VERKOOP_KLANT_KLEUREN = [
+  "#2f7058", "#a05617", "#2576a6", "#9a5a9e", "#c0392b", "#8e6b23",
+  "#3d7d3d", "#5f4b8b", "#1f6f6f", "#b5651d", "#4a6fa5", "#8a3b5a",
+];
+
+function renderVerkoopKlantFilters() {
   const kanalen = [...new Set((window.PICKLIST_VERKOOP || []).map((o) => o.kanaal))].sort((a, b) => a.localeCompare(b, "nl"));
-  select.innerHTML = '<option value="">Alle kanalen</option>' + kanalen.map((kanaal) => `<option value="${escapeHtml(kanaal)}">${escapeHtml(kanaal)}</option>`).join("");
-  if (kanalen.includes(huidige)) select.value = huidige;
+  const container = document.querySelector("#verkoopKlantFilters");
+  if (!kanalen.includes(verkoopActiefKanaal)) verkoopActiefKanaal = "";
+  container.innerHTML = kanalen
+    .map((kanaal, index) => {
+      const kleur = VERKOOP_KLANT_KLEUREN[index % VERKOOP_KLANT_KLEUREN.length];
+      const actief = kanaal === verkoopActiefKanaal;
+      return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-kanaal="${escapeHtml(kanaal)}" style="--klant-kleur:${kleur}">${escapeHtml(kanaal)}</button>`;
+    })
+    .join("");
+  container.querySelectorAll(".verkoop-klant-button").forEach((knop) => {
+    knop.addEventListener("click", () => {
+      const kanaal = knop.dataset.kanaal;
+      verkoopActiefKanaal = verkoopActiefKanaal === kanaal ? "" : kanaal;
+      renderVerkoopDialog();
+    });
+  });
 }
 
 function verkoopAggregeerPerPakketEnKanaal(orders) {
@@ -875,7 +920,7 @@ const VERKOOP_MAAND_NAMEN = [
 ];
 
 function renderVerkoopKalender() {
-  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon");
+  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon" && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal));
   const perDag = new Map();
   pakketOrders.forEach((order) => {
     perDag.set(order.datum, (perDag.get(order.datum) || 0) + order.aantal);
@@ -966,7 +1011,7 @@ function renderVerkoopRegio() {
 
 function renderVerkoopDialog() {
   renderVerkoopTiles();
-  renderVerkoopKanaalOpties();
+  renderVerkoopKlantFilters();
   const gefilterd = verkoopGefilterdeOrders();
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
@@ -1634,21 +1679,25 @@ backupButton.addEventListener("click", runBackup);
 newImportButton.addEventListener("click", resetImport);
 printPakketkaartenButton.addEventListener("click", printPakketkaarten);
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
-document.querySelector("#closePackageDialog").addEventListener("click", () => packageDialog.close());
-document.querySelector("#cancelPackageButton").addEventListener("click", () => packageDialog.close());
+document.querySelector("#closePackageDialog").addEventListener("click", closePackageDialogAndReturn);
+document.querySelector("#cancelPackageButton").addEventListener("click", closePackageDialogAndReturn);
 packageForm.addEventListener("submit", saveNewPackage);
 document.querySelector("#newPackagePokon").addEventListener("change", syncPokonAmountField);
 document.querySelector("#prevPackageButton").addEventListener("click", () => navigatePackage(-1));
 document.querySelector("#nextPackageButton").addEventListener("click", () => navigatePackage(1));
 document.querySelector("#managePackagesButton").addEventListener("click", () => {
-  document.querySelector("#managePackagesSearch").value = "";
-  renderManagePackagesList();
+  document.querySelector("#managePackagesSearch").value = managePackagesSearchTerm;
+  renderManagePackagesList(managePackagesSearchTerm);
   managePackagesDialog.showModal();
 });
 document.querySelector("#closeManagePackagesDialog").addEventListener("click", () => managePackagesDialog.close());
-document.querySelector("#managePackagesSearch").addEventListener("input", (event) => renderManagePackagesList(event.target.value));
+document.querySelector("#managePackagesSearch").addEventListener("input", (event) => {
+  managePackagesSearchTerm = event.target.value;
+  renderManagePackagesList(managePackagesSearchTerm);
+});
 document.querySelector("#addPackageFromManageButton").addEventListener("click", () => {
   managePackagesDialog.close();
+  packageFormOpenedFromManageList = true;
   openPackageForm();
 });
 document.querySelector("#openVerkoopButton").addEventListener("click", () => {
@@ -1656,11 +1705,12 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   document.querySelector("#verkoopVanDatum").value = vandaag;
   document.querySelector("#verkoopTotDatum").value = vandaag;
   verkoopView = "kalender";
+  verkoopActiefKanaal = "";
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
-["#verkoopVanDatum", "#verkoopTotDatum", "#verkoopKanaalFilter"].forEach((selector) => {
+["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
