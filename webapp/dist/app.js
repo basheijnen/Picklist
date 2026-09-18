@@ -341,6 +341,7 @@ function openPackageForm(pakketnummer = "") {
   document.querySelector("#packageFormMessage").textContent = "";
   updatePackageNavButtons(pakketnummer);
   if (!packageDialog.open) packageDialog.showModal();
+  document.querySelector("#newPackageNumber").focus();
 }
 
 function openEditPackageForm(pakketnummer) {

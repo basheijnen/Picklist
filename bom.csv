@@ -1547,26 +1547,26 @@ T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,261
 117.1p,KAMER,Syngonium Arrow - P12,,1.0,Kamerplanten klein:,30
 116.1,KAMER,Syngonium Arrow - P12,,1.0,Kamerplanten klein:,30
 116.1p,KAMER,Syngonium Arrow - P12,,1.0,Kamerplanten klein:,30
-141.1,KAMER,Cycas Revoluta Medium,,1.0,Kamerplanten groot:,39
-141.1p,KAMER,Cycas Revoluta Medium,,1.0,Kamerplanten groot:,39
-141.2,KAMER,Cycas Revoluta Medium,,2.0,Kamerplanten groot:,39
-141.2p,KAMER,Cycas Revoluta Medium,,2.0,Kamerplanten groot:,39
-141.3,KAMER,Cycas Revoluta Large,,1.0,Kamerplanten groot:,40
-141.3p,KAMER,Cycas Revoluta Large,,1.0,Kamerplanten groot:,40
-141.4,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,40
-141.4p,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,40
-128.1,KAMER,Chamaedorea Elegance - P17,,1.0,Kamerplanten groot:,41
-128.1p,KAMER,Chamaedorea Elegance - P17,,1.0,Kamerplanten groot:,41
-128.2,KAMER,Chamaedorea Elegance - P17,,2.0,Kamerplanten groot:,41
-128.2p,KAMER,Chamaedorea Elegance - P17,,2.0,Kamerplanten groot:,41
-2.8,KAMER,Strelitzia Reginae - P9,,1.0,Kamerplanten rest:,44
-2.8p,KAMER,Strelitzia Reginae - P9,,1.0,Kamerplanten rest:,44
-2.9,KAMER,Strelitzia Reginae - P9,,2.0,Kamerplanten rest:,44
-2.9p,KAMER,Strelitzia Reginae - P9,,2.0,Kamerplanten rest:,44
-104.1,KAMER,Strelitzia Reginae - P9,,3.0,Kamerplanten rest:,44
-104.1p,KAMER,Strelitzia Reginae - P9,,3.0,Kamerplanten rest:,44
-104.2,KAMER,Strelitzia Reginae - P9,,6.0,Kamerplanten rest:,44
-104.2p,KAMER,Strelitzia Reginae - P9,,6.0,Kamerplanten rest:,44
+141.1,KAMER,Cycas Revoluta Medium,,1.0,Kamerplanten groot:,43
+141.1p,KAMER,Cycas Revoluta Medium,,1.0,Kamerplanten groot:,43
+141.2,KAMER,Cycas Revoluta Medium,,2.0,Kamerplanten groot:,43
+141.2p,KAMER,Cycas Revoluta Medium,,2.0,Kamerplanten groot:,43
+141.3,KAMER,Cycas Revoluta Large,,1.0,Kamerplanten groot:,44
+141.3p,KAMER,Cycas Revoluta Large,,1.0,Kamerplanten groot:,44
+141.4,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,44
+141.4p,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,44
+128.1,KAMER,Chamaedorea Elegance - P17,,1.0,Kamerplanten groot:,45
+128.1p,KAMER,Chamaedorea Elegance - P17,,1.0,Kamerplanten groot:,45
+128.2,KAMER,Chamaedorea Elegance - P17,,2.0,Kamerplanten groot:,45
+128.2p,KAMER,Chamaedorea Elegance - P17,,2.0,Kamerplanten groot:,45
+2.8,KAMER,Strelitzia Reginae - P9,,1.0,Kamerplanten rest:,48
+2.8p,KAMER,Strelitzia Reginae - P9,,1.0,Kamerplanten rest:,48
+2.9,KAMER,Strelitzia Reginae - P9,,2.0,Kamerplanten rest:,48
+2.9p,KAMER,Strelitzia Reginae - P9,,2.0,Kamerplanten rest:,48
+104.1,KAMER,Strelitzia Reginae - P9,,3.0,Kamerplanten rest:,48
+104.1p,KAMER,Strelitzia Reginae - P9,,3.0,Kamerplanten rest:,48
+104.2,KAMER,Strelitzia Reginae - P9,,6.0,Kamerplanten rest:,48
+104.2p,KAMER,Strelitzia Reginae - P9,,6.0,Kamerplanten rest:,48
 3.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 3.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 3.3p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
@@ -3271,3 +3271,13 @@ T012p,DOZEN,EUR40,,1.0,,17
 111.1p,KAMER,Spathiphyllum Korto P12,Pokon,2.0,Kamerplanten klein:,36
 111.1p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,900
 111.1p,DOZEN,14,,1.0,,900
+110.1,KAMER,Efteling Sprookjesboom Assepoester,,1.0,Kamerplanten klein:,37
+110.1,DOZEN,1,,1.0,,900
+110.1p,KAMER,Efteling Sprookjesboom Assepoester,,1.0,Kamerplanten klein:,38
+110.1p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,900
+110.1p,DOZEN,14,,1.0,,900
+110.2,KAMER,Efteling Sprookjesboom Benjamin,,1.0,Kamerplanten klein:,39
+110.2,DOZEN,1,,1.0,,900
+110.2p,KAMER,Efteling Sprookjesboom Benjamin,,1.0,Kamerplanten klein:,40
+110.2p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,900
+110.2p,DOZEN,14,,1.0,,900
