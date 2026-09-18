@@ -363,33 +363,42 @@ def _push_code_to_shared_copy():
             shutil.copy2(item, destination)
 
 
+def _commit_all_changes(message):
+    status = _run_git(["status", "--porcelain"])
+    if status.returncode != 0:
+        raise RuntimeError(f"git status mislukt: {status.stderr.strip()}")
+    if not status.stdout.strip():
+        return False
+    add = _run_git(["add", "-A"])
+    if add.returncode != 0:
+        raise RuntimeError(f"git add mislukt: {add.stderr.strip()}")
+    commit = _run_git(["commit", "-m", message])
+    if commit.returncode != 0:
+        raise RuntimeError(f"git commit mislukt: {commit.stderr.strip()}")
+    return True
+
+
 def run_backup():
-    """Pull the shared data files in, commit/push whatever changed, then
-    mirror the (now up to date) code back out to K:. Runs under
-    `_write_lock` so it can't interleave with a package save.
+    """Commit whatever changed locally FIRST — including bom.csv/package_info.csv
+    edits made through this checkout's own UI — so pulling in K:'s (possibly
+    older) copy below can never silently destroy them; at worst it lands as a
+    second commit that needs a manual merge instead of vanishing without a
+    trace. Then pull the shared data files in, commit that too if it changed
+    anything, push, and mirror the (now up to date) code back out to K:. Runs
+    under `_write_lock` so it can't interleave with a package save.
     """
+    committed = _commit_all_changes(f"Back-up {datetime.now():%d-%m-%Y %H:%M}")
+
     k_sync_error = None
     if not SHARED_COPY_DIR.exists():
         k_sync_error = f"{SHARED_COPY_DIR} is niet bereikbaar. Staat de K:-schijf aangekoppeld?"
     else:
         try:
             _pull_shared_data()
+            if _commit_all_changes(f"Sync vanaf K: {datetime.now():%d-%m-%Y %H:%M}"):
+                committed = True
         except Exception as error:
             k_sync_error = f"Ophalen van K: mislukt: {error}"
-
-    status = _run_git(["status", "--porcelain"])
-    if status.returncode != 0:
-        raise RuntimeError(f"git status mislukt: {status.stderr.strip()}")
-
-    committed = bool(status.stdout.strip())
-    if committed:
-        add = _run_git(["add", "-A"])
-        if add.returncode != 0:
-            raise RuntimeError(f"git add mislukt: {add.stderr.strip()}")
-        message = f"Back-up {datetime.now():%d-%m-%Y %H:%M}"
-        commit = _run_git(["commit", "-m", message])
-        if commit.returncode != 0:
-            raise RuntimeError(f"git commit mislukt: {commit.stderr.strip()}")
 
     push = _run_git(["push"])
     if push.returncode != 0:

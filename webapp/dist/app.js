@@ -203,7 +203,7 @@ function createComponentRow() {
   row.innerHTML = `
     <label>Plant / artikel<input class="component-item" required placeholder="Naam"></label>
     <label>Soort<input class="component-kind" placeholder="Optioneel"></label>
-    <label>Aantal<input class="component-amount" type="number" min="0.01" step="0.01" value="1" required></label>
+    <label>Aantal<input class="component-amount" type="number" min="1" step="1" value="1" required></label>
     <label>Waar?<select class="component-area" required><option>KOELING</option><option>KAS</option><option>KAMER</option></select></label>
     <label>Categorie<select class="component-groep"></select></label>
     <button class="remove-component" type="button" aria-label="Regel verwijderen">×</button>`;
@@ -211,6 +211,13 @@ function createComponentRow() {
   const groepSelect = row.querySelector(".component-groep");
   populateGroepOptions(areaSelect.value, groepSelect);
   areaSelect.addEventListener("change", () => populateGroepOptions(areaSelect.value, groepSelect));
+  const amountInput = row.querySelector(".component-amount");
+  amountInput.addEventListener("input", () => {
+    // Getypte komma's/punten meteen afronden — dit veld mag nooit decimalen tonen.
+    if (amountInput.value && !Number.isInteger(Number(amountInput.value))) {
+      amountInput.value = Math.max(1, Math.round(Number(amountInput.value)) || 1);
+    }
+  });
   row.querySelector(".remove-component").addEventListener("click", () => {
     if (componentRows.children.length > 1) row.remove();
   });
@@ -252,15 +259,10 @@ function hideNewPackageBoxesSuggestions() {
 }
 
 function renderNewPackageBoxesSuggestions() {
-  const query = newPackageBoxesInput.value.trim().toLowerCase();
-  if (!query) { hideNewPackageBoxesSuggestions(); return; }
-  const matches = getDoosnummerList().filter((doosnummer) => doosnummer.toLowerCase().includes(query)).slice(0, 8);
-  if (!matches.length || (matches.length === 1 && matches[0].toLowerCase() === query)) {
-    hideNewPackageBoxesSuggestions();
-    return;
-  }
+  const alleDoosnummers = getDoosnummerList();
+  if (!alleDoosnummers.length) { hideNewPackageBoxesSuggestions(); return; }
   newPackageBoxesSuggestionsEl.replaceChildren();
-  matches.forEach((doosnummer) => {
+  alleDoosnummers.forEach((doosnummer) => {
     const item = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
@@ -311,15 +313,19 @@ function navigatePackage(step) {
 // Pokon) kan hergebruiken en alleen het pakketnummer hoeft aan te passen —
 // bijvoorbeeld om van 110.9 een 110.9p met Pokon te maken.
 function copyCurrentPackage() {
+  const gekopieerdPakketnummer = editingPakketnummer;
   editingPakketnummer = null;
   const numberInput = document.querySelector("#newPackageNumber");
   numberInput.disabled = false;
-  numberInput.value = "";
+  numberInput.value = gekopieerdPakketnummer || "";
   document.querySelector("#packageDialogTitle").textContent = "Nieuw pakket toevoegen";
   document.querySelector("#savePackageButton").textContent = "Pakket opslaan";
   document.querySelector("#packageFormMessage").textContent = "";
   updatePackageNavButtons("");
   numberInput.focus();
+  // Cursor achteraan zetten in plaats van de hele waarde te selecteren, zodat
+  // je meteen kan doortypen (bijv. een "p" achter het gekopieerde nummer).
+  numberInput.setSelectionRange(numberInput.value.length, numberInput.value.length);
 }
 
 function openPackageForm(pakketnummer = "") {
@@ -1891,8 +1897,9 @@ nazendingPakketnummerInput.addEventListener("input", () => {
 });
 nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
 nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
-newPackageBoxesInput.addEventListener("input", renderNewPackageBoxesSuggestions);
+newPackageBoxesInput.addEventListener("input", hideNewPackageBoxesSuggestions);
 newPackageBoxesInput.addEventListener("focus", renderNewPackageBoxesSuggestions);
+newPackageBoxesInput.addEventListener("click", renderNewPackageBoxesSuggestions);
 newPackageBoxesInput.addEventListener("blur", hideNewPackageBoxesSuggestions);
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
