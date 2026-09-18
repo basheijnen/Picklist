@@ -1876,6 +1876,9 @@ async function runBackup() {
     const time = new Intl.DateTimeFormat("nl-NL", { hour: "2-digit", minute: "2-digit" }).format(new Date());
     if (result.k_synced) {
       backupStatus.textContent = `Back-up gelukt (${time})`;
+      setTimeout(() => {
+        if (backupStatus.textContent === `Back-up gelukt (${time})`) backupStatus.textContent = "";
+      }, 10000);
     } else {
       backupStatus.classList.add("is-error");
       backupStatus.textContent = `Gepusht naar GitHub, maar K:-synchronisatie mislukt: ${result.k_sync_error}`;
