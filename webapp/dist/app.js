@@ -862,6 +862,10 @@ function bundelKlantDirect(entry) {
     .filter(Boolean);
   nazendingBrondata = { naam: entry.naam };
   renderNazendingDraftList();
+  // Meteen het eerste pakket openklappen om te bewerken (doos/tracking) —
+  // anders staat er alleen een leeg "Pakketnummer"-veld, terwijl alles al
+  // bekend is en er niets hoeft te worden ingetypt.
+  if (nazendingDraft.length) switchToNazendingDraftItem(0);
 }
 
 // Reads whatever pakket is currently shown in the picker (not yet added to
@@ -2418,8 +2422,15 @@ document.querySelectorAll(".verkoop-table th[data-sort]").forEach((th) => {
     renderVerkoopDialog();
   });
 });
-document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
-document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
+function sluitNazendingDialog() {
+  // Kwam je hier via een "Bundelen →"-knop vanuit Dubbele klanten, dan ga je
+  // terug naar dat overzicht i.p.v. helemaal terug naar het hoofdscherm.
+  const terugNaarDubbeleKlanten = Boolean(nazendingBrondata);
+  nazendingDialog.close();
+  if (terugNaarDubbeleKlanten) openKlantDuplicatenDialog();
+}
+document.querySelector("#closeNazendingDialog").addEventListener("click", sluitNazendingDialog);
+document.querySelector("#cancelNazendingButton").addEventListener("click", sluitNazendingDialog);
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
 document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
