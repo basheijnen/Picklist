@@ -271,7 +271,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaat-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: 10px; background: #f4f8f5; cursor: pointer; }
 .klant-duplicaat-row input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
 .klant-duplicaat-naam { min-width: 140px; font-weight: 750; }
-.klant-duplicaat-regels { color: var(--muted); font-size: .88rem; }
+.klant-duplicaat-regels { display: inline-block; margin-top: 2px; color: var(--muted); font-size: .88rem; line-height: 1.5; }
 .klant-duplicaten-empty { padding: 18px; color: var(--muted); text-align: center; }
 .nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
 .nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 3px 3px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }

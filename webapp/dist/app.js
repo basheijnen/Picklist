@@ -213,6 +213,7 @@ const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage")
 
 function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
+  const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
   klantDuplicatenListEl.replaceChildren();
   if (!dubbel.length) {
     klantDuplicatenMessage.textContent = "";
@@ -224,13 +225,18 @@ function renderKlantDuplicatenDialog() {
   }
   klantDuplicatenMessage.textContent = `${dubbel.length} klant${dubbel.length === 1 ? "" : "en"} met meerdere bestellingen.`;
   dubbel.forEach((entry) => {
-    const regelsTekst = entry.regels.map((r) => `${r.pakketnummer} (x${r.aantal})`).join(", ");
+    const regelsHtml = entry.regels
+      .map((r) => {
+        const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
+        return `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)} (x${r.aantal})`;
+      })
+      .join("<br>");
     const row = document.createElement("label");
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox">
       <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
-      <span class="klant-duplicaat-regels">${escapeHtml(regelsTekst)}</span></span>`;
+      <span class="klant-duplicaat-regels">${regelsHtml}</span></span>`;
     row._entry = entry;
     klantDuplicatenListEl.append(row);
   });
