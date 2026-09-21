@@ -242,6 +242,9 @@
       <button id="closeNazendingDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
     </div>
     <div class="nazending-dialog-body">
+      <label id="nazendingKlantnaamField" class="nazending-pakket-field" hidden>Klantnaam (optioneel)
+        <input id="nazendingKlantnaam" placeholder="Bijv. Jansen" autocomplete="off">
+      </label>
       <div id="nazendingDraftList" class="nazending-draft-list" hidden></div>
       <label class="nazending-pakket-field">Pakketnummer
         <div class="nazending-pakket-input-wrap">
@@ -250,6 +253,7 @@
         </div>
       </label>
       <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
+      <div id="nazendingKlantDuplicates" class="count-diff-menu" hidden></div>
       <div id="nazendingComponentRows" class="nazending-component-rows"></div>
       <button id="addAnotherNazendingPakketButton" class="text-button nazending-add-another-button" type="button" hidden>+ Nog een pakket toevoegen</button>
       <p id="nazendingMessage" class="dialog-message" role="alert"></p>
