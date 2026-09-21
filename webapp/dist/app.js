@@ -17,7 +17,6 @@ function setMessage(text) {
 const results = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
-const newImportButton = document.querySelector("#newImportButton");
 const printPakketkaartenButton = document.querySelector("#printPakketkaartenButton");
 const backupButton = document.querySelector("#backupButton");
 const backupStatus = document.querySelector("#backupStatus");
@@ -2144,7 +2143,6 @@ function renderAll() {
     results.hidden = true;
     emptyState.hidden = false;
     printButton.disabled = true;
-    newImportButton.disabled = true;
     printPakketkaartenButton.disabled = true;
     document.querySelector("#klantDuplicatenButton").disabled = true;
     return;
@@ -2193,7 +2191,7 @@ function renderAll() {
     unknownList.append(item);
   });
   unknownPanel.hidden = calculated.unknown.length === 0;
-  emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
+  emptyState.hidden = true; results.hidden = false;
   printButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
   printPakketkaartenButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
   document.querySelector("#klantDuplicatenButton").disabled = orderCounts.size === 0;
@@ -2258,7 +2256,6 @@ fileInput.addEventListener("change", () => handleFile(fileInput.files[0]));
 dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files[0]));
 printButton.addEventListener("click", () => window.print());
 backupButton.addEventListener("click", runBackup);
-newImportButton.addEventListener("click", resetImport);
 printPakketkaartenButton.addEventListener("click", printPakketkaarten);
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
 document.querySelector("#closePackageDialog").addEventListener("click", closePackageDialogAndReturn);
