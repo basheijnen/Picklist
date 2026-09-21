@@ -30,6 +30,8 @@ const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const verkoopDialog = document.querySelector("#verkoopDialog");
 const nazendingDialog = document.querySelector("#nazendingDialog");
+const nazendingKlantnaamField = document.querySelector("#nazendingKlantnaamField");
+const nazendingKlantnaamInput = document.querySelector("#nazendingKlantnaam");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
 const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
 const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
@@ -39,6 +41,11 @@ const nazendingDraftListEl = document.querySelector("#nazendingDraftList");
 const addAnotherNazendingPakketButton = document.querySelector("#addAnotherNazendingPakketButton");
 let nazendingDraft = [];
 let nazendingSoort = "klacht";
+// Gezet wanneer de bundel-draft automatisch is voorgevuld vanuit "Dubbele
+// klanten" — bepaalt of saveNazending() de brontelling (orderCounts/
+// orderNames) mag verminderen. Bij een handmatig getypte bundel (nooit
+// gekoppeld aan een bestaande telling) blijft dit null en gebeurt dat niet.
+let nazendingBrondata = null;
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
@@ -304,12 +311,18 @@ function renderKlantDuplicatenDialog() {
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox" checked>
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>
+      <button type="button" class="klant-duplicaat-bundel-button">Bundelen →</button><br>
       <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
       ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}
       <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span>`;
     row._entry = entry;
     row.querySelector("input").addEventListener("change", updateKlantDuplicatenSelectAllState);
+    row.querySelector(".klant-duplicaat-bundel-button").addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      bundelKlantDirect(entry);
+    });
     if (entry.kanaal) {
       row.querySelector(".klant-duplicaat-kanaal").addEventListener("click", (event) => {
         event.preventDefault();
@@ -743,12 +756,15 @@ function renderNazendingPakketSuggestions() {
 
 function openNazendingDialog(soort = "klacht") {
   nazendingSoort = soort;
+  nazendingBrondata = null;
   const isBundel = soort === "bundel";
   document.querySelector("#nazendingDialogTitle").textContent = isBundel ? "Bundelpakket samenstellen" : "Klacht aanmaken";
   document.querySelector("#addAnotherNazendingPakketButton").textContent = isBundel
     ? "+ Nog een pakket toevoegen aan dit bundelpakket"
     : "+ Nog een pakket toevoegen aan deze klacht";
   document.querySelector("#saveNazendingButton").textContent = isBundel ? "Bundelpakket opslaan" : "Klacht opslaan";
+  nazendingKlantnaamField.hidden = !isBundel;
+  nazendingKlantnaamInput.value = "";
   nazendingDraft = [];
   renderNazendingDraftList();
   resetNazendingPakketPicker();
@@ -809,6 +825,43 @@ function loadNazendingComponents() {
       checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
       nazendingComponentRowsEl.append(row);
     });
+}
+
+// Bouwt dezelfde "draft data"-vorm als readCurrentNazendingSelection, maar
+// automatisch uit de BOM i.p.v. handmatig aangevinkte formuliervelden —
+// gebruikt om een bundel-draft voor te vullen vanuit bekende orderdata
+// (Dubbele klanten), zodat je pakketnummer/inhoud niet opnieuw hoeft te
+// typen of aan te vinken.
+function buildBundelPakketDataUitRegel(pakketnummer, aantal) {
+  const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
+  const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
+  if (!info || !relatedEntries.length) return null;
+  const entries = relatedEntries.map((entry) => ({
+    gebied: entry.gebied,
+    item: entry.item,
+    soort: entry.soort,
+    groep: entry.groep,
+    volgorde: entry.volgorde,
+    aantal: entry.gebied === "DOZEN" ? aantal : Math.round(entry.aantal_per_pakket * aantal),
+    tracking: "",
+  }));
+  return { pakketnummer, pakketnaam: info.pakketnaam, volledig: false, entries };
+}
+
+// Opent de Bundel-dialoog al gevuld met de pakketten van één klant uit het
+// "Dubbele klanten"-overzicht — geen pakketnummer meer hoeven intypen, wel
+// zelf nog de doos(en)/tracking en eventueel de aantallen splitsen (bijv.
+// "+ Nog een pakket toevoegen" met hetzelfde pakketnummer nogmaals, voor een
+// tweede doos met een deel van het aantal).
+function bundelKlantDirect(entry) {
+  klantDuplicatenDialog.close();
+  openNazendingDialog("bundel");
+  nazendingKlantnaamInput.value = entry.naam;
+  nazendingDraft = entry.regels
+    .map((r) => buildBundelPakketDataUitRegel(r.pakketnummer, r.aantal))
+    .filter(Boolean);
+  nazendingBrondata = { naam: entry.naam };
+  renderNazendingDraftList();
 }
 
 // Reads whatever pakket is currently shown in the picker (not yet added to
@@ -925,6 +978,7 @@ function saveNazending() {
     id: makeImportId(),
     active: true,
     soort: nazendingSoort,
+    klantnaam: nazendingSoort === "bundel" ? nazendingKlantnaamInput.value.trim() : "",
     pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     // Een bundelpakket toont nooit het pakketnummer groot boven — alleen het
@@ -938,6 +992,25 @@ function saveNazending() {
     // its bundle-mate kept", which only this per-pakket breakdown captures.
     pakketten: pakketten.map((p) => ({ pakketnummer: p.pakketnummer, pakketnaam: p.pakketnaam, entries: p.entries })),
   });
+  // Voorgevuld vanuit "Dubbele klanten": de eenheden die daadwerkelijk in
+  // deze bundel terechtkomen (per pakketnummer het DOZEN-aantal, dat is de
+  // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
+  // meetellen als los pakket én als bundel. Alleen wat je zelf uit de draft
+  // hebt verwijderd of niet hebt opgeslagen blijft dus gewoon actief staan.
+  if (nazendingBrondata) {
+    const perPakket = new Map();
+    pakketten.forEach((p) => {
+      const doosEntry = p.entries.find((entry) => entry.gebied === "DOZEN");
+      const aantal = doosEntry ? doosEntry.aantal : 0;
+      if (aantal > 0) perPakket.set(p.pakketnummer, (perPakket.get(p.pakketnummer) || 0) + aantal);
+    });
+    perPakket.forEach((aantal, pakketnummer) => {
+      subtractFromActiveImports(pakketnummer, aantal);
+      verwijderOrderNamen(nazendingBrondata.naam, pakketnummer, aantal);
+    });
+    saveImportState();
+    nazendingBrondata = null;
+  }
   saveNazendingen();
   nazendingDialog.close();
   renderAll();
@@ -1903,6 +1976,16 @@ function nazendingContentNaam(content) {
 }
 
 function appendNazendingPakketkaarten(nz, showStickers = false) {
+  const isBundelNz = nz.soort === "bundel";
+  // Een voorblad met de klantnaam gaat vóór de dooskaarten van deze bundel,
+  // zodat direct duidelijk is voor wie de hele stapel is — alleen relevant
+  // als er bij het aanmaken een naam is ingevuld.
+  if (isBundelNz && nz.klantnaam) {
+    const cover = document.createElement("div");
+    cover.className = "pakketkaart pakketkaart-bundel pakketkaart-voorblad";
+    cover.innerHTML = `<div class="pakketkaart-voorblad-naam">${escapeHtml(nz.klantnaam)}</div>`;
+    pakketkaartenPanel.append(cover);
+  }
   groupNazendingByDoos(nz).forEach((group) => {
     const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
     const itemsHtml = group.content
@@ -1912,7 +1995,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
     // Eén doosnummer met aantal > 1 (bijv. "EUR40 x3") is 3 fysieke dozen die
     // elk hun eigen trackingnummer nodig hebben — dus één regel per nummer.
     const trackingRegels = (group.tracking || "").split("\n").map((regel) => regel.trim()).filter(Boolean);
-    const isBundel = nz.soort === "bundel";
+    const isBundel = isBundelNz;
     // Bundelpakketten tonen het pakketnummer nooit groot, ongeacht nz.volledig.
     const toontPakketnummer = nz.volledig && !isBundel;
     const card = document.createElement("div");

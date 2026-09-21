@@ -174,6 +174,8 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart-nazending-badge.pakketkaart-badge-bundel { background: #8e5fd1; }
 .pakketkaart-nazending { border: 4pt solid #e8842c; border-radius: 8pt; }
 .pakketkaart-bundel { border: 4pt solid #8e5fd1; border-radius: 8pt; }
+.pakketkaart-voorblad { align-items: center; justify-content: center; text-align: center; }
+.pakketkaart-voorblad-naam { font-size: 64pt; font-weight: 800; line-height: 1.2; word-break: break-word; }
 .pakketkaart-nummer { margin: 10mm 0; font-size: 80pt; font-weight: 800; line-height: 1; text-align: center; }
 .pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
@@ -256,6 +258,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .bundel-add-button { margin-left: auto; color: #000; font-weight: 800; border: 2px solid #000; background: #d8bdf0; }
 .nazending-dialog-body { padding: 22px 28px 6px; }
 .nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
+.nazending-pakket-field[hidden] { display: none; }
 .nazending-pakket-field input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
 .nazending-pakket-input-wrap { position: relative; }
 .nazending-suggestions { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 5; max-height: 220px; margin: 0; padding: 6px; overflow-y: auto; list-style: none; border: 1px solid var(--line); border-radius: 10px; background: white; box-shadow: 0 14px 34px rgba(25, 52, 43, .16); }
@@ -279,6 +282,8 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaat-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 84px 26px 12px; border-radius: 10px; background: #f4f8f5; cursor: pointer; }
 .klant-duplicaat-row input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
 .klant-duplicaat-naam { min-width: 140px; font-weight: 750; }
+.klant-duplicaat-bundel-button { margin-left: 10px; padding: 2px 10px; border: 1.5px solid #8e5fd1; border-radius: 999px; color: #8e5fd1; background: white; font-size: .74rem; font-weight: 800; cursor: pointer; }
+.klant-duplicaat-bundel-button:hover { background: #8e5fd1; color: white; }
 .klant-duplicaat-kanaal { position: absolute; top: 10px; right: 12px; padding: 3px 10px; border: 1.5px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); background: white; font-size: .68rem; font-weight: 800; letter-spacing: .02em; cursor: pointer; }
 .klant-duplicaat-kanaal:hover { background: var(--klant-kleur, var(--line)); color: white; }
 .klant-duplicaat-regels { display: inline-block; margin-top: 2px; color: var(--muted); font-size: .88rem; line-height: 1.5; }
