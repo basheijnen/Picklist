@@ -270,7 +270,8 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-component-row input[type="checkbox"] { width: 18px; height: 18px; }
 .nazending-component-row .nazending-component-label { min-width: 0; font-size: .92rem; }
 .nazending-component-row .nazending-component-label small { display: block; color: var(--muted); }
-.nazending-doosnummer { width: 84px; min-height: 32px; padding: 3px 6px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; background: white; cursor: pointer; }
+.nazending-doosnummer { width: 160px; min-height: 32px; padding: 3px 6px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; background: white; }
+.nazending-doosnummer-wrap { display: inline-block; }
 .nazending-tracking { display: block; width: 260px; margin-top: 6px; padding: 5px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; line-height: 1.4; background: white; resize: vertical; }
 .nazending-component-row .nazending-aantal { width: 72px; min-height: 34px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; text-align: right; }
 .nazending-component-row.is-unchecked { opacity: .55; }

@@ -49,6 +49,29 @@ let nazendingBrondata = null;
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
+const EXTRA_DOOSNUMMERS_STORAGE_KEY = "picklist-extra-doosnummers-v1";
+// Doosnummers die niet aan een bestaand pakket hangen (bijv. losse
+// bundel-dozen als "Doos 12 tubes") — apart bijgehouden zodat ze toch als
+// suggestie verschijnen. Bij de eerste keer starten met een paar bekende
+// standaardtypes; daarna groeit de lijst vanzelf mee zodra je een nieuw
+// doosnummer typt en een bundel/klacht opslaat.
+function loadExtraDoosnummers() {
+  try {
+    const raw = localStorage.getItem(EXTRA_DOOSNUMMERS_STORAGE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch (_error) {
+    // localStorage unavailable — start met alleen de standaardset.
+  }
+  return new Set(["Doos 12 tubes", "Doos 14 tubes", "Doos 16 tubes"]);
+}
+function saveExtraDoosnummers() {
+  try {
+    localStorage.setItem(EXTRA_DOOSNUMMERS_STORAGE_KEY, JSON.stringify([...extraDoosnummers]));
+  } catch (_error) {
+    // Best effort only, zie saveImportState.
+  }
+}
+let extraDoosnummers = loadExtraDoosnummers();
 let imports = [];
 let editingPakketnummer = null;
 let managePackagesSearchTerm = "";
@@ -549,10 +572,10 @@ function getDoosnummerList() {
 // doosnummer field: shows every known box number on click/focus (there's no
 // point filtering — a box number doesn't have a "search term" the way a
 // pakketnummer does) and closes as soon as you start typing.
-function wireDoosnummerSuggestions(inputEl, listEl) {
+function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList) {
   const hide = () => { listEl.hidden = true; listEl.replaceChildren(); };
   const render = () => {
-    const alleDoosnummers = getDoosnummerList();
+    const alleDoosnummers = lijstFn();
     if (!alleDoosnummers.length) { hide(); return; }
     listEl.replaceChildren();
     alleDoosnummers.forEach((doosnummer) => {
@@ -783,6 +806,7 @@ function resetNazendingPakketPicker() {
 
 function getKnownDoosnummers() {
   const known = new Set((window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item));
+  extraDoosnummers.forEach((doosnummer) => known.add(doosnummer));
   return [...known].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
@@ -807,11 +831,10 @@ function loadNazendingComponents() {
       const row = document.createElement("label");
       row.className = "nazending-component-row";
       const labelHtml = entry.gebied === "DOZEN"
-        ? `Doos <select class="nazending-doosnummer" aria-label="Doosnummer">${
-            getKnownDoosnummers()
-              .map((doosnummer) => `<option value="${escapeHtml(doosnummer)}"${doosnummer === entry.item ? " selected" : ""}>${escapeHtml(doosnummer)}</option>`)
-              .join("")
-          }</select>${
+        ? `Doos <div class="nazending-pakket-input-wrap nazending-doosnummer-wrap">
+            <input type="text" class="nazending-doosnummer" value="${escapeHtml(entry.item)}" placeholder="Doosnummer" aria-label="Doosnummer" autocomplete="off">
+            <ul class="nazending-suggestions nazending-doosnummer-suggestions" hidden></ul>
+          </div>${
             nazendingSoort === "bundel"
               ? `<textarea class="nazending-tracking" rows="3" placeholder="Trackingnummer(s), één per regel bij meerdere dozen (optioneel)" aria-label="Trackingnummer(s) voor deze doos"></textarea>`
               : ""
@@ -823,6 +846,10 @@ function loadNazendingComponents() {
         <input type="number" class="nazending-aantal" min="0" step="1" value="${Math.round(entry.aantal_per_pakket)}">`;
       const checkbox = row.querySelector("input[type=checkbox]");
       checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
+      const doosnummerInput = row.querySelector(".nazending-doosnummer");
+      if (doosnummerInput) {
+        wireDoosnummerSuggestions(doosnummerInput, row.querySelector(".nazending-doosnummer-suggestions"), getKnownDoosnummers);
+      }
       nazendingComponentRowsEl.append(row);
     });
 }
@@ -996,6 +1023,20 @@ function saveNazending() {
     // its bundle-mate kept", which only this per-pakket breakdown captures.
     pakketten: pakketten.map((p) => ({ pakketnummer: p.pakketnummer, pakketnaam: p.pakketnaam, entries: p.entries })),
   });
+  // Een hier getypt nieuw doosnummer (niet uit de BOM, bijv. "Doos 12 tubes")
+  // onthouden als extra suggestie voor volgende keren.
+  const bekend = new Set(getKnownDoosnummers());
+  let extraDoosnummersGewijzigd = false;
+  pakketten.forEach((p) => {
+    p.entries.forEach((entry) => {
+      if (entry.gebied === "DOZEN" && entry.item && !bekend.has(entry.item)) {
+        extraDoosnummers.add(entry.item);
+        bekend.add(entry.item);
+        extraDoosnummersGewijzigd = true;
+      }
+    });
+  });
+  if (extraDoosnummersGewijzigd) saveExtraDoosnummers();
   // Voorgevuld vanuit "Dubbele klanten": de eenheden die daadwerkelijk in
   // deze bundel terechtkomen (per pakketnummer het DOZEN-aantal, dat is de
   // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
