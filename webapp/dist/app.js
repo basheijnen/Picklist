@@ -39,6 +39,7 @@ const nazendingMessage = document.querySelector("#nazendingMessage");
 const nazendingDraftListEl = document.querySelector("#nazendingDraftList");
 const addAnotherNazendingPakketButton = document.querySelector("#addAnotherNazendingPakketButton");
 let nazendingDraft = [];
+let nazendingSoort = "klacht";
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
@@ -487,7 +488,14 @@ function renderNazendingPakketSuggestions() {
   nazendingPakketSuggestionsEl.hidden = false;
 }
 
-function openNazendingDialog() {
+function openNazendingDialog(soort = "klacht") {
+  nazendingSoort = soort;
+  const isBundel = soort === "bundel";
+  document.querySelector("#nazendingDialogTitle").textContent = isBundel ? "Bundelpakket samenstellen" : "Klacht aanmaken";
+  document.querySelector("#addAnotherNazendingPakketButton").textContent = isBundel
+    ? "+ Nog een pakket toevoegen aan dit bundelpakket"
+    : "+ Nog een pakket toevoegen aan deze klacht";
+  document.querySelector("#saveNazendingButton").textContent = isBundel ? "Bundelpakket opslaan" : "Klacht opslaan";
   nazendingDraft = [];
   renderNazendingDraftList();
   resetNazendingPakketPicker();
@@ -651,13 +659,17 @@ function saveNazending() {
   if (current.status === "invalid") { nazendingMessage.textContent = current.message; return; }
   const pakketten = [...nazendingDraft];
   if (current.status === "ok") pakketten.push(current.data);
-  if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe aan de klacht."; return; }
+  if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe."; return; }
   nazendingen.push({
     id: makeImportId(),
     active: true,
+    soort: nazendingSoort,
     pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
-    volledig: pakketten.every((p) => p.volledig),
+    // Een bundelpakket toont nooit het pakketnummer groot boven — alleen het
+    // aantal planten is relevant — dus die telt altijd als "niet volledig",
+    // ongeacht welke regels zijn aangevinkt.
+    volledig: nazendingSoort === "bundel" ? false : pakketten.every((p) => p.volledig),
     entries: pakketten.flatMap((p) => p.entries),
     // Kept per pakket (not just flattened into `entries`) so pakketkaarten
     // can print one card per doos: a pakket whose doos was unchecked has no
@@ -1405,16 +1417,19 @@ function renderPackages(orderCounts) {
       // ships in — not how many pakketten were bundled into it — since
       // that's what determines whether it reads as 1 pakket or more.
       const doosAantal = doosEntries.reduce((sum, entry) => sum + entry.aantal, 0);
-      const countCell = nz.volledig
+      const isBundel = nz.soort === "bundel";
+      // Bundelpakketten tonen het pakketnummer nooit groot, ongeacht volledig.
+      const toontPakketnummer = nz.volledig && !isBundel;
+      const countCell = toontPakketnummer
         ? `<span class="nazending-full-badge">${doosAantal}</span>`
         : `${displayNumber(stukAantal)} stuks`;
-      return `<tr class="nazending-row">
-        <td class="package-number">${nz.volledig ? escapeHtml(nz.pakketnummer) : ""}</td>
-        <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge">Nazending</span></td>
+      return `<tr class="nazending-row${isBundel ? " is-bundel" : ""}">
+        <td class="package-number">${toontPakketnummer ? escapeHtml(nz.pakketnummer) : ""}</td>
+        <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundelpakket" : "Nazending"}</span></td>
         <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
         <td class="package-count">${countCell}</td>
         <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
-        <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="Nazending verwijderen">×</button></td>
+        <td><button type="button" class="nazending-delete-button" data-id="${escapeHtml(nz.id)}" aria-label="${isBundel ? "Bundelpakket" : "Nazending"} verwijderen">×</button></td>
       </tr>`;
     })
     .join("");
@@ -1603,15 +1618,18 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
     const stickersHtml = showStickers ? `${displayNumber(group.doosAantal)} ${group.doosAantal === 1 ? "sticker" : "stickers"}` : "";
+    const isBundel = nz.soort === "bundel";
+    // Bundelpakketten tonen het pakketnummer nooit groot, ongeacht nz.volledig.
+    const toontPakketnummer = nz.volledig && !isBundel;
     const card = document.createElement("div");
     // An incomplete klacht has no meaningful pakketnummer or nominal naam to
     // show (see nazendingContentNaam) — only the plants being picked matter,
     // so that summary bar is dropped and the item list becomes the headline.
-    card.className = `pakketkaart pakketkaart-nazending${nz.volledig ? "" : " pakketkaart-incomplete"}`;
+    card.className = `pakketkaart ${isBundel ? "pakketkaart-bundel" : "pakketkaart-nazending"}${toontPakketnummer ? "" : " pakketkaart-incomplete"}`;
     card.innerHTML = `
-      <div class="pakketkaart-label">${nz.volledig ? "PAKKETNUMMER: " : ""}<span class="pakketkaart-nazending-badge">Nazending</span></div>
-      <div class="pakketkaart-nummer">${nz.volledig ? escapeHtml(group.pakketnummer) : ""}</div>
-      ${nz.volledig ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
+      <div class="pakketkaart-label">${toontPakketnummer ? "PAKKETNUMMER: " : ""}<span class="pakketkaart-nazending-badge${isBundel ? " pakketkaart-badge-bundel" : ""}">${isBundel ? "Bundelpakket" : "Nazending"}</span></div>
+      <div class="pakketkaart-nummer">${toontPakketnummer ? escapeHtml(group.pakketnummer) : ""}</div>
+      ${toontPakketnummer ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
@@ -1783,11 +1801,18 @@ function renderImportsList() {
       .filter((entry) => entry.gebied === "DOZEN")
       .reduce((boxSum, entry) => boxSum + entry.aantal, 0), 0);
     const someActive = nazendingen.some((nz) => nz.active !== false);
+    const bundelCount = nazendingen.filter((nz) => nz.soort === "bundel").length;
+    const klachtCount = nazendingen.length - bundelCount;
+    const groupLabel = bundelCount && klachtCount
+      ? `Klachten & bundels (${nazendingen.length})`
+      : bundelCount
+        ? `Bundelpakketten (${nazendingen.length})`
+        : `Klachten (${nazendingen.length})`;
     const groupRow = document.createElement("div");
     groupRow.className = `import-row${allActive ? "" : " is-held"}`;
     groupRow.innerHTML = `
       <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${allActive ? "checked" : ""}><span>Meetellen</span></label>
-      <span class="nazending-list-label">Klachten (${nazendingen.length})<span class="nazending-badge">Klacht</span></span>
+      <span class="nazending-list-label">${groupLabel}</span>
       <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>`;
     const groupCheckbox = groupRow.querySelector(".import-active-checkbox");
     groupCheckbox.indeterminate = someActive && !allActive;
@@ -1807,9 +1832,10 @@ function renderImportsList() {
       const nzActive = nz.active !== false;
       const subRow = document.createElement("div");
       subRow.className = `nazending-subrow${nzActive ? "" : " is-held"}`;
+      const isBundel = nz.soort === "bundel";
       subRow.innerHTML = `
-        <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span>${escapeHtml(nz.pakketnummer)}</span></label>
-        <button type="button" class="nazending-delete-button" aria-label="Klacht verwijderen">×</button>`;
+        <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span>${escapeHtml(nz.pakketnummer)}</span><span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundel" : "Klacht"}</span></label>
+        <button type="button" class="nazending-delete-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} verwijderen">×</button>`;
       subRow.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
         nz.active = event.target.checked;
         closeCountDiffMenu();
@@ -1817,7 +1843,7 @@ function renderImportsList() {
         renderAll();
       });
       subRow.querySelector(".nazending-delete-button").addEventListener("click", async () => {
-        if (!(await confirmDialog(`Klacht "${nz.pakketnummer}" verwijderen?`))) return;
+        if (!(await confirmDialog(`${isBundel ? "Bundelpakket" : "Klacht"} "${nz.pakketnummer}" verwijderen?`))) return;
         nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
         saveNazendingen();
         if (imports.length || nazendingen.length) renderAll(); else resetImport();
@@ -2015,7 +2041,8 @@ document.querySelectorAll(".verkoop-table th[data-sort]").forEach((th) => {
 });
 document.querySelector("#closeNazendingDialog").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
-document.querySelector("#addNazendingButton").addEventListener("click", openNazendingDialog);
+document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
+document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
 nazendingPakketnummerInput.addEventListener("input", () => {
   loadNazendingComponents();
   renderNazendingPakketSuggestions();
