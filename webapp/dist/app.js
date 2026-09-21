@@ -214,6 +214,15 @@ const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
 const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
 const selectAllKlantDuplicatenButton = document.querySelector("#selectAllKlantDuplicatenButton");
 
+// Zelfde kleur-toewijzing als de kanaalknoppen op de Verkopen-hoofdpagina
+// (renderVerkoopKlantFilters): index in de alfabetisch gesorteerde lijst van
+// alle bekende kanalen, modulo de vaste kleurenset.
+function kanaalKleur(kanaal) {
+  const kanalen = [...new Set((window.PICKLIST_VERKOOP || []).map((o) => o.kanaal))].sort((a, b) => a.localeCompare(b, "nl"));
+  const index = kanalen.indexOf(kanaal);
+  return VERKOOP_KLANT_KLEUREN[index < 0 ? 0 : index % VERKOOP_KLANT_KLEUREN.length];
+}
+
 function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
@@ -244,11 +253,30 @@ function renderKlantDuplicatenDialog() {
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox">
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>${entry.kanaal ? `<span class="klant-duplicaat-kanaal">${escapeHtml(entry.kanaal)}</span>` : ""}<br>
-      <span class="klant-duplicaat-regels">${regelsHtml}</span></span>`;
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
+      <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
+      ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}`;
     row._entry = entry;
+    if (entry.kanaal) {
+      row.querySelector(".klant-duplicaat-kanaal").addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        selecteerKlantenPerKanaal(entry.kanaal);
+      });
+    }
     klantDuplicatenListEl.append(row);
   });
+}
+
+// Klik op een kanaal-badge selecteert (of deselecteert) in één keer alle
+// klanten met datzelfde kanaal — handig als je bijv. alleen Bol.com wilt
+// bundelen zonder elke klant apart aan te vinken.
+function selecteerKlantenPerKanaal(kanaal) {
+  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
+    .filter((row) => row._entry.kanaal === kanaal)
+    .map((row) => row.querySelector("input"));
+  const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
+  checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
 }
 
 function openKlantDuplicatenDialog() {
