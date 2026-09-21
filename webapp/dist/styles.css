@@ -294,7 +294,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-overzicht-table th:nth-child(3), .klant-overzicht-table td:nth-child(3) { width: 58%; }
 .klant-overzicht-table th:nth-child(4), .klant-overzicht-table td:nth-child(4) { width: 14%; }
 .klant-overzicht-naam { font-weight: 800; }
-.klant-overzicht-kanaal { display: inline-block; padding: 2px 7px; border: 1.2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 7pt; font-weight: 800; line-height: 1.3; }
+.klant-overzicht-kanaal { display: inline-block; max-width: 100%; padding: 2px 7px; border: 1.2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 7pt; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
 .klant-overzicht-planten { font-weight: 800; text-align: right; white-space: nowrap; }
 .nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
 .nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 3px 3px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }
