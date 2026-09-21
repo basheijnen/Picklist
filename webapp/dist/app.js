@@ -31,9 +31,6 @@ const managePackagesDialog = document.querySelector("#managePackagesDialog");
 const managePackagesList = document.querySelector("#managePackagesList");
 const verkoopDialog = document.querySelector("#verkoopDialog");
 const nazendingDialog = document.querySelector("#nazendingDialog");
-const nazendingKlantnaamField = document.querySelector("#nazendingKlantnaamField");
-const nazendingKlantnaamInput = document.querySelector("#nazendingKlantnaam");
-const nazendingKlantDuplicatesEl = document.querySelector("#nazendingKlantDuplicates");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
 const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
 const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
@@ -84,7 +81,6 @@ function saveImportState() {
       name: imp.name,
       active: imp.active,
       orderCounts: Object.fromEntries(imp.orderCounts),
-      orderNames: imp.orderNames || [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }))));
@@ -105,7 +101,6 @@ function loadImportState() {
       name: imp.name,
       active: Boolean(imp.active),
       orderCounts: new Map(Object.entries(imp.orderCounts || {})),
-      orderNames: Array.isArray(imp.orderNames) ? imp.orderNames : [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }));
@@ -486,7 +481,6 @@ function renderNazendingPakketSuggestions() {
       nazendingPakketnummerInput.value = pakketnummer;
       hideNazendingPakketSuggestions();
       loadNazendingComponents();
-      renderNazendingKlantDuplicates();
     });
     item.append(button);
     nazendingPakketSuggestionsEl.append(item);
@@ -502,8 +496,6 @@ function openNazendingDialog(soort = "klacht") {
     ? "+ Nog een pakket toevoegen aan dit bundelpakket"
     : "+ Nog een pakket toevoegen aan deze klacht";
   document.querySelector("#saveNazendingButton").textContent = isBundel ? "Bundelpakket opslaan" : "Klacht opslaan";
-  nazendingKlantnaamField.hidden = !isBundel;
-  nazendingKlantnaamInput.value = "";
   nazendingDraft = [];
   renderNazendingDraftList();
   resetNazendingPakketPicker();
@@ -518,38 +510,6 @@ function resetNazendingPakketPicker() {
   nazendingComponentRowsEl.replaceChildren();
   addAnotherNazendingPakketButton.hidden = true;
   hideNazendingPakketSuggestions();
-  renderNazendingKlantDuplicates();
-}
-
-// Bij een bundelpakket: laat zien welke klanten meerdere keren hetzelfde
-// pakketnummer bestelden, zodat je meteen ziet wie je eventueel kunt
-// bundelen (en hoeveel) i.p.v. dat zelf in de orderlijst te moeten opzoeken.
-// Alleen op basis van de "Name"-kolom uit de orderexport — ontbreekt die in
-// een oudere export, dan blijft deze lijst gewoon leeg.
-function renderNazendingKlantDuplicates() {
-  nazendingKlantDuplicatesEl.hidden = true;
-  nazendingKlantDuplicatesEl.replaceChildren();
-  if (nazendingSoort !== "bundel") return;
-  const pakketnummer = nazendingPakketnummerInput.value.trim();
-  if (!pakketnummer) return;
-  const namen = imports.flatMap((imp) => imp.orderNames || [])
-    .filter((entry) => entry.pakketnummer === pakketnummer)
-    .map((entry) => entry.naam);
-  const aantalPerNaam = new Map();
-  namen.forEach((naam) => aantalPerNaam.set(naam, (aantalPerNaam.get(naam) || 0) + 1));
-  const dubbel = [...aantalPerNaam.entries()].filter(([, aantal]) => aantal >= 2).sort((a, b) => b[1] - a[1]);
-  if (!dubbel.length) return;
-  const label = document.createElement("span");
-  label.textContent = "Dubbele klanten voor dit pakket:";
-  nazendingKlantDuplicatesEl.append(label);
-  dubbel.forEach(([naam, aantal]) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = `${naam} (${aantal}x)`;
-    button.addEventListener("click", () => { nazendingKlantnaamInput.value = naam; });
-    nazendingKlantDuplicatesEl.append(button);
-  });
-  nazendingKlantDuplicatesEl.hidden = false;
 }
 
 function getKnownDoosnummers() {
@@ -704,7 +664,6 @@ function saveNazending() {
     id: makeImportId(),
     active: true,
     soort: nazendingSoort,
-    klantnaam: nazendingSoort === "bundel" ? nazendingKlantnaamInput.value.trim() : "",
     pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     // Een bundelpakket toont nooit het pakketnummer groot boven — alleen het
@@ -1298,25 +1257,6 @@ function readOrders(text) {
   return counts;
 }
 
-// Per-order (pakketnummer, naam) paren voor het opsporen van dubbele klanten
-// bij het samenstellen van een bundelpakket. Oudere exports zonder "Name"-
-// kolom leveren gewoon een lege lijst — de bundel-dropdown blijft dan leeg.
-function readOrderNames(text) {
-  const rows = parseDelimited(text);
-  if (!rows.length) return [];
-  const header = rows[0].map((value) => value.trim());
-  const packageIndex = header.indexOf("Package Number");
-  const nameIndex = header.indexOf("Name");
-  if (packageIndex < 0 || nameIndex < 0) return [];
-  const result = [];
-  rows.slice(1).forEach((row) => {
-    const pakketnummer = (row[packageIndex] || "").trim();
-    const naam = (row[nameIndex] || "").trim();
-    if (pakketnummer && naam) result.push({ pakketnummer, naam });
-  });
-  return result;
-}
-
 function calculate(orderCounts) {
   const knownPackages = new Set();
   const departments = Object.fromEntries(DEPARTMENTS.map((name) => [name, new Map()]));
@@ -1672,23 +1612,13 @@ function nazendingContentNaam(content) {
 }
 
 function appendNazendingPakketkaarten(nz, showStickers = false) {
-  const isBundelNz = nz.soort === "bundel";
-  // Een voorblad met de klantnaam gaat vóór de dooskaarten van deze bundel,
-  // zodat direct duidelijk is voor wie de hele stapel is — alleen relevant
-  // als er bij het aanmaken een naam is ingevuld.
-  if (isBundelNz && nz.klantnaam) {
-    const cover = document.createElement("div");
-    cover.className = "pakketkaart pakketkaart-bundel pakketkaart-voorblad";
-    cover.innerHTML = `<div class="pakketkaart-voorblad-naam">${escapeHtml(nz.klantnaam)}</div>`;
-    pakketkaartenPanel.append(cover);
-  }
   groupNazendingByDoos(nz).forEach((group) => {
     const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
     const itemsHtml = group.content
       .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
     const stickersHtml = showStickers ? `${displayNumber(group.doosAantal)} ${group.doosAantal === 1 ? "sticker" : "stickers"}` : "";
-    const isBundel = isBundelNz;
+    const isBundel = nz.soort === "bundel";
     // Bundelpakketten tonen het pakketnummer nooit groot, ongeacht nz.volledig.
     const toontPakketnummer = nz.volledig && !isBundel;
     const card = document.createElement("div");
@@ -1996,7 +1926,6 @@ async function handleFile(file) {
   try {
     const text = await file.text();
     const orderCounts = readOrders(text);
-    const orderNames = readOrderNames(text);
     // Also parse the same file for Verkopen, so a lijst can be sent there
     // later without re-uploading — an older export format that's missing a
     // required column just means no "Naar Verkopen" button for this lijst.
@@ -2006,7 +1935,7 @@ async function handleFile(file) {
     const name = imports.some((imp) => imp.name === baseName)
       ? await promptImportName(uniqueImportName(baseName))
       : baseName;
-    imports.push({ id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false });
+    imports.push({ id: makeImportId(), name, active: true, orderCounts, verkoopOrders, verkoopVerstuurd: false });
     saveImportState();
     renderAll();
   } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
@@ -2117,7 +2046,6 @@ document.querySelector("#bundelButton").addEventListener("click", () => openNaze
 nazendingPakketnummerInput.addEventListener("input", () => {
   loadNazendingComponents();
   renderNazendingPakketSuggestions();
-  renderNazendingKlantDuplicates();
 });
 nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
 nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
