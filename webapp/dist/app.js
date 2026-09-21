@@ -225,7 +225,7 @@ function verplaatsNaarTeBundelen(geselecteerd) {
 const klantDuplicatenDialog = document.querySelector("#klantDuplicatenDialog");
 const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
 const klantDuplicatenKanaalFiltersEl = document.querySelector("#klantDuplicatenKanaalFilters");
-let klantDuplicatenActiefKanaal = "";
+let klantDuplicatenActieveKanalen = new Set();
 const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
 const selectAllKlantDuplicatenButton = document.querySelector("#selectAllKlantDuplicatenButton");
 
@@ -252,27 +252,30 @@ function renderKlantDuplicatenDialog() {
     klantDuplicatenListEl.append(leeg);
     return;
   }
-  // Filter op kanaal blijft geldig zolang dat kanaal nog voorkomt — anders
-  // (nieuwe import, kanaal verdwenen) terug naar "alles tonen".
+  // Filter op kanalen blijft geldig zolang die kanalen nog voorkomen —
+  // anders (nieuwe import, kanaal verdwenen) die uit de selectie halen.
   const kanalen = [...new Set(dubbel.flatMap((entry) => entry.kanaal ? entry.kanaal.split(" / ") : []))]
     .sort((a, b) => a.localeCompare(b, "nl"));
-  if (klantDuplicatenActiefKanaal && !kanalen.includes(klantDuplicatenActiefKanaal)) klantDuplicatenActiefKanaal = "";
-  const zichtbaar = klantDuplicatenActiefKanaal
-    ? dubbel.filter((entry) => entry.kanaal.split(" / ").includes(klantDuplicatenActiefKanaal))
+  [...klantDuplicatenActieveKanalen].forEach((kanaal) => {
+    if (!kanalen.includes(kanaal)) klantDuplicatenActieveKanalen.delete(kanaal);
+  });
+  const zichtbaar = klantDuplicatenActieveKanalen.size
+    ? dubbel.filter((entry) => entry.kanaal.split(" / ").some((k) => klantDuplicatenActieveKanalen.has(k)))
     : dubbel;
   klantDuplicatenMessage.textContent = `${zichtbaar.length} klant${zichtbaar.length === 1 ? "" : "en"} met meerdere bestellingen.`;
   selectAllKlantDuplicatenButton.hidden = false;
   selectAllKlantDuplicatenButton.textContent = "Alles selecteren";
   klantDuplicatenKanaalFiltersEl.replaceChildren();
   kanalen.forEach((kanaal) => {
-    const actief = kanaal === klantDuplicatenActiefKanaal;
+    const actief = klantDuplicatenActieveKanalen.has(kanaal);
     const knop = document.createElement("button");
     knop.type = "button";
     knop.className = `verkoop-klant-button${actief ? " is-actief" : ""}`;
     knop.style.setProperty("--klant-kleur", kanaalKleur(kanaal));
     knop.textContent = kanaal;
     knop.addEventListener("click", () => {
-      klantDuplicatenActiefKanaal = actief ? "" : kanaal;
+      if (actief) klantDuplicatenActieveKanalen.delete(kanaal);
+      else klantDuplicatenActieveKanalen.add(kanaal);
       renderKlantDuplicatenDialog();
     });
     klantDuplicatenKanaalFiltersEl.append(knop);
@@ -320,7 +323,7 @@ function selecteerKlantenPerKanaal(kanaal) {
 }
 
 function openKlantDuplicatenDialog() {
-  klantDuplicatenActiefKanaal = "";
+  klantDuplicatenActieveKanalen = new Set();
   renderKlantDuplicatenDialog();
   if (!klantDuplicatenDialog.open) klantDuplicatenDialog.showModal();
 }
