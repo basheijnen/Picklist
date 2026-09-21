@@ -339,8 +339,12 @@ function printKlantOverzicht() {
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
   const rijenHtml = geselecteerd
     .map((entry) => {
+      // Eén regel per order, net als in de dialoog zelf — geen (xN)-suffix.
       const regelsHtml = entry.regels
-        .map((r) => `${escapeHtml(r.pakketnummer)} – ${escapeHtml((packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket")}${r.aantal > 1 ? ` ×${r.aantal}` : ""}`)
+        .flatMap((r) => {
+          const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
+          return Array(r.aantal).fill(`${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`);
+        })
         .join("<br>");
       const kanaalHtml = entry.kanaal
         ? `<span class="klant-overzicht-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}">${escapeHtml(entry.kanaal)}</span>`
