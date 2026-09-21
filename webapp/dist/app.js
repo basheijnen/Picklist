@@ -152,6 +152,15 @@ const TE_BUNDELEN_NAAM = "TE BUNDELEN";
 // Klantnamen die vaker dan 1x voorkomen in de actieve lijsten, ongeacht
 // pakketnummer — die klant heeft dan meerdere bestellingen geplaatst die
 // mogelijk samen in 1 doos passen. Alfabetisch gesorteerd op naam.
+// Aantal planten in één pakket van dit nummer — zelfde bron (BOM,
+// KOELING/KAS/KAMER-regels) als de pakketkaart zelf gebruikt voor zijn
+// "x N"-koptotaal, zodat dit overal hetzelfde getal oplevert.
+function plantenPerPakket(pakketnummer) {
+  return (window.PICKLIST_BOM || [])
+    .filter((entry) => entry.pakketnummer === pakketnummer && ["KOELING", "KAS", "KAMER"].includes(entry.gebied))
+    .reduce((sum, entry) => sum + entry.aantal_per_pakket, 0);
+}
+
 function verzamelDubbeleKlanten() {
   const perNaam = new Map();
   imports.filter((imp) => imp.active).forEach((imp) => {
@@ -163,12 +172,16 @@ function verzamelDubbeleKlanten() {
     });
   });
   const dubbel = [...perNaam.entries()]
-    .map(([naam, info]) => ({
-      naam,
-      kanaal: [...info.kanalen].join(" / "),
-      regels: [...info.perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal })),
-      totaal: [...info.perPakket.values()].reduce((sum, aantal) => sum + aantal, 0),
-    }))
+    .map(([naam, info]) => {
+      const regels = [...info.perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal }));
+      return {
+        naam,
+        kanaal: [...info.kanalen].join(" / "),
+        regels,
+        totaal: regels.reduce((sum, r) => sum + r.aantal, 0),
+        totaalPlanten: regels.reduce((sum, r) => sum + plantenPerPakket(r.pakketnummer) * r.aantal, 0),
+      };
+    })
     .filter((entry) => entry.totaal >= 2);
   dubbel.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
   return dubbel;
@@ -253,7 +266,8 @@ function renderKlantDuplicatenDialog() {
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox">
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>
+      <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span><br>
       <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
       ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}`;
     row._entry = entry;
