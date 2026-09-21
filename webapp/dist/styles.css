@@ -273,7 +273,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaten-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .klant-duplicaten-toolbar .nazending-pakket-naam { margin-top: 0; }
 .klant-duplicaten-kanaal-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.klant-duplicaten-list { display: grid; gap: 8px; margin-top: 10px; max-height: 50vh; overflow-y: auto; }
+.klant-duplicaten-list { display: grid; align-content: start; gap: 8px; margin-top: 10px; height: 50vh; overflow-y: auto; }
 .klant-duplicaat-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 84px 26px 12px; border-radius: 10px; background: #f4f8f5; cursor: pointer; }
 .klant-duplicaat-row input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
 .klant-duplicaat-naam { min-width: 140px; font-weight: 750; }
