@@ -155,17 +155,19 @@ const TE_BUNDELEN_NAAM = "TE BUNDELEN";
 function verzamelDubbeleKlanten() {
   const perNaam = new Map();
   imports.filter((imp) => imp.active).forEach((imp) => {
-    (imp.orderNames || []).forEach(({ naam, pakketnummer }) => {
-      if (!perNaam.has(naam)) perNaam.set(naam, new Map());
-      const perPakket = perNaam.get(naam);
-      perPakket.set(pakketnummer, (perPakket.get(pakketnummer) || 0) + 1);
+    (imp.orderNames || []).forEach(({ naam, pakketnummer, kanaal }) => {
+      if (!perNaam.has(naam)) perNaam.set(naam, { perPakket: new Map(), kanalen: new Set() });
+      const info = perNaam.get(naam);
+      info.perPakket.set(pakketnummer, (info.perPakket.get(pakketnummer) || 0) + 1);
+      if (kanaal) info.kanalen.add(kanaal);
     });
   });
   const dubbel = [...perNaam.entries()]
-    .map(([naam, perPakket]) => ({
+    .map(([naam, info]) => ({
       naam,
-      regels: [...perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal })),
-      totaal: [...perPakket.values()].reduce((sum, aantal) => sum + aantal, 0),
+      kanaal: [...info.kanalen].join(" / "),
+      regels: [...info.perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal })),
+      totaal: [...info.perPakket.values()].reduce((sum, aantal) => sum + aantal, 0),
     }))
     .filter((entry) => entry.totaal >= 2);
   dubbel.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
@@ -194,13 +196,13 @@ function verwijderOrderNamen(naam, pakketnummer, aantal) {
 function verplaatsNaarTeBundelen(geselecteerd) {
   if (!geselecteerd.length) return;
   const teBundelen = imports.find((imp) => imp.name === TE_BUNDELEN_NAAM) || createHeldImport(TE_BUNDELEN_NAAM);
-  geselecteerd.forEach(({ naam, regels }) => {
+  geselecteerd.forEach(({ naam, kanaal, regels }) => {
     regels.forEach(({ pakketnummer, aantal }) => {
       subtractFromActiveImports(pakketnummer, aantal);
       verwijderOrderNamen(naam, pakketnummer, aantal);
       teBundelen.orderCounts.set(pakketnummer, (teBundelen.orderCounts.get(pakketnummer) || 0) + aantal);
       if (!teBundelen.orderNames) teBundelen.orderNames = [];
-      for (let i = 0; i < aantal; i += 1) teBundelen.orderNames.push({ pakketnummer, naam });
+      for (let i = 0; i < aantal; i += 1) teBundelen.orderNames.push({ pakketnummer, naam, kanaal });
     });
   });
   saveImportState();
@@ -210,6 +212,7 @@ function verplaatsNaarTeBundelen(geselecteerd) {
 const klantDuplicatenDialog = document.querySelector("#klantDuplicatenDialog");
 const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
 const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
+const selectAllKlantDuplicatenButton = document.querySelector("#selectAllKlantDuplicatenButton");
 
 function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
@@ -217,6 +220,7 @@ function renderKlantDuplicatenDialog() {
   klantDuplicatenListEl.replaceChildren();
   if (!dubbel.length) {
     klantDuplicatenMessage.textContent = "";
+    selectAllKlantDuplicatenButton.hidden = true;
     const leeg = document.createElement("p");
     leeg.className = "klant-duplicaten-empty";
     leeg.textContent = "Geen dubbele klantnamen gevonden in de actieve lijsten.";
@@ -224,6 +228,8 @@ function renderKlantDuplicatenDialog() {
     return;
   }
   klantDuplicatenMessage.textContent = `${dubbel.length} klant${dubbel.length === 1 ? "" : "en"} met meerdere bestellingen.`;
+  selectAllKlantDuplicatenButton.hidden = false;
+  selectAllKlantDuplicatenButton.textContent = "Alles selecteren";
   dubbel.forEach((entry) => {
     // Eén regel per order i.p.v. één regel met een (xN)-suffix — zo zie je
     // in één oogopslag hoe vaak iets terugkomt, zonder een getal te lezen.
@@ -238,7 +244,7 @@ function renderKlantDuplicatenDialog() {
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox">
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>${entry.kanaal ? `<span class="klant-duplicaat-kanaal">${escapeHtml(entry.kanaal)}</span>` : ""}<br>
       <span class="klant-duplicaat-regels">${regelsHtml}</span></span>`;
     row._entry = entry;
     klantDuplicatenListEl.append(row);
@@ -1372,11 +1378,19 @@ function readOrderNames(text) {
   const packageIndex = header.indexOf("Package Number");
   const nameIndex = header.indexOf("Name");
   if (packageIndex < 0 || nameIndex < 0) return [];
+  // "Client"/"Shop" ontbreken soms in oudere exports — dan blijft kanaal leeg,
+  // net zoals parseVerkoopExport dat ook al voor de Verkopen-data toestaat.
+  const clientIndex = header.indexOf("Client");
+  const shopIndex = header.indexOf("Shop");
   const result = [];
   rows.slice(1).forEach((row) => {
     const pakketnummer = (row[packageIndex] || "").trim();
     const naam = (row[nameIndex] || "").trim();
-    if (pakketnummer && naam) result.push({ pakketnummer, naam });
+    if (!pakketnummer || !naam) return;
+    const kanaal = clientIndex >= 0
+      ? normalizeKanaal(row[clientIndex] || "", shopIndex >= 0 ? row[shopIndex] || "" : "")
+      : "";
+    result.push({ pakketnummer, naam, kanaal });
   });
   return result;
 }
@@ -2173,6 +2187,12 @@ document.querySelector("#bundelButton").addEventListener("click", () => openNaze
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
+selectAllKlantDuplicatenButton.addEventListener("click", () => {
+  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input")];
+  const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
+  checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
+  selectAllKlantDuplicatenButton.textContent = alleAangevinkt ? "Alles selecteren" : "Alles deselecteren";
+});
 document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("click", () => {
   const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
     .filter((row) => row.querySelector("input").checked)

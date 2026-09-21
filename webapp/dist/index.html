@@ -40,9 +40,6 @@
       <button id="printPakketkaartenButton" class="button button-secondary" type="button" disabled>
         Pakketkaarten afdrukken
       </button>
-      <button id="klantDuplicatenButton" class="button button-secondary" type="button" disabled>
-        Dubbele klanten bekijken
-      </button>
     </div>
   </header>
 
@@ -95,7 +92,10 @@
     </main>
 
     <section id="importsPanel" class="imports-panel" hidden>
-      <span class="eyebrow">Ingeladen lijsten</span>
+      <div class="imports-panel-header">
+        <span class="eyebrow">Ingeladen lijsten</span>
+        <button id="klantDuplicatenButton" class="text-button" type="button" disabled>Dubbele klanten bekijken</button>
+      </div>
       <div id="importsList" class="imports-list"></div>
     </section>
   </div>
@@ -270,7 +270,10 @@
     </div>
     <div class="nazending-dialog-body">
       <p class="nazending-pakket-naam">Klanten die dezelfde naam meerdere keren in de actieve lijsten hebben staan &mdash; mogelijk in 1 doos te combineren.</p>
-      <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
+      <div class="klant-duplicaten-toolbar">
+        <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
+        <button id="selectAllKlantDuplicatenButton" class="text-button" type="button" hidden>Alles selecteren</button>
+      </div>
       <div id="klantDuplicatenList" class="klant-duplicaten-list"></div>
     </div>
     <div class="dialog-actions">
