@@ -1391,7 +1391,7 @@ function renderPackages(orderCounts) {
           <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
           <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${row.aantal}" data-pakketnummer="${escapeHtml(row.pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(row.pakketnummer)}"></td>
           <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
-          <td><button type="button" class="pakketkaart-reprint-button" data-pakketnummer="${escapeHtml(row.pakketnummer)}" title="Kaart opnieuw afdrukken" aria-label="Kaart opnieuw afdrukken voor pakket ${escapeHtml(row.pakketnummer)}">⟲</button></td>
+          <td><button type="button" class="pakketkaart-reprint-button" data-pakketnummer="${escapeHtml(row.pakketnummer)}" title="Kaart opnieuw afdrukken" aria-label="Kaart opnieuw afdrukken voor pakket ${escapeHtml(row.pakketnummer)}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg></button></td>
         </tr>`;
       }
       const nz = row.nz;
