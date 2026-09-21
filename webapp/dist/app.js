@@ -1391,7 +1391,7 @@ function renderPackages(orderCounts) {
           <td class="pokon-cell">${needsPokon ? "Pokon" : ""}</td>
           <td class="package-count"><input class="package-count-input" type="number" min="0" step="1" value="${row.aantal}" data-pakketnummer="${escapeHtml(row.pakketnummer)}" aria-label="Aantal voor pakket ${escapeHtml(row.pakketnummer)}"></td>
           <td class="box-cell">${escapeHtml(info.doosnummers || "—")}</td>
-          <td></td>
+          <td><button type="button" class="pakketkaart-reprint-button" data-pakketnummer="${escapeHtml(row.pakketnummer)}" title="Kaart opnieuw afdrukken" aria-label="Kaart opnieuw afdrukken voor pakket ${escapeHtml(row.pakketnummer)}">⟲</button></td>
         </tr>`;
       }
       const nz = row.nz;
@@ -1440,11 +1440,15 @@ function renderPackages(orderCounts) {
     handleCountChange(input.dataset.pakketnummer, Math.max(0, Math.floor(Number(input.value) || 0)), input);
   });
   section.querySelector("tbody").addEventListener("click", (event) => {
-    const button = event.target.closest(".nazending-delete-button");
-    if (!button) return;
-    nazendingen = nazendingen.filter((nz) => nz.id !== button.dataset.id);
-    saveNazendingen();
-    renderAll();
+    const deleteButton = event.target.closest(".nazending-delete-button");
+    if (deleteButton) {
+      nazendingen = nazendingen.filter((nz) => nz.id !== deleteButton.dataset.id);
+      saveNazendingen();
+      renderAll();
+      return;
+    }
+    const reprintButton = event.target.closest(".pakketkaart-reprint-button");
+    if (reprintButton) printSinglePakketkaart(reprintButton.dataset.pakketnummer);
   });
   return section;
 }
@@ -1511,7 +1515,7 @@ function finalizeDecrease(pakketnummer, diff, targetImportId, newName) {
   renderAll();
 }
 
-function buildPakketkaarten(orderCounts) {
+function buildPakketkaarten(orderCounts, { includeNazendingen = true } = {}) {
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
   const bomByPakket = new Map();
   (window.PICKLIST_BOM || []).forEach((entry) => {
@@ -1538,7 +1542,7 @@ function buildPakketkaarten(orderCounts) {
       <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>`;
     pakketkaartenPanel.append(card);
   });
-  activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz));
+  if (includeNazendingen) activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz));
 }
 
 // Splits a klacht into one card per physical doos: a sub-pakket whose own
@@ -1613,6 +1617,19 @@ function printPakketkaarten() {
   }
   buildPakketkaarten(nieuweOrderCounts);
   orderCounts.forEach((_aantal, pakketnummer) => printedPakketnummers.add(pakketnummer));
+  savePrintedPakketnummers();
+  document.body.classList.add("printing-pakketkaarten");
+  window.print();
+}
+
+// Handmatige herdruk van één pakketkaart — bijv. wanneer een deel van een
+// wachtlijst alsnog geleverd kan worden. Negeert bewust de "al geprint"-status
+// en print alleen deze ene kaart, niet de rest van de al geprinte pakketten.
+function printSinglePakketkaart(pakketnummer) {
+  const aantal = mergedActiveOrderCounts().get(pakketnummer);
+  if (!aantal) return;
+  buildPakketkaarten(new Map([[pakketnummer, aantal]]), { includeNazendingen: false });
+  printedPakketnummers.add(pakketnummer);
   savePrintedPakketnummers();
   document.body.classList.add("printing-pakketkaarten");
   window.print();
