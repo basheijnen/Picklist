@@ -1981,15 +1981,6 @@ function nazendingContentNaam(content) {
 
 function appendNazendingPakketkaarten(nz, showStickers = false) {
   const isBundelNz = nz.soort === "bundel";
-  // Een voorblad met de klantnaam gaat vóór de dooskaarten van deze bundel,
-  // zodat direct duidelijk is voor wie de hele stapel is — alleen relevant
-  // als er bij het aanmaken een naam is ingevuld.
-  if (isBundelNz && nz.klantnaam) {
-    const cover = document.createElement("div");
-    cover.className = "pakketkaart pakketkaart-bundel pakketkaart-voorblad";
-    cover.innerHTML = `<div class="pakketkaart-voorblad-naam">${escapeHtml(nz.klantnaam)}</div>`;
-    pakketkaartenPanel.append(cover);
-  }
   groupNazendingByDoos(nz).forEach((group) => {
     const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
     const itemsHtml = group.content
@@ -2012,6 +2003,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       <div class="pakketkaart-nummer">${toontPakketnummer ? escapeHtml(group.pakketnummer) : ""}</div>
       ${toontPakketnummer ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
+      ${isBundel && nz.klantnaam ? `<div class="pakketkaart-klantnaam">${escapeHtml(nz.klantnaam)}</div>` : ""}
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>

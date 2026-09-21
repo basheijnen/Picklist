@@ -174,8 +174,7 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart-nazending-badge.pakketkaart-badge-bundel { background: #8e5fd1; }
 .pakketkaart-nazending { border: 4pt solid #e8842c; border-radius: 8pt; }
 .pakketkaart-bundel { border: 4pt solid #8e5fd1; border-radius: 8pt; }
-.pakketkaart-voorblad { align-items: center; justify-content: center; text-align: center; }
-.pakketkaart-voorblad-naam { font-size: 64pt; font-weight: 800; line-height: 1.2; word-break: break-word; }
+.pakketkaart-klantnaam { display: flex; flex: 1; align-items: center; justify-content: center; padding: 10mm 0; text-align: center; font-size: 44pt; font-weight: 800; line-height: 1.2; word-break: break-word; }
 .pakketkaart-nummer { margin: 10mm 0; font-size: 80pt; font-weight: 800; line-height: 1; text-align: center; }
 .pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
