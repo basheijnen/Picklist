@@ -179,6 +179,7 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
 .pakketkaart-incomplete .pakketkaart-items { font-size: 18pt; font-weight: 800; }
 .pakketkaart-footer { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: auto; }
+.pakketkaart-tracking { margin-top: 4px; text-align: right; font-size: 14pt; font-weight: 800; }
 .pakketkaart-doos { display: flex; align-items: baseline; gap: 12px; }
 .pakketkaart-doos-label { font-size: 12pt; font-weight: 700; }
 .pakketkaart-doos-nummer { font-size: 40pt; font-weight: 800; }
@@ -268,6 +269,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-component-row .nazending-component-label { min-width: 0; font-size: .92rem; }
 .nazending-component-row .nazending-component-label small { display: block; color: var(--muted); }
 .nazending-doosnummer { width: 84px; min-height: 32px; padding: 3px 6px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; background: white; cursor: pointer; }
+.nazending-tracking { display: block; width: 200px; min-height: 32px; margin-top: 6px; padding: 3px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font: inherit; font-weight: 700; background: white; }
 .nazending-component-row .nazending-aantal { width: 72px; min-height: 34px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; text-align: right; }
 .nazending-component-row.is-unchecked { opacity: .55; }
 .klant-duplicaten-kanaal-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }

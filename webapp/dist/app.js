@@ -795,7 +795,11 @@ function loadNazendingComponents() {
             getKnownDoosnummers()
               .map((doosnummer) => `<option value="${escapeHtml(doosnummer)}"${doosnummer === entry.item ? " selected" : ""}>${escapeHtml(doosnummer)}</option>`)
               .join("")
-          }</select>`
+          }</select>${
+            nazendingSoort === "bundel"
+              ? `<input type="text" class="nazending-tracking" placeholder="Trackingnummer (optioneel)" aria-label="Trackingnummer voor deze doos" autocomplete="off">`
+              : ""
+          }`
         : `${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}`;
       row.innerHTML = `
         <input type="checkbox" checked data-gebied="${escapeHtml(entry.gebied)}" data-item="${escapeHtml(entry.item)}" data-soort="${escapeHtml(entry.soort || "")}" data-groep="${escapeHtml(entry.groep || "")}" data-volgorde="${entry.volgorde}">
@@ -829,6 +833,7 @@ function readCurrentNazendingSelection() {
       const doosnummerInput = row.querySelector(".nazending-doosnummer");
       const item = doosnummerInput ? doosnummerInput.value.trim() : checkbox.dataset.item;
       if (!item) return null;
+      const trackingInput = row.querySelector(".nazending-tracking");
       return {
         gebied: checkbox.dataset.gebied,
         item,
@@ -836,6 +841,7 @@ function readCurrentNazendingSelection() {
         groep: checkbox.dataset.groep,
         volgorde: Number(checkbox.dataset.volgorde),
         aantal,
+        tracking: trackingInput ? trackingInput.value.trim() : "",
       };
     })
     .filter(Boolean);
@@ -877,6 +883,8 @@ function applyNazendingSelectionToRows(entries) {
     row.querySelector(".nazending-aantal").value = match.aantal;
     const doosnummerInput = row.querySelector(".nazending-doosnummer");
     if (doosnummerInput) doosnummerInput.value = match.item;
+    const trackingInput = row.querySelector(".nazending-tracking");
+    if (trackingInput) trackingInput.value = match.tracking || "";
   });
 }
 
@@ -1860,6 +1868,7 @@ function groupNazendingByDoos(nz) {
       pakketnummer: sub.pakketnummer,
       doosnummer: doosEntry ? doosEntry.item : null,
       doosAantal: doosEntry ? doosEntry.aantal : 0,
+      tracking: doosEntry ? doosEntry.tracking || "" : "",
       content: sub.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied)),
     };
   });
@@ -1877,6 +1886,7 @@ function groupNazendingByDoos(nz) {
     // en telt dus niet als extra sticker. Geen enkele doosregel: dan is het
     // nog altijd minstens 1 fysieke doos.
     doosAantal: subs.reduce((sum, sub) => sum + (sub.doosnummer ? sub.doosAantal : 0), 0) || 1,
+    tracking: (subs.find((sub) => sub.tracking) || {}).tracking || "",
     pakketnummer: subs.map((sub) => sub.pakketnummer).join(" + "),
     content: subs.flatMap((sub) => sub.content).sort((a, b) => a.volgorde - b.volgorde),
   }));
@@ -1915,7 +1925,8 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>
-      </div>`;
+      </div>
+      ${group.tracking ? `<div class="pakketkaart-tracking"><span class="pakketkaart-doos-label">TRACKING:</span> ${escapeHtml(group.tracking)}</div>` : ""}`;
     pakketkaartenPanel.append(card);
   });
 }
