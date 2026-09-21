@@ -1534,7 +1534,8 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
       .join("");
     // Het aantal stickers is het aantal pakketten (orderCounts), niet het
     // aantal planten in de kaart-header (dat komt uit de BOM en staat vast).
-    const stickersHtml = showStickers ? `${displayNumber(orderCounts.get(pakketnummer) || 0)} stickers` : "";
+    const stickerAantal = orderCounts.get(pakketnummer) || 0;
+    const stickersHtml = showStickers ? `${displayNumber(stickerAantal)} ${stickerAantal === 1 ? "sticker" : "stickers"}` : "";
     const card = document.createElement("div");
     card.className = "pakketkaart";
     card.innerHTML = `
