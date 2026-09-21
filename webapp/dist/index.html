@@ -40,6 +40,9 @@
       <button id="printPakketkaartenButton" class="button button-secondary" type="button" disabled>
         Pakketkaarten afdrukken
       </button>
+      <button id="klantDuplicatenButton" class="button button-secondary" type="button" disabled>
+        Dubbele klanten bekijken
+      </button>
     </div>
   </header>
 
@@ -257,6 +260,22 @@
     <div class="dialog-actions">
       <button id="cancelNazendingButton" class="button button-quiet" type="button">Annuleren</button>
       <button id="saveNazendingButton" class="button button-primary" type="button">Opslaan</button>
+    </div>
+  </dialog>
+
+  <dialog id="klantDuplicatenDialog" class="package-dialog nazending-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Overzicht</span><h2>Dubbele klanten</h2></div>
+      <button id="closeKlantDuplicatenDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="nazending-dialog-body">
+      <p class="nazending-pakket-naam">Klanten die dezelfde naam meerdere keren in de actieve lijsten hebben staan &mdash; mogelijk in 1 doos te combineren.</p>
+      <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
+      <div id="klantDuplicatenList" class="klant-duplicaten-list"></div>
+    </div>
+    <div class="dialog-actions">
+      <button id="cancelKlantDuplicatenButton" class="button button-quiet" type="button">Sluiten</button>
+      <button id="verplaatsKlantDuplicatenButton" class="button button-primary" type="button">Geselecteerde verplaatsen naar TE BUNDELEN</button>
     </div>
   </dialog>
 

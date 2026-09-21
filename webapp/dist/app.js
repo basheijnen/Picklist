@@ -81,6 +81,7 @@ function saveImportState() {
       name: imp.name,
       active: imp.active,
       orderCounts: Object.fromEntries(imp.orderCounts),
+      orderNames: imp.orderNames || [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }))));
@@ -101,6 +102,7 @@ function loadImportState() {
       name: imp.name,
       active: Boolean(imp.active),
       orderCounts: new Map(Object.entries(imp.orderCounts || {})),
+      orderNames: Array.isArray(imp.orderNames) ? imp.orderNames : [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
     }));
@@ -140,11 +142,104 @@ function subtractFromActiveImports(pakketnummer, delta) {
 }
 
 function createHeldImport(name) {
-  const held = { id: makeImportId(), name, active: false, orderCounts: new Map() };
+  const held = { id: makeImportId(), name, active: false, orderCounts: new Map(), orderNames: [] };
   imports.push(held);
   return held;
 }
 
+const TE_BUNDELEN_NAAM = "TE BUNDELEN";
+
+// Klantnamen die vaker dan 1x voorkomen in de actieve lijsten, ongeacht
+// pakketnummer — die klant heeft dan meerdere bestellingen geplaatst die
+// mogelijk samen in 1 doos passen. Alfabetisch gesorteerd op naam.
+function verzamelDubbeleKlanten() {
+  const perNaam = new Map();
+  imports.filter((imp) => imp.active).forEach((imp) => {
+    (imp.orderNames || []).forEach(({ naam, pakketnummer }) => {
+      if (!perNaam.has(naam)) perNaam.set(naam, new Map());
+      const perPakket = perNaam.get(naam);
+      perPakket.set(pakketnummer, (perPakket.get(pakketnummer) || 0) + 1);
+    });
+  });
+  const dubbel = [...perNaam.entries()]
+    .map(([naam, perPakket]) => ({
+      naam,
+      regels: [...perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal })),
+      totaal: [...perPakket.values()].reduce((sum, aantal) => sum + aantal, 0),
+    }))
+    .filter((entry) => entry.totaal >= 2);
+  dubbel.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
+  return dubbel;
+}
+
+// Haalt precies `aantal` (pakketnummer, naam)-orderregels weg uit de actieve
+// lijsten — het spiegelbeeld van subtractFromActiveImports, zodat de
+// klantnaam-gegevens in sync blijven met de aantallen die verplaatst zijn.
+function verwijderOrderNamen(naam, pakketnummer, aantal) {
+  let resterend = aantal;
+  imports.filter((imp) => imp.active).forEach((imp) => {
+    if (resterend <= 0 || !imp.orderNames || !imp.orderNames.length) return;
+    const behouden = [];
+    imp.orderNames.forEach((entry) => {
+      if (resterend > 0 && entry.naam === naam && entry.pakketnummer === pakketnummer) {
+        resterend -= 1;
+      } else {
+        behouden.push(entry);
+      }
+    });
+    imp.orderNames = behouden;
+  });
+}
+
+function verplaatsNaarTeBundelen(geselecteerd) {
+  if (!geselecteerd.length) return;
+  const teBundelen = imports.find((imp) => imp.name === TE_BUNDELEN_NAAM) || createHeldImport(TE_BUNDELEN_NAAM);
+  geselecteerd.forEach(({ naam, regels }) => {
+    regels.forEach(({ pakketnummer, aantal }) => {
+      subtractFromActiveImports(pakketnummer, aantal);
+      verwijderOrderNamen(naam, pakketnummer, aantal);
+      teBundelen.orderCounts.set(pakketnummer, (teBundelen.orderCounts.get(pakketnummer) || 0) + aantal);
+      if (!teBundelen.orderNames) teBundelen.orderNames = [];
+      for (let i = 0; i < aantal; i += 1) teBundelen.orderNames.push({ pakketnummer, naam });
+    });
+  });
+  saveImportState();
+  renderAll();
+}
+
+const klantDuplicatenDialog = document.querySelector("#klantDuplicatenDialog");
+const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
+const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
+
+function renderKlantDuplicatenDialog() {
+  const dubbel = verzamelDubbeleKlanten();
+  klantDuplicatenListEl.replaceChildren();
+  if (!dubbel.length) {
+    klantDuplicatenMessage.textContent = "";
+    const leeg = document.createElement("p");
+    leeg.className = "klant-duplicaten-empty";
+    leeg.textContent = "Geen dubbele klantnamen gevonden in de actieve lijsten.";
+    klantDuplicatenListEl.append(leeg);
+    return;
+  }
+  klantDuplicatenMessage.textContent = `${dubbel.length} klant${dubbel.length === 1 ? "" : "en"} met meerdere bestellingen.`;
+  dubbel.forEach((entry) => {
+    const regelsTekst = entry.regels.map((r) => `${r.pakketnummer} (x${r.aantal})`).join(", ");
+    const row = document.createElement("label");
+    row.className = "klant-duplicaat-row";
+    row.innerHTML = `
+      <input type="checkbox">
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
+      <span class="klant-duplicaat-regels">${escapeHtml(regelsTekst)}</span></span>`;
+    row._entry = entry;
+    klantDuplicatenListEl.append(row);
+  });
+}
+
+function openKlantDuplicatenDialog() {
+  renderKlantDuplicatenDialog();
+  if (!klantDuplicatenDialog.open) klantDuplicatenDialog.showModal();
+}
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
@@ -1257,6 +1352,26 @@ function readOrders(text) {
   return counts;
 }
 
+// Per-order (pakketnummer, naam) paren, voor het opsporen van klanten die
+// vaker dan 1x in de lijst voorkomen. Oudere exports zonder "Name"-kolom
+// leveren gewoon een lege lijst — het dubbele-klanten-overzicht blijft dan
+// leeg voor die lijst.
+function readOrderNames(text) {
+  const rows = parseDelimited(text);
+  if (!rows.length) return [];
+  const header = rows[0].map((value) => value.trim());
+  const packageIndex = header.indexOf("Package Number");
+  const nameIndex = header.indexOf("Name");
+  if (packageIndex < 0 || nameIndex < 0) return [];
+  const result = [];
+  rows.slice(1).forEach((row) => {
+    const pakketnummer = (row[packageIndex] || "").trim();
+    const naam = (row[nameIndex] || "").trim();
+    if (pakketnummer && naam) result.push({ pakketnummer, naam });
+  });
+  return result;
+}
+
 function calculate(orderCounts) {
   const knownPackages = new Set();
   const departments = Object.fromEntries(DEPARTMENTS.map((name) => [name, new Map()]));
@@ -1864,6 +1979,7 @@ function renderAll() {
     printButton.disabled = true;
     newImportButton.disabled = true;
     printPakketkaartenButton.disabled = true;
+    document.querySelector("#klantDuplicatenButton").disabled = true;
     return;
   }
   const orderCounts = mergedActiveOrderCounts();
@@ -1913,6 +2029,7 @@ function renderAll() {
   emptyState.hidden = true; results.hidden = false; newImportButton.disabled = false;
   printButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
   printPakketkaartenButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
+  document.querySelector("#klantDuplicatenButton").disabled = orderCounts.size === 0;
 }
 
 function selectDepartment(name) {
@@ -1926,6 +2043,7 @@ async function handleFile(file) {
   try {
     const text = await file.text();
     const orderCounts = readOrders(text);
+    const orderNames = readOrderNames(text);
     // Also parse the same file for Verkopen, so a lijst can be sent there
     // later without re-uploading — an older export format that's missing a
     // required column just means no "Naar Verkopen" button for this lijst.
@@ -1935,7 +2053,7 @@ async function handleFile(file) {
     const name = imports.some((imp) => imp.name === baseName)
       ? await promptImportName(uniqueImportName(baseName))
       : baseName;
-    imports.push({ id: makeImportId(), name, active: true, orderCounts, verkoopOrders, verkoopVerstuurd: false });
+    imports.push({ id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false });
     saveImportState();
     renderAll();
   } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
@@ -2043,6 +2161,17 @@ document.querySelector("#closeNazendingDialog").addEventListener("click", () => 
 document.querySelector("#cancelNazendingButton").addEventListener("click", () => nazendingDialog.close());
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
 document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
+document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
+document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
+document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
+document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("click", () => {
+  const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
+    .filter((row) => row.querySelector("input").checked)
+    .map((row) => row._entry);
+  if (!geselecteerd.length) return;
+  verplaatsNaarTeBundelen(geselecteerd);
+  klantDuplicatenDialog.close();
+});
 nazendingPakketnummerInput.addEventListener("input", () => {
   loadNazendingComponents();
   renderNazendingPakketSuggestions();
