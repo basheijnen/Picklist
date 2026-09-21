@@ -797,7 +797,7 @@ function loadNazendingComponents() {
               .join("")
           }</select>${
             nazendingSoort === "bundel"
-              ? `<input type="text" class="nazending-tracking" placeholder="Trackingnummer (optioneel)" aria-label="Trackingnummer voor deze doos" autocomplete="off">`
+              ? `<textarea class="nazending-tracking" rows="3" placeholder="Trackingnummer(s), één per regel bij meerdere dozen (optioneel)" aria-label="Trackingnummer(s) voor deze doos"></textarea>`
               : ""
           }`
         : `${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}`;
@@ -1909,6 +1909,9 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
     const stickersHtml = showStickers ? `${displayNumber(group.doosAantal)} ${group.doosAantal === 1 ? "sticker" : "stickers"}` : "";
+    // Eén doosnummer met aantal > 1 (bijv. "EUR40 x3") is 3 fysieke dozen die
+    // elk hun eigen trackingnummer nodig hebben — dus één regel per nummer.
+    const trackingRegels = (group.tracking || "").split("\n").map((regel) => regel.trim()).filter(Boolean);
     const isBundel = nz.soort === "bundel";
     // Bundelpakketten tonen het pakketnummer nooit groot, ongeacht nz.volledig.
     const toontPakketnummer = nz.volledig && !isBundel;
@@ -1926,7 +1929,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
         <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>
       </div>
-      ${group.tracking ? `<div class="pakketkaart-tracking"><span class="pakketkaart-doos-label">TRACKING:</span> ${escapeHtml(group.tracking)}</div>` : ""}`;
+      ${trackingRegels.length ? `<div class="pakketkaart-tracking"><span class="pakketkaart-doos-label">TRACKING:</span> ${trackingRegels.map(escapeHtml).join("<br>")}</div>` : ""}`;
     pakketkaartenPanel.append(card);
   });
 }
