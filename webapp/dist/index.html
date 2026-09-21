@@ -101,6 +101,7 @@
   </div>
 
   <div id="pakketkaartenPanel" hidden></div>
+  <div id="klantOverzichtPanel" hidden></div>
 
   <dialog id="packageDialog" class="package-dialog">
     <form id="packageForm" method="dialog">
@@ -274,10 +275,12 @@
         <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
         <button id="selectAllKlantDuplicatenButton" class="text-button" type="button" hidden>Alles selecteren</button>
       </div>
+      <div id="klantDuplicatenKanaalFilters" class="klant-duplicaten-kanaal-filters"></div>
       <div id="klantDuplicatenList" class="klant-duplicaten-list"></div>
     </div>
     <div class="dialog-actions">
       <button id="cancelKlantDuplicatenButton" class="button button-quiet" type="button">Sluiten</button>
+      <button id="printKlantOverzichtButton" class="button button-quiet" type="button">Overzicht printen (PDF)</button>
       <button id="verplaatsKlantDuplicatenButton" class="button button-primary" type="button">Geselecteerde verplaatsen naar TE BUNDELEN</button>
     </div>
   </dialog>

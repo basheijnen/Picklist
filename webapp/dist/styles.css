@@ -272,6 +272,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-component-row.is-unchecked { opacity: .55; }
 .klant-duplicaten-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .klant-duplicaten-toolbar .nazending-pakket-naam { margin-top: 0; }
+.klant-duplicaten-kanaal-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .klant-duplicaten-list { display: grid; gap: 8px; margin-top: 10px; max-height: 50vh; overflow-y: auto; }
 .klant-duplicaat-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 84px 26px 12px; border-radius: 10px; background: #f4f8f5; cursor: pointer; }
 .klant-duplicaat-row input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
@@ -281,6 +282,16 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaat-regels { display: inline-block; margin-top: 2px; color: var(--muted); font-size: .88rem; line-height: 1.5; }
 .klant-duplicaat-planten { position: absolute; bottom: 8px; right: 12px; color: var(--muted); font-size: .74rem; font-weight: 700; }
 .klant-duplicaten-empty { padding: 18px; color: var(--muted); text-align: center; }
+.klant-overzicht { padding: 10mm; }
+.klant-overzicht-header { margin-bottom: 8mm; padding-bottom: 6mm; border-bottom: 2px solid var(--ink); }
+.klant-overzicht-header h1 { margin: 0 0 4px; font-size: 22pt; }
+.klant-overzicht-header p { margin: 0; color: var(--muted); font-size: 10pt; }
+.klant-overzicht-table { width: 100%; border-collapse: collapse; }
+.klant-overzicht-table th, .klant-overzicht-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.klant-overzicht-table th { color: var(--muted); font-size: 9pt; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.klant-overzicht-naam { font-weight: 800; }
+.klant-overzicht-kanaal { display: inline-block; padding: 2px 9px; border: 1.5px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 8.5pt; font-weight: 800; }
+.klant-overzicht-planten { font-weight: 800; text-align: right; white-space: nowrap; }
 .nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
 .nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 3px 3px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }
 .nazending-draft-row small { color: var(--muted); font-weight: 550; }
@@ -347,6 +358,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   #pakketkaartenPanel { display: none; }
   body.printing-pakketkaarten .results { display: none !important; }
   body.printing-pakketkaarten #pakketkaartenPanel { display: block !important; }
+  #klantOverzichtPanel { display: none; }
+  body.printing-klantoverzicht .results { display: none !important; }
+  body.printing-klantoverzicht #klantOverzichtPanel { display: block !important; }
   .department-header { padding: 0 0 6px; border-bottom: 3px solid var(--accent); background: white; }
   .department-header h2 { font-size: 18pt; }
   .department-header p, .eyebrow { margin-bottom: 2px; font-size: 8pt; }

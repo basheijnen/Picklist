@@ -224,6 +224,7 @@ function verplaatsNaarTeBundelen(geselecteerd) {
 
 const klantDuplicatenDialog = document.querySelector("#klantDuplicatenDialog");
 const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
+const klantDuplicatenKanaalFiltersEl = document.querySelector("#klantDuplicatenKanaalFilters");
 const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
 const selectAllKlantDuplicatenButton = document.querySelector("#selectAllKlantDuplicatenButton");
 
@@ -240,6 +241,7 @@ function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
   klantDuplicatenListEl.replaceChildren();
+  klantDuplicatenKanaalFiltersEl.replaceChildren();
   if (!dubbel.length) {
     klantDuplicatenMessage.textContent = "";
     selectAllKlantDuplicatenButton.hidden = true;
@@ -252,6 +254,18 @@ function renderKlantDuplicatenDialog() {
   klantDuplicatenMessage.textContent = `${dubbel.length} klant${dubbel.length === 1 ? "" : "en"} met meerdere bestellingen.`;
   selectAllKlantDuplicatenButton.hidden = false;
   selectAllKlantDuplicatenButton.textContent = "Alles selecteren";
+  const kanalen = [...new Set(dubbel.flatMap((entry) => entry.kanaal ? entry.kanaal.split(" / ") : []))]
+    .sort((a, b) => a.localeCompare(b, "nl"));
+  klantDuplicatenKanaalFiltersEl.replaceChildren();
+  kanalen.forEach((kanaal) => {
+    const knop = document.createElement("button");
+    knop.type = "button";
+    knop.className = "verkoop-klant-button";
+    knop.style.setProperty("--klant-kleur", kanaalKleur(kanaal));
+    knop.textContent = kanaal;
+    knop.addEventListener("click", () => selecteerKlantenPerKanaal(kanaal));
+    klantDuplicatenKanaalFiltersEl.append(knop);
+  });
   dubbel.forEach((entry) => {
     // Eén regel per order i.p.v. één regel met een (xN)-suffix — zo zie je
     // in één oogopslag hoe vaak iets terugkomt, zonder een getal te lezen.
@@ -287,8 +301,9 @@ function renderKlantDuplicatenDialog() {
 // bundelen zonder elke klant apart aan te vinken.
 function selecteerKlantenPerKanaal(kanaal) {
   const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
-    .filter((row) => row._entry.kanaal === kanaal)
+    .filter((row) => row._entry.kanaal.split(" / ").includes(kanaal))
     .map((row) => row.querySelector("input"));
+  if (!checkboxes.length) return;
   const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
   checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
 }
@@ -296,6 +311,50 @@ function selecteerKlantenPerKanaal(kanaal) {
 function openKlantDuplicatenDialog() {
   renderKlantDuplicatenDialog();
   if (!klantDuplicatenDialog.open) klantDuplicatenDialog.showModal();
+}
+
+// Print/PDF-overzicht van precies de aangevinkte klanten op dit moment —
+// niets aangevinkt is dus ook niets op het overzicht, geen impliciete
+// "alles" als er niet expliciet geselecteerd is.
+function printKlantOverzicht() {
+  const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
+    .filter((row) => row.querySelector("input").checked)
+    .map((row) => row._entry);
+  if (!geselecteerd.length) {
+    klantDuplicatenMessage.textContent = "Selecteer eerst minstens één klant om een overzicht van te maken.";
+    return;
+  }
+  const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
+  const rijenHtml = geselecteerd
+    .map((entry) => {
+      const regelsHtml = entry.regels
+        .map((r) => `${escapeHtml(r.pakketnummer)} – ${escapeHtml((packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket")}${r.aantal > 1 ? ` ×${r.aantal}` : ""}`)
+        .join("<br>");
+      const kanaalHtml = entry.kanaal
+        ? `<span class="klant-overzicht-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}">${escapeHtml(entry.kanaal)}</span>`
+        : "—";
+      return `<tr>
+        <td class="klant-overzicht-naam">${escapeHtml(entry.naam)}</td>
+        <td>${kanaalHtml}</td>
+        <td>${regelsHtml}</td>
+        <td class="klant-overzicht-planten">${displayNumber(entry.totaalPlanten)}</td>
+      </tr>`;
+    })
+    .join("");
+  document.querySelector("#klantOverzichtPanel").innerHTML = `
+    <div class="klant-overzicht">
+      <header class="klant-overzicht-header">
+        <h1>Te bundelen klanten</h1>
+        <p>${formatLongDate(new Date())} — ${geselecteerd.length} klant${geselecteerd.length === 1 ? "" : "en"}</p>
+      </header>
+      <table class="klant-overzicht-table">
+        <thead><tr><th>Klant</th><th>Kanaal</th><th>Pakketten</th><th>Planten</th></tr></thead>
+        <tbody>${rijenHtml}</tbody>
+      </table>
+    </div>`;
+  klantDuplicatenDialog.close();
+  document.body.classList.add("printing-klantoverzicht");
+  window.print();
 }
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
@@ -1863,7 +1922,7 @@ async function printSinglePakketkaart(pakketnummer) {
   window.print();
 }
 
-window.addEventListener("afterprint", () => document.body.classList.remove("printing-pakketkaarten"));
+window.addEventListener("afterprint", () => document.body.classList.remove("printing-pakketkaarten", "printing-klantoverzicht"));
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -2235,6 +2294,7 @@ selectAllKlantDuplicatenButton.addEventListener("click", () => {
   checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
   selectAllKlantDuplicatenButton.textContent = alleAangevinkt ? "Alles selecteren" : "Alles deselecteren";
 });
+document.querySelector("#printKlantOverzichtButton").addEventListener("click", printKlantOverzicht);
 document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("click", () => {
   const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
     .filter((row) => row.querySelector("input").checked)
