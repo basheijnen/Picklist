@@ -225,10 +225,13 @@ function renderKlantDuplicatenDialog() {
   }
   klantDuplicatenMessage.textContent = `${dubbel.length} klant${dubbel.length === 1 ? "" : "en"} met meerdere bestellingen.`;
   dubbel.forEach((entry) => {
+    // Eén regel per order i.p.v. één regel met een (xN)-suffix — zo zie je
+    // in één oogopslag hoe vaak iets terugkomt, zonder een getal te lezen.
     const regelsHtml = entry.regels
-      .map((r) => {
+      .flatMap((r) => {
         const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
-        return `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)} (x${r.aantal})`;
+        const regel = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`;
+        return Array(r.aantal).fill(regel);
       })
       .join("<br>");
     const row = document.createElement("label");
