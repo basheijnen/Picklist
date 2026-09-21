@@ -1515,7 +1515,7 @@ function finalizeDecrease(pakketnummer, diff, targetImportId, newName) {
   renderAll();
 }
 
-function buildPakketkaarten(orderCounts, { includeNazendingen = true } = {}) {
+function buildPakketkaarten(orderCounts, { includeNazendingen = true, showStickers = false } = {}) {
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
   const bomByPakket = new Map();
   (window.PICKLIST_BOM || []).forEach((entry) => {
@@ -1532,6 +1532,9 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true } = {}) {
     const itemsHtml = entries
       .map((entry) => `<li>${displayNumber(entry.aantal_per_pakket)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
+    // Het aantal stickers is het aantal pakketten (orderCounts), niet het
+    // aantal planten in de kaart-header (dat komt uit de BOM en staat vast).
+    const stickersHtml = showStickers ? `${displayNumber(orderCounts.get(pakketnummer) || 0)} stickers` : "";
     const card = document.createElement("div");
     card.className = "pakketkaart";
     card.innerHTML = `
@@ -1539,7 +1542,10 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true } = {}) {
       <div class="pakketkaart-nummer">${escapeHtml(pakketnummer)}</div>
       <div class="pakketkaart-naam"><span>${escapeHtml(info ? info.pakketnaam : "Onbekend pakket")}</span><span>x ${displayNumber(totalCount)}</span></div>
       <ul class="pakketkaart-items">${itemsHtml}</ul>
-      <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>`;
+      <div class="pakketkaart-footer">
+        <span class="pakketkaart-stickers">${stickersHtml}</span>
+        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>
+      </div>`;
     pakketkaartenPanel.append(card);
   });
   if (includeNazendingen) activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz));
@@ -1596,12 +1602,15 @@ function appendNazendingPakketkaarten(nz) {
       <div class="pakketkaart-nummer">${nz.volledig ? escapeHtml(group.pakketnummer) : ""}</div>
       ${nz.volledig ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
-      <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>`;
+      <div class="pakketkaart-footer">
+        <span class="pakketkaart-stickers"></span>
+        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>
+      </div>`;
     pakketkaartenPanel.append(card);
   });
 }
 
-function printPakketkaarten() {
+async function printPakketkaarten() {
   if (!imports.length && !nazendingen.length) return;
   const orderCounts = mergedActiveOrderCounts();
   // Een pakket dat uit alle actieve lijsten is verdwenen (lijst verwijderd of
@@ -1615,7 +1624,12 @@ function printPakketkaarten() {
     setMessage("Alle pakketkaarten voor de huidige lijsten zijn al geprint.");
     return;
   }
-  buildPakketkaarten(nieuweOrderCounts);
+  const showStickers = await confirmDialog(
+    "Het aantal pakketten (stickers) linksonder op de kaarten zetten?",
+    "Ja, stickeraantal tonen",
+    { cancelLabel: "Nee, weglaten", style: "primary", title: "Pakketkaarten printen" }
+  );
+  buildPakketkaarten(nieuweOrderCounts, { showStickers });
   orderCounts.forEach((_aantal, pakketnummer) => printedPakketnummers.add(pakketnummer));
   savePrintedPakketnummers();
   document.body.classList.add("printing-pakketkaarten");
@@ -1625,10 +1639,15 @@ function printPakketkaarten() {
 // Handmatige herdruk van één pakketkaart — bijv. wanneer een deel van een
 // wachtlijst alsnog geleverd kan worden. Negeert bewust de "al geprint"-status
 // en print alleen deze ene kaart, niet de rest van de al geprinte pakketten.
-function printSinglePakketkaart(pakketnummer) {
+async function printSinglePakketkaart(pakketnummer) {
   const aantal = mergedActiveOrderCounts().get(pakketnummer);
   if (!aantal) return;
-  buildPakketkaarten(new Map([[pakketnummer, aantal]]), { includeNazendingen: false });
+  const showStickers = await confirmDialog(
+    `Het aantal pakketten (stickers) linksonder op de kaart voor ${pakketnummer} zetten?`,
+    "Ja, stickeraantal tonen",
+    { cancelLabel: "Nee, weglaten", style: "primary", title: "Pakketkaart printen" }
+  );
+  buildPakketkaarten(new Map([[pakketnummer, aantal]]), { includeNazendingen: false, showStickers });
   printedPakketnummers.add(pakketnummer);
   savePrintedPakketnummers();
   document.body.classList.add("printing-pakketkaarten");
@@ -1644,13 +1663,16 @@ function escapeHtml(value) {
 // Styled stand-in for the native confirm() — that one shows the page's own
 // URL ("127.0.0.1:8765 meldt het volgende"), which reads as a browser
 // warning rather than part of the app.
-function confirmDialog(message, confirmLabel = "Verwijderen") {
+function confirmDialog(message, confirmLabel = "Verwijderen", { cancelLabel = "Annuleren", style = "danger", title = "Weet je het zeker?" } = {}) {
   const dialog = document.querySelector("#confirmDialog");
+  document.querySelector("#confirmDialogTitle").textContent = title;
   document.querySelector("#confirmDialogMessage").textContent = message;
-  document.querySelector("#confirmDialogOk").textContent = confirmLabel;
+  const okButton = document.querySelector("#confirmDialogOk");
+  const cancelButton = document.querySelector("#confirmDialogCancel");
+  okButton.textContent = confirmLabel;
+  okButton.className = `button button-${style}`;
+  cancelButton.textContent = cancelLabel;
   return new Promise((resolve) => {
-    const okButton = document.querySelector("#confirmDialogOk");
-    const cancelButton = document.querySelector("#confirmDialogCancel");
     const closeButton = document.querySelector("#closeConfirmDialog");
     let settled = false;
     const finish = (result) => {

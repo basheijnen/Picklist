@@ -174,9 +174,11 @@ tbody tr:hover { background: #f5faf7; }
 .pakketkaart-naam { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); font-size: 15pt; font-weight: 800; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
 .pakketkaart-incomplete .pakketkaart-items { font-size: 18pt; font-weight: 800; }
-.pakketkaart-doos { display: flex; align-items: baseline; justify-content: flex-end; gap: 12px; margin-top: auto; }
+.pakketkaart-footer { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: auto; }
+.pakketkaart-doos { display: flex; align-items: baseline; gap: 12px; }
 .pakketkaart-doos-label { font-size: 12pt; font-weight: 700; }
 .pakketkaart-doos-nummer { font-size: 40pt; font-weight: 800; }
+.pakketkaart-stickers { font-size: 20pt; font-weight: 800; }
 .unknown-panel { margin-top: 24px; padding: 26px 28px; border: 1px solid #eac8a3; border-radius: 18px; background: #fff8ee; }
 .eyebrow-warning { color: #a05d16; }
 .unknown-panel h2 { margin-bottom: 5px; }
