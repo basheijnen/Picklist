@@ -266,10 +266,10 @@ function renderKlantDuplicatenDialog() {
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
       <input type="checkbox">
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>
-      <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span><br>
+      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
       <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
-      ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}`;
+      ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}
+      <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span>`;
     row._entry = entry;
     if (entry.kanaal) {
       row.querySelector(".klant-duplicaat-kanaal").addEventListener("click", (event) => {
