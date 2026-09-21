@@ -227,7 +227,8 @@ const klantDuplicatenListEl = document.querySelector("#klantDuplicatenList");
 const klantDuplicatenKanaalFiltersEl = document.querySelector("#klantDuplicatenKanaalFilters");
 let klantDuplicatenActieveKanalen = new Set();
 const klantDuplicatenMessage = document.querySelector("#klantDuplicatenMessage");
-const selectAllKlantDuplicatenButton = document.querySelector("#selectAllKlantDuplicatenButton");
+const klantDuplicatenSelectAllRow = document.querySelector("#klantDuplicatenSelectAllRow");
+const klantDuplicatenSelectAllCheckbox = document.querySelector("#klantDuplicatenSelectAllCheckbox");
 
 // Zelfde kleur-toewijzing als de kanaalknoppen op de Verkopen-hoofdpagina
 // (renderVerkoopKlantFilters): index in de alfabetisch gesorteerde lijst van
@@ -256,7 +257,7 @@ function renderKlantDuplicatenDialog() {
   klantDuplicatenKanaalFiltersEl.replaceChildren();
   if (!dubbel.length) {
     klantDuplicatenMessage.textContent = "";
-    selectAllKlantDuplicatenButton.hidden = true;
+    klantDuplicatenSelectAllRow.hidden = true;
     const leeg = document.createElement("p");
     leeg.className = "klant-duplicaten-empty";
     leeg.textContent = "Geen dubbele klantnamen gevonden in de actieve lijsten.";
@@ -274,8 +275,7 @@ function renderKlantDuplicatenDialog() {
     ? dubbel.filter((entry) => entry.kanaal.split(" / ").some((k) => klantDuplicatenActieveKanalen.has(k)))
     : dubbel;
   klantDuplicatenMessage.textContent = `${zichtbaar.length} klant${zichtbaar.length === 1 ? "" : "en"} met meerdere bestellingen.`;
-  selectAllKlantDuplicatenButton.hidden = false;
-  selectAllKlantDuplicatenButton.textContent = "Alles selecteren";
+  klantDuplicatenSelectAllRow.hidden = false;
   klantDuplicatenKanaalFiltersEl.replaceChildren();
   kanalen.forEach((kanaal) => {
     const actief = klantDuplicatenActieveKanalen.has(kanaal);
@@ -304,12 +304,13 @@ function renderKlantDuplicatenDialog() {
     const row = document.createElement("label");
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
-      <input type="checkbox">
+      <input type="checkbox" checked>
       <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span><br>
       <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
       ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}
       <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span>`;
     row._entry = entry;
+    row.querySelector("input").addEventListener("change", updateKlantDuplicatenSelectAllState);
     if (entry.kanaal) {
       row.querySelector(".klant-duplicaat-kanaal").addEventListener("click", (event) => {
         event.preventDefault();
@@ -319,6 +320,17 @@ function renderKlantDuplicatenDialog() {
     }
     klantDuplicatenListEl.append(row);
   });
+  updateKlantDuplicatenSelectAllState();
+}
+
+// Houdt het hoofd-selectievakje in sync met de individuele rijen: aangevinkt
+// als alles aan staat, leeg als niets aan staat, "indeterminate" (streepje)
+// als het gemengd is.
+function updateKlantDuplicatenSelectAllState() {
+  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input")];
+  const aantalAangevinkt = checkboxes.filter((checkbox) => checkbox.checked).length;
+  klantDuplicatenSelectAllCheckbox.checked = checkboxes.length > 0 && aantalAangevinkt === checkboxes.length;
+  klantDuplicatenSelectAllCheckbox.indeterminate = aantalAangevinkt > 0 && aantalAangevinkt < checkboxes.length;
 }
 
 // Klik op een kanaal-badge selecteert (of deselecteert) in één keer alle
@@ -331,6 +343,7 @@ function selecteerKlantenPerKanaal(kanaal) {
   if (!checkboxes.length) return;
   const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
   checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
+  updateKlantDuplicatenSelectAllState();
 }
 
 function openKlantDuplicatenDialog() {
@@ -2318,11 +2331,10 @@ document.querySelector("#bundelButton").addEventListener("click", () => openNaze
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
-selectAllKlantDuplicatenButton.addEventListener("click", () => {
-  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input")];
-  const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
-  checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
-  selectAllKlantDuplicatenButton.textContent = alleAangevinkt ? "Alles selecteren" : "Alles deselecteren";
+klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
+  const aangevinkt = event.target.checked;
+  klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input").forEach((checkbox) => { checkbox.checked = aangevinkt; });
+  klantDuplicatenSelectAllCheckbox.indeterminate = false;
 });
 document.querySelector("#printKlantOverzichtButton").addEventListener("click", printKlantOverzicht);
 document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("click", () => {

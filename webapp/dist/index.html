@@ -271,11 +271,12 @@
     </div>
     <div class="nazending-dialog-body">
       <p class="nazending-pakket-naam">Klanten die dezelfde naam meerdere keren in de actieve lijsten hebben staan &mdash; mogelijk in 1 doos te combineren.</p>
-      <div class="klant-duplicaten-toolbar">
-        <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
-        <button id="selectAllKlantDuplicatenButton" class="text-button" type="button" hidden>Alles selecteren</button>
-      </div>
+      <p id="klantDuplicatenMessage" class="nazending-pakket-naam" role="status"></p>
       <div id="klantDuplicatenKanaalFilters" class="klant-duplicaten-kanaal-filters"></div>
+      <label id="klantDuplicatenSelectAllRow" class="klant-duplicaten-select-all" hidden>
+        <input id="klantDuplicatenSelectAllCheckbox" type="checkbox">
+        <span>Alles selecteren</span>
+      </label>
       <div id="klantDuplicatenList" class="klant-duplicaten-list"></div>
     </div>
     <div class="dialog-actions">
