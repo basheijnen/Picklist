@@ -238,6 +238,17 @@ function kanaalKleur(kanaal) {
   return VERKOOP_KLANT_KLEUREN[index < 0 ? 0 : index % VERKOOP_KLANT_KLEUREN.length];
 }
 
+// Korte namen (Amazon, Bol.com, iBood, ...) passen prima; lange namen worden
+// initialen van elk woord — zowel spatie- als CamelCase-gescheiden, dus
+// "VakantieVeilingen" → "VV" en "Maison Privee" → "MP". Alleen gebruikt in
+// het PDF-overzicht, waar de ruimte het krapst is.
+function kanaalAfkorting(kanaal) {
+  if (!kanaal || kanaal.length <= 10) return kanaal;
+  const woorden = kanaal.split(/(?=[A-Z])|\s+/).filter(Boolean);
+  const afkorting = woorden.map((w) => w[0]).join("").toUpperCase();
+  return afkorting.length >= 2 ? afkorting : kanaal;
+}
+
 function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
@@ -350,7 +361,7 @@ function printKlantOverzicht() {
         })
         .join("<br>");
       const kanaalHtml = entry.kanaal
-        ? `<span class="klant-overzicht-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}">${escapeHtml(entry.kanaal)}</span>`
+        ? entry.kanaal.split(" / ").map((k) => `<span class="klant-overzicht-kanaal" style="--klant-kleur:${kanaalKleur(k)}" title="${escapeHtml(k)}">${escapeHtml(kanaalAfkorting(k))}</span>`).join(" ")
         : "—";
       return `<tr>
         <td class="klant-overzicht-naam">${escapeHtml(entry.naam)}</td>
