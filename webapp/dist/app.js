@@ -1549,7 +1549,7 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
       </div>`;
     pakketkaartenPanel.append(card);
   });
-  if (includeNazendingen) activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz));
+  if (includeNazendingen) activeNazendingen().forEach((nz) => appendNazendingPakketkaarten(nz, showStickers));
 }
 
 // Splits a klacht into one card per physical doos: a sub-pakket whose own
@@ -1558,11 +1558,15 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
 // klacht has. A klacht with no doos at all becomes a single "—" card.
 function groupNazendingByDoos(nz) {
   const subPakketten = nz.pakketten || [{ pakketnummer: nz.pakketnummer, entries: nz.entries }];
-  const withDoos = subPakketten.map((sub) => ({
-    pakketnummer: sub.pakketnummer,
-    doosnummer: (sub.entries.find((entry) => entry.gebied === "DOZEN") || {}).item || null,
-    content: sub.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied)),
-  }));
+  const withDoos = subPakketten.map((sub) => {
+    const doosEntry = sub.entries.find((entry) => entry.gebied === "DOZEN");
+    return {
+      pakketnummer: sub.pakketnummer,
+      doosnummer: doosEntry ? doosEntry.item : null,
+      doosAantal: doosEntry ? doosEntry.aantal : 0,
+      content: sub.entries.filter((entry) => ["KOELING", "KAS", "KAMER"].includes(entry.gebied)),
+    };
+  });
   const fallbackDoos = (withDoos.find((sub) => sub.doosnummer) || {}).doosnummer || null;
   const groups = new Map();
   withDoos.forEach((sub) => {
@@ -1572,6 +1576,11 @@ function groupNazendingByDoos(nz) {
   });
   return [...groups.entries()].map(([doosnummer, subs]) => ({
     doosnummer,
+    // Alleen subs met een eigen doosregel tellen mee — een sub zonder eigen
+    // doos rijdt gratis mee in de box van zijn bundelmaat (zie hierboven),
+    // en telt dus niet als extra sticker. Geen enkele doosregel: dan is het
+    // nog altijd minstens 1 fysieke doos.
+    doosAantal: subs.reduce((sum, sub) => sum + (sub.doosnummer ? sub.doosAantal : 0), 0) || 1,
     pakketnummer: subs.map((sub) => sub.pakketnummer).join(" + "),
     content: subs.flatMap((sub) => sub.content).sort((a, b) => a.volgorde - b.volgorde),
   }));
@@ -1587,12 +1596,13 @@ function nazendingContentNaam(content) {
     .join(" + ");
 }
 
-function appendNazendingPakketkaarten(nz) {
+function appendNazendingPakketkaarten(nz, showStickers = false) {
   groupNazendingByDoos(nz).forEach((group) => {
     const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
     const itemsHtml = group.content
       .map((entry) => `<li>${displayNumber(entry.aantal)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
+    const stickersHtml = showStickers ? `${displayNumber(group.doosAantal)} ${group.doosAantal === 1 ? "sticker" : "stickers"}` : "";
     const card = document.createElement("div");
     // An incomplete klacht has no meaningful pakketnummer or nominal naam to
     // show (see nazendingContentNaam) — only the plants being picked matter,
@@ -1604,7 +1614,7 @@ function appendNazendingPakketkaarten(nz) {
       ${nz.volledig ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-footer">
-        <span class="pakketkaart-stickers"></span>
+        <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>
       </div>`;
     pakketkaartenPanel.append(card);
