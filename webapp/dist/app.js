@@ -72,6 +72,28 @@ function saveExtraDoosnummers() {
   }
 }
 let extraDoosnummers = loadExtraDoosnummers();
+
+const VERBORGEN_DOOSNUMMERS_STORAGE_KEY = "picklist-verborgen-doosnummers-v1";
+// Doosnummers die wél uit echte pakketdata (BOM) komen, maar die je niet
+// meer als suggestie wilt zien — bijv. een doosje dat niet meer gebruikt
+// wordt. Verbergt alleen de suggestie, verandert niets aan bom.csv.
+function loadVerborgenDoosnummers() {
+  try {
+    const raw = localStorage.getItem(VERBORGEN_DOOSNUMMERS_STORAGE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch (_error) {
+    // localStorage unavailable — start leeg.
+  }
+  return new Set();
+}
+function saveVerborgenDoosnummers() {
+  try {
+    localStorage.setItem(VERBORGEN_DOOSNUMMERS_STORAGE_KEY, JSON.stringify([...verborgenDoosnummers]));
+  } catch (_error) {
+    // Best effort only.
+  }
+}
+let verborgenDoosnummers = loadVerborgenDoosnummers();
 let imports = [];
 let editingPakketnummer = null;
 let managePackagesSearchTerm = "";
@@ -591,9 +613,11 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
         hide();
       });
       item.append(button);
-      // Alleen zelf toegevoegde doosnummers (niet gekoppeld aan een bestaand
-      // pakket) zijn hier weg te halen — de rest komt uit echte pakketdata.
-      if (extraDoosnummers.has(doosnummer)) {
+      // Bij deze lijst (Klacht/Bundel-doosveld) is elk doosnummer weg te
+      // halen uit de suggesties — zelf toegevoegde verdwijnen helemaal,
+      // "echte" (uit bom.csv) worden alleen verborgen: bom.csv zelf blijft
+      // ongewijzigd, mocht het nummer ooit weer gebruikt worden.
+      if (lijstFn === getKnownDoosnummers) {
         const verwijderButton = document.createElement("button");
         verwijderButton.type = "button";
         verwijderButton.className = "nazending-doosnummer-verwijder";
@@ -602,8 +626,13 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
         verwijderButton.addEventListener("mousedown", (event) => {
           event.preventDefault();
           event.stopPropagation();
-          extraDoosnummers.delete(doosnummer);
-          saveExtraDoosnummers();
+          if (extraDoosnummers.has(doosnummer)) {
+            extraDoosnummers.delete(doosnummer);
+            saveExtraDoosnummers();
+          } else {
+            verborgenDoosnummers.add(doosnummer);
+            saveVerborgenDoosnummers();
+          }
           render();
         });
         item.append(verwijderButton);
@@ -824,6 +853,7 @@ function resetNazendingPakketPicker() {
 function getKnownDoosnummers() {
   const known = new Set((window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "DOZEN").map((entry) => entry.item));
   extraDoosnummers.forEach((doosnummer) => known.add(doosnummer));
+  verborgenDoosnummers.forEach((doosnummer) => known.delete(doosnummer));
   return [...known].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
