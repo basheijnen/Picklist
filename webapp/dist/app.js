@@ -1553,7 +1553,7 @@ function renderVerkoopTiles() {
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
-    { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon", kanaal: "" },
+    { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
   ];
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
   const huidigeTot = document.querySelector("#verkoopTotDatum").value;
