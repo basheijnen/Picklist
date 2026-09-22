@@ -276,8 +276,11 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-suggestions li + li { margin-top: 2px; }
 .nazending-suggestions button { display: block; width: 100%; padding: 8px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font: inherit; font-weight: 650; text-align: left; cursor: pointer; }
 .nazending-suggestions button:hover { background: #eef5f0; }
-.nazending-suggestions li:has(.nazending-doosnummer-verwijder) button:first-child { flex: 1; min-width: 0; }
-.nazending-doosnummer-verwijder { flex-shrink: 0; width: 28px; padding: 8px 0 !important; border-radius: 7px; color: var(--danger) !important; text-align: center !important; font-weight: 800 !important; }
+/* Losse klasse i.p.v. :has() — het selectiegebied (de doosnaam) moet het
+   grootste, makkelijkst te raken vlak zijn; het rode kruisje juist klein. */
+.nazending-suggestions li:has(.nazending-doosnummer-verwijder) { flex-wrap: nowrap; }
+.nazending-suggestie-kies { flex: 1 1 auto; min-width: 0; }
+.nazending-doosnummer-verwijder { flex: 0 0 22px; width: 22px; padding: 8px 0 !important; border-radius: 7px; color: var(--danger) !important; text-align: center !important; font-weight: 800 !important; }
 .nazending-doosnummer-verwijder:hover { background: #f9e9e7 !important; }
 .nazending-pakket-naam { margin: 6px 0 0; color: var(--brand); font-weight: 750; min-height: 1.2em; }
 .nazending-component-rows { display: grid; gap: 8px; margin-top: 16px; }
@@ -294,14 +297,19 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaten-select-all { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 0 12px; color: var(--ink); font-weight: 750; cursor: pointer; }
 .klant-duplicaten-select-all input { width: 18px; height: 18px; }
 .klant-duplicaten-list { display: grid; align-content: start; gap: 8px; margin-top: 10px; height: 50vh; overflow-y: auto; }
-.klant-duplicaat-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 84px 26px 12px; border-radius: 10px; background: #f4f8f5; cursor: pointer; }
-.klant-duplicaat-row input[type="checkbox"] { margin-top: 3px; width: 18px; height: 18px; flex-shrink: 0; }
+.klant-duplicaat-row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 84px 14px 12px; border-radius: 10px; background: #f4f8f5; }
+.klant-duplicaat-row input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; }
+.klant-duplicaat-select-wrap { display: block; margin-top: 3px; cursor: pointer; }
+.klant-duplicaat-body { flex: 1; min-width: 0; }
 .klant-duplicaat-naam { min-width: 140px; font-weight: 750; }
 .klant-duplicaat-bundel-button { margin-left: 10px; padding: 2px 10px; border: 1.5px solid #8e5fd1; border-radius: 999px; color: #8e5fd1; background: white; font-size: .74rem; font-weight: 800; cursor: pointer; }
 .klant-duplicaat-bundel-button:hover { background: #8e5fd1; color: white; }
 .klant-duplicaat-kanaal { position: absolute; top: 10px; right: 12px; padding: 3px 10px; border: 1.5px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); background: white; font-size: .68rem; font-weight: 800; letter-spacing: .02em; cursor: pointer; }
 .klant-duplicaat-kanaal:hover { background: var(--klant-kleur, var(--line)); color: white; }
-.klant-duplicaat-regels { display: inline-block; margin-top: 2px; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+.klant-duplicaat-regels { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.klant-duplicaat-regel { display: flex; align-items: flex-start; gap: 8px; padding: 2px 4px; border-radius: 6px; color: var(--muted); font-size: .88rem; line-height: 1.5; cursor: pointer; }
+.klant-duplicaat-regel:hover { background: #e8f0ea; }
+.klant-duplicaat-regel input[type="checkbox"] { margin-top: 3px; width: 15px; height: 15px; }
 .klant-duplicaat-planten { position: absolute; bottom: 8px; right: 12px; color: var(--muted); font-size: .74rem; font-weight: 700; }
 .klant-duplicaten-empty { padding: 18px; color: var(--muted); text-align: center; }
 .klant-overzicht { padding: 10mm; }

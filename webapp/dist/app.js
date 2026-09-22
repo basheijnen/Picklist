@@ -344,30 +344,47 @@ function renderKlantDuplicatenDialog() {
     klantDuplicatenKanaalFiltersEl.append(knop);
   });
   zichtbaar.forEach((entry) => {
-    // Eén regel per order i.p.v. één regel met een (xN)-suffix — zo zie je
-    // in één oogopslag hoe vaak iets terugkomt, zonder een getal te lezen.
-    const regelsHtml = entry.regels
-      .flatMap((r) => {
+    // Eén regel per pakketnummer, met een eigen selectievakje — zo kun je
+    // vóór het bundelen al kiezen welke pakketten van deze klant meegaan
+    // (bijv. 2 van de 3), i.p.v. altijd alles in één keer te bundelen.
+    // Bij een regel met aantal>1 blijven de herhaalde tekstregels staan
+    // (geen "xN"-suffix) onder hetzelfde selectievakje, want die eenheden
+    // horen sowieso bij elkaar (buildBundelPakketDataUitRegel neemt altijd
+    // het hele aantal van een regel mee, nooit een deel ervan).
+    const regelRijenHtml = entry.regels
+      .map((r, regelIndex) => {
         const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
-        const regel = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`;
-        return Array(r.aantal).fill(regel);
+        const regelTekst = Array(r.aantal).fill(`${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`).join("<br>");
+        return `<label class="klant-duplicaat-regel">
+          <input type="checkbox" class="klant-duplicaat-regel-checkbox" data-regel-index="${regelIndex}" checked>
+          <span>${regelTekst}</span>
+        </label>`;
       })
-      .join("<br>");
-    const row = document.createElement("label");
+      .join("");
+    const row = document.createElement("div");
     row.className = "klant-duplicaat-row";
     row.innerHTML = `
-      <input type="checkbox" checked>
-      <span><span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>
-      <button type="button" class="klant-duplicaat-bundel-button">Bundelen →</button><br>
-      <span class="klant-duplicaat-regels">${regelsHtml}</span></span>
+      <label class="klant-duplicaat-select-wrap"><input type="checkbox" class="klant-duplicaat-select" checked></label>
+      <div class="klant-duplicaat-body">
+        <span class="klant-duplicaat-naam">${escapeHtml(entry.naam)}</span>
+        <button type="button" class="klant-duplicaat-bundel-button">Bundelen →</button>
+        <div class="klant-duplicaat-regels">${regelRijenHtml}</div>
+      </div>
       ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}
       <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span>`;
     row._entry = entry;
-    row.querySelector("input").addEventListener("change", updateKlantDuplicatenSelectAllState);
+    row.querySelector(".klant-duplicaat-select").addEventListener("change", updateKlantDuplicatenSelectAllState);
     row.querySelector(".klant-duplicaat-bundel-button").addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      bundelKlantDirect(entry);
+      const geselecteerdeRegels = [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => entry.regels[Number(checkbox.dataset.regelIndex)]);
+      if (!geselecteerdeRegels.length) {
+        klantDuplicatenMessage.textContent = "Vink minstens één pakket aan om te bundelen.";
+        return;
+      }
+      bundelKlantDirect({ naam: entry.naam, regels: geselecteerdeRegels });
     });
     if (entry.kanaal) {
       row.querySelector(".klant-duplicaat-kanaal").addEventListener("click", (event) => {
@@ -385,7 +402,7 @@ function renderKlantDuplicatenDialog() {
 // als alles aan staat, leeg als niets aan staat, "indeterminate" (streepje)
 // als het gemengd is.
 function updateKlantDuplicatenSelectAllState() {
-  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input")];
+  const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-select")];
   const aantalAangevinkt = checkboxes.filter((checkbox) => checkbox.checked).length;
   klantDuplicatenSelectAllCheckbox.checked = checkboxes.length > 0 && aantalAangevinkt === checkboxes.length;
   klantDuplicatenSelectAllCheckbox.indeterminate = aantalAangevinkt > 0 && aantalAangevinkt < checkboxes.length;
@@ -397,7 +414,7 @@ function updateKlantDuplicatenSelectAllState() {
 function selecteerKlantenPerKanaal(kanaal) {
   const checkboxes = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
     .filter((row) => row._entry.kanaal.split(" / ").includes(kanaal))
-    .map((row) => row.querySelector("input"));
+    .map((row) => row.querySelector(".klant-duplicaat-select"));
   if (!checkboxes.length) return;
   const alleAangevinkt = checkboxes.every((checkbox) => checkbox.checked);
   checkboxes.forEach((checkbox) => { checkbox.checked = !alleAangevinkt; });
@@ -415,7 +432,7 @@ function openKlantDuplicatenDialog() {
 // "alles" als er niet expliciet geselecteerd is.
 function printKlantOverzicht() {
   const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
-    .filter((row) => row.querySelector("input").checked)
+    .filter((row) => row.querySelector(".klant-duplicaat-select").checked)
     .map((row) => row._entry);
   if (!geselecteerd.length) {
     klantDuplicatenMessage.textContent = "Selecteer eerst minstens één klant om een overzicht van te maken.";
@@ -610,6 +627,7 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
       const item = document.createElement("li");
       const button = document.createElement("button");
       button.type = "button";
+      button.className = "nazending-suggestie-kies";
       button.textContent = doosnummer;
       // mousedown (not click) fires before the input's blur, so the list is
       // still there to read from when the handler runs.
@@ -912,13 +930,16 @@ function loadNazendingComponents() {
 // gebruikt om een bundel-draft voor te vullen vanuit bekende orderdata
 // (Dubbele klanten), zodat je pakketnummer/inhoud niet opnieuw hoeft te
 // typen of aan te vinken.
-function buildBundelPakketDataUitRegel(pakketnummer, aantal) {
+// `gedeeldDoosnummer` overschrijft de DOZEN-regel van dit pakket met het
+// doosnummer dat voor de hele bundel gekozen is (zie bundelKlantDirect) —
+// zonder die override valt terug op het eigen BOM-doosnummer van dit pakket.
+function buildBundelPakketDataUitRegel(pakketnummer, aantal, gedeeldDoosnummer) {
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
   if (!info || !relatedEntries.length) return null;
   const entries = relatedEntries.map((entry) => ({
     gebied: entry.gebied,
-    item: entry.item,
+    item: entry.gebied === "DOZEN" && gedeeldDoosnummer ? gedeeldDoosnummer : entry.item,
     soort: entry.soort,
     groep: entry.groep,
     volgorde: entry.volgorde,
@@ -937,8 +958,19 @@ function bundelKlantDirect(entry) {
   klantDuplicatenDialog.close();
   openNazendingDialog("bundel");
   nazendingKlantnaamInput.value = entry.naam;
+  // Meerdere pakketten die je in één keer vanuit "Dubbele klanten" bundelt,
+  // gaan in de praktijk in dezelfde ene doos — dus alvast hetzelfde
+  // (gegokte) doosnummer voorinvullen i.p.v. voor elk pakket apart opnieuw
+  // te moeten kiezen. Gebaseerd op het doosnummer van het eerste pakket;
+  // gewoon aanpasbaar per pakket als het toch andere dozen moeten worden.
+  const eersteInfo = entry.regels.length > 1
+    ? (window.PICKLIST_PACKAGES || []).find((p) => p.pakketnummer === entry.regels[0].pakketnummer)
+    : null;
+  const gedeeldDoosnummer = eersteInfo && eersteInfo.doosnummers
+    ? eersteInfo.doosnummers.split("+")[0].trim()
+    : "";
   nazendingDraft = entry.regels
-    .map((r) => buildBundelPakketDataUitRegel(r.pakketnummer, r.aantal))
+    .map((r) => buildBundelPakketDataUitRegel(r.pakketnummer, r.aantal, gedeeldDoosnummer))
     .filter(Boolean);
   nazendingBrondata = { naam: entry.naam };
   renderNazendingDraftList();
@@ -1095,6 +1127,10 @@ function saveNazending() {
   // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
   // meetellen als los pakket én als bundel. Alleen wat je zelf uit de draft
   // hebt verwijderd of niet hebt opgeslagen blijft dus gewoon actief staan.
+  // Kwam deze bundel uit "Dubbele klanten", dan ga je na het opslaan terug
+  // naar dat overzicht — net als bij annuleren — zodat je meteen ziet welke
+  // pakketten van deze klant nog over zijn (en welke net verdwenen zijn).
+  const terugNaarDubbeleKlanten = Boolean(nazendingBrondata);
   if (nazendingBrondata) {
     const perPakket = new Map();
     pakketten.forEach((p) => {
@@ -1112,6 +1148,7 @@ function saveNazending() {
   saveNazendingen();
   nazendingDialog.close();
   renderAll();
+  if (terugNaarDubbeleKlanten) openKlantDuplicatenDialog();
 }
 
 async function saveNewPackage(event) {
@@ -2687,7 +2724,7 @@ document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", 
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
 klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
   const aangevinkt = event.target.checked;
-  klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row input").forEach((checkbox) => { checkbox.checked = aangevinkt; });
+  klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-select").forEach((checkbox) => { checkbox.checked = aangevinkt; });
   klantDuplicatenSelectAllCheckbox.indeterminate = false;
 });
 document.querySelector("#printKlantOverzichtButton").addEventListener("click", printKlantOverzicht);
