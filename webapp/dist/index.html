@@ -37,9 +37,6 @@
       <button id="printPakketkaartenButton" class="button button-secondary" type="button" disabled>
         Pakketkaarten afdrukken
       </button>
-      <button id="resetPrintStatusButton" class="button button-secondary" type="button" title="Zet alle pakketkaarten weer op 'nog niet geprint' — bijv. als het printen mislukte of geannuleerd is" disabled>
-        ↺ Print-status wissen
-      </button>
     </div>
   </header>
 
@@ -94,7 +91,18 @@
     <section id="importsPanel" class="imports-panel" hidden>
       <div class="imports-panel-header">
         <span class="eyebrow">Ingeladen lijsten</span>
-        <button id="klantDuplicatenButton" class="text-button" type="button" disabled>Dubbele klanten bekijken</button>
+        <div class="imports-panel-header-buttons">
+          <button id="klantDuplicatenButton" class="text-button" type="button" disabled>Dubbele klanten bekijken</button>
+          <button id="resetPrintStatusButton" class="print-status-reset-button" type="button" title="Zet alle pakketkaarten weer op 'nog niet geprint' — bijv. als het printen mislukte of geannuleerd is" disabled aria-label="Print-status wissen">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8V3h9v5"/>
+              <rect x="3" y="8" width="11" height="6" rx="1"/>
+              <path d="M5 11h9v6H5z"/>
+              <path d="M19 7a5 5 0 1 1 -1.5 -3.5"/>
+              <path d="M19 2v3.5h-3.5"/>
+            </svg>
+          </button>
+        </div>
       </div>
       <div id="importsList" class="imports-list"></div>
     </section>
