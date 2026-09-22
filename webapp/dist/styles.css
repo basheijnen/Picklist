@@ -261,9 +261,13 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-pakket-field input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font-size: .95rem; }
 .nazending-pakket-input-wrap { position: relative; }
 .nazending-suggestions { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 5; max-height: 220px; margin: 0; padding: 6px; overflow-y: auto; list-style: none; border: 1px solid var(--line); border-radius: 10px; background: white; box-shadow: 0 14px 34px rgba(25, 52, 43, .16); }
+.nazending-suggestions li { display: flex; align-items: center; gap: 2px; }
 .nazending-suggestions li + li { margin-top: 2px; }
 .nazending-suggestions button { display: block; width: 100%; padding: 8px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font: inherit; font-weight: 650; text-align: left; cursor: pointer; }
 .nazending-suggestions button:hover { background: #eef5f0; }
+.nazending-suggestions li:has(.nazending-doosnummer-verwijder) button:first-child { flex: 1; min-width: 0; }
+.nazending-doosnummer-verwijder { flex-shrink: 0; width: 28px; padding: 8px 0 !important; border-radius: 7px; color: var(--danger) !important; text-align: center !important; font-weight: 800 !important; }
+.nazending-doosnummer-verwijder:hover { background: #f9e9e7 !important; }
 .nazending-pakket-naam { margin: 6px 0 0; color: var(--brand); font-weight: 750; min-height: 1.2em; }
 .nazending-component-rows { display: grid; gap: 8px; margin-top: 16px; }
 .nazending-component-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px; background: #f4f8f5; }

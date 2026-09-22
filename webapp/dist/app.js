@@ -591,6 +591,23 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
         hide();
       });
       item.append(button);
+      // Alleen zelf toegevoegde doosnummers (niet gekoppeld aan een bestaand
+      // pakket) zijn hier weg te halen — de rest komt uit echte pakketdata.
+      if (extraDoosnummers.has(doosnummer)) {
+        const verwijderButton = document.createElement("button");
+        verwijderButton.type = "button";
+        verwijderButton.className = "nazending-doosnummer-verwijder";
+        verwijderButton.textContent = "×";
+        verwijderButton.setAttribute("aria-label", `Doosnummer ${doosnummer} verwijderen uit suggesties`);
+        verwijderButton.addEventListener("mousedown", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          extraDoosnummers.delete(doosnummer);
+          saveExtraDoosnummers();
+          render();
+        });
+        item.append(verwijderButton);
+      }
       listEl.append(item);
     });
     listEl.hidden = false;
