@@ -382,6 +382,24 @@ function kanaalAfkorting(kanaal) {
   return afkorting.length >= 2 ? afkorting : kanaal;
 }
 
+// Groepeert de aangevinkte selectievakjes van een klant-rij (één per
+// besteleenheid) terug naar regels per pakketnummer, met het aantal
+// aangevinkte eenheden — kan dus minder zijn dan het volledige aantal van
+// die regel als er maar een deel is aangevinkt.
+function telAangevinkteRegels(row, entry) {
+  const perRegel = new Map();
+  [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
+    .filter((checkbox) => checkbox.checked)
+    .forEach((checkbox) => {
+      const regelIndex = Number(checkbox.dataset.regelIndex);
+      perRegel.set(regelIndex, (perRegel.get(regelIndex) || 0) + 1);
+    });
+  return [...perRegel.entries()].map(([regelIndex, aantal]) => ({
+    pakketnummer: entry.regels[regelIndex].pakketnummer,
+    aantal,
+  }));
+}
+
 function renderKlantDuplicatenDialog() {
   const dubbel = verzamelDubbeleKlanten();
   const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
@@ -424,21 +442,21 @@ function renderKlantDuplicatenDialog() {
     klantDuplicatenKanaalFiltersEl.append(knop);
   });
   zichtbaar.forEach((entry) => {
-    // Eén regel per pakketnummer, met een eigen selectievakje — zo kun je
-    // vóór het bundelen al kiezen welke pakketten van deze klant meegaan
-    // (bijv. 2 van de 3), i.p.v. altijd alles in één keer te bundelen.
-    // Bij een regel met aantal>1 blijven de herhaalde tekstregels staan
-    // (geen "xN"-suffix) onder hetzelfde selectievakje, want die eenheden
-    // horen sowieso bij elkaar (buildBundelPakketDataUitRegel neemt altijd
-    // het hele aantal van een regel mee, nooit een deel ervan).
+    // Eén selectievakje per besteleenheid (niet per pakketnummer) — zo kun
+    // je vóór het bundelen al kiezen welke exemplaren van deze klant meegaan,
+    // ook als het om hetzelfde pakketnummer gaat (bijv. 2 van de 3 x8'ers in
+    // deze doos, de derde in een andere). Vinkjes met hetzelfde
+    // data-regel-index horen bij hetzelfde pakketnummer; bij bundelen/
+    // verplaatsen wordt geteld hoeveel daarvan aanstaan en gaat dat
+    // (deel)aantal mee, i.p.v. altijd het volledige aantal van de regel.
     const regelRijenHtml = entry.regels
-      .map((r, regelIndex) => {
+      .flatMap((r, regelIndex) => {
         const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
-        const regelTekst = Array(r.aantal).fill(`${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`).join("<br>");
-        return `<label class="klant-duplicaat-regel">
+        const regelTekst = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`;
+        return Array(r.aantal).fill(0).map(() => `<label class="klant-duplicaat-regel">
           <input type="checkbox" class="klant-duplicaat-regel-checkbox" data-regel-index="${regelIndex}">
           <span>${regelTekst}</span>
-        </label>`;
+        </label>`);
       })
       .join("");
     const row = document.createElement("div");
@@ -461,7 +479,7 @@ function renderKlantDuplicatenDialog() {
         .filter((checkbox) => checkbox.checked)
         .reduce((sum, checkbox) => {
           const r = entry.regels[Number(checkbox.dataset.regelIndex)];
-          return sum + plantenPerPakket(r.pakketnummer) * r.aantal;
+          return sum + plantenPerPakket(r.pakketnummer);
         }, 0);
       plantenEl.textContent = `${displayNumber(aantal)} planten`;
     };
@@ -473,9 +491,7 @@ function renderKlantDuplicatenDialog() {
     row.querySelector(".klant-duplicaat-bundel-button").addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      const geselecteerdeRegels = [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
-        .filter((checkbox) => checkbox.checked)
-        .map((checkbox) => entry.regels[Number(checkbox.dataset.regelIndex)]);
+      const geselecteerdeRegels = telAangevinkteRegels(row, entry);
       if (!geselecteerdeRegels.length) {
         klantDuplicatenMessage.textContent = "Vink minstens één pakket aan om te bundelen.";
         return;
@@ -3063,9 +3079,7 @@ document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("clic
     .filter((row) => row.querySelector(".klant-duplicaat-select").checked)
     .map((row) => {
       const entry = row._entry;
-      const regels = [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
-        .filter((checkbox) => checkbox.checked)
-        .map((checkbox) => entry.regels[Number(checkbox.dataset.regelIndex)]);
+      const regels = telAangevinkteRegels(row, entry);
       return { naam: entry.naam, kanaal: entry.kanaal, regels };
     })
     .filter((entry) => entry.regels.length);
