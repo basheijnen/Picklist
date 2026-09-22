@@ -3068,7 +3068,6 @@ document.querySelector("#nazendingDirectMeerDetailButton").addEventListener("cli
 wireDoosnummerSuggestions(nazendingDirectDoosnummerInput, document.querySelector("#nazendingDirectDoosnummerSuggesties"), getKnownDoosnummers);
 wireTrackingPasteExtractie(nazendingDirectTrackingInput);
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
-document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
