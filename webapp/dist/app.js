@@ -50,6 +50,7 @@ let nazendingBrondata = null;
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
+const KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY = "picklist-klant-duplicaten-gezien-v1";
 const EXTRA_DOOSNUMMERS_STORAGE_KEY = "picklist-extra-doosnummers-v1";
 // Doosnummers die niet aan een bestaand pakket hangen (bijv. losse
 // bundel-dozen als "Doos 12 tubes") — apart bijgehouden zodat ze toch als
@@ -113,6 +114,32 @@ function savePrintedPakketnummers() {
 function loadPrintedPakketnummers() {
   try {
     const raw = localStorage.getItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw);
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch (_error) {
+    return new Set();
+  }
+}
+
+// Namen die ooit als "dubbele klant" (2+ bestellingen) zijn gezien, blijven
+// in dat overzicht staan zolang er nog minstens 1 regel van ze over is —
+// ook als je door gedeeltelijk bundelen (zie bundelKlantDirect) onder de 2
+// zakt. Bij bijv. 10 pakketten waarvan je er steeds een paar apart bundelt,
+// blijft de klant dus zichtbaar tot alles verwerkt is, i.p.v. halverwege
+// ineens uit de lijst te verdwijnen.
+function saveKlantDuplicatenGezien() {
+  try {
+    if (!klantDuplicatenGezien.size) { localStorage.removeItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY); return; }
+    localStorage.setItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY, JSON.stringify([...klantDuplicatenGezien]));
+  } catch (_error) {
+    // localStorage unavailable — dan wordt dit gewoon niet onthouden.
+  }
+}
+
+function loadKlantDuplicatenGezien() {
+  try {
+    const raw = localStorage.getItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY);
     if (!raw) return new Set();
     const parsed = JSON.parse(raw);
     return new Set(Array.isArray(parsed) ? parsed : []);
@@ -201,6 +228,9 @@ function createHeldImport(name) {
 
 const TE_BUNDELEN_NAAM = "TE BUNDELEN";
 
+// Zie saveKlantDuplicatenGezien hierboven.
+let klantDuplicatenGezien = new Set();
+
 // Klantnamen die vaker dan 1x voorkomen in de actieve lijsten, ongeacht
 // pakketnummer — die klant heeft dan meerdere bestellingen geplaatst die
 // mogelijk samen in 1 doos passen. Alfabetisch gesorteerd op naam.
@@ -223,7 +253,7 @@ function verzamelDubbeleKlanten() {
       if (kanaal) info.kanalen.add(kanaal);
     });
   });
-  const dubbel = [...perNaam.entries()]
+  const alleEntries = [...perNaam.entries()]
     .map(([naam, info]) => {
       const regels = [...info.perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal }));
       return {
@@ -233,8 +263,29 @@ function verzamelDubbeleKlanten() {
         totaal: regels.reduce((sum, r) => sum + r.aantal, 0),
         totaalPlanten: regels.reduce((sum, r) => sum + plantenPerPakket(r.pakketnummer) * r.aantal, 0),
       };
-    })
-    .filter((entry) => entry.totaal >= 2);
+    });
+  // Eenmaal als "dubbel" gezien, blijft een klant in dit overzicht staan tot
+  // er niets meer van over is — ook als gedeeltelijk bundelen het aantal
+  // resterende regels (tijdelijk) onder de 2 brengt. Zodra een klant helemaal
+  // geen regels meer heeft, wordt de naam ook weer uit "gezien" gehaald —
+  // anders zou een latere, echt nieuwe klant met toevallig dezelfde naam en
+  // maar 1 bestelling hier onterecht blijven staan.
+  const huidigeNamen = new Set(alleEntries.map((entry) => entry.naam));
+  let gezienGewijzigd = false;
+  [...klantDuplicatenGezien].forEach((naam) => {
+    if (!huidigeNamen.has(naam)) {
+      klantDuplicatenGezien.delete(naam);
+      gezienGewijzigd = true;
+    }
+  });
+  alleEntries.forEach((entry) => {
+    if (entry.totaal >= 2 && !klantDuplicatenGezien.has(entry.naam)) {
+      klantDuplicatenGezien.add(entry.naam);
+      gezienGewijzigd = true;
+    }
+  });
+  if (gezienGewijzigd) saveKlantDuplicatenGezien();
+  const dubbel = alleEntries.filter((entry) => entry.totaal >= 2 || klantDuplicatenGezien.has(entry.naam));
   dubbel.sort((a, b) => a.naam.localeCompare(b.naam, "nl"));
   return dubbel;
 }
@@ -2752,4 +2803,5 @@ populatePokonOptions();
 imports = loadImportState();
 nazendingen = loadNazendingen();
 printedPakketnummers = loadPrintedPakketnummers();
+klantDuplicatenGezien = loadKlantDuplicatenGezien();
 renderAll();
