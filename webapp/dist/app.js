@@ -1343,6 +1343,48 @@ function verkoopHuidigSeizoenStart(datumStr) {
   return `${seizoenJaar}-07-01`;
 }
 
+// Eén entry per seizoen waarvoor er daadwerkelijk data is (nieuwste eerst),
+// zodat een extra seizoen (zoals de historie van 2025-2026, of ooit
+// 2024-2025) vanzelf als knop verschijnt zodra de orders erin staan — geen
+// nieuwe code nodig om een seizoen te laten "meedoen".
+function verkoopAlleSeizoenen() {
+  const vandaag = todayIso();
+  const starts = new Set((window.PICKLIST_VERKOOP || []).map((o) => verkoopHuidigSeizoenStart(o.datum)));
+  return [...starts]
+    .sort((a, b) => b.localeCompare(a))
+    .map((start) => {
+      const seizoenJaar = Number(start.slice(0, 4));
+      const eindVanSeizoen = `${seizoenJaar + 1}-06-30`;
+      // Het lopende seizoen loopt maar tot vandaag — een vorig seizoen mag
+      // gewoon tot en met 30 juni, daar verandert niets meer aan.
+      const tot = eindVanSeizoen > vandaag ? vandaag : eindVanSeizoen;
+      return { van: start, tot, label: `${seizoenJaar}-${seizoenJaar + 1}` };
+    });
+}
+
+function renderVerkoopSeizoenFilters() {
+  const seizoenen = verkoopAlleSeizoenen();
+  const container = document.querySelector("#verkoopSeizoenFilters");
+  if (seizoenen.length < 2) { container.replaceChildren(); return; }
+  const huidigeVan = document.querySelector("#verkoopVanDatum").value;
+  const huidigeTot = document.querySelector("#verkoopTotDatum").value;
+  container.innerHTML = seizoenen
+    .map((seizoen, index) => {
+      const actief = seizoen.van === huidigeVan && seizoen.tot === huidigeTot;
+      const kleur = VERKOOP_KLANT_KLEUREN[index % VERKOOP_KLANT_KLEUREN.length];
+      return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-van="${escapeHtml(seizoen.van)}" data-tot="${escapeHtml(seizoen.tot)}" style="--klant-kleur:${kleur}">${escapeHtml(seizoen.label)}</button>`;
+    })
+    .join("");
+  container.querySelectorAll("button").forEach((knop) => {
+    knop.addEventListener("click", () => {
+      document.querySelector("#verkoopVanDatum").value = knop.dataset.van;
+      document.querySelector("#verkoopTotDatum").value = knop.dataset.tot;
+      verkoopView = "tabel";
+      renderVerkoopDialog();
+    });
+  });
+}
+
 async function verstuurNaarVerkoop(imp, buttonEl) {
   if (!imp.verkoopOrders || !imp.verkoopOrders.length) return;
   buttonEl.disabled = true;
@@ -1495,12 +1537,16 @@ const VERKOOP_KLANT_KLEUREN = [
 ];
 
 function renderVerkoopKlantFilters() {
-  // Kanalen zonder minstens 1 order dit verkoopseizoen (bijv. een webshop
-  // die niet meer wordt gebruikt) hoeven niet steeds als knop mee te blijven
-  // staan — dat wordt alleen maar drukker naarmate de historie langer wordt.
-  const seizoenStart = verkoopHuidigSeizoenStart(todayIso());
+  // Kanalen zonder minstens 1 order in het seizoen dat bij de actieve Van-
+  // datum hoort (bijv. een webshop die niet meer wordt gebruikt) hoeven niet
+  // steeds als knop mee te blijven staan. Seizoen-bewust i.p.v. hardcoded op
+  // "dit seizoen", zodat het kanalenrijtje meebeweegt als je via het
+  // seizoensknopje een vorig seizoen bekijkt.
+  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
+  const seizoenStart = verkoopHuidigSeizoenStart(huidigeVanWaarde || todayIso());
+  const seizoenEind = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
   const kanalenDitSeizoen = new Set(
-    (window.PICKLIST_VERKOOP || []).filter((o) => o.datum >= seizoenStart).map((o) => o.kanaal)
+    (window.PICKLIST_VERKOOP || []).filter((o) => o.datum >= seizoenStart && o.datum <= seizoenEind).map((o) => o.kanaal)
   );
   const kanalen = [...kanalenDitSeizoen].sort((a, b) => a.localeCompare(b, "nl"));
   const container = document.querySelector("#verkoopKlantFilters");
@@ -1656,6 +1702,7 @@ function renderVerkoopRegio() {
 }
 
 function renderVerkoopDialog() {
+  renderVerkoopSeizoenFilters();
   renderVerkoopTiles();
   renderVerkoopKlantFilters();
   const gefilterd = verkoopGefilterdeOrders();
