@@ -116,12 +116,16 @@ let imports = [];
 let editingPakketnummer = null;
 let managePackagesSearchTerm = "";
 let packageFormOpenedFromManageList = false;
-let printedPakketnummers = new Set();
+// Map i.p.v. Set: onthoudt per pakketnummer niet alleen dát het geprint is,
+// maar ook met wélk aantal — zo telt een gewijzigd aantal (bijv. een extra
+// order via een nieuwe lijst) ook als "moet opnieuw", niet alleen een
+// pakketnummer dat voorheen nog nooit voorkwam.
+let printedPakketnummers = new Map();
 
 function savePrintedPakketnummers() {
   try {
     if (!printedPakketnummers.size) { localStorage.removeItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY); return; }
-    localStorage.setItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY, JSON.stringify([...printedPakketnummers]));
+    localStorage.setItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY, JSON.stringify(Object.fromEntries(printedPakketnummers)));
   } catch (_error) {
     // localStorage unavailable — the "al geprint"-status wordt dan gewoon niet onthouden.
   }
@@ -130,11 +134,17 @@ function savePrintedPakketnummers() {
 function loadPrintedPakketnummers() {
   try {
     const raw = localStorage.getItem(PRINTED_PAKKETNUMMERS_STORAGE_KEY);
-    if (!raw) return new Set();
+    if (!raw) return new Map();
     const parsed = JSON.parse(raw);
-    return new Set(Array.isArray(parsed) ? parsed : []);
+    // Oud formaat (array van pakketnummers, van vóór het onthouden aantal) —
+    // dan is het laatst geprinte aantal onbekend; behandel dat als "anders
+    // dan elk mogelijk huidig aantal", zodat zo'n pakket voor de zekerheid
+    // nog 1x meeprint i.p.v. stilzwijgend een wijziging te missen.
+    if (Array.isArray(parsed)) return new Map(parsed.map((pakketnummer) => [pakketnummer, null]));
+    if (parsed && typeof parsed === "object") return new Map(Object.entries(parsed));
+    return new Map();
   } catch (_error) {
-    return new Set();
+    return new Map();
   }
 }
 
@@ -2742,10 +2752,15 @@ async function printPakketkaarten() {
   // Een pakket dat uit alle actieve lijsten is verdwenen (lijst verwijderd of
   // uitgevinkt) telt niet meer als "al geprint" — komt het later terug via
   // een nieuwe lijst, dan moet de kaart gewoon weer meeprinten.
-  [...printedPakketnummers].forEach((pakketnummer) => {
+  [...printedPakketnummers.keys()].forEach((pakketnummer) => {
     if (!orderCounts.has(pakketnummer)) printedPakketnummers.delete(pakketnummer);
   });
-  const nieuweOrderCounts = new Map([...orderCounts].filter(([pakketnummer]) => !printedPakketnummers.has(pakketnummer)));
+  // Print ook opnieuw mee als het aantal is gewijzigd t.o.v. de vorige print
+  // (bijv. een extra order via een nieuwe lijst morgen) — niet alleen als
+  // het pakketnummer zelf helemaal nieuw is.
+  const nieuweOrderCounts = new Map(
+    [...orderCounts].filter(([pakketnummer, aantal]) => printedPakketnummers.get(pakketnummer) !== aantal)
+  );
   if (!nieuweOrderCounts.size && !activeNazendingen().length) {
     setMessage("Alle pakketkaarten voor de huidige lijsten zijn al geprint.");
     return;
@@ -2756,7 +2771,7 @@ async function printPakketkaarten() {
     { cancelLabel: "Nee, weglaten", style: "primary", title: "Pakketkaarten printen" }
   );
   buildPakketkaarten(nieuweOrderCounts, { showStickers });
-  orderCounts.forEach((_aantal, pakketnummer) => printedPakketnummers.add(pakketnummer));
+  orderCounts.forEach((aantal, pakketnummer) => printedPakketnummers.set(pakketnummer, aantal));
   savePrintedPakketnummers();
   resetPrintStatusButton.disabled = false;
   document.body.classList.add("printing-pakketkaarten");
@@ -2775,7 +2790,7 @@ async function printSinglePakketkaart(pakketnummer) {
     { cancelLabel: "Nee, weglaten", style: "primary", title: "Pakketkaart printen" }
   );
   buildPakketkaarten(new Map([[pakketnummer, aantal]]), { includeNazendingen: false, showStickers });
-  printedPakketnummers.add(pakketnummer);
+  printedPakketnummers.set(pakketnummer, aantal);
   savePrintedPakketnummers();
   document.body.classList.add("printing-pakketkaarten");
   window.print();
