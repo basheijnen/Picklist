@@ -432,8 +432,24 @@ function renderKlantDuplicatenDialog() {
         <div class="klant-duplicaat-regels">${regelRijenHtml}</div>
       </div>
       ${entry.kanaal ? `<button type="button" class="klant-duplicaat-kanaal" style="--klant-kleur:${kanaalKleur(entry.kanaal)}" data-kanaal="${escapeHtml(entry.kanaal)}">${escapeHtml(entry.kanaal)}</button>` : ""}
-      <span class="klant-duplicaat-planten">${displayNumber(entry.totaalPlanten)} planten</span>`;
+      <span class="klant-duplicaat-planten"></span>`;
     row._entry = entry;
+    // Het plantenaantal rechtsonder volgt de aangevinkte pakketten i.p.v.
+    // altijd het klant-totaal te tonen — staat niets aan, dan is dat 0.
+    const plantenEl = row.querySelector(".klant-duplicaat-planten");
+    const updatePlanten = () => {
+      const aantal = [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
+        .filter((checkbox) => checkbox.checked)
+        .reduce((sum, checkbox) => {
+          const r = entry.regels[Number(checkbox.dataset.regelIndex)];
+          return sum + plantenPerPakket(r.pakketnummer) * r.aantal;
+        }, 0);
+      plantenEl.textContent = `${displayNumber(aantal)} planten`;
+    };
+    row.querySelectorAll(".klant-duplicaat-regel-checkbox").forEach((checkbox) => {
+      checkbox.addEventListener("change", updatePlanten);
+    });
+    updatePlanten();
     row.querySelector(".klant-duplicaat-select").addEventListener("change", updateKlantDuplicatenSelectAllState);
     row.querySelector(".klant-duplicaat-bundel-button").addEventListener("click", (event) => {
       event.preventDefault();
