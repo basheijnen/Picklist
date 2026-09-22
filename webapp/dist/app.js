@@ -52,6 +52,12 @@ let nazendingSoort = "klacht";
 // binnenkomst via "Bundelen →" vanuit Dubbele klanten, waar de inhoud al
 // vaststaat en alleen doos+tracking nog gekozen hoeven te worden.
 let nazendingDirectModus = false;
+// Bewaart het bronAantal (zie buildBundelPakketDataUitRegel) van het pakket
+// dat nu in de handmatige invoer staat, zodat het niet verloren gaat als je
+// vanuit een uit Dubbele klanten voorgevulde bundel overstapt op "Liever per
+// pakket losse doos/tracking instellen?" — anders leest saveNazending straks
+// het verkeerde (want op 1 sticker gezette) DOZEN-aantal als brontelling.
+let nazendingHerbewerkBronAantal = null;
 // Gezet wanneer de bundel-draft automatisch is voorgevuld vanuit "Dubbele
 // klanten" — bepaalt of saveNazending() de brontelling (orderCounts/
 // orderNames) mag verminderen. Bij een handmatig getypte bundel (nooit
@@ -1067,6 +1073,7 @@ function openNazendingDialog(soort = "klacht") {
   nazendingSoort = soort;
   nazendingBrondata = null;
   nazendingDirectModus = false;
+  nazendingHerbewerkBronAantal = null;
   renderNazendingDirectSamenvatting();
   const isBundel = soort === "bundel";
   document.querySelector("#nazendingDialogTitle").textContent = isBundel ? "Bundelpakket samenstellen" : "Klacht aanmaken";
@@ -1229,6 +1236,11 @@ function renderNazendingDirectSamenvatting() {
 // the draft list). Used both by "nog een pakket toevoegen" and by the final
 // save, which folds in the last pakket without forcing an extra click.
 function readCurrentNazendingSelection() {
+  // Eenmalig "verbruiken": zodra dit pakket wordt gelezen (opgeslagen of
+  // teruggeklapt in de draft) geldt het niet meer voor een eventueel
+  // volgend, ander pakket dat je hierna nog toevoegt.
+  const bronAantal = nazendingHerbewerkBronAantal;
+  nazendingHerbewerkBronAantal = null;
   const pakketnummer = nazendingPakketnummerInput.value.trim();
   if (!pakketnummer) return { status: "empty" };
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
@@ -1260,7 +1272,10 @@ function readCurrentNazendingSelection() {
     })
     .filter(Boolean);
   if (!entries.length) return { status: "invalid", message: `Vink minstens één regel aan met een geldig aantal voor ${pakketnummer}.` };
-  return { status: "ok", data: { pakketnummer, pakketnaam: info.pakketnaam, volledig, entries } };
+  return {
+    status: "ok",
+    data: { pakketnummer, pakketnaam: info.pakketnaam, volledig, entries, ...(typeof bronAantal === "number" ? { bronAantal } : {}) },
+  };
 }
 
 function renderNazendingDraftList() {
@@ -1286,7 +1301,13 @@ function renderNazendingDraftList() {
 // Restores checkbox/aantal/doosnummer state onto the freshly rendered rows
 // for a pakket, matching by volgorde since a doosnummer's text may have
 // been edited (so its item no longer matches the row's default box number).
-function applyNazendingSelectionToRows(entries) {
+// `bronAantal` (zie buildBundelPakketDataUitRegel) overschrijft, indien
+// aanwezig, het aantal van de DOZEN-rij: die staat in `entries` altijd op 1
+// (1 gedeelde doos/sticker), maar bij het overstappen naar deze handmatige
+// invoer verdwijnt de dedup-logica uit saveNazending die dat weer terugbrengt
+// tot 1 sticker — dus moet het bewaarde bronAantal hier zichtbaar/bewerkbaar
+// worden, anders gaat bij het opslaan het echte aantal bestellingen verloren.
+function applyNazendingSelectionToRows(entries, bronAantal) {
   const byVolgorde = new Map(entries.map((entry) => [entry.volgorde, entry]));
   [...nazendingComponentRowsEl.querySelectorAll(".nazending-component-row")].forEach((row) => {
     const checkbox = row.querySelector("input[type=checkbox]");
@@ -1294,7 +1315,7 @@ function applyNazendingSelectionToRows(entries) {
     checkbox.checked = Boolean(match);
     row.classList.toggle("is-unchecked", !checkbox.checked);
     if (!match) return;
-    row.querySelector(".nazending-aantal").value = match.aantal;
+    row.querySelector(".nazending-aantal").value = match.gebied === "DOZEN" && typeof bronAantal === "number" ? bronAantal : match.aantal;
     const doosnummerInput = row.querySelector(".nazending-doosnummer");
     if (doosnummerInput) doosnummerInput.value = match.item;
     const trackingInput = row.querySelector(".nazending-tracking");
@@ -1320,7 +1341,8 @@ function switchToNazendingDraftItem(index) {
   nazendingMessage.textContent = "";
   nazendingPakketnummerInput.value = entry.pakketnummer;
   loadNazendingComponents();
-  applyNazendingSelectionToRows(entry.entries);
+  nazendingHerbewerkBronAantal = typeof entry.bronAantal === "number" ? entry.bronAantal : null;
+  applyNazendingSelectionToRows(entry.entries, entry.bronAantal);
   nazendingPakketnummerInput.focus();
 }
 
