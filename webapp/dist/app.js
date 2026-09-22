@@ -2729,9 +2729,13 @@ function promptImportName(suggestedName) {
 
 function renderImportsList() {
   const totalCount = imports.length + nazendingen.length;
-  const activeCount = imports.filter((imp) => imp.active).length + activeNazendingen().length;
   importsPanel.hidden = totalCount === 0;
-  document.querySelector("#fileName").textContent = totalCount ? `${activeCount} van ${totalCount} actief` : "—";
+  // "Lijsten" telt alleen echte ingeladen CSV-lijsten — klachten en
+  // bundelpakketten zijn geen lijsten en horen hier niet in mee (ze hebben
+  // hun eigen "Klachten"-teller in de summary-bar).
+  document.querySelector("#fileName").textContent = imports.length
+    ? `${imports.filter((imp) => imp.active).length} van ${imports.length} actief`
+    : "—";
   if (!totalCount) { importsList.replaceChildren(); return; }
   importsList.replaceChildren();
   imports.forEach((imp) => {
@@ -2856,7 +2860,7 @@ function renderAll() {
   const calculated = calculate(orderCounts);
   renderImportsList();
   document.querySelector("#orderCount").textContent = [...orderCounts.values()].reduce((a, b) => a + b, 0);
-  document.querySelector("#klachtCount").textContent = activeNazendingen().length;
+  document.querySelector("#klachtCount").textContent = activeNazendingen().filter((nz) => nz.soort !== "bundel").length;
   document.querySelector("#packageCount").textContent = orderCounts.size + activeNazendingen().length;
   document.querySelector("#runDate").textContent = new Intl.DateTimeFormat("nl-NL").format(new Date());
   const tabs = document.querySelector("#departmentTabs");
