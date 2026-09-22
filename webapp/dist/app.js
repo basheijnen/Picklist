@@ -1258,7 +1258,7 @@ const KANAAL_REGIO = {
   "westwing": "EUROPA",
   "outspot": "EUROPA",
   "veepee": "EUROPA",
-  "aldi": "EUROPA",
+  "aldi online": "ALDI",
   "essim": "BENELUX",
 };
 
@@ -1527,6 +1527,7 @@ function renderVerkoopTiles() {
   const totaalDezeWeek = pakketOrders.filter((o) => o.datum >= dezeWeek.van && o.datum <= dezeWeek.tot).reduce((sum, o) => sum + o.aantal, 0);
   const europa = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
   const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
+  const aldi = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "ALDI").reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
   // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
@@ -1542,7 +1543,7 @@ function renderVerkoopTiles() {
     { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio" },
+    { label: "Europa · Benelux · ALDI", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)} · ${displayNumber(aldi)}`, van: seizoenStart, tot: seizoenTot, view: "regio" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
@@ -1697,10 +1698,11 @@ function renderVerkoopKalender() {
 const VERKOOP_KANAAL_REGIO_VOLGORDE = [
   ["Groupon FR", "EUROPA"], ["Groupon DE", "EUROPA"], ["Groupon IT", "EUROPA"], ["Groupon ES", "EUROPA"],
   ["Limango", "EUROPA"], ["Maison Privee", "EUROPA"], ["WestWing", "EUROPA"], ["Outspot", "EUROPA"],
-  ["VeePee", "EUROPA"], ["ALDI", "EUROPA"],
+  ["VeePee", "EUROPA"],
   ["Bol.com", "BENELUX"], ["Groupon NL", "BENELUX"], ["Groupon BE", "BENELUX"], ["iBood", "BENELUX"],
   ["Mediahuis", "BENELUX"], ["NewReturns", "BENELUX"], ["VakantieVeilingen", "BENELUX"], ["PVW", "BENELUX"],
   ["Voordeelvanger", "BENELUX"], ["Amazon", "BENELUX"], ["ESSIM", "BENELUX"],
+  ["ALDI Online", "ALDI"],
 ];
 
 function renderVerkoopRegio() {
@@ -1740,10 +1742,11 @@ function renderVerkoopRegio() {
 
   const europa = sectie("EUROPA", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "EUROPA").map(([naam]) => naam));
   const benelux = sectie("BENELUX", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "BENELUX").map(([naam]) => naam));
-  let html = europa.html + benelux.html;
+  const aldi = sectie("ALDI", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "ALDI").map(([naam]) => naam));
+  let html = europa.html + benelux.html + aldi.html;
 
-  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr>`;
-  let grandTotaal = europa.totaal + benelux.totaal;
+  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr><tr><td>ALDI</td><td>${displayNumber(aldi.totaal)}</td></tr>`;
+  let grandTotaal = europa.totaal + benelux.totaal + aldi.totaal;
   if (onbekendeKanalen.length) {
     const onbekend = sectie("ONBEKEND KANAAL", onbekendeKanalen);
     html += onbekend.html;
