@@ -1480,10 +1480,20 @@ function verkoopExporteren() {
 }
 
 function renderVerkoopTiles() {
-  const alleOrders = (window.PICKLIST_VERKOOP || []).filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal);
+  const vandaag = todayIso();
+  // "Totaal seizoen" en "Europa · Benelux" volgen het seizoen dat bij de
+  // actieve Van-datum hoort (zelfde aanpak als de kanaalknoppen), zodat ze
+  // meebewegen met het seizoensknopje i.p.v. altijd het huidige seizoen (of
+  // erger, alle seizoenen bij elkaar) te tonen.
+  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
+  const seizoenStart = verkoopHuidigSeizoenStart(huidigeVanWaarde || vandaag);
+  const seizoenEindVolledig = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
+  const seizoenTot = seizoenEindVolledig > vandaag ? vandaag : seizoenEindVolledig;
+  const alleOrders = (window.PICKLIST_VERKOOP || [])
+    .filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    .filter((o) => o.datum >= seizoenStart && o.datum <= seizoenTot);
   const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
   const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
-  const vandaag = todayIso();
   const totaalSeizoen = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
   const dezeWeek = verkoopWeekBereik(vandaag);
@@ -1495,10 +1505,10 @@ function renderVerkoopTiles() {
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: verkoopHuidigSeizoenStart(vandaag), tot: vandaag, view: "tabel" },
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), van: vandaag, tot: vandaag },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), van: dezeWeek.van, tot: dezeWeek.tot },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: verkoopHuidigSeizoenStart(vandaag), tot: vandaag, view: "regio" },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
@@ -1653,7 +1663,10 @@ const VERKOOP_KANAAL_REGIO_VOLGORDE = [
 ];
 
 function renderVerkoopRegio() {
-  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon");
+  // Zelfde Van/Tot/kanaal/zoek-filter als de tabelweergave — voorheen keek
+  // dit altijd naar alle data ooit, dus veranderde er niets bij het kiezen
+  // van een ander seizoen.
+  const pakketOrders = verkoopGefilterdeOrders().filter((o) => o.pakketnummer !== "Pokon");
   const perKanaal = new Map();
   pakketOrders.forEach((order) => {
     perKanaal.set(order.kanaal, (perKanaal.get(order.kanaal) || 0) + order.aantal);
@@ -1665,11 +1678,16 @@ function renderVerkoopRegio() {
 
   const sectie = (titel, kanalen) => {
     let totaal = 0;
-    const rijen = kanalen.map((kanaal) => {
-      const waarde = perKanaal.get(kanaal) || 0;
-      totaal += waarde;
-      return `<tr><td>${escapeHtml(kanaal)}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
-    }).join("");
+    // Kanalen zonder omzet in de actieve periode niet meer als lege rij
+    // tonen — anders staat elk seizoensoverzicht vol met klanten die daar
+    // toevallig niets besteld hebben.
+    const rijen = kanalen
+      .filter((kanaal) => perKanaal.has(kanaal))
+      .map((kanaal) => {
+        const waarde = perKanaal.get(kanaal) || 0;
+        totaal += waarde;
+        return `<tr><td>${escapeHtml(kanaal)}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+      }).join("");
     const html = `<div class="verkoop-regio-sectie">
       <div class="verkoop-regio-titel">${escapeHtml(titel)}</div>
       <table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
