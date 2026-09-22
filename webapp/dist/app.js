@@ -1495,7 +1495,14 @@ const VERKOOP_KLANT_KLEUREN = [
 ];
 
 function renderVerkoopKlantFilters() {
-  const kanalen = [...new Set((window.PICKLIST_VERKOOP || []).map((o) => o.kanaal))].sort((a, b) => a.localeCompare(b, "nl"));
+  // Kanalen zonder minstens 1 order dit verkoopseizoen (bijv. een webshop
+  // die niet meer wordt gebruikt) hoeven niet steeds als knop mee te blijven
+  // staan — dat wordt alleen maar drukker naarmate de historie langer wordt.
+  const seizoenStart = verkoopHuidigSeizoenStart(todayIso());
+  const kanalenDitSeizoen = new Set(
+    (window.PICKLIST_VERKOOP || []).filter((o) => o.datum >= seizoenStart).map((o) => o.kanaal)
+  );
+  const kanalen = [...kanalenDitSeizoen].sort((a, b) => a.localeCompare(b, "nl"));
   const container = document.querySelector("#verkoopKlantFilters");
   if (!kanalen.includes(verkoopActiefKanaal)) verkoopActiefKanaal = "";
   container.innerHTML = kanalen
