@@ -462,6 +462,11 @@ let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
 let verkoopActiefKanaal = "";
 let verkoopView = "kalender";
+// Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
+// een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
+// bekeken seizoen zetten (voor de tabel-filter) zonder dat de titel, de
+// tegels, de kanaalknoppen of het kalenderoverzicht meespringen.
+let verkoopActiefSeizoen = "";
 
 // A klacht is active by default; older saved records simply have no
 // `active` field at all, which should still mean "counts".
@@ -1369,12 +1374,9 @@ function renderVerkoopSeizoenDropdown() {
   const seizoenen = verkoopAlleSeizoenen();
   const toggle = document.querySelector("#verkoopSeizoenToggle");
   const dropdown = document.querySelector("#verkoopSeizoenDropdown");
-  const huidigeVan = document.querySelector("#verkoopVanDatum").value;
+  if (!verkoopActiefSeizoen) verkoopActiefSeizoen = verkoopHuidigSeizoenStart(todayIso());
 
-  // De titel volgt het seizoen van de actieve Van-datum, ook als Van/Tot
-  // niet precies een heel seizoen bestrijkt (bijv. na "Deze week" klikken).
-  const actieveSeizoenStart = verkoopHuidigSeizoenStart(huidigeVan || todayIso());
-  const actieveSeizoenJaar = Number(actieveSeizoenStart.slice(0, 4));
+  const actieveSeizoenJaar = Number(verkoopActiefSeizoen.slice(0, 4));
   document.querySelector("#verkoopTitelSeizoen").textContent = `${actieveSeizoenJaar}-${actieveSeizoenJaar + 1}`;
 
   if (seizoenen.length < 2) {
@@ -1385,7 +1387,7 @@ function renderVerkoopSeizoenDropdown() {
   toggle.hidden = false;
   dropdown.innerHTML = seizoenen
     .map((seizoen) => {
-      const actief = seizoen.van === actieveSeizoenStart;
+      const actief = seizoen.van === verkoopActiefSeizoen;
       return `<li><button type="button" class="${actief ? "is-actief" : ""}" data-van="${escapeHtml(seizoen.van)}" data-tot="${escapeHtml(seizoen.tot)}">${escapeHtml(seizoen.label)}</button></li>`;
     })
     .join("");
@@ -1394,6 +1396,7 @@ function renderVerkoopSeizoenDropdown() {
     // handling, so the dropdown is still there to read from.
     knop.addEventListener("mousedown", (event) => {
       event.preventDefault();
+      verkoopActiefSeizoen = knop.dataset.van;
       document.querySelector("#verkoopVanDatum").value = knop.dataset.van;
       document.querySelector("#verkoopTotDatum").value = knop.dataset.tot;
       sluitVerkoopSeizoenDropdown();
@@ -1505,12 +1508,12 @@ function verkoopExporteren() {
 
 function renderVerkoopTiles() {
   const vandaag = todayIso();
-  // "Totaal seizoen" en "Europa · Benelux" volgen het seizoen dat bij de
-  // actieve Van-datum hoort (zelfde aanpak als de kanaalknoppen), zodat ze
-  // meebewegen met het seizoensknopje i.p.v. altijd het huidige seizoen (of
-  // erger, alle seizoenen bij elkaar) te tonen.
-  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
-  const seizoenStart = verkoopHuidigSeizoenStart(huidigeVanWaarde || vandaag);
+  // "Totaal seizoen" en "Europa · Benelux" volgen het seizoen dat via het
+  // seizoensmenu gekozen is (verkoopActiefSeizoen) — niet de Van-datum, want
+  // die verandert ook door tegels als "Vandaag"/"Deze week" en die mogen het
+  // bekeken seizoen niet omgooien.
+  if (!verkoopActiefSeizoen) verkoopActiefSeizoen = verkoopHuidigSeizoenStart(vandaag);
+  const seizoenStart = verkoopActiefSeizoen;
   const seizoenEindVolledig = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
   const seizoenTot = seizoenEindVolledig > vandaag ? vandaag : seizoenEindVolledig;
   const alleOrders = (window.PICKLIST_VERKOOP || [])
@@ -1571,13 +1574,12 @@ const VERKOOP_KLANT_KLEUREN = [
 ];
 
 function renderVerkoopKlantFilters() {
-  // Kanalen zonder minstens 1 order in het seizoen dat bij de actieve Van-
-  // datum hoort (bijv. een webshop die niet meer wordt gebruikt) hoeven niet
-  // steeds als knop mee te blijven staan. Seizoen-bewust i.p.v. hardcoded op
-  // "dit seizoen", zodat het kanalenrijtje meebeweegt als je via het
-  // seizoensknopje een vorig seizoen bekijkt.
-  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
-  const seizoenStart = verkoopHuidigSeizoenStart(huidigeVanWaarde || todayIso());
+  // Kanalen zonder minstens 1 order in het gekozen seizoen (bijv. een
+  // webshop die niet meer wordt gebruikt) hoeven niet steeds als knop mee
+  // te blijven staan. Volgt verkoopActiefSeizoen (het seizoensmenu), niet
+  // de Van-datum — die verandert ook door bijv. de "Vandaag"-tegel.
+  if (!verkoopActiefSeizoen) verkoopActiefSeizoen = verkoopHuidigSeizoenStart(todayIso());
+  const seizoenStart = verkoopActiefSeizoen;
   const seizoenEind = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
   const kanalenDitSeizoen = new Set(
     (window.PICKLIST_VERKOOP || []).filter((o) => o.datum >= seizoenStart && o.datum <= seizoenEind).map((o) => o.kanaal)
@@ -1653,10 +1655,10 @@ function renderVerkoopKalender() {
   pakketOrders.forEach((order) => {
     perDag.set(order.datum, (perDag.get(order.datum) || 0) + order.aantal);
   });
-  // Zelfde seizoen als de actieve Van-datum — anders blijft de kalender op
-  // 2026-2027 hangen, ook als je via het seizoensknopje 2025-2026 bekijkt.
-  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
-  const seizoenStartJaar = Number(verkoopHuidigSeizoenStart(huidigeVanWaarde || todayIso()).slice(0, 4));
+  // Volgt verkoopActiefSeizoen (het seizoensmenu) i.p.v. de Van-datum, die
+  // ook door andere tegels ("Vandaag" e.d.) wordt aangepast.
+  if (!verkoopActiefSeizoen) verkoopActiefSeizoen = verkoopHuidigSeizoenStart(todayIso());
+  const seizoenStartJaar = Number(verkoopActiefSeizoen.slice(0, 4));
   document.querySelector("#verkoopKalenderView").innerHTML = verkoopSeizoenMaanden(seizoenStartJaar)
     .map(([jaar, maand]) => {
       const dagenInMaand = new Date(jaar, maand, 0).getDate();
@@ -2589,6 +2591,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   document.querySelector("#verkoopTotDatum").value = vandaag;
   verkoopView = "kalender";
   verkoopActiefKanaal = "";
+  verkoopActiefSeizoen = verkoopHuidigSeizoenStart(vandaag);
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
