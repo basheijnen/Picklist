@@ -68,7 +68,7 @@ def test_read_kanaal_historie_splits_pokon_from_pakket(tmp_path):
     bol["B6"] = "Bol.com"
     bol["D8"] = "9.1"
     bol["E8"] = "9.1P"  # package 9.1 sold with a box of Pokon added
-    bol["F8"] = "P004"  # fixed internal code series, unrelated — ignored entirely
+    bol["F8"] = "P004"  # standalone Pokon-variant column (e.g. Mediterrane mest)
     bol["A9"] = datetime.date(2026, 7, 6)
     bol["D9"] = 30
     bol["E9"] = 1
@@ -85,8 +85,8 @@ def test_read_kanaal_historie_splits_pokon_from_pakket(tmp_path):
         by_pakketnummer[order.pakketnummer] += order.aantal
     # 30 plain "9.1" + 1 "9.1P" (counts toward "9.1" itself) = 31.
     assert by_pakketnummer["9.1"] == 31.0
-    # Only "9.1P"'s Pokon box counts — the standalone "P004" is ignored.
-    assert by_pakketnummer["Pokon"] == 1.0
+    # "9.1P"'s Pokon box (1) plus the standalone "P004" column (1) = 2.
+    assert by_pakketnummer["Pokon"] == 2.0
     assert "9.1P" not in by_pakketnummer
     assert "P004" not in by_pakketnummer
 

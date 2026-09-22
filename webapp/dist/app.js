@@ -1529,12 +1529,19 @@ function renderVerkoopTiles() {
   const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
+  // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
+  // — klikbaar maken zou Van/Tot naar de échte huidige datum zetten, en dus
+  // opeens data uit een heel ander (het actuele) seizoen ophalen terwijl de
+  // titel op het bekeken seizoen blijft staan. Alleen klikbaar (en dus met
+  // van/tot) als je toch al in het actuele seizoen zit.
+  const bekijktHuidigSeizoen = seizoenStart === verkoopHuidigSeizoenStart(vandaag);
+
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
     { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel" },
-    { label: "Vandaag", waarde: displayNumber(totaalVandaag), van: vandaag, tot: vandaag },
-    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), van: dezeWeek.van, tot: dezeWeek.tot },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
   ];

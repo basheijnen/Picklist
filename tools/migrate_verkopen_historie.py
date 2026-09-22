@@ -33,12 +33,14 @@ MET_POKON = re.compile(r"^(\d+\.\d+)[Pp]$")
 def _split_pokon(pakketnummer):
     """A pakketnummer ending in "p"/"P" is that package with a box of Pokon
     added — the base package still counts as itself, and the Pokon box
-    counts separately. A bare "P<nummer>" (e.g. "P004") is a fixed internal
-    code series unrelated to real Pokon-with-a-package sales — ignored
-    entirely. Returns (basis_pakketnummer_or_None, is_pokon).
+    counts separately. A bare "P<nummer>" (e.g. "P004") is this workbook's
+    own column series for standalone Pokon sales (one column per Pokon
+    variant — "P001" = Tuinmest, "P004" = Mediterrane mest, etc. — not tied
+    to any specific plant package), so it counts as pure Pokon too, with no
+    underlying basis package. Returns (basis_pakketnummer_or_None, is_pokon).
     """
     if PUUR_POKON.fullmatch(pakketnummer):
-        return None, False
+        return None, True
     match = MET_POKON.fullmatch(pakketnummer)
     if match:
         return match.group(1), True
