@@ -270,7 +270,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-number { font-weight: 800; color: var(--brand); }
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
-.nazending-add-button { color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
+.nazending-add-button { margin-left: auto; color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
 .manage-packages-button { color: #000; font-weight: 800; border: 2px solid #000; background: #5b9bd5; }
 .nazending-dialog-body { padding: 22px 28px 6px; }
 .nazending-pakket-field { display: grid; gap: 6px; margin-bottom: 4px; color: var(--muted); font-size: .82rem; font-weight: 750; }
