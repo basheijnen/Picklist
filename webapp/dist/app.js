@@ -18,6 +18,7 @@ const results = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
 const printButton = document.querySelector("#printButton");
 const printPakketkaartenButton = document.querySelector("#printPakketkaartenButton");
+const resetPrintStatusButton = document.querySelector("#resetPrintStatusButton");
 const backupButton = document.querySelector("#backupButton");
 const backupStatus = document.querySelector("#backupStatus");
 const pakketkaartenPanel = document.querySelector("#pakketkaartenPanel");
@@ -2123,6 +2124,7 @@ async function printPakketkaarten() {
   buildPakketkaarten(nieuweOrderCounts, { showStickers });
   orderCounts.forEach((_aantal, pakketnummer) => printedPakketnummers.add(pakketnummer));
   savePrintedPakketnummers();
+  resetPrintStatusButton.disabled = false;
   document.body.classList.add("printing-pakketkaarten");
   window.print();
 }
@@ -2325,6 +2327,7 @@ function renderAll() {
     emptyState.hidden = false;
     printButton.disabled = true;
     printPakketkaartenButton.disabled = true;
+    resetPrintStatusButton.disabled = true;
     document.querySelector("#klantDuplicatenButton").disabled = true;
     return;
   }
@@ -2375,6 +2378,7 @@ function renderAll() {
   emptyState.hidden = true; results.hidden = false;
   printButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
   printPakketkaartenButton.disabled = orderCounts.size === 0 && activeNazendingen().length === 0;
+  resetPrintStatusButton.disabled = printedPakketnummers.size === 0;
   document.querySelector("#klantDuplicatenButton").disabled = orderCounts.size === 0;
 }
 
@@ -2438,6 +2442,21 @@ dropZone.addEventListener("drop", (event) => handleFile(event.dataTransfer.files
 printButton.addEventListener("click", () => window.print());
 backupButton.addEventListener("click", runBackup);
 printPakketkaartenButton.addEventListener("click", printPakketkaarten);
+resetPrintStatusButton.addEventListener("click", async () => {
+  // Er is geen betrouwbare manier om te weten of iemand het printvenster
+  // heeft geannuleerd (browsers geven daar geen signaal voor), dus staat
+  // hier gewoon een handmatige "terugzetten"-knop voor dat geval.
+  const ok = await confirmDialog(
+    "Alle pakketkaarten weer op 'nog niet geprint' zetten? De volgende keer printen komt dan alles opnieuw mee.",
+    "Ja, terugzetten",
+    { cancelLabel: "Annuleren", style: "primary" }
+  );
+  if (!ok) return;
+  printedPakketnummers.clear();
+  savePrintedPakketnummers();
+  setMessage("Print-status is gewist — de volgende print bevat weer alle pakketkaarten.");
+  renderAll();
+});
 document.querySelector("#addComponentButton").addEventListener("click", createComponentRow);
 document.querySelector("#closePackageDialog").addEventListener("click", closePackageDialogAndReturn);
 document.querySelector("#cancelPackageButton").addEventListener("click", closePackageDialogAndReturn);
