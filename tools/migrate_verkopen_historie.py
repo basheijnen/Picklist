@@ -92,6 +92,14 @@ def read_kanaal_historie(workbook_path):
                 waarde = ws.cell(row=rij, column=kolom).value
                 if not waarde:
                     continue
+                try:
+                    waarde = float(waarde)
+                except (TypeError, ValueError):
+                    print(
+                        f"Waarschuwing: niet-numerieke waarde {waarde!r} genegeerd "
+                        f"({ws.title}, {datum}, pakket {pakketnummer})"
+                    )
+                    continue
                 basis, pokon = _split_pokon(pakketnummer)
                 if basis:
                     orders.append(
@@ -100,7 +108,7 @@ def read_kanaal_historie(workbook_path):
                             datum=datum,
                             kanaal=kanaal,
                             pakketnummer=basis,
-                            aantal=float(waarde),
+                            aantal=waarde,
                         )
                     )
                 if pokon:
@@ -110,7 +118,7 @@ def read_kanaal_historie(workbook_path):
                             datum=datum,
                             kanaal=kanaal,
                             pakketnummer="Pokon",
-                            aantal=float(waarde),
+                            aantal=waarde,
                         )
                     )
             rij += 1
