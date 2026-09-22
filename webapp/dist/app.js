@@ -1379,7 +1379,8 @@ function renderVerkoopSeizoenFilters() {
     knop.addEventListener("click", () => {
       document.querySelector("#verkoopVanDatum").value = knop.dataset.van;
       document.querySelector("#verkoopTotDatum").value = knop.dataset.tot;
-      verkoopView = "tabel";
+      // Blijf in de weergave waar je al in zat (tabel/kalender/regio) — een
+      // seizoen kiezen hoeft je niet terug te zetten naar Tabel.
       renderVerkoopDialog();
     });
   });
@@ -1609,13 +1610,15 @@ function renderVerkoopTable(orders) {
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
 }
 
-// The season is fixed to what this dashboard is named after, matching how
-// the old Excel workbook laid out one column-group per month regardless of
-// whether that month had data yet.
-const VERKOOP_SEIZOEN_MAANDEN = [
-  [2026, 7], [2026, 8], [2026, 9], [2026, 10], [2026, 11], [2026, 12],
-  [2027, 1], [2027, 2], [2027, 3], [2027, 4], [2027, 5], [2027, 6],
-];
+// De 12 maanden (juli t/m juni) van het seizoen dat bij seizoenStartJaar
+// hoort — matcht hoe het oude Excel-werkblad één kolomgroep per maand had,
+// maar nu per seizoen i.p.v. hardcoded op 2026-2027.
+function verkoopSeizoenMaanden(seizoenStartJaar) {
+  const maanden = [];
+  for (let m = 7; m <= 12; m += 1) maanden.push([seizoenStartJaar, m]);
+  for (let m = 1; m <= 6; m += 1) maanden.push([seizoenStartJaar + 1, m]);
+  return maanden;
+}
 const VERKOOP_MAAND_NAMEN = [
   "januari", "februari", "maart", "april", "mei", "juni",
   "juli", "augustus", "september", "oktober", "november", "december",
@@ -1627,7 +1630,11 @@ function renderVerkoopKalender() {
   pakketOrders.forEach((order) => {
     perDag.set(order.datum, (perDag.get(order.datum) || 0) + order.aantal);
   });
-  document.querySelector("#verkoopKalenderView").innerHTML = VERKOOP_SEIZOEN_MAANDEN
+  // Zelfde seizoen als de actieve Van-datum — anders blijft de kalender op
+  // 2026-2027 hangen, ook als je via het seizoensknopje 2025-2026 bekijkt.
+  const huidigeVanWaarde = document.querySelector("#verkoopVanDatum").value;
+  const seizoenStartJaar = Number(verkoopHuidigSeizoenStart(huidigeVanWaarde || todayIso()).slice(0, 4));
+  document.querySelector("#verkoopKalenderView").innerHTML = verkoopSeizoenMaanden(seizoenStartJaar)
     .map(([jaar, maand]) => {
       const dagenInMaand = new Date(jaar, maand, 0).getDate();
       let totaalMaand = 0;
@@ -1643,7 +1650,7 @@ function renderVerkoopKalender() {
       // horizontal row across all 12 columns, regardless of month length.
       const vulRijen = Array.from({ length: 31 - dagenInMaand }, () => `<tr><td>&nbsp;</td><td></td></tr>`).join("");
       return `<div class="verkoop-kalender-maand">
-        <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])}</div>
+        <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])} ${jaar}</div>
         <table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table>
       </div>`;
     })
