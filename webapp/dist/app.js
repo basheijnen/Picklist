@@ -1519,15 +1519,18 @@ function renderVerkoopTiles() {
   const alleOrders = (window.PICKLIST_VERKOOP || [])
     .filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
     .filter((o) => o.datum >= seizoenStart && o.datum <= seizoenTot);
-  const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon");
+  // ALDI telt niet mee in "Totaal seizoen" (en dus ook niet in Vandaag/Deze
+  // week) — dat krijgt een eigen tegel, zodat de twee elkaar niet overlappen.
+  const pakketOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon" && regioVoorKanaal(o.kanaal) !== "ALDI");
   const pokonOrders = alleOrders.filter((o) => o.pakketnummer === "Pokon");
+  const aldiOrders = alleOrders.filter((o) => o.pakketnummer !== "Pokon" && regioVoorKanaal(o.kanaal) === "ALDI");
   const totaalSeizoen = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
   const dezeWeek = verkoopWeekBereik(vandaag);
   const totaalDezeWeek = pakketOrders.filter((o) => o.datum >= dezeWeek.van && o.datum <= dezeWeek.tot).reduce((sum, o) => sum + o.aantal, 0);
   const europa = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
   const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
-  const aldi = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "ALDI").reduce((sum, o) => sum + o.aantal, 0);
+  const aldi = aldiOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
   // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
@@ -1540,11 +1543,12 @@ function renderVerkoopTiles() {
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel" },
-    { label: "Vandaag", waarde: displayNumber(totaalVandaag), ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
-    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
-    { label: "Europa · Benelux · ALDI", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)} · ${displayNumber(aldi)}`, van: seizoenStart, tot: seizoenTot, view: "regio" },
-    { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon" },
+    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "" },
+    { label: "ALDI", waarde: displayNumber(aldi), van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "ALDI Online" },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
+    { label: "Pokon", waarde: displayNumber(totaalPokon), van: "", tot: "", zoek: "Pokon", kanaal: "" },
   ];
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
   const huidigeTot = document.querySelector("#verkoopTotDatum").value;
@@ -1553,7 +1557,8 @@ function renderVerkoopTiles() {
   tilesEl.innerHTML = tegels
     .map((tegel) => {
       const klikbaar = tegel.van !== undefined;
-      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && (tegel.zoek || "") === huidigeZoek;
+      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && (tegel.zoek || "") === huidigeZoek
+        && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal);
       return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`;
     })
     .join("");
@@ -1564,6 +1569,7 @@ function renderVerkoopTiles() {
       document.querySelector("#verkoopVanDatum").value = tegel.van;
       document.querySelector("#verkoopTotDatum").value = tegel.tot;
       document.querySelector("#verkoopZoekInput").value = tegel.zoek || "";
+      if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
       verkoopView = tegel.view || "tabel";
       renderVerkoopDialog();
     });
