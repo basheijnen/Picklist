@@ -1156,7 +1156,10 @@ function loadNazendingComponents() {
 // Meerdere samengevoegde bestellingen van hetzelfde pakketnummer (aantal>1)
 // gaan altijd in die ene gedeelde doos, dus de DOZEN-regel blijft altijd 1
 // sticker — nooit het aantal bestellingen, anders telt bijv. 3x hetzelfde
-// pakket in 1 doos als 3 stickers i.p.v. 1.
+// pakket in 1 doos als 3 stickers i.p.v. 1. Het echte aantal bestellingen
+// blijft wel apart bewaard als `bronAantal`, want dat is nodig om straks de
+// juiste hoeveelheid orders uit de actieve lijsten te halen (saveNazending)
+// en om het pakketnummer het juiste aantal keer te tonen (bijv. "55.2 + 55.2").
 function buildBundelPakketDataUitRegel(pakketnummer, aantal, gedeeldDoosnummer) {
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
@@ -1170,7 +1173,7 @@ function buildBundelPakketDataUitRegel(pakketnummer, aantal, gedeeldDoosnummer) 
     aantal: entry.gebied === "DOZEN" ? 1 : Math.round(entry.aantal_per_pakket * aantal),
     tracking: "",
   }));
-  return { pakketnummer, pakketnaam: info.pakketnaam, volledig: false, entries };
+  return { pakketnummer, pakketnaam: info.pakketnaam, volledig: false, entries, bronAantal: aantal };
 }
 
 // Opent de Bundel-dialoog al gevuld met de pakketten van één klant uit het
@@ -1361,19 +1364,20 @@ function saveNazending() {
   }
   if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe."; return; }
   // Voorgevuld vanuit "Dubbele klanten": de eenheden die daadwerkelijk in
-  // deze bundel terechtkomen (per pakketnummer het DOZEN-aantal, dat is de
-  // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
-  // meetellen als los pakket én als bundel. In directe modus is een deel
-  // van de doosregels net op 0 gezet om dubbeltellen bij het printen te
-  // voorkomen (zie hierboven) — de brontelling komt daarom uit de
-  // ongewijzigde nazendingDraft, niet uit die aangepaste `pakketten`.
+  // deze bundel terechtkomen gaan eraf bij de actieve lijsten — zodat ze
+  // niet dubbel meetellen als los pakket én als bundel. De brontelling komt
+  // uit `bronAantal` (het echte aantal samengevoegde bestellingen, zie
+  // buildBundelPakketDataUitRegel), niet uit het DOZEN-aantal — dat laatste
+  // is altijd 1 (één gedeelde doos/sticker) en zegt dus niets meer over hoe
+  // veel bestellingen erin zitten. Voor handmatig toegevoegde pakketten
+  // (geen bronAantal) valt terug op het DOZEN-aantal, zoals voorheen.
   let herkomst = null;
   if (nazendingBrondata) {
     const bronPakketten = nazendingDirectModus ? nazendingDraft : pakketten;
     const perPakket = new Map();
     bronPakketten.forEach((p) => {
       const doosEntry = p.entries.find((entry) => entry.gebied === "DOZEN");
-      const aantal = doosEntry ? doosEntry.aantal : 0;
+      const aantal = typeof p.bronAantal === "number" ? p.bronAantal : (doosEntry ? doosEntry.aantal : 0);
       if (aantal > 0) perPakket.set(p.pakketnummer, (perPakket.get(p.pakketnummer) || 0) + aantal);
     });
     // Bewaard op het record zelf (niet alleen in het module-brede
@@ -1391,7 +1395,11 @@ function saveNazending() {
     active: true,
     soort: nazendingSoort,
     klantnaam: nazendingSoort === "bundel" ? nazendingKlantnaamInput.value.trim() : "",
-    pakketnummer: pakketten.map((p) => p.pakketnummer).join(" + "),
+    // Herhaalt het pakketnummer per samengevoegde bronbestelling (bijv.
+    // "55.2 + 55.2" voor 2 gebundelde orders van hetzelfde pakket) i.p.v.
+    // het maar 1x te tonen — zo blijft zichtbaar hoeveel orders er in deze
+    // ene doos zitten, ook al is dat er maar 1 sticker.
+    pakketnummer: pakketten.flatMap((p) => Array(p.bronAantal || 1).fill(p.pakketnummer)).join(" + "),
     pakketnaam: pakketten.map((p) => p.pakketnaam).join(" + "),
     // Een bundelpakket toont nooit het pakketnummer groot boven — alleen het
     // aantal planten is relevant — dus die telt altijd als "niet volledig",
