@@ -748,6 +748,51 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
   inputEl.addEventListener("blur", hide);
 }
 
+// Plak je een trackingpagina-link (bijv. de DPD "mydpd"-zoeklink met
+// ?parcelNumber=...) in een trackingveld, dan is alleen het cijferreeksje
+// daarin het echte trackingnummer — de rest van de URL is ruis. Een gewoon
+// getypt of geplakt trackingnummer (geen URL) blijft altijd ongewijzigd.
+function extractTrackingNummer(tekst) {
+  const regel = tekst.trim();
+  if (!regel || !/^https?:\/\//i.test(regel)) return regel;
+  let cijferreeksen = [];
+  try {
+    const url = new URL(regel);
+    url.searchParams.forEach((waarde) => {
+      const matches = waarde.match(/\d{6,}/g);
+      if (matches) cijferreeksen.push(...matches);
+    });
+  } catch (_error) {
+    // Geen geldige URL — dan gewoon door naar de algemene cijfer-zoektocht hieronder.
+  }
+  if (!cijferreeksen.length) {
+    const matches = regel.match(/\d{6,}/g);
+    if (matches) cijferreeksen = matches;
+  }
+  if (!cijferreeksen.length) return regel;
+  // Langste reeks wint — voorkomt dat een toevallig korter getal elders in de URL gepakt wordt.
+  return cijferreeksen.reduce((langste, huidige) => (huidige.length > langste.length ? huidige : langste));
+}
+
+// Werkt op zowel de <textarea> (meerdere trackingnummers, één per regel) als
+// een los <input>-trackingveld.
+function wireTrackingPasteExtractie(el) {
+  el.addEventListener("paste", (event) => {
+    const geplakt = event.clipboardData && event.clipboardData.getData("text");
+    if (!geplakt) return;
+    const verwerkt = geplakt.split("\n").map((regel) => extractTrackingNummer(regel)).join("\n");
+    if (verwerkt === geplakt) return;
+    event.preventDefault();
+    const start = el.selectionStart;
+    const eind = el.selectionEnd;
+    const huidige = el.value;
+    el.value = huidige.slice(0, start) + verwerkt + huidige.slice(eind);
+    const nieuwePositie = start + verwerkt.length;
+    el.setSelectionRange(nieuwePositie, nieuwePositie);
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+}
+
 function updatePackageNavButtons(pakketnummer) {
   const nav = document.querySelector(".package-nav");
   const prevButton = document.querySelector("#prevPackageButton");
@@ -1000,6 +1045,8 @@ function loadNazendingComponents() {
       if (doosnummerInput) {
         wireDoosnummerSuggestions(doosnummerInput, row.querySelector(".nazending-doosnummer-suggestions"), getKnownDoosnummers);
       }
+      const trackingInput = row.querySelector(".nazending-tracking");
+      if (trackingInput) wireTrackingPasteExtractie(trackingInput);
       nazendingComponentRowsEl.append(row);
     });
 }
@@ -2839,6 +2886,7 @@ document.querySelector("#nazendingDirectMeerDetailButton").addEventListener("cli
   if (nazendingDraft.length) switchToNazendingDraftItem(0);
 });
 wireDoosnummerSuggestions(nazendingDirectDoosnummerInput, document.querySelector("#nazendingDirectDoosnummerSuggesties"), getKnownDoosnummers);
+wireTrackingPasteExtractie(nazendingDirectTrackingInput);
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
 document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
