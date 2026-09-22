@@ -2730,12 +2730,16 @@ function promptImportName(suggestedName) {
 function renderImportsList() {
   const totalCount = imports.length + nazendingen.length;
   importsPanel.hidden = totalCount === 0;
-  // "Lijsten" telt alleen echte ingeladen CSV-lijsten — klachten en
-  // bundelpakketten zijn geen lijsten en horen hier niet in mee (ze hebben
-  // hun eigen "Klachten"-teller in de summary-bar).
-  document.querySelector("#fileName").textContent = imports.length
-    ? `${imports.filter((imp) => imp.active).length} van ${imports.length} actief`
-    : "—";
+  // "Lijsten" volgt precies de rijen die hieronder ook echt te zien zijn:
+  // elke ingeladen CSV-lijst telt apart, en alle klachten/bundelpakketten
+  // samen tellen als 1 lijst (ze staan ook als 1 gezamenlijke "Meetellen"-rij
+  // met 1 schakelaar hieronder, zie het "Klachten & bundels"-blok verderop),
+  // niet als 1 losse lijst per klacht/bundel.
+  const lijstenTotal = imports.length + (nazendingen.length ? 1 : 0);
+  const lijstenActiveImports = imports.filter((imp) => imp.active).length;
+  const nazendingenAllesActief = nazendingen.length > 0 && nazendingen.every((nz) => nz.active !== false);
+  const lijstenActive = lijstenActiveImports + (nazendingenAllesActief ? 1 : 0);
+  document.querySelector("#fileName").textContent = lijstenTotal ? `${lijstenActive} van ${lijstenTotal} actief` : "—";
   if (!totalCount) { importsList.replaceChildren(); return; }
   importsList.replaceChildren();
   imports.forEach((imp) => {
