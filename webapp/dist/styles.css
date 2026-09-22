@@ -117,6 +117,8 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .count-diff-menu button:hover { border-color: var(--brand); }
 .count-diff-menu .count-diff-cancel { color: var(--muted); }
 .count-diff-menu .count-diff-standaard-wacht { border-color: var(--brand); background: #eaf2ec; font-weight: 750; }
+.count-diff-wacht-datum-label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-weight: 650; }
+.count-diff-wacht-datum { min-height: 32px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 8px; font-size: .82rem; color: var(--ink); }
 .count-diff-new-name { min-height: 32px; padding: 4px 9px; border: 1px solid #bdcbc4; border-radius: 8px; font-size: .82rem; width: 150px; }
 .summary-bar { display: grid; grid-template-columns: 2fr repeat(4, 1fr); overflow: hidden; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 16px; background: linear-gradient(110deg, color-mix(in srgb, var(--brand) 9%, white), white); }
 .summary-bar div { min-width: 0; padding: 18px 20px; border-right: 1px solid var(--line); }
@@ -341,6 +343,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .wachtlijst-overzicht-table th:nth-child(4), .wachtlijst-overzicht-table td:nth-child(4) { width: 12%; }
 .wachtlijst-overzicht-table th:nth-child(5), .wachtlijst-overzicht-table td:nth-child(5) { width: 16%; }
 .wachtlijst-overzicht-aantal { font-weight: 800; text-align: right; white-space: nowrap; }
+.wachtlijst-datum-koprij td { padding: 14px 10px 6px; border-bottom: 2px solid var(--ink); color: var(--ink); font-size: 11pt; font-weight: 800; }
 .nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
 .nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 3px 3px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }
 .nazending-draft-row small { color: var(--muted); font-weight: 550; }

@@ -179,6 +179,10 @@ function saveImportState() {
       orderNames: imp.orderNames || [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
+      // Optioneel "pas versturen na"-datum per pakketnummer, gezet bij het
+      // verplaatsen naar de wachtlijst (zie finalizeDecrease) — bepaalt de
+      // groepering op het wachtlijst-voorblad (printWachtlijstVoorblad).
+      wachtDatums: Object.fromEntries(imp.wachtDatums || new Map()),
     }))));
   } catch (_error) {
     // localStorage unavailable (private browsing, quota, ...) — the session
@@ -200,6 +204,7 @@ function loadImportState() {
       orderNames: Array.isArray(imp.orderNames) ? imp.orderNames : [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
+      wachtDatums: new Map(Object.entries(imp.wachtDatums || {})),
     }));
   } catch (_error) {
     return [];
@@ -237,7 +242,7 @@ function subtractFromActiveImports(pakketnummer, delta) {
 }
 
 function createHeldImport(name) {
-  const held = { id: makeImportId(), name, active: false, orderCounts: new Map(), orderNames: [] };
+  const held = { id: makeImportId(), name, active: false, orderCounts: new Map(), orderNames: [], wachtDatums: new Map() };
   imports.push(held);
   return held;
 }
@@ -611,20 +616,40 @@ function printWachtlijstVoorblad(imp) {
   const pokonPakketten = new Set(
     (window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "POKON").map((entry) => entry.pakketnummer)
   );
-  const rijenHtml = [...imp.orderCounts.entries()]
-    .sort(([a], [b]) => a.localeCompare(b, "nl", { numeric: true }))
-    .map(([pakketnummer, aantal]) => {
-      const info = packageInfo.get(pakketnummer) || {};
-      const needsPokon = pokonPakketten.has(pakketnummer);
-      return `<tr>
-        <td>${escapeHtml(pakketnummer)}</td>
-        <td>${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
-        <td>${needsPokon ? "Pokon" : ""}</td>
-        <td class="wachtlijst-overzicht-aantal">${displayNumber(aantal)}</td>
-        <td>${escapeHtml(info.doosnummers || "—")}</td>
-      </tr>`;
+  const wachtDatums = imp.wachtDatums || new Map();
+  const rijHtml = (pakketnummer, aantal) => {
+    const info = packageInfo.get(pakketnummer) || {};
+    const needsPokon = pokonPakketten.has(pakketnummer);
+    return `<tr>
+      <td>${escapeHtml(pakketnummer)}</td>
+      <td>${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
+      <td>${needsPokon ? "Pokon" : ""}</td>
+      <td class="wachtlijst-overzicht-aantal">${displayNumber(aantal)}</td>
+      <td>${escapeHtml(info.doosnummers || "—")}</td>
+    </tr>`;
+  };
+  const alleRegels = [...imp.orderCounts.entries()].sort(([a], [b]) => a.localeCompare(b, "nl", { numeric: true }));
+  // Pakketten zonder datum eerst (normale volgorde), daarna per datum
+  // gegroepeerd en chronologisch gesorteerd — zo blijft in één oogopslag
+  // zichtbaar wat je "gewoon" in de wacht hebt staan en wat pas na een
+  // bepaalde datum mag.
+  const zonderDatum = alleRegels.filter(([pakketnummer]) => !wachtDatums.get(pakketnummer));
+  const metDatum = alleRegels.filter(([pakketnummer]) => wachtDatums.get(pakketnummer));
+  const perDatum = new Map();
+  metDatum.forEach(([pakketnummer, aantal]) => {
+    const datum = wachtDatums.get(pakketnummer);
+    if (!perDatum.has(datum)) perDatum.set(datum, []);
+    perDatum.get(datum).push([pakketnummer, aantal]);
+  });
+  const datumGroepenHtml = [...perDatum.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([datum, regels]) => {
+      const label = formatDagMaand(datum);
+      const koprij = `<tr class="wachtlijst-datum-koprij"><td colspan="5">Na ${escapeHtml(label)} versturen:</td></tr>`;
+      return koprij + regels.map(([pakketnummer, aantal]) => rijHtml(pakketnummer, aantal)).join("");
     })
     .join("");
+  const rijenHtml = zonderDatum.map(([pakketnummer, aantal]) => rijHtml(pakketnummer, aantal)).join("") + datumGroepenHtml;
   const totaal = [...imp.orderCounts.values()].reduce((a, b) => a + b, 0);
   document.querySelector("#wachtlijstOverzichtPanel").innerHTML = `
     <div class="klant-overzicht wachtlijst-overzicht">
@@ -2320,6 +2345,14 @@ function formatLongDate(date) {
     .replace(/\b\p{L}/gu, (letter) => letter.toUpperCase());
 }
 
+// Dag + maandnaam voor de datum-koppen op het wachtlijst-voorblad (bijv.
+// "23 september") — `datumStr` is een "YYYY-MM-DD" uit een <input type=date>.
+function formatDagMaand(datumStr) {
+  const [jaar, maand, dag] = datumStr.split("-").map(Number);
+  const date = new Date(jaar, maand - 1, dag);
+  return new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long" }).format(date);
+}
+
 function groupEntries(entries) {
   return [...entries.values()]
     .sort((a, b) => a.volgorde - b.volgorde || a.item.localeCompare(b.item, "nl"))
@@ -2505,6 +2538,7 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   diffRow.innerHTML = `<td colspan="5"><div class="count-diff-menu">
     <span>Verschil (${diff}) verplaatsen naar wachtlijst:</span>
     <button type="button" class="count-diff-standaard-wacht">In de wacht</button>
+    <label class="count-diff-wacht-datum-label">pas na <input type="date" class="count-diff-wacht-datum" aria-label="Pas versturen na deze datum (optioneel)"></label>
     ${existingButtons}
     <input type="text" class="count-diff-new-name" placeholder="Nieuwe naam…">
     <button type="button" class="count-diff-new-confirm">Aanmaken &amp; verplaatsen</button>
@@ -2513,7 +2547,8 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   row.insertAdjacentElement("afterend", diffRow);
   diffRow.querySelector(".count-diff-standaard-wacht").addEventListener("click", () => {
     const doel = vindOfMaakInDeWachtLijst();
-    finalizeDecrease(pakketnummer, diff, doel.id, null);
+    const datumInput = diffRow.querySelector(".count-diff-wacht-datum");
+    finalizeDecrease(pakketnummer, diff, doel.id, null, datumInput.value || null);
   });
   diffRow.querySelectorAll(".count-diff-target").forEach((button) => {
     button.addEventListener("click", () => finalizeDecrease(pakketnummer, diff, button.dataset.id, null));
@@ -2527,11 +2562,19 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   diffRow.querySelector(".count-diff-cancel").addEventListener("click", () => finalizeDecrease(pakketnummer, diff, null, null));
 }
 
-function finalizeDecrease(pakketnummer, diff, targetImportId, newName) {
+function finalizeDecrease(pakketnummer, diff, targetImportId, newName, datum) {
   subtractFromActiveImports(pakketnummer, diff);
   if (targetImportId || newName) {
     const target = targetImportId ? imports.find((imp) => imp.id === targetImportId) : createHeldImport(newName);
-    if (target) target.orderCounts.set(pakketnummer, (target.orderCounts.get(pakketnummer) || 0) + diff);
+    if (target) {
+      target.orderCounts.set(pakketnummer, (target.orderCounts.get(pakketnummer) || 0) + diff);
+      // Alleen zetten als er echt een datum is meegegeven — een latere
+      // verplaatsing zonder datum haalt een eerder gezette datum niet weg.
+      if (datum) {
+        if (!target.wachtDatums) target.wachtDatums = new Map();
+        target.wachtDatums.set(pakketnummer, datum);
+      }
+    }
   }
   saveImportState();
   renderAll();
