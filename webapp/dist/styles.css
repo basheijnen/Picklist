@@ -114,6 +114,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .count-diff-menu button { min-height: 32px; padding: 0 12px; border: 1px solid #bdcbc4; border-radius: 8px; color: var(--ink); background: white; font-weight: 650; cursor: pointer; }
 .count-diff-menu button:hover { border-color: var(--brand); }
 .count-diff-menu .count-diff-cancel { color: var(--muted); }
+.count-diff-menu .count-diff-standaard-wacht { border-color: var(--brand); background: #eaf2ec; font-weight: 750; }
 .count-diff-new-name { min-height: 32px; padding: 4px 9px; border: 1px solid #bdcbc4; border-radius: 8px; font-size: .82rem; width: 150px; }
 .summary-bar { display: grid; grid-template-columns: 2fr repeat(4, 1fr); overflow: hidden; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 16px; background: linear-gradient(110deg, color-mix(in srgb, var(--brand) 9%, white), white); }
 .summary-bar div { min-width: 0; padding: 18px 20px; border-right: 1px solid var(--line); }
@@ -332,6 +333,12 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-overzicht-naam { font-weight: 800; }
 .klant-overzicht-kanaal { display: inline-block; max-width: 100%; padding: 2px 7px; border: 1.2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 7pt; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
 .klant-overzicht-planten { font-weight: 800; text-align: right; white-space: nowrap; }
+.wachtlijst-overzicht-table th:nth-child(1), .wachtlijst-overzicht-table td:nth-child(1) { width: 14%; }
+.wachtlijst-overzicht-table th:nth-child(2), .wachtlijst-overzicht-table td:nth-child(2) { width: 46%; }
+.wachtlijst-overzicht-table th:nth-child(3), .wachtlijst-overzicht-table td:nth-child(3) { width: 12%; }
+.wachtlijst-overzicht-table th:nth-child(4), .wachtlijst-overzicht-table td:nth-child(4) { width: 12%; }
+.wachtlijst-overzicht-table th:nth-child(5), .wachtlijst-overzicht-table td:nth-child(5) { width: 16%; }
+.wachtlijst-overzicht-aantal { font-weight: 800; text-align: right; white-space: nowrap; }
 .nazending-draft-list { display: grid; gap: 8px; margin-bottom: 18px; }
 .nazending-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 3px 3px 3px 14px; border: 1px solid #e8d6a8; border-radius: 10px; background: #fbf6ec; font-size: .88rem; font-weight: 650; }
 .nazending-draft-row small { color: var(--muted); font-weight: 550; }
@@ -406,6 +413,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   #klantOverzichtPanel { display: none; }
   body.printing-klantoverzicht .results { display: none !important; }
   body.printing-klantoverzicht #klantOverzichtPanel { display: block !important; }
+  #wachtlijstOverzichtPanel { display: none; }
+  body.printing-wachtlijst .results { display: none !important; }
+  body.printing-wachtlijst #wachtlijstOverzichtPanel { display: block !important; }
   .department-header { padding: 0 0 6px; border-bottom: 3px solid var(--accent); background: white; }
   .department-header h2 { font-size: 18pt; }
   .department-header p, .eyebrow { margin-bottom: 2px; font-size: 8pt; }

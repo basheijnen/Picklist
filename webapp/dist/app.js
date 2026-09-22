@@ -242,6 +242,14 @@ function createHeldImport(name) {
   return held;
 }
 
+// Standaard doellijst voor "in de wacht zetten" — 1 vaste naam i.p.v. steeds
+// zelf iets te moeten intypen. Hergebruikt de bestaande lijst met die naam
+// als die er al is, anders wordt hij aangemaakt.
+const IN_DE_WACHT_NAAM = "In de wacht";
+function vindOfMaakInDeWachtLijst() {
+  return imports.find((imp) => imp.name === IN_DE_WACHT_NAAM) || createHeldImport(IN_DE_WACHT_NAAM);
+}
+
 // Zie saveKlantDuplicatenGezien hierboven.
 let klantDuplicatenGezien = new Set();
 
@@ -590,6 +598,46 @@ function printKlantOverzicht() {
     </div>`;
   klantDuplicatenDialog.close();
   document.body.classList.add("printing-klantoverzicht");
+  window.print();
+}
+
+// Los voorblad voor de standaard "In de wacht"-lijst: alleen een overzicht
+// van wat erin zit, geen Koeling/Kas/Kamer/Pokon/Dozen-pagina's — die orders
+// worden vandaag toch niet gepickt. Werkt op de eigen aantallen van déze
+// lijst, los van wat er verder actief staat (zelfde opzet als
+// printKlantOverzicht hierboven).
+function printWachtlijstVoorblad(imp) {
+  const packageInfo = new Map((window.PICKLIST_PACKAGES || []).map((entry) => [entry.pakketnummer, entry]));
+  const pokonPakketten = new Set(
+    (window.PICKLIST_BOM || []).filter((entry) => entry.gebied === "POKON").map((entry) => entry.pakketnummer)
+  );
+  const rijenHtml = [...imp.orderCounts.entries()]
+    .sort(([a], [b]) => a.localeCompare(b, "nl", { numeric: true }))
+    .map(([pakketnummer, aantal]) => {
+      const info = packageInfo.get(pakketnummer) || {};
+      const needsPokon = pokonPakketten.has(pakketnummer);
+      return `<tr>
+        <td>${escapeHtml(pakketnummer)}</td>
+        <td>${escapeHtml(info.pakketnaam || "Onbekende pakketnaam")}</td>
+        <td>${needsPokon ? "Pokon" : ""}</td>
+        <td class="wachtlijst-overzicht-aantal">${displayNumber(aantal)}</td>
+        <td>${escapeHtml(info.doosnummers || "—")}</td>
+      </tr>`;
+    })
+    .join("");
+  const totaal = [...imp.orderCounts.values()].reduce((a, b) => a + b, 0);
+  document.querySelector("#wachtlijstOverzichtPanel").innerHTML = `
+    <div class="klant-overzicht wachtlijst-overzicht">
+      <header class="klant-overzicht-header">
+        <h1>Orders in de wacht</h1>
+        <p>${escapeHtml(imp.name)} — ${formatLongDate(new Date())} — ${displayNumber(totaal)} pakketten</p>
+      </header>
+      <table class="klant-overzicht-table wachtlijst-overzicht-table">
+        <thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>Pokon</th><th>Aantal</th><th>Doosnummer(s)</th></tr></thead>
+        <tbody>${rijenHtml}</tbody>
+      </table>
+    </div>`;
+  document.body.classList.add("printing-wachtlijst");
   window.print();
 }
 
@@ -2446,7 +2494,9 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   closeCountDiffMenu();
   input.dataset.diffPending = String(diff);
   const row = input.closest("tr");
-  const heldImports = imports.filter((imp) => !imp.active);
+  // De standaard "In de wacht"-lijst krijgt zijn eigen vaste knop i.p.v. hem
+  // ook nog eens tussen de andere bestaande wachtlijsten te tonen.
+  const heldImports = imports.filter((imp) => !imp.active && imp.name !== IN_DE_WACHT_NAAM);
   const existingButtons = heldImports
     .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
     .join("");
@@ -2454,12 +2504,17 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   diffRow.className = "count-diff-row";
   diffRow.innerHTML = `<td colspan="5"><div class="count-diff-menu">
     <span>Verschil (${diff}) verplaatsen naar wachtlijst:</span>
+    <button type="button" class="count-diff-standaard-wacht">In de wacht</button>
     ${existingButtons}
     <input type="text" class="count-diff-new-name" placeholder="Nieuwe naam…">
     <button type="button" class="count-diff-new-confirm">Aanmaken &amp; verplaatsen</button>
     <button type="button" class="count-diff-cancel">Negeren</button>
   </div></td>`;
   row.insertAdjacentElement("afterend", diffRow);
+  diffRow.querySelector(".count-diff-standaard-wacht").addEventListener("click", () => {
+    const doel = vindOfMaakInDeWachtLijst();
+    finalizeDecrease(pakketnummer, diff, doel.id, null);
+  });
   diffRow.querySelectorAll(".count-diff-target").forEach((button) => {
     button.addEventListener("click", () => finalizeDecrease(pakketnummer, diff, button.dataset.id, null));
   });
@@ -2683,7 +2738,7 @@ async function printSinglePakketkaart(pakketnummer) {
   window.print();
 }
 
-window.addEventListener("afterprint", () => document.body.classList.remove("printing-pakketkaarten", "printing-klantoverzicht"));
+window.addEventListener("afterprint", () => document.body.classList.remove("printing-pakketkaarten", "printing-klantoverzicht", "printing-wachtlijst"));
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
@@ -2771,12 +2826,18 @@ function renderImportsList() {
       : imp.verkoopVerstuurd
         ? `<span class="import-verkoop-status">✓ in Verkopen</span>`
         : `<button type="button" class="import-verkoop-button">Naar Verkopen →</button>`;
+    // De standaard "In de wacht"-lijst krijgt een eigen afdrukknop voor een
+    // los voorblad (geen Koeling/Kas/Kamer/Pokon/Dozen-pagina's) — die orders
+    // worden vandaag toch niet gepickt, dus die pagina's hebben geen nut.
+    const wachtVoorbladKnopHtml = imp.name === IN_DE_WACHT_NAAM
+      ? `<button type="button" class="import-wacht-voorblad-button">Voorblad afdrukken →</button>`
+      : "";
     const row = document.createElement("div");
     row.className = `import-row${imp.active ? "" : " is-held"}`;
     row.innerHTML = `
       <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${imp.active ? "checked" : ""}><span>Meetellen</span></label>
       <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst">
-      <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}</span>
+      <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}${wachtVoorbladKnopHtml}</span>
       <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
     row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
       imp.active = event.target.checked;
@@ -2791,6 +2852,8 @@ function renderImportsList() {
     });
     const verkoopButton = row.querySelector(".import-verkoop-button");
     if (verkoopButton) verkoopButton.addEventListener("click", () => verstuurNaarVerkoop(imp, verkoopButton));
+    const wachtVoorbladButton = row.querySelector(".import-wacht-voorblad-button");
+    if (wachtVoorbladButton) wachtVoorbladButton.addEventListener("click", () => printWachtlijstVoorblad(imp));
     row.querySelector(".import-delete-button").addEventListener("click", async () => {
       if (!(await confirmDialog(`Lijst "${imp.name}" verwijderen?`))) return;
       imports = imports.filter((entry) => entry.id !== imp.id);
