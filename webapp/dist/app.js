@@ -407,7 +407,7 @@ function renderKlantDuplicatenDialog() {
         const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
         const regelTekst = Array(r.aantal).fill(`${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`).join("<br>");
         return `<label class="klant-duplicaat-regel">
-          <input type="checkbox" class="klant-duplicaat-regel-checkbox" data-regel-index="${regelIndex}" checked>
+          <input type="checkbox" class="klant-duplicaat-regel-checkbox" data-regel-index="${regelIndex}">
           <span>${regelTekst}</span>
         </label>`;
       })
