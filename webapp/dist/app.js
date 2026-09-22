@@ -1260,6 +1260,7 @@ const KANAAL_REGIO = {
   "veepee": "EUROPA",
   "aldi online": "ALDI",
   "essim": "BENELUX",
+  "dagknaller": "BENELUX",
 };
 
 function regioVoorKanaal(kanaal) {
@@ -1543,8 +1544,7 @@ function renderVerkoopTiles() {
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen", waarde: displayNumber(totaalSeizoen), van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "" },
-    { label: "ALDI", waarde: displayNumber(aldi), van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "ALDI Online" },
+    { label: "Totaal seizoen · ALDI", waarde: `${displayNumber(totaalSeizoen)} · ${displayNumber(aldi)}`, van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "" },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
@@ -1707,7 +1707,7 @@ const VERKOOP_KANAAL_REGIO_VOLGORDE = [
   ["VeePee", "EUROPA"],
   ["Bol.com", "BENELUX"], ["Groupon NL", "BENELUX"], ["Groupon BE", "BENELUX"], ["iBood", "BENELUX"],
   ["Mediahuis", "BENELUX"], ["NewReturns", "BENELUX"], ["VakantieVeilingen", "BENELUX"], ["PVW", "BENELUX"],
-  ["Voordeelvanger", "BENELUX"], ["Amazon", "BENELUX"], ["ESSIM", "BENELUX"],
+  ["Voordeelvanger", "BENELUX"], ["Amazon", "BENELUX"], ["ESSIM", "BENELUX"], ["Dagknaller", "BENELUX"],
   ["ALDI Online", "ALDI"],
 ];
 
