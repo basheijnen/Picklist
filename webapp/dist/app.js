@@ -1610,20 +1610,23 @@ function renderVerkoopKlantFilters() {
   });
 }
 
-function verkoopAggregeerPerPakketEnKanaal(orders) {
+function verkoopAggregeerPerPakket(orders) {
+  // Een totaalrij per pakketnummer, over alle kanalen heen opgeteld -- de
+  // export (verkoopExporteren) blijft juist per order/stuk ongeaggregeerd,
+  // dat verschil is bewust: de tabel is een overzicht, de export is detail.
   const groepen = new Map();
   orders.forEach((order) => {
-    const key = `${order.pakketnummer}\u0000${order.kanaal}`;
-    groepen.set(key, (groepen.get(key) || 0) + order.aantal);
+    groepen.set(order.pakketnummer, (groepen.get(order.pakketnummer) || 0) + order.aantal);
   });
-  return [...groepen.entries()].map(([key, aantal]) => {
-    const [pakketnummer, kanaal] = key.split("\u0000");
-    return { pakketnummer, kanaal, naam: verkoopPakketnaam(pakketnummer), aantal };
-  });
+  return [...groepen.entries()].map(([pakketnummer, aantal]) => ({
+    pakketnummer,
+    naam: verkoopPakketnaam(pakketnummer),
+    aantal,
+  }));
 }
 
 function renderVerkoopTable(orders) {
-  const rijen = verkoopAggregeerPerPakketEnKanaal(orders);
+  const rijen = verkoopAggregeerPerPakket(orders);
   const { kolom, richting } = verkoopSort;
   rijen.sort((a, b) => {
     const factor = richting === "asc" ? 1 : -1;
@@ -1634,7 +1637,6 @@ function renderVerkoopTable(orders) {
     .map((rij) => `<tr>
       <td>${escapeHtml(rij.pakketnummer)}</td>
       <td>${escapeHtml(rij.naam)}</td>
-      <td>${escapeHtml(rij.kanaal)}</td>
       <td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td>
     </tr>`)
     .join("");
