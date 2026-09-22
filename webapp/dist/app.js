@@ -1153,6 +1153,10 @@ function loadNazendingComponents() {
 // `gedeeldDoosnummer` overschrijft de DOZEN-regel van dit pakket met het
 // doosnummer dat voor de hele bundel gekozen is (zie bundelKlantDirect) —
 // zonder die override valt terug op het eigen BOM-doosnummer van dit pakket.
+// Meerdere samengevoegde bestellingen van hetzelfde pakketnummer (aantal>1)
+// gaan altijd in die ene gedeelde doos, dus de DOZEN-regel blijft altijd 1
+// sticker — nooit het aantal bestellingen, anders telt bijv. 3x hetzelfde
+// pakket in 1 doos als 3 stickers i.p.v. 1.
 function buildBundelPakketDataUitRegel(pakketnummer, aantal, gedeeldDoosnummer) {
   const info = (window.PICKLIST_PACKAGES || []).find((entry) => entry.pakketnummer === pakketnummer);
   const relatedEntries = (window.PICKLIST_BOM || []).filter((entry) => entry.pakketnummer === pakketnummer);
@@ -1163,7 +1167,7 @@ function buildBundelPakketDataUitRegel(pakketnummer, aantal, gedeeldDoosnummer) 
     soort: entry.soort,
     groep: entry.groep,
     volgorde: entry.volgorde,
-    aantal: entry.gebied === "DOZEN" ? aantal : Math.round(entry.aantal_per_pakket * aantal),
+    aantal: entry.gebied === "DOZEN" ? 1 : Math.round(entry.aantal_per_pakket * aantal),
     tracking: "",
   }));
   return { pakketnummer, pakketnaam: info.pakketnaam, volledig: false, entries };
