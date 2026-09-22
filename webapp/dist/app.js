@@ -1362,28 +1362,51 @@ function verkoopAlleSeizoenen() {
     });
 }
 
-function renderVerkoopSeizoenFilters() {
+// Titel ("Verkopen 2026-2027") en het uitklapmenu ernaast om van seizoen te
+// wisselen — vervangt de eerdere rij losse knoppen onder de datumvelden,
+// die te veel ruimte innamen.
+function renderVerkoopSeizoenDropdown() {
   const seizoenen = verkoopAlleSeizoenen();
-  const container = document.querySelector("#verkoopSeizoenFilters");
-  if (seizoenen.length < 2) { container.replaceChildren(); return; }
+  const toggle = document.querySelector("#verkoopSeizoenToggle");
+  const dropdown = document.querySelector("#verkoopSeizoenDropdown");
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
-  const huidigeTot = document.querySelector("#verkoopTotDatum").value;
-  container.innerHTML = seizoenen
-    .map((seizoen, index) => {
-      const actief = seizoen.van === huidigeVan && seizoen.tot === huidigeTot;
-      const kleur = VERKOOP_KLANT_KLEUREN[index % VERKOOP_KLANT_KLEUREN.length];
-      return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-van="${escapeHtml(seizoen.van)}" data-tot="${escapeHtml(seizoen.tot)}" style="--klant-kleur:${kleur}">${escapeHtml(seizoen.label)}</button>`;
+
+  // De titel volgt het seizoen van de actieve Van-datum, ook als Van/Tot
+  // niet precies een heel seizoen bestrijkt (bijv. na "Deze week" klikken).
+  const actieveSeizoenStart = verkoopHuidigSeizoenStart(huidigeVan || todayIso());
+  const actieveSeizoenJaar = Number(actieveSeizoenStart.slice(0, 4));
+  document.querySelector("#verkoopTitelSeizoen").textContent = `${actieveSeizoenJaar}-${actieveSeizoenJaar + 1}`;
+
+  if (seizoenen.length < 2) {
+    toggle.hidden = true;
+    dropdown.hidden = true;
+    return;
+  }
+  toggle.hidden = false;
+  dropdown.innerHTML = seizoenen
+    .map((seizoen) => {
+      const actief = seizoen.van === actieveSeizoenStart;
+      return `<li><button type="button" class="${actief ? "is-actief" : ""}" data-van="${escapeHtml(seizoen.van)}" data-tot="${escapeHtml(seizoen.tot)}">${escapeHtml(seizoen.label)}</button></li>`;
     })
     .join("");
-  container.querySelectorAll("button").forEach((knop) => {
-    knop.addEventListener("click", () => {
+  dropdown.querySelectorAll("button").forEach((knop) => {
+    // mousedown (not click) fires before the toggle's own blur/outside-click
+    // handling, so the dropdown is still there to read from.
+    knop.addEventListener("mousedown", (event) => {
+      event.preventDefault();
       document.querySelector("#verkoopVanDatum").value = knop.dataset.van;
       document.querySelector("#verkoopTotDatum").value = knop.dataset.tot;
+      sluitVerkoopSeizoenDropdown();
       // Blijf in de weergave waar je al in zat (tabel/kalender/regio) — een
       // seizoen kiezen hoeft je niet terug te zetten naar Tabel.
       renderVerkoopDialog();
     });
   });
+}
+
+function sluitVerkoopSeizoenDropdown() {
+  document.querySelector("#verkoopSeizoenDropdown").hidden = true;
+  document.querySelector("#verkoopSeizoenToggle").setAttribute("aria-expanded", "false");
 }
 
 async function verstuurNaarVerkoop(imp, buttonEl) {
@@ -1727,7 +1750,7 @@ function renderVerkoopRegio() {
 }
 
 function renderVerkoopDialog() {
-  renderVerkoopSeizoenFilters();
+  renderVerkoopSeizoenDropdown();
   renderVerkoopTiles();
   renderVerkoopKlantFilters();
   const gefilterd = verkoopGefilterdeOrders();
@@ -2570,6 +2593,23 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   verkoopDialog.showModal();
 });
 document.querySelector("#closeVerkoopDialog").addEventListener("click", () => verkoopDialog.close());
+document.querySelector("#verkoopSeizoenToggle").addEventListener("click", (event) => {
+  event.stopPropagation();
+  const dropdown = document.querySelector("#verkoopSeizoenDropdown");
+  const opent = dropdown.hidden;
+  if (opent) {
+    dropdown.hidden = false;
+    document.querySelector("#verkoopSeizoenToggle").setAttribute("aria-expanded", "true");
+  } else {
+    sluitVerkoopSeizoenDropdown();
+  }
+});
+document.addEventListener("click", (event) => {
+  const dropdown = document.querySelector("#verkoopSeizoenDropdown");
+  if (!dropdown.hidden && !dropdown.contains(event.target) && event.target !== document.querySelector("#verkoopSeizoenToggle")) {
+    sluitVerkoopSeizoenDropdown();
+  }
+});
 document.querySelector("#verkoopExportButton").addEventListener("click", verkoopExporteren);
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);

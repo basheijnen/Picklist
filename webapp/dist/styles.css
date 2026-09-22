@@ -38,6 +38,13 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .import-panel h2 { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .eyebrow { display: block; margin-bottom: 6px; color: #397560; font-size: .75rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.verkoop-titel-wrap { position: relative; display: inline-flex; align-items: center; gap: 6px; }
+.verkoop-titel-wrap h2 { margin: 0; }
+.verkoop-seizoen-toggle { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 0; border-radius: 999px; color: var(--muted); background: transparent; cursor: pointer; }
+.verkoop-seizoen-toggle:hover { background: #edf3ef; color: var(--brand); }
+.verkoop-seizoen-toggle[aria-expanded="true"] { background: #edf3ef; color: var(--brand); }
+#verkoopSeizoenDropdown { min-width: 160px; left: auto; right: auto; }
+#verkoopSeizoenDropdown button.is-actief { color: var(--brand); font-weight: 800; }
 .drop-zone { min-height: 46px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border: 2px dashed #88aa9d; border-radius: 14px; color: var(--brand); background: #f4faf6; text-align: center; cursor: pointer; transition: .2s ease; }
 .drop-zone:hover, .drop-zone.is-dragging { border-color: var(--brand); background: #e8f4ed; transform: translateY(-2px); }
 .upload-icon { display: grid; place-items: center; width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; color: white; background: var(--brand); font-weight: 800; font-size: .85rem; }
