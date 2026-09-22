@@ -2179,6 +2179,17 @@ function displayNumber(value) {
   return Number.isInteger(value) ? String(value) : value.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
 }
 
+// Een doosnummer als "3" of "15" mag groot en opvallend, maar een langere
+// vrije tekst (bijv. "Doos 16 tubes") past dan niet meer netjes op de
+// pakketkaart en gaat lelijk op 2 regels breken — daarom kleiner lettertype
+// naarmate de tekst langer is, zodat het altijd op 1 regel past.
+function doosnummerFontKlasse(waarde) {
+  const lengte = String(waarde || "").length;
+  if (lengte <= 4) return "";
+  if (lengte <= 10) return " pakketkaart-doos-nummer-middel";
+  return " pakketkaart-doos-nummer-klein";
+}
+
 function displayTwoDecimals(value) {
   return value.toLocaleString("nl-NL", {
     minimumFractionDigits: 2,
@@ -2490,7 +2501,7 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
-        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(info ? info.doosnummers : "—")}</span></div>
+        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer${doosnummerFontKlasse(info ? info.doosnummers : "—")}">${escapeHtml(info ? info.doosnummers : "—")}</span></div>
       </div>`;
     pakketkaartenPanel.append(card);
   });
@@ -2570,7 +2581,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       ${isBundel && nz.klantnaam ? `<div class="pakketkaart-klantnaam">${escapeHtml(nz.klantnaam)}</div>` : ""}
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
-        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer">${escapeHtml(group.doosnummer)}</span></div>
+        <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer${doosnummerFontKlasse(group.doosnummer)}">${escapeHtml(group.doosnummer)}</span></div>
       </div>
       ${trackingRegels.length ? `<div class="pakketkaart-tracking"><span class="pakketkaart-doos-label">TRACKING:</span> ${trackingRegels.map(escapeHtml).join("<br>")}</div>` : ""}`;
     pakketkaartenPanel.append(card);
