@@ -333,6 +333,11 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-draft-edit:hover { text-decoration: underline; }
 .nazending-draft-remove { width: 26px; height: 26px; flex-shrink: 0; border: 0; border-radius: 7px; color: var(--danger); background: #f9e9e7; font-size: 1rem; cursor: pointer; }
 .nazending-add-another-button { margin-top: 12px; color: #2f7058; }
+.nazending-direct-samenvatting { display: grid; gap: 14px; margin-bottom: 8px; }
+.nazending-direct-samenvatting[hidden] { display: none; }
+.nazending-direct-totaal { margin: 0; padding: 10px 14px; border-radius: 10px; background: #e8f4ed; color: var(--brand); font-size: 1.05rem; font-weight: 800; }
+.nazending-direct-totaal span { font-size: 1.3rem; }
+#nazendingDirectMeerDetailButton { justify-self: start; color: var(--muted); font-size: .82rem; }
 .package-total-row.nazending-total-row { background: transparent; }
 .nazending-row { background: #fff4e6 !important; }
 .nazending-row:hover { background: #ffecd4 !important; }

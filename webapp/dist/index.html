@@ -266,15 +266,30 @@
         <input id="nazendingKlantnaam" placeholder="Bijv. Jansen" autocomplete="off">
       </label>
       <div id="nazendingDraftList" class="nazending-draft-list" hidden></div>
-      <label class="nazending-pakket-field">Pakketnummer
-        <div class="nazending-pakket-input-wrap">
-          <input id="nazendingPakketnummer" placeholder="Bijv. 11.1" autocomplete="off">
-          <ul id="nazendingPakketSuggestions" class="nazending-suggestions" hidden></ul>
-        </div>
-      </label>
-      <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
-      <div id="nazendingComponentRows" class="nazending-component-rows"></div>
-      <button id="addAnotherNazendingPakketButton" class="text-button nazending-add-another-button" type="button" hidden>+ Nog een pakket toevoegen</button>
+      <div id="nazendingDirectSamenvatting" class="nazending-direct-samenvatting" hidden>
+        <p class="nazending-direct-totaal"><span id="nazendingDirectTotaalPlanten"></span> planten in dit bundelpakket</p>
+        <label class="nazending-pakket-field">Doos
+          <div class="nazending-pakket-input-wrap nazending-doosnummer-wrap">
+            <input id="nazendingDirectDoosnummer" class="nazending-doosnummer" placeholder="Doosnummer" aria-label="Doosnummer" autocomplete="off">
+            <ul id="nazendingDirectDoosnummerSuggesties" class="nazending-suggestions nazending-doosnummer-suggestions" hidden></ul>
+          </div>
+        </label>
+        <label class="nazending-pakket-field">Tracking (optioneel)
+          <textarea id="nazendingDirectTracking" class="nazending-tracking" rows="2" placeholder="Trackingnummer"></textarea>
+        </label>
+        <button id="nazendingDirectMeerDetailButton" class="text-button" type="button">Liever per pakket losse doos/tracking instellen?</button>
+      </div>
+      <div id="nazendingPakketPicker">
+        <label class="nazending-pakket-field">Pakketnummer
+          <div class="nazending-pakket-input-wrap">
+            <input id="nazendingPakketnummer" placeholder="Bijv. 11.1" autocomplete="off">
+            <ul id="nazendingPakketSuggestions" class="nazending-suggestions" hidden></ul>
+          </div>
+        </label>
+        <p id="nazendingPakketNaam" class="nazending-pakket-naam"></p>
+        <div id="nazendingComponentRows" class="nazending-component-rows"></div>
+        <button id="addAnotherNazendingPakketButton" class="text-button nazending-add-another-button" type="button" hidden>+ Nog een pakket toevoegen</button>
+      </div>
       <p id="nazendingMessage" class="dialog-message" role="alert"></p>
     </div>
     <div class="dialog-actions">

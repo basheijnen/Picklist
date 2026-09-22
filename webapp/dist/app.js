@@ -40,8 +40,18 @@ const nazendingComponentRowsEl = document.querySelector("#nazendingComponentRows
 const nazendingMessage = document.querySelector("#nazendingMessage");
 const nazendingDraftListEl = document.querySelector("#nazendingDraftList");
 const addAnotherNazendingPakketButton = document.querySelector("#addAnotherNazendingPakketButton");
+const nazendingPakketPickerEl = document.querySelector("#nazendingPakketPicker");
+const nazendingDirectSamenvattingEl = document.querySelector("#nazendingDirectSamenvatting");
+const nazendingDirectTotaalPlantenEl = document.querySelector("#nazendingDirectTotaalPlanten");
+const nazendingDirectDoosnummerInput = document.querySelector("#nazendingDirectDoosnummer");
+const nazendingDirectTrackingInput = document.querySelector("#nazendingDirectTracking");
 let nazendingDraft = [];
 let nazendingSoort = "klacht";
+// True zolang de bundel-samenvatting (1 doos/tracking voor de hele bundel)
+// getoond wordt i.p.v. de normale pakket-voor-pakket invoer — alleen aan bij
+// binnenkomst via "Bundelen →" vanuit Dubbele klanten, waar de inhoud al
+// vaststaat en alleen doos+tracking nog gekozen hoeven te worden.
+let nazendingDirectModus = false;
 // Gezet wanneer de bundel-draft automatisch is voorgevuld vanuit "Dubbele
 // klanten" — bepaalt of saveNazending() de brontelling (orderCounts/
 // orderNames) mag verminderen. Bij een handmatig getypte bundel (nooit
@@ -901,6 +911,8 @@ function renderNazendingPakketSuggestions() {
 function openNazendingDialog(soort = "klacht") {
   nazendingSoort = soort;
   nazendingBrondata = null;
+  nazendingDirectModus = false;
+  renderNazendingDirectSamenvatting();
   const isBundel = soort === "bundel";
   document.querySelector("#nazendingDialogTitle").textContent = isBundel ? "Bundelpakket samenstellen" : "Klacht aanmaken";
   document.querySelector("#addAnotherNazendingPakketButton").textContent = isBundel
@@ -1013,10 +1025,8 @@ function bundelKlantDirect(entry) {
   // gaan in de praktijk in dezelfde ene doos — dus alvast hetzelfde
   // (gegokte) doosnummer voorinvullen i.p.v. voor elk pakket apart opnieuw
   // te moeten kiezen. Gebaseerd op het doosnummer van het eerste pakket;
-  // gewoon aanpasbaar per pakket als het toch andere dozen moeten worden.
-  const eersteInfo = entry.regels.length > 1
-    ? (window.PICKLIST_PACKAGES || []).find((p) => p.pakketnummer === entry.regels[0].pakketnummer)
-    : null;
+  // gewoon aanpasbaar als het toch een andere doos moet worden.
+  const eersteInfo = (window.PICKLIST_PACKAGES || []).find((p) => p.pakketnummer === entry.regels[0].pakketnummer);
   const gedeeldDoosnummer = eersteInfo && eersteInfo.doosnummers
     ? eersteInfo.doosnummers.split("+")[0].trim()
     : "";
@@ -1025,10 +1035,30 @@ function bundelKlantDirect(entry) {
     .filter(Boolean);
   nazendingBrondata = { naam: entry.naam };
   renderNazendingDraftList();
-  // Meteen het eerste pakket openklappen om te bewerken (doos/tracking) —
-  // anders staat er alleen een leeg "Pakketnummer"-veld, terwijl alles al
-  // bekend is en er niets hoeft te worden ingetypt.
-  if (nazendingDraft.length) switchToNazendingDraftItem(0);
+  // De inhoud is al 100% bekend (je hebt de pakketten net zelf aangevinkt in
+  // Dubbele klanten) — dus niet per pakket laten uitklappen om te bewerken,
+  // maar één overzichtelijke samenvatting met alleen nog doos + tracking.
+  nazendingDirectModus = true;
+  renderNazendingDirectSamenvatting();
+}
+
+// Toont de samenvatting (totaal planten + 1 gedeeld doos/tracking-veld)
+// i.p.v. de normale pakket-voor-pakket invoer. Wordt na opslaan/annuleren
+// en bij de gewone "+ Bundelen"/"+ Nazending"-knoppen weer teruggezet.
+function renderNazendingDirectSamenvatting() {
+  nazendingDirectSamenvattingEl.hidden = !nazendingDirectModus;
+  nazendingPakketPickerEl.hidden = nazendingDirectModus;
+  if (!nazendingDirectModus) return;
+  const totaalPlanten = nazendingDraft.reduce(
+    (sum, p) => sum + p.entries
+      .filter((e) => ["KOELING", "KAS", "KAMER"].includes(e.gebied))
+      .reduce((s, e) => s + e.aantal, 0),
+    0
+  );
+  nazendingDirectTotaalPlantenEl.textContent = displayNumber(totaalPlanten);
+  const doosEntry = nazendingDraft.flatMap((p) => p.entries).find((e) => e.gebied === "DOZEN");
+  nazendingDirectDoosnummerInput.value = doosEntry ? doosEntry.item : "";
+  nazendingDirectTrackingInput.value = "";
 }
 
 // Reads whatever pakket is currently shown in the picker (not yet added to
@@ -1112,6 +1142,12 @@ function applyNazendingSelectionToRows(entries) {
 // its doos after all) without losing whatever you're currently filling in —
 // the pakket you're on gets folded back into the draft list first.
 function switchToNazendingDraftItem(index) {
+  // Vanuit de samenvatting toch 1 specifiek pakket willen fijnafstellen? Dan
+  // val je terug op de normale, uitgebreide pakket-voor-pakket invoer.
+  if (nazendingDirectModus) {
+    nazendingDirectModus = false;
+    renderNazendingDirectSamenvatting();
+  }
   const current = readCurrentNazendingSelection();
   if (current.status === "ok") nazendingDraft.push(current.data);
   const entry = nazendingDraft[index];
@@ -1136,10 +1172,23 @@ function addAnotherNazendingPakket() {
 }
 
 function saveNazending() {
-  const current = readCurrentNazendingSelection();
-  if (current.status === "invalid") { nazendingMessage.textContent = current.message; return; }
-  const pakketten = [...nazendingDraft];
-  if (current.status === "ok") pakketten.push(current.data);
+  let pakketten;
+  if (nazendingDirectModus) {
+    // Alle inhoud staat al vast (uit Dubbele klanten) — alleen het gedeelde
+    // doosnummer/tracking nog toepassen op elk pakket in de draft.
+    const doosnummer = nazendingDirectDoosnummerInput.value.trim();
+    if (!doosnummer) { nazendingMessage.textContent = "Vul een doosnummer in."; return; }
+    const tracking = nazendingDirectTrackingInput.value.trim();
+    pakketten = nazendingDraft.map((p) => ({
+      ...p,
+      entries: p.entries.map((entry) => (entry.gebied === "DOZEN" ? { ...entry, item: doosnummer, tracking } : entry)),
+    }));
+  } else {
+    const current = readCurrentNazendingSelection();
+    if (current.status === "invalid") { nazendingMessage.textContent = current.message; return; }
+    pakketten = [...nazendingDraft];
+    if (current.status === "ok") pakketten.push(current.data);
+  }
   if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe."; return; }
   nazendingen.push({
     id: makeImportId(),
@@ -1198,6 +1247,7 @@ function saveNazending() {
   }
   saveNazendingen();
   nazendingDialog.close();
+  nazendingDirectModus = false;
   renderAll();
   if (terugNaarDubbeleKlanten) openKlantDuplicatenDialog();
 }
@@ -2764,10 +2814,15 @@ function sluitNazendingDialog() {
   // terug naar dat overzicht i.p.v. helemaal terug naar het hoofdscherm.
   const terugNaarDubbeleKlanten = Boolean(nazendingBrondata);
   nazendingDialog.close();
+  nazendingDirectModus = false;
   if (terugNaarDubbeleKlanten) openKlantDuplicatenDialog();
 }
 document.querySelector("#closeNazendingDialog").addEventListener("click", sluitNazendingDialog);
 document.querySelector("#cancelNazendingButton").addEventListener("click", sluitNazendingDialog);
+document.querySelector("#nazendingDirectMeerDetailButton").addEventListener("click", () => {
+  if (nazendingDraft.length) switchToNazendingDraftItem(0);
+});
+wireDoosnummerSuggestions(nazendingDirectDoosnummerInput, document.querySelector("#nazendingDirectDoosnummerSuggesties"), getKnownDoosnummers);
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
 document.querySelector("#bundelButton").addEventListener("click", () => openNazendingDialog("bundel"));
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
