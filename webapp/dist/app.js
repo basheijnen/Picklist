@@ -2862,6 +2862,12 @@ function promptImportName(suggestedName) {
   });
 }
 
+// Onthoudt of de "Klachten & bundels"-sublijst is uitgeklapt — staat
+// standaard dicht (die rijen zijn vooral ruis als je alleen de gewone
+// lijsten wil zien) en blijft open/dicht staan over her-renders heen zolang
+// de pagina niet ververst wordt.
+let klachtenGroupUitgeklapt = false;
+
 function renderImportsList() {
   const totalCount = imports.length + nazendingen.length;
   importsPanel.hidden = totalCount === 0;
@@ -2941,7 +2947,10 @@ function renderImportsList() {
     groupRow.className = `import-row${allActive ? "" : " is-held"}`;
     groupRow.innerHTML = `
       <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${allActive ? "checked" : ""}><span>Meetellen</span></label>
-      <span class="nazending-list-label">${groupLabel}</span>
+      <span class="nazending-list-label">
+        <button type="button" class="nazending-sublist-toggle${klachtenGroupUitgeklapt ? " is-open" : ""}" aria-label="${klachtenGroupUitgeklapt ? "Inklappen" : "Uitklappen"}" aria-expanded="${klachtenGroupUitgeklapt}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        ${groupLabel}
+      </span>
       <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>`;
     const groupCheckbox = groupRow.querySelector(".import-active-checkbox");
     groupCheckbox.indeterminate = someActive && !allActive;
@@ -2957,6 +2966,11 @@ function renderImportsList() {
 
     const subList = document.createElement("div");
     subList.className = "nazending-sublist";
+    subList.hidden = !klachtenGroupUitgeklapt;
+    groupRow.querySelector(".nazending-sublist-toggle").addEventListener("click", () => {
+      klachtenGroupUitgeklapt = !klachtenGroupUitgeklapt;
+      renderImportsList();
+    });
     nazendingen.forEach((nz) => {
       const nzActive = nz.active !== false;
       const subRow = document.createElement("div");
