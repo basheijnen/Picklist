@@ -236,8 +236,6 @@ function createHeldImport(name) {
   return held;
 }
 
-const TE_BUNDELEN_NAAM = "TE BUNDELEN";
-
 // Zie saveKlantDuplicatenGezien hierboven.
 let klantDuplicatenGezien = new Set();
 
@@ -319,20 +317,41 @@ function verwijderOrderNamen(naam, pakketnummer, aantal) {
   });
 }
 
-function verplaatsNaarTeBundelen(geselecteerd) {
-  if (!geselecteerd.length) return;
-  const teBundelen = imports.find((imp) => imp.name === TE_BUNDELEN_NAAM) || createHeldImport(TE_BUNDELEN_NAAM);
+// Verplaatst geselecteerde klant-regels (uit Dubbele klanten) naar een
+// gekozen bestaande of nieuwe lijst — bijv. om ze apart te houden totdat je
+// ze los afhandelt, zonder ze meteen te bundelen.
+function verplaatsGeselecteerdNaarLijst(geselecteerd, doelImport) {
+  if (!geselecteerd.length || !doelImport) return;
   geselecteerd.forEach(({ naam, kanaal, regels }) => {
     regels.forEach(({ pakketnummer, aantal }) => {
       subtractFromActiveImports(pakketnummer, aantal);
       verwijderOrderNamen(naam, pakketnummer, aantal);
-      teBundelen.orderCounts.set(pakketnummer, (teBundelen.orderCounts.get(pakketnummer) || 0) + aantal);
-      if (!teBundelen.orderNames) teBundelen.orderNames = [];
-      for (let i = 0; i < aantal; i += 1) teBundelen.orderNames.push({ pakketnummer, naam, kanaal });
+      doelImport.orderCounts.set(pakketnummer, (doelImport.orderCounts.get(pakketnummer) || 0) + aantal);
+      if (!doelImport.orderNames) doelImport.orderNames = [];
+      for (let i = 0; i < aantal; i += 1) doelImport.orderNames.push({ pakketnummer, naam, kanaal });
     });
   });
   saveImportState();
   renderAll();
+}
+
+// Zet een bundelpakket (met herkomst, zie saveNazending) terug naar een
+// gekozen lijst: de pakketten komen weer terug als gewone orderCounts/
+// orderNames (dus ook weer zichtbaar in "Dubbele klanten" als die klant
+// dan weer 2+ regels heeft), en het bundelpakket zelf verdwijnt.
+function herstelNazendingNaarLijst(nz, doelImport) {
+  if (!nz.herkomst || !doelImport) return;
+  nz.herkomst.regels.forEach(({ pakketnummer, aantal }) => {
+    doelImport.orderCounts.set(pakketnummer, (doelImport.orderCounts.get(pakketnummer) || 0) + aantal);
+    if (!doelImport.orderNames) doelImport.orderNames = [];
+    for (let i = 0; i < aantal; i += 1) {
+      doelImport.orderNames.push({ pakketnummer, naam: nz.herkomst.naam, kanaal: nz.herkomst.kanaal });
+    }
+  });
+  nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
+  saveImportState();
+  saveNazendingen();
+  if (imports.length || nazendingen.length) renderAll(); else resetImport();
 }
 
 const klantDuplicatenDialog = document.querySelector("#klantDuplicatenDialog");
@@ -551,6 +570,65 @@ function printKlantOverzicht() {
   document.body.classList.add("printing-klantoverzicht");
   window.print();
 }
+
+function closeVerplaatsMenu() {
+  const menuEl = document.querySelector("#klantDuplicatenVerplaatsMenu");
+  menuEl.hidden = true;
+  menuEl.replaceChildren();
+}
+
+// Kiezen naar welke lijst de geselecteerde klant-regels verplaatst moeten
+// worden. Bij precies 1 gemeenschappelijk kanaal gebeurt dit direct zonder
+// dit menu (zie de klik-handler hieronder) — dit menu is voor de rest van
+// de gevallen: meerdere kanalen, of gewoon een andere bestaande/nieuwe lijst.
+function openVerplaatsMenu(geselecteerd, kanalen) {
+  const menuEl = document.querySelector("#klantDuplicatenVerplaatsMenu");
+  const kanaalButtons = kanalen
+    .map((kanaal) => `<button type="button" class="verplaats-kanaal-target" data-kanaal="${escapeHtml(kanaal)}">${escapeHtml(kanaal)}</button>`)
+    .join("");
+  const importButtons = imports
+    .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
+    .join("");
+  menuEl.innerHTML = `
+    <span>Verplaatsen naar kanaal:</span>
+    ${kanaalButtons || "<span>—</span>"}
+    <span>of lijst:</span>
+    ${importButtons || "<span>—</span>"}
+    <input type="text" class="count-diff-new-name" placeholder="Nieuwe naam…">
+    <button type="button" class="count-diff-new-confirm">Aanmaken &amp; verplaatsen</button>
+    <button type="button" class="count-diff-cancel">Annuleren</button>`;
+  menuEl.hidden = false;
+  const uitvoeren = (doel, lijst = geselecteerd) => {
+    verplaatsGeselecteerdNaarLijst(lijst, doel);
+    closeVerplaatsMenu();
+    klantDuplicatenDialog.close();
+  };
+  menuEl.querySelectorAll(".verplaats-kanaal-target").forEach((button) => {
+    button.addEventListener("click", () => {
+      const kanaal = button.dataset.kanaal;
+      // Alleen de regels van klanten die (ook) dit kanaal hebben gaan mee —
+      // de rest van de selectie blijft gewoon staan voor een volgende keuze.
+      const subset = geselecteerd
+        .filter((entry) => entry.kanaal && entry.kanaal.split(" / ").includes(kanaal));
+      const doel = imports.find((imp) => imp.name === kanaal) || createHeldImport(kanaal);
+      doel.active = true;
+      uitvoeren(doel, subset);
+    });
+  });
+  menuEl.querySelectorAll(".count-diff-target").forEach((button) => {
+    button.addEventListener("click", () => uitvoeren(imports.find((imp) => imp.id === button.dataset.id)));
+  });
+  menuEl.querySelector(".count-diff-new-confirm").addEventListener("click", () => {
+    const nameInput = menuEl.querySelector(".count-diff-new-name");
+    const name = nameInput.value.trim();
+    if (!name) { nameInput.focus(); return; }
+    const doel = createHeldImport(name);
+    doel.active = true;
+    uitvoeren(doel);
+  });
+  menuEl.querySelector(".count-diff-cancel").addEventListener("click", closeVerplaatsMenu);
+}
+
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
@@ -1096,7 +1174,7 @@ function bundelKlantDirect(entry) {
   nazendingDraft = entry.regels
     .map((r) => buildBundelPakketDataUitRegel(r.pakketnummer, r.aantal, gedeeldDoosnummer))
     .filter(Boolean);
-  nazendingBrondata = { naam: entry.naam };
+  nazendingBrondata = { naam: entry.naam, kanaal: entry.kanaal };
   renderNazendingDraftList();
   // De inhoud is al 100% bekend (je hebt de pakketten net zelf aangevinkt in
   // Dubbele klanten) — dus niet per pakket laten uitklappen om te bewerken,
@@ -1242,9 +1320,18 @@ function saveNazending() {
     const doosnummer = nazendingDirectDoosnummerInput.value.trim();
     if (!doosnummer) { nazendingMessage.textContent = "Vul een doosnummer in."; return; }
     const tracking = nazendingDirectTrackingInput.value.trim();
-    pakketten = nazendingDraft.map((p) => ({
+    // Alleen het eerste pakket krijgt een "echte" doosregel (met aantal) —
+    // de rest rijdt gratis mee in diezelfde ene fysieke doos (zie
+    // groupNazendingByDoos hieronder), anders telt de doos/stickers dubbel
+    // voor wat feitelijk 1 doos is.
+    pakketten = nazendingDraft.map((p, index) => ({
       ...p,
-      entries: p.entries.map((entry) => (entry.gebied === "DOZEN" ? { ...entry, item: doosnummer, tracking } : entry)),
+      entries: p.entries.map((entry) => {
+        if (entry.gebied !== "DOZEN") return entry;
+        return index === 0
+          ? { ...entry, item: doosnummer, tracking }
+          : { ...entry, item: "", tracking: "", aantal: 0 };
+      }),
     }));
   } else {
     const current = readCurrentNazendingSelection();
@@ -1253,6 +1340,32 @@ function saveNazending() {
     if (current.status === "ok") pakketten.push(current.data);
   }
   if (!pakketten.length) { nazendingMessage.textContent = "Voeg minstens één pakket toe."; return; }
+  // Voorgevuld vanuit "Dubbele klanten": de eenheden die daadwerkelijk in
+  // deze bundel terechtkomen (per pakketnummer het DOZEN-aantal, dat is de
+  // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
+  // meetellen als los pakket én als bundel. In directe modus is een deel
+  // van de doosregels net op 0 gezet om dubbeltellen bij het printen te
+  // voorkomen (zie hierboven) — de brontelling komt daarom uit de
+  // ongewijzigde nazendingDraft, niet uit die aangepaste `pakketten`.
+  let herkomst = null;
+  if (nazendingBrondata) {
+    const bronPakketten = nazendingDirectModus ? nazendingDraft : pakketten;
+    const perPakket = new Map();
+    bronPakketten.forEach((p) => {
+      const doosEntry = p.entries.find((entry) => entry.gebied === "DOZEN");
+      const aantal = doosEntry ? doosEntry.aantal : 0;
+      if (aantal > 0) perPakket.set(p.pakketnummer, (perPakket.get(p.pakketnummer) || 0) + aantal);
+    });
+    // Bewaard op het record zelf (niet alleen in het module-brede
+    // nazendingBrondata, dat na het opslaan meteen weer leeg wordt) zodat
+    // een later "terugzetten" precies weet wat en hoeveel er weer terug
+    // de actieve lijsten in moet.
+    herkomst = {
+      naam: nazendingBrondata.naam,
+      kanaal: nazendingBrondata.kanaal || "",
+      regels: [...perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal })),
+    };
+  }
   nazendingen.push({
     id: makeImportId(),
     active: true,
@@ -1270,6 +1383,7 @@ function saveNazending() {
     // way to say which other box it physically ships in besides "the one
     // its bundle-mate kept", which only this per-pakket breakdown captures.
     pakketten: pakketten.map((p) => ({ pakketnummer: p.pakketnummer, pakketnaam: p.pakketnaam, entries: p.entries })),
+    herkomst,
   });
   // Een hier getypt nieuw doosnummer (niet uit de BOM, bijv. "Doos 12 tubes")
   // onthouden als extra suggestie voor volgende keren.
@@ -1285,25 +1399,14 @@ function saveNazending() {
     });
   });
   if (extraDoosnummersGewijzigd) saveExtraDoosnummers();
-  // Voorgevuld vanuit "Dubbele klanten": de eenheden die daadwerkelijk in
-  // deze bundel terechtkomen (per pakketnummer het DOZEN-aantal, dat is de
-  // brontelling) gaan eraf bij de actieve lijsten — zodat ze niet dubbel
-  // meetellen als los pakket én als bundel. Alleen wat je zelf uit de draft
-  // hebt verwijderd of niet hebt opgeslagen blijft dus gewoon actief staan.
   // Kwam deze bundel uit "Dubbele klanten", dan ga je na het opslaan terug
   // naar dat overzicht — net als bij annuleren — zodat je meteen ziet welke
   // pakketten van deze klant nog over zijn (en welke net verdwenen zijn).
   const terugNaarDubbeleKlanten = Boolean(nazendingBrondata);
-  if (nazendingBrondata) {
-    const perPakket = new Map();
-    pakketten.forEach((p) => {
-      const doosEntry = p.entries.find((entry) => entry.gebied === "DOZEN");
-      const aantal = doosEntry ? doosEntry.aantal : 0;
-      if (aantal > 0) perPakket.set(p.pakketnummer, (perPakket.get(p.pakketnummer) || 0) + aantal);
-    });
-    perPakket.forEach((aantal, pakketnummer) => {
+  if (herkomst) {
+    herkomst.regels.forEach(({ pakketnummer, aantal }) => {
       subtractFromActiveImports(pakketnummer, aantal);
-      verwijderOrderNamen(nazendingBrondata.naam, pakketnummer, aantal);
+      verwijderOrderNamen(herkomst.naam, pakketnummer, aantal);
     });
     saveImportState();
     nazendingBrondata = null;
@@ -2200,7 +2303,7 @@ function renderPackages(orderCounts) {
       const stukAantal = nzContent.reduce((sum, entry) => sum + entry.aantal, 0);
       const hasPokon = nz.entries.some((entry) => entry.gebied === "POKON");
       const doosEntries = nz.entries.filter((entry) => entry.gebied === "DOZEN");
-      const doosnummers = doosEntries.map((entry) => entry.item).join(" + ");
+      const doosnummers = doosEntries.map((entry) => entry.item).filter(Boolean).join(" + ");
       // The badge for a "volledig" klacht shows how many boxes it actually
       // ships in — not how many pakketten were bundled into it — since
       // that's what determines whether it reads as 1 pakket or more.
@@ -2316,6 +2419,45 @@ function finalizeDecrease(pakketnummer, diff, targetImportId, newName) {
   }
   saveImportState();
   renderAll();
+}
+
+function closeHerstelMenu() {
+  document.querySelectorAll(".herstel-menu-row").forEach((row) => row.remove());
+}
+
+// Kiezen naar welke geladen lijst een bundelpakket teruggezet moet worden —
+// zelfde opzet als de wachtlijst-menu bij het verlagen van een aantal.
+function openHerstelMenu(subRow, nz) {
+  closeHerstelMenu();
+  closeCountDiffMenu();
+  const importButtons = imports
+    .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
+    .join("");
+  const menuRow = document.createElement("div");
+  menuRow.className = "herstel-menu-row";
+  menuRow.innerHTML = `<div class="count-diff-menu">
+    <span>Terugzetten naar lijst:</span>
+    ${importButtons}
+    <input type="text" class="count-diff-new-name" placeholder="Nieuwe naam…">
+    <button type="button" class="count-diff-new-confirm">Aanmaken &amp; terugzetten</button>
+    <button type="button" class="count-diff-cancel">Annuleren</button>
+  </div>`;
+  subRow.insertAdjacentElement("afterend", menuRow);
+  menuRow.querySelectorAll(".count-diff-target").forEach((button) => {
+    button.addEventListener("click", () => {
+      const doel = imports.find((imp) => imp.id === button.dataset.id);
+      herstelNazendingNaarLijst(nz, doel);
+    });
+  });
+  menuRow.querySelector(".count-diff-new-confirm").addEventListener("click", () => {
+    const nameInput = menuRow.querySelector(".count-diff-new-name");
+    const name = nameInput.value.trim();
+    if (!name) { nameInput.focus(); return; }
+    const doel = createHeldImport(name);
+    doel.active = true;
+    herstelNazendingNaarLijst(nz, doel);
+  });
+  menuRow.querySelector(".count-diff-cancel").addEventListener("click", closeHerstelMenu);
 }
 
 function buildPakketkaarten(orderCounts, { includeNazendingen = true, showStickers = false } = {}) {
@@ -2630,15 +2772,22 @@ function renderImportsList() {
       const subRow = document.createElement("div");
       subRow.className = `nazending-subrow${nzActive ? "" : " is-held"}`;
       const isBundel = nz.soort === "bundel";
+      const herstelButtonHtml = nz.herkomst
+        ? `<button type="button" class="nazending-herstel-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} terugzetten naar een lijst" title="Terugzetten naar een lijst"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v1"/></svg></button>`
+        : "";
       subRow.innerHTML = `
         <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span>${escapeHtml(nz.pakketnummer)}</span><span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundel" : "Klacht"}</span></label>
-        <button type="button" class="nazending-delete-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} verwijderen">×</button>`;
+        <span class="nazending-subrow-acties">${herstelButtonHtml}<button type="button" class="nazending-delete-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} verwijderen">×</button></span>`;
       subRow.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
         nz.active = event.target.checked;
         closeCountDiffMenu();
         saveNazendingen();
         renderAll();
       });
+      const herstelButton = subRow.querySelector(".nazending-herstel-button");
+      if (herstelButton) {
+        herstelButton.addEventListener("click", () => openHerstelMenu(subRow, nz));
+      }
       subRow.querySelector(".nazending-delete-button").addEventListener("click", async () => {
         if (!(await confirmDialog(`${isBundel ? "Bundelpakket" : "Klacht"} "${nz.pakketnummer}" verwijderen?`))) return;
         nazendingen = nazendingen.filter((entry) => entry.id !== nz.id);
@@ -2900,11 +3049,30 @@ klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
 document.querySelector("#printKlantOverzichtButton").addEventListener("click", printKlantOverzicht);
 document.querySelector("#verplaatsKlantDuplicatenButton").addEventListener("click", () => {
   const geselecteerd = [...klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-row")]
-    .filter((row) => row.querySelector("input").checked)
-    .map((row) => row._entry);
-  if (!geselecteerd.length) return;
-  verplaatsNaarTeBundelen(geselecteerd);
-  klantDuplicatenDialog.close();
+    .filter((row) => row.querySelector(".klant-duplicaat-select").checked)
+    .map((row) => {
+      const entry = row._entry;
+      const regels = [...row.querySelectorAll(".klant-duplicaat-regel-checkbox")]
+        .filter((checkbox) => checkbox.checked)
+        .map((checkbox) => entry.regels[Number(checkbox.dataset.regelIndex)]);
+      return { naam: entry.naam, kanaal: entry.kanaal, regels };
+    })
+    .filter((entry) => entry.regels.length);
+  if (!geselecteerd.length) {
+    klantDuplicatenMessage.textContent = "Vink minstens één pakket aan om te verplaatsen.";
+    return;
+  }
+  // Delen alle geselecteerde klanten precies 1 kanaal, dan meteen daarheen
+  // verplaatsen (bijv. "iBood") zonder eerst te hoeven kiezen.
+  const kanalen = [...new Set(geselecteerd.flatMap((entry) => entry.kanaal ? entry.kanaal.split(" / ") : []))];
+  if (kanalen.length === 1) {
+    const doel = imports.find((imp) => imp.name === kanalen[0]) || createHeldImport(kanalen[0]);
+    doel.active = true;
+    verplaatsGeselecteerdNaarLijst(geselecteerd, doel);
+    klantDuplicatenDialog.close();
+    return;
+  }
+  openVerplaatsMenu(geselecteerd, kanalen);
 });
 nazendingPakketnummerInput.addEventListener("input", () => {
   loadNazendingComponents();

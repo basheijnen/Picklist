@@ -98,6 +98,10 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .nazending-subrow-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .nazending-subrow-toggle input { width: 15px; height: 15px; }
 .nazending-subrow .nazending-delete-button { width: 22px; height: 22px; font-size: .9rem; }
+.nazending-subrow-acties { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.nazending-herstel-button { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 0; border-radius: 8px; color: #2f7058; background: #e8f4ed; cursor: pointer; }
+.nazending-herstel-button:hover { background: #d7ebdf; }
+.herstel-menu-row { margin: 2px 0 6px; padding: 8px 10px; border-radius: 8px; background: #f4f8f5; }
 .import-meta-row { grid-area: meta; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .import-order-total { color: var(--muted); font-size: .74rem; white-space: nowrap; }
 .import-verkoop-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
@@ -105,6 +109,7 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .import-delete-button { grid-area: delete; width: 32px; height: 32px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.15rem; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
+.count-diff-menu[hidden] { display: none; }
 .count-diff-menu > span { margin-right: 4px; font-weight: 750; color: var(--ink); }
 .count-diff-menu button { min-height: 32px; padding: 0 12px; border: 1px solid #bdcbc4; border-radius: 8px; color: var(--ink); background: white; font-weight: 650; cursor: pointer; }
 .count-diff-menu button:hover { border-color: var(--brand); }
