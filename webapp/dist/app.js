@@ -1544,7 +1544,12 @@ function renderVerkoopTiles() {
   // van/tot/zoek: clicking a tile jumps the Van/Tot fields below straight to
   // what that tile is showing, instead of making you set them by hand.
   const tegels = [
-    { label: "Totaal seizoen · ALDI", waarde: `${displayNumber(totaalSeizoen)} · ${displayNumber(aldi)}`, van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "" },
+    {
+      label: "Totaal seizoen",
+      waarde: displayNumber(totaalSeizoen),
+      badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
+      van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "",
+    },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
@@ -1559,7 +1564,10 @@ function renderVerkoopTiles() {
       const klikbaar = tegel.van !== undefined;
       const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && (tegel.zoek || "") === huidigeZoek
         && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal);
-      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span></div>`;
+      const badge = tegel.badge
+        ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
+        : "";
+      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${badge}</div>`;
     })
     .join("");
   [...tilesEl.children].forEach((el, index) => {
@@ -1749,9 +1757,11 @@ function renderVerkoopRegio() {
   const europa = sectie("EUROPA", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "EUROPA").map(([naam]) => naam));
   const benelux = sectie("BENELUX", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "BENELUX").map(([naam]) => naam));
   const aldi = sectie("ALDI", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "ALDI").map(([naam]) => naam));
-  let html = europa.html + benelux.html + aldi.html;
+  // ALDI heeft alleen omzet in 2024-2025 — in seizoenen zonder Aldi-data
+  // hoeft de sectie niet leeg getoond te worden.
+  let html = europa.html + benelux.html + (aldi.totaal ? aldi.html : "");
 
-  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr><tr><td>ALDI</td><td>${displayNumber(aldi.totaal)}</td></tr>`;
+  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr>${aldi.totaal ? `<tr><td>ALDI</td><td>${displayNumber(aldi.totaal)}</td></tr>` : ""}`;
   let grandTotaal = europa.totaal + benelux.totaal + aldi.totaal;
   if (onbekendeKanalen.length) {
     const onbekend = sectie("ONBEKEND KANAAL", onbekendeKanalen);
