@@ -106,6 +106,8 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .import-order-total { color: var(--muted); font-size: .74rem; white-space: nowrap; }
 .import-verkoop-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .import-verkoop-status { color: var(--brand); font-size: .72rem; font-weight: 700; white-space: nowrap; }
+.import-wacht-voorblad-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.import-wacht-voorblad-button:hover { background: var(--brand); color: white; }
 .import-delete-button { grid-area: delete; width: 32px; height: 32px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.15rem; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
