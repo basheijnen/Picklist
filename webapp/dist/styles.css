@@ -20,7 +20,7 @@ button, input { font: inherit; }
 .brand { grid-column: 2; display: flex; align-items: center; justify-self: center; gap: 14px; }
 .header-logo { display: block; max-width: 100%; object-fit: contain; }
 .header-logos { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 20px; }
-.eurogreen-logo { width: min(230px, 100%); height: auto; padding: 6px 10px; border: 1px solid rgba(255,255,255,.9); border-radius: 10px; background: #ffffff; box-shadow: 0 2px 0 rgba(15,40,30,.14), 0 12px 26px rgba(8,26,18,.3); }
+.eurogreen-logo { width: min(230px, 100%); height: auto; padding: 0; border: 0; border-radius: 4px; background: transparent; box-shadow: none; }
 .header-actions { grid-column: 3; display: flex; align-items: center; justify-self: end; gap: 18px; }
 .header-actions .button { font-size: .82rem; }
 .backup-status { max-width: 220px; color: #c9dbd3; font-size: .8rem; font-weight: 650; text-align: right; }
