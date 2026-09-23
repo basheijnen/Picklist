@@ -20,13 +20,12 @@ button, input { font: inherit; }
 .brand { grid-column: 2; display: flex; align-items: center; justify-self: center; gap: 14px; }
 .header-logo { display: block; max-width: 100%; object-fit: contain; }
 .header-logos { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 20px; }
-.eurogreen-logo { width: min(230px, 100%); height: auto; padding: 0; border: 0; border-radius: 4px; background: transparent; box-shadow: none; }
 .header-actions { grid-column: 3; display: flex; align-items: center; justify-self: end; gap: 18px; }
 .header-actions .button { font-size: .82rem; }
 .backup-status { max-width: 220px; color: #c9dbd3; font-size: .8rem; font-weight: 650; text-align: right; }
 .backup-status.is-error { color: #f3a99a; }
-.gardenzo-card { display: grid; place-items: center; width: 170px; height: 60px; }
-.gardenzo-logo { width: 170px; height: auto; filter: brightness(0) invert(1); opacity: .95; }
+.gardenzo-card { display: grid; place-items: center; width: 280px; height: 94px; }
+.gardenzo-logo { width: 280px; height: auto; filter: brightness(0) invert(1); opacity: .95; }
 .brand-mark { display: grid; place-items: center; width: 46px; height: 46px; border: 2px solid rgba(255,255,255,.75); border-radius: 14px; color: var(--gold); font-size: 1.55rem; font-weight: 900; }
 h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.15rem); letter-spacing: -.03em; }
