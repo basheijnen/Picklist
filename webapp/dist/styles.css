@@ -309,7 +309,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .manage-package-number { font-weight: 800; color: var(--brand); }
 .manage-package-name { color: var(--muted); }
 .manage-packages-empty { padding: 18px; color: var(--muted); text-align: center; }
-.nazending-add-button { color: #000; font-weight: 800; border: 2px solid #000; background: #cc3a14; }
+.nazending-add-button { color: #000; font-weight: 800; border: 2px solid #000; background: #e5342a; }
 .manage-packages-button { color: #000; font-weight: 800; border: 2px solid #000; background: #5b9bd5; }
 .klant-duplicaten-button { color: #000; font-weight: 800; border: 2px solid #000; background: #e8842c; }
 .klant-duplicaten-button:hover:not(:disabled) { background: #d3762a; }
