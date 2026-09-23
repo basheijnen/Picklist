@@ -109,7 +109,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .import-active-toggle input { width: 17px; height: 17px; }
 .import-name-input { grid-area: name; width: 100%; min-width: 0; min-height: 30px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font-size: .87rem; font-weight: 650; background: white; }
 .nazending-list-label { grid-area: name; display: flex; align-items: center; gap: 4px; min-width: 0; min-height: 30px; padding: 4px 2px; font-size: .87rem; font-weight: 650; color: var(--ink); }
-.nazending-sublist { display: grid; gap: 2px; margin: -6px 0 6px 44px; }
+.nazending-sublist { display: grid; gap: 2px; margin: 10px 0 6px 44px; }
 .nazending-sublist[hidden] { display: none; }
 .nazending-sublist-toggle { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: 6px; flex-shrink: 0; border: 1.5px solid #000; border-radius: 50%; color: var(--brand); background: white; cursor: pointer; transition: transform .15s ease, background .15s ease; }
 .nazending-sublist-toggle svg { width: 16px; height: 16px; stroke-width: 3; }
@@ -403,7 +403,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-row.is-bundel { background: #f1e7fb !important; }
 .nazending-row.is-bundel:hover { background: #e6d5f7 !important; }
 .nazending-row.is-bundel .package-number { color: #6a3fa0; }
-.nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1.3px solid #000; border-radius: 999px; background: #e8842c; color: #000; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
+.nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1.3px solid #000; border-radius: 999px; background: #e5342a; color: #000; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
 .nazending-badge-bundel { background: #8e5fd1; }
 .nazending-full-badge { display: inline-flex; align-items: center; justify-content: center; width: 64px; min-height: 34px; padding: 4px 8px; border-radius: 7px; background: #e8842c; color: #000; font-weight: 800; text-align: center; }
 .nazending-delete-button { width: 30px; height: 30px; border: 1.3px solid #000; border-radius: 8px; color: white; background: #e5342a; font-size: 1.1rem; cursor: pointer; }
