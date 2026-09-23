@@ -285,8 +285,11 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-dialog .dialog-header { padding: 24px 28px 20px; }
 .nazending-dialog .dialog-actions { padding: 16px 28px 24px; }
 .confirm-dialog { width: min(420px, calc(100% - 24px)); }
-.hardloper-dialog { width: min(420px, calc(100% - 24px)); }
-.hardloper-dialog-body { padding-bottom: 26px; }
+.hardloper-dialog { width: min(320px, calc(100% - 24px)); }
+.hardloper-dialog-body { padding-bottom: 18px; }
+.hardloper-dialog .dialog-header { padding: 18px 20px 14px; }
+.hardloper-dialog .nazending-dialog-body { padding: 14px 20px 0; }
+.hardloper-dialog h2 { font-size: 1rem; }
 .verkoop-hardloper-kanalen-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-hardloper-kanaal-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; }
 .verkoop-hardloper-kanaal-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }

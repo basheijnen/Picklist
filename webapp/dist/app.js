@@ -2069,13 +2069,28 @@ function renderVerkoopOverzichtPanel() {
       </li>`)
     .join("");
   [...top10El.children].forEach((li) => {
-    li.addEventListener("click", () => openVerkoopHardloperDialog(li.dataset.pakketnummer));
+    li.addEventListener("click", () => openVerkoopHardloperDialog(li.dataset.pakketnummer, li));
   });
+}
+
+// Positioneert de pop-up vlak naast de aangeklikte Top 10-regel i.p.v. het
+// midden van het scherm — moet ná showModal() (pas dan heeft de dialoog een
+// echte grootte om mee te rekenen), en blijft binnen het scherm.
+function positioneerBijAnker(dialog, anchorEl) {
+  const ankerRect = anchorEl.getBoundingClientRect();
+  const dialogRect = dialog.getBoundingClientRect();
+  const marge = 12;
+  let left = ankerRect.right + marge;
+  if (left + dialogRect.width > window.innerWidth - marge) left = ankerRect.left - dialogRect.width - marge;
+  left = Math.min(Math.max(left, marge), Math.max(marge, window.innerWidth - dialogRect.width - marge));
+  let top = ankerRect.top;
+  top = Math.min(Math.max(top, marge), Math.max(marge, window.innerHeight - dialogRect.height - marge));
+  Object.assign(dialog.style, { position: "fixed", margin: "0", top: `${top}px`, left: `${left}px`, right: "auto", bottom: "auto" });
 }
 
 // Kanaalverdeling van 1 pakket uit de Top 10, van hoog naar laag — dezelfde
 // seizoen-selectie als het paneel zelf (verkoopOverzichtPakketOrders).
-function openVerkoopHardloperDialog(pakketnummer) {
+function openVerkoopHardloperDialog(pakketnummer, anchorEl) {
   const orders = verkoopOverzichtPakketOrders.filter((o) => o.pakketnummer === pakketnummer);
   const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
   const perKanaal = new Map();
@@ -2092,7 +2107,10 @@ function openVerkoopHardloperDialog(pakketnummer) {
       </li>`)
     .join("");
   const dialog = document.querySelector("#verkoopHardloperDialog");
-  if (!dialog.open) dialog.showModal();
+  if (!dialog.open) {
+    dialog.showModal();
+    if (anchorEl) positioneerBijAnker(dialog, anchorEl);
+  }
 }
 
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
