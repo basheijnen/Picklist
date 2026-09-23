@@ -3018,7 +3018,7 @@ function renderImportsList() {
         ? `Bundelpakketten (${nazendingen.length})`
         : `Klachten (${nazendingen.length})`;
     const groupRow = document.createElement("div");
-    groupRow.className = `import-row${allActive ? "" : " is-held"}`;
+    groupRow.className = `import-row nazending-group-row${allActive ? "" : " is-held"}`;
     groupRow.innerHTML = `
       <label class="import-active-toggle" title="Meetellen"><input type="checkbox" class="import-active-checkbox" aria-label="Meetellen" ${allActive ? "checked" : ""}></label>
       <span class="nazending-list-label">
