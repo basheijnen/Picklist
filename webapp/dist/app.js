@@ -2036,6 +2036,11 @@ function renderVerkoopTiles() {
 // seizoensafbakening (1 juli t/m 30 juni, ALDI en Pokon niet meegeteld) als
 // de "Totaal seizoen"-tegel in dat scherm, maar altijd het actuele seizoen —
 // volgt niet het seizoensmenu daar.
+// Onthoudt de seizoen-gefilterde orders van het laatst gerenderde paneel,
+// zodat een klik op een Top 10-regel de kanaalverdeling kan opzoeken zonder
+// het seizoensfilter opnieuw te moeten berekenen.
+let verkoopOverzichtPakketOrders = [];
+
 function renderVerkoopOverzichtPanel() {
   const panel = document.querySelector("#verkoopOverzichtPanel");
   const orders = window.PICKLIST_VERKOOP || [];
@@ -2047,20 +2052,47 @@ function renderVerkoopOverzichtPanel() {
   const seizoenTot = seizoenEindVolledig > vandaag ? vandaag : seizoenEindVolledig;
   const pakketOrders = orders.filter((o) => o.datum >= seizoenStart && o.datum <= seizoenTot
     && o.pakketnummer !== "Pokon" && regioVoorKanaal(o.kanaal) !== "ALDI");
+  verkoopOverzichtPakketOrders = pakketOrders;
   const totaal = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
   document.querySelector("#verkoopOverzichtTotaal").textContent = displayNumber(totaal);
 
   const perPakket = new Map();
   pakketOrders.forEach((o) => perPakket.set(o.pakketnummer, (perPakket.get(o.pakketnummer) || 0) + o.aantal));
   const top10 = [...perPakket.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
-  document.querySelector("#verkoopOverzichtTop10").innerHTML = top10
-    .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item">
+  const top10El = document.querySelector("#verkoopOverzichtTop10");
+  top10El.innerHTML = top10
+    .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item" data-pakketnummer="${escapeHtml(pakketnummer)}">
         <span class="verkoop-overzicht-top10-rang">${index < 3 ? index + 1 : ""}</span>
         <span class="verkoop-overzicht-top10-nummer">${escapeHtml(pakketnummer)}</span>
         <span class="verkoop-overzicht-top10-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
         <span class="verkoop-overzicht-top10-aantal">${displayNumber(aantal)}</span>
       </li>`)
     .join("");
+  [...top10El.children].forEach((li) => {
+    li.addEventListener("click", () => openVerkoopHardloperDialog(li.dataset.pakketnummer));
+  });
+}
+
+// Kanaalverdeling van 1 pakket uit de Top 10, van hoog naar laag — dezelfde
+// seizoen-selectie als het paneel zelf (verkoopOverzichtPakketOrders).
+function openVerkoopHardloperDialog(pakketnummer) {
+  const orders = verkoopOverzichtPakketOrders.filter((o) => o.pakketnummer === pakketnummer);
+  const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
+  const perKanaal = new Map();
+  orders.forEach((o) => perKanaal.set(o.kanaal, (perKanaal.get(o.kanaal) || 0) + o.aantal));
+  const verdeling = [...perKanaal.entries()].sort(([, a], [, b]) => b - a);
+
+  document.querySelector("#verkoopHardloperTitel").textContent = `${pakketnummer} – ${verkoopPakketnaam(pakketnummer)}`;
+  document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = verdeling
+    .map(([kanaal, aantal]) => `<li class="verkoop-hardloper-kanaal-item">
+        <span class="verkoop-hardloper-kanaal-badge" style="--klant-kleur:${kanaalKleur(kanaal)}"></span>
+        <span class="verkoop-hardloper-kanaal-naam">${escapeHtml(kanaal || "Onbekend")}</span>
+        <span class="verkoop-hardloper-kanaal-percentage">${totaal ? Math.round((aantal / totaal) * 100) : 0}%</span>
+        <span class="verkoop-hardloper-kanaal-aantal">${displayNumber(aantal)}</span>
+      </li>`)
+    .join("");
+  const dialog = document.querySelector("#verkoopHardloperDialog");
+  if (!dialog.open) dialog.showModal();
 }
 
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
@@ -3287,6 +3319,8 @@ document.querySelector("#addNazendingButton").addEventListener("click", () => op
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
+document.querySelector("#closeVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
+document.querySelector("#sluitVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
 klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
   const aangevinkt = event.target.checked;
   klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-select").forEach((checkbox) => { checkbox.checked = aangevinkt; });

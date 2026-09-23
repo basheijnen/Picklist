@@ -70,7 +70,8 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .verkoop-overzicht-tile { margin-bottom: 16px; }
 .verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.verkoop-overzicht-top10-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; }
+.verkoop-overzicht-top10-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
+.verkoop-overzicht-top10-item:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
 .verkoop-overzicht-top10-rang { flex-shrink: 0; width: 13px; padding-top: 1px; color: var(--gold); font-size: .74rem; font-weight: 800; }
 .verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 34px; padding-top: 1px; color: var(--muted); font-size: .68rem; font-weight: 700; text-align: right; }
 .verkoop-overzicht-top10-naam { flex: 1 1 auto; min-width: 0; font-weight: 650; line-height: 1.3; overflow-wrap: break-word; }
@@ -272,6 +273,13 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-dialog .dialog-header { padding: 24px 28px 20px; }
 .nazending-dialog .dialog-actions { padding: 16px 28px 24px; }
 .confirm-dialog { width: min(420px, calc(100% - 24px)); }
+.hardloper-dialog { width: min(420px, calc(100% - 24px)); }
+.verkoop-hardloper-kanalen-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.verkoop-hardloper-kanaal-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; }
+.verkoop-hardloper-kanaal-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+.verkoop-hardloper-kanaal-badge { flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: var(--klant-kleur, var(--muted)); }
+.verkoop-hardloper-kanaal-aantal { flex-shrink: 0; color: var(--brand); font-weight: 800; }
+.verkoop-hardloper-kanaal-percentage { flex-shrink: 0; width: 38px; color: var(--muted); font-size: .74rem; text-align: right; }
 .confirm-dialog .dialog-header { padding: 22px 24px 16px; }
 .confirm-dialog-message { margin: 0; padding: 0 24px 22px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
 .confirm-dialog-message p { margin: 0 0 14px; }
