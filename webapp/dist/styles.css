@@ -285,7 +285,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-dialog .dialog-header { padding: 24px 28px 20px; }
 .nazending-dialog .dialog-actions { padding: 16px 28px 24px; }
 .confirm-dialog { width: min(420px, calc(100% - 24px)); }
-.hardloper-dialog { width: min(320px, calc(100% - 24px)); }
+.hardloper-dialog { width: min(360px, calc(100% - 24px)); }
 .hardloper-dialog-body { padding-bottom: 18px; }
 .hardloper-dialog .dialog-header { padding: 18px 20px 14px; }
 .hardloper-dialog .nazending-dialog-body { padding: 14px 20px 0; }
