@@ -2968,7 +2968,7 @@ function renderImportsList() {
     // los voorblad (geen Koeling/Kas/Kamer/Pokon/Dozen-pagina's) — die orders
     // worden vandaag toch niet gepickt, dus die pagina's hebben geen nut.
     const wachtVoorbladKnopHtml = imp.name === IN_DE_WACHT_NAAM
-      ? `<button type="button" class="import-wacht-voorblad-button">Voorblad afdrukken →</button>`
+      ? `<button type="button" class="import-wacht-voorblad-button"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="4" y="9" width="16" height="8" rx="1.5"/><path d="M6 14h12v7H6z"/></svg>Voorblad afdrukken</button>`
       : "";
     const row = document.createElement("div");
     row.className = `import-row${imp.active ? "" : " is-held"}`;
@@ -3320,7 +3320,6 @@ document.querySelector("#klantDuplicatenButton").addEventListener("click", openK
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#closeVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
-document.querySelector("#sluitVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
 klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
   const aangevinkt = event.target.checked;
   klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-select").forEach((checkbox) => { checkbox.checked = aangevinkt; });

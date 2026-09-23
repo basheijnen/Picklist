@@ -120,8 +120,9 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .import-order-total { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--muted); font-size: .7rem; white-space: nowrap; }
 .import-verkoop-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .import-verkoop-status { flex-shrink: 0; color: var(--brand); font-size: .68rem; font-weight: 700; white-space: nowrap; }
-.import-wacht-voorblad-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.import-wacht-voorblad-button:hover { background: var(--brand); color: white; }
+.import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1px solid #b9862f; border-radius: 999px; color: #5c4210; background: var(--gold); font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.import-wacht-voorblad-button:hover { background: #d9a94e; }
+.import-wacht-voorblad-button svg { flex-shrink: 0; }
 .import-delete-button { grid-area: delete; width: 26px; height: 26px; border: 0; border-radius: 7px; color: var(--danger); background: #f9e9e7; font-size: 1rem; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
@@ -274,6 +275,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-dialog .dialog-actions { padding: 16px 28px 24px; }
 .confirm-dialog { width: min(420px, calc(100% - 24px)); }
 .hardloper-dialog { width: min(420px, calc(100% - 24px)); }
+.hardloper-dialog-body { padding-bottom: 26px; }
 .verkoop-hardloper-kanalen-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-hardloper-kanaal-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; }
 .verkoop-hardloper-kanaal-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
