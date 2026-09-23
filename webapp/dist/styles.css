@@ -73,7 +73,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .verkoop-overzicht-top10-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
 .verkoop-overzicht-top10-item:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
 .verkoop-overzicht-top10-rang { flex-shrink: 0; width: 13px; padding-top: 1px; color: var(--gold); font-size: .74rem; font-weight: 800; }
-.verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 34px; padding-top: 1px; color: var(--muted); font-size: .68rem; font-weight: 700; text-align: right; }
+.verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 36px; padding-top: 1px; color: var(--ink); font-size: .72rem; font-weight: 800; text-align: right; }
 .verkoop-overzicht-top10-naam { flex: 1 1 auto; min-width: 0; font-weight: 650; line-height: 1.3; overflow-wrap: break-word; }
 .verkoop-overzicht-top10-aantal { flex-shrink: 0; width: 30px; padding-top: 1px; color: var(--brand); font-weight: 800; text-align: right; }
 .imports-panel-header { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
