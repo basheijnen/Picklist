@@ -2056,8 +2056,8 @@ function renderVerkoopOverzichtPanel() {
   document.querySelector("#verkoopOverzichtTop10").innerHTML = top10
     .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item">
         <span class="verkoop-overzicht-top10-rang">${index < 3 ? index + 1 : ""}</span>
-        <span class="verkoop-overzicht-top10-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
         <span class="verkoop-overzicht-top10-nummer">${escapeHtml(pakketnummer)}</span>
+        <span class="verkoop-overzicht-top10-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
         <span class="verkoop-overzicht-top10-aantal">${displayNumber(aantal)}</span>
       </li>`)
     .join("");
@@ -2941,7 +2941,7 @@ function renderImportsList() {
     const row = document.createElement("div");
     row.className = `import-row${imp.active ? "" : " is-held"}`;
     row.innerHTML = `
-      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${imp.active ? "checked" : ""}><span>Meetellen</span></label>
+      <label class="import-active-toggle" title="Meetellen"><input type="checkbox" class="import-active-checkbox" aria-label="Meetellen" ${imp.active ? "checked" : ""}></label>
       <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst">
       <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}${wachtVoorbladKnopHtml}</span>
       <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
@@ -2988,7 +2988,7 @@ function renderImportsList() {
     const groupRow = document.createElement("div");
     groupRow.className = `import-row${allActive ? "" : " is-held"}`;
     groupRow.innerHTML = `
-      <label class="import-active-toggle"><input type="checkbox" class="import-active-checkbox" ${allActive ? "checked" : ""}><span>Meetellen</span></label>
+      <label class="import-active-toggle" title="Meetellen"><input type="checkbox" class="import-active-checkbox" aria-label="Meetellen" ${allActive ? "checked" : ""}></label>
       <span class="nazending-list-label">
         <button type="button" class="nazending-sublist-toggle${klachtenGroupUitgeklapt ? " is-open" : ""}" aria-label="${klachtenGroupUitgeklapt ? "Inklappen" : "Uitklappen"}" aria-expanded="${klachtenGroupUitgeklapt}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         ${groupLabel}

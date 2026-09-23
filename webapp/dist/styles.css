@@ -65,15 +65,15 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .empty-state p { color: var(--muted); }
 .results { margin-top: 28px; }
 .imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
-.verkoop-overzicht-panel { flex: 0 0 275px; width: 275px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
+.verkoop-overzicht-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
 .verkoop-overzicht-header { margin-bottom: 14px; }
 .verkoop-overzicht-tile { margin-bottom: 16px; }
 .verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-overzicht-top10-item { display: flex; align-items: baseline; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; }
 .verkoop-overzicht-top10-rang { flex-shrink: 0; width: 13px; color: var(--gold); font-size: .74rem; font-weight: 800; }
+.verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 34px; color: var(--muted); font-size: .68rem; font-weight: 700; text-align: right; }
 .verkoop-overzicht-top10-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
-.verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 32px; color: var(--muted); font-size: .68rem; font-weight: 700; text-align: right; }
 .verkoop-overzicht-top10-aantal { flex-shrink: 0; width: 30px; color: var(--brand); font-weight: 800; text-align: right; }
 .imports-panel-header { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
 .imports-panel-header .eyebrow { margin-bottom: 0; }
@@ -82,24 +82,24 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .print-status-reset-button { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 30px; flex-shrink: 0; border: 1.5px solid var(--danger); border-radius: 999px; color: var(--danger); background: white; cursor: pointer; }
 .print-status-reset-button:hover:not(:disabled) { background: #f9e9e7; }
 .print-status-reset-button:disabled { opacity: .4; cursor: not-allowed; }
-.imports-list { display: grid; gap: 8px; }
+.imports-list { display: grid; gap: 6px; }
 .import-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-areas: "checkbox name delete" "checkbox meta delete";
   align-items: center;
-  row-gap: 3px;
-  column-gap: 10px;
-  padding: 10px 12px;
+  row-gap: 2px;
+  column-gap: 8px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
-  border-radius: 11px;
+  border-radius: 10px;
   background: #f8faf9;
 }
 .import-row.is-held { background: #fbf6ec; border-color: #e8d6a8; }
-.import-active-toggle { grid-area: checkbox; align-self: start; display: flex; align-items: center; gap: 7px; padding-top: 8px; font-size: .85rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.import-active-toggle { grid-area: checkbox; align-self: center; display: flex; align-items: center; }
 .import-active-toggle input { width: 17px; height: 17px; }
-.import-name-input { grid-area: name; width: 100%; min-width: 0; min-height: 36px; padding: 6px 10px; border: 1px solid #bdcbc4; border-radius: 8px; font-size: .9rem; font-weight: 650; background: white; }
-.nazending-list-label { grid-area: name; display: flex; align-items: center; gap: 4px; min-width: 0; min-height: 36px; padding: 6px 2px; font-size: .9rem; font-weight: 650; color: var(--ink); }
+.import-name-input { grid-area: name; width: 100%; min-width: 0; min-height: 30px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font-size: .87rem; font-weight: 650; background: white; }
+.nazending-list-label { grid-area: name; display: flex; align-items: center; gap: 4px; min-width: 0; min-height: 30px; padding: 4px 2px; font-size: .87rem; font-weight: 650; color: var(--ink); }
 .nazending-sublist { display: grid; gap: 2px; margin: -6px 0 6px 44px; }
 .nazending-sublist[hidden] { display: none; }
 .nazending-sublist-toggle { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 2px; border: 0; border-radius: 6px; color: var(--muted); background: transparent; cursor: pointer; transition: transform .15s ease; }
@@ -115,13 +115,13 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .nazending-herstel-button { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 0; border-radius: 8px; color: #2f7058; background: #e8f4ed; cursor: pointer; }
 .nazending-herstel-button:hover { background: #d7ebdf; }
 .herstel-menu-row { margin: 2px 0 6px; padding: 8px 10px; border-radius: 8px; background: #f4f8f5; }
-.import-meta-row { grid-area: meta; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.import-order-total { color: var(--muted); font-size: .74rem; white-space: nowrap; }
-.import-verkoop-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.import-verkoop-status { color: var(--brand); font-size: .72rem; font-weight: 700; white-space: nowrap; }
-.import-wacht-voorblad-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.import-meta-row { grid-area: meta; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+.import-order-total { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--muted); font-size: .7rem; white-space: nowrap; }
+.import-verkoop-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.import-verkoop-status { flex-shrink: 0; color: var(--brand); font-size: .68rem; font-weight: 700; white-space: nowrap; }
+.import-wacht-voorblad-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .import-wacht-voorblad-button:hover { background: var(--brand); color: white; }
-.import-delete-button { grid-area: delete; width: 32px; height: 32px; border: 0; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.15rem; cursor: pointer; }
+.import-delete-button { grid-area: delete; width: 26px; height: 26px; border: 0; border-radius: 7px; color: var(--danger); background: #f9e9e7; font-size: 1rem; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
 .count-diff-menu[hidden] { display: none; }
