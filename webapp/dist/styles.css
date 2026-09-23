@@ -364,6 +364,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-overzicht { padding: 10mm; }
 .klant-overzicht-header { margin-bottom: 8mm; padding-bottom: 6mm; border-bottom: 2px solid var(--ink); }
 .klant-overzicht-header h1 { margin: 0 0 4px; font-size: 22pt; }
+.wachtlijst-overzicht .klant-overzicht-header h1 { font-size: 38pt; }
 .klant-overzicht-header p { margin: 0; color: var(--muted); font-size: 10pt; }
 .klant-overzicht-table { width: 100%; table-layout: fixed; border-collapse: collapse; }
 .klant-overzicht-table th, .klant-overzicht-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; word-wrap: break-word; }
@@ -376,8 +377,8 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-overzicht-lijst { color: var(--muted); font-size: .84em; font-weight: 650; }
 .klant-overzicht-kanaal { display: inline-block; max-width: 100%; padding: 2px 7px; border: 1.2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 7pt; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
 .klant-overzicht-planten { font-weight: 800; text-align: right; white-space: nowrap; }
-.wachtlijst-overzicht-table th:nth-child(1), .wachtlijst-overzicht-table td:nth-child(1) { width: 14%; }
-.wachtlijst-overzicht-table th:nth-child(2), .wachtlijst-overzicht-table td:nth-child(2) { width: 46%; }
+.wachtlijst-overzicht-table th:nth-child(1), .wachtlijst-overzicht-table td:nth-child(1) { width: 19%; }
+.wachtlijst-overzicht-table th:nth-child(2), .wachtlijst-overzicht-table td:nth-child(2) { width: 41%; }
 .wachtlijst-overzicht-table th:nth-child(3), .wachtlijst-overzicht-table td:nth-child(3) { width: 12%; }
 .wachtlijst-overzicht-table th:nth-child(4), .wachtlijst-overzicht-table td:nth-child(4) { width: 12%; }
 .wachtlijst-overzicht-table th:nth-child(5), .wachtlijst-overzicht-table td:nth-child(5) { width: 16%; }
