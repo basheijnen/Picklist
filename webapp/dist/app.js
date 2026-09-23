@@ -284,15 +284,22 @@ function verzamelDubbeleKlanten() {
   const perNaam = new Map();
   imports.filter((imp) => imp.active).forEach((imp) => {
     (imp.orderNames || []).forEach(({ naam, pakketnummer, kanaal }) => {
-      if (!perNaam.has(naam)) perNaam.set(naam, { perPakket: new Map(), kanalen: new Set() });
+      if (!perNaam.has(naam)) perNaam.set(naam, { perRegel: new Map(), kanalen: new Set() });
       const info = perNaam.get(naam);
-      info.perPakket.set(pakketnummer, (info.perPakket.get(pakketnummer) || 0) + 1);
+      // Per pakketnummer + herkomstlijst een eigen regel (i.p.v. alleen per
+      // pakketnummer) — zo blijft zichtbaar uit welke lijst elke bestelling
+      // komt, ook als dezelfde klant hetzelfde pakket in meerdere lijsten
+      // heeft besteld.
+      const key = `${pakketnummer}\u0000${imp.name}`;
+      const bestaand = info.perRegel.get(key);
+      if (bestaand) bestaand.aantal += 1;
+      else info.perRegel.set(key, { pakketnummer, lijst: imp.name, aantal: 1 });
       if (kanaal) info.kanalen.add(kanaal);
     });
   });
   const alleEntries = [...perNaam.entries()]
     .map(([naam, info]) => {
-      const regels = [...info.perPakket.entries()].map(([pakketnummer, aantal]) => ({ pakketnummer, aantal }));
+      const regels = [...info.perRegel.values()];
       return {
         naam,
         kanaal: [...info.kanalen].join(" / "),
@@ -481,7 +488,7 @@ function renderKlantDuplicatenDialog() {
     const regelRijenHtml = entry.regels
       .flatMap((r, regelIndex) => {
         const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
-        const regelTekst = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`;
+        const regelTekst = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}${r.lijst ? ` <span class="klant-duplicaat-regel-lijst">(${escapeHtml(r.lijst)})</span>` : ""}`;
         return Array(r.aantal).fill(0).map(() => `<label class="klant-duplicaat-regel">
           <input type="checkbox" class="klant-duplicaat-regel-checkbox" data-regel-index="${regelIndex}">
           <span>${regelTekst}</span>
@@ -586,7 +593,8 @@ function printKlantOverzicht() {
       const regelsHtml = entry.regels
         .flatMap((r) => {
           const naam = (packageInfo.get(r.pakketnummer) || {}).pakketnaam || "Onbekend pakket";
-          return Array(r.aantal).fill(`${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}`);
+          const tekst = `${escapeHtml(r.pakketnummer)} – ${escapeHtml(naam)}${r.lijst ? ` <span class="klant-overzicht-lijst">(${escapeHtml(r.lijst)})</span>` : ""}`;
+          return Array(r.aantal).fill(tekst);
         })
         .join("<br>");
       const kanaalHtml = entry.kanaal

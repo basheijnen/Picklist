@@ -325,6 +325,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-duplicaat-regel { display: flex; align-items: flex-start; gap: 8px; padding: 2px 4px; border-radius: 6px; color: var(--muted); font-size: .88rem; line-height: 1.5; cursor: pointer; }
 .klant-duplicaat-regel:hover { background: #e8f0ea; }
 .klant-duplicaat-regel input[type="checkbox"] { margin-top: 3px; width: 15px; height: 15px; }
+.klant-duplicaat-regel-lijst { color: var(--muted); font-size: .82em; font-weight: 600; }
 .klant-duplicaat-planten { position: absolute; bottom: 8px; right: 12px; color: var(--muted); font-size: .74rem; font-weight: 700; }
 .klant-duplicaten-empty { padding: 18px; color: var(--muted); text-align: center; }
 .klant-overzicht { padding: 10mm; }
@@ -339,6 +340,7 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .klant-overzicht-table th:nth-child(3), .klant-overzicht-table td:nth-child(3) { width: 58%; }
 .klant-overzicht-table th:nth-child(4), .klant-overzicht-table td:nth-child(4) { width: 14%; }
 .klant-overzicht-naam { font-weight: 800; }
+.klant-overzicht-lijst { color: var(--muted); font-size: .84em; font-weight: 650; }
 .klant-overzicht-kanaal { display: inline-block; max-width: 100%; padding: 2px 7px; border: 1.2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); font-size: 7pt; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
 .klant-overzicht-planten { font-weight: 800; text-align: right; white-space: nowrap; }
 .wachtlijst-overzicht-table th:nth-child(1), .wachtlijst-overzicht-table td:nth-child(1) { width: 14%; }
