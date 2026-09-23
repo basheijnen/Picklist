@@ -32,9 +32,10 @@ h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3
 .brand p { margin: 0; color: #c9dbd3; font-size: .9rem; }
 .page-body { display: flex; align-items: flex-start; gap: 38px; padding: 36px clamp(20px, 5vw, 72px) 64px; }
 main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(16px, 2.4vw, 24px) + 1px); }
-.import-panel-header { display: flex; align-items: center; min-height: 54px; margin-bottom: 14px; }
+.import-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; margin-bottom: 14px; }
+.import-panel-header .text-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; font-size: .72rem; background: white; white-space: nowrap; }
 .import-panel-header .eyebrow, .verkoop-overzicht-header .eyebrow, .imports-panel-header .eyebrow { margin-bottom: 0; }
-.import-panel { display: flex; flex-direction: column; gap: 10px; padding: clamp(16px, 2.4vw, 24px); border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
+.import-panel { display: flex; flex-direction: column; gap: 10px; padding: clamp(16px, 2.4vw, 24px); border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
 .eyebrow { display: block; margin-bottom: 6px; color: #397560; font-size: .75rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
@@ -67,7 +68,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .results { margin-top: 28px; }
 .imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
 .verkoop-overzicht-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
-.verkoop-overzicht-header { display: flex; align-items: center; min-height: 54px; margin-bottom: 14px; }
+.verkoop-overzicht-header { display: flex; align-items: center; min-height: 30px; margin-bottom: 14px; }
 .verkoop-overzicht-tile { margin-bottom: 16px; }
 .verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
@@ -77,11 +78,9 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 36px; padding-top: 1px; color: var(--ink); font-size: .72rem; font-weight: 800; text-align: right; }
 .verkoop-overzicht-top10-naam { flex: 1 1 auto; min-width: 0; font-weight: 650; line-height: 1.3; overflow-wrap: break-word; }
 .verkoop-overzicht-top10-aantal { flex-shrink: 0; width: 30px; padding-top: 1px; color: var(--brand); font-weight: 800; text-align: right; }
-.imports-panel-header { display: flex; flex-direction: row; align-items: center; flex-wrap: wrap; gap: 8px; min-height: 30px; margin-bottom: 14px; }
+.imports-panel-header { display: flex; align-items: center; min-height: 30px; margin-bottom: 14px; }
 .imports-panel-header .eyebrow { margin-bottom: 0; }
-.imports-panel-header-buttons { display: flex; align-items: center; gap: 6px; }
-.imports-panel-header .text-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; font-size: .72rem; background: white; white-space: nowrap; }
-.print-status-reset-button { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 30px; flex-shrink: 0; border: 1.5px solid var(--danger); border-radius: 999px; color: var(--danger); background: white; cursor: pointer; }
+.print-status-reset-button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 34px; flex-shrink: 0; border: 1.5px solid var(--danger); border-radius: 10px; color: var(--danger); background: white; cursor: pointer; }
 .print-status-reset-button:hover:not(:disabled) { background: #f9e9e7; }
 .print-status-reset-button:disabled { opacity: .4; cursor: not-allowed; }
 .imports-list { display: grid; gap: 6px; }
@@ -402,11 +401,15 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .pakketkaart-reprint-button { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 0; border-radius: 8px; color: var(--brand); background: #e5ede8; cursor: pointer; }
 tr.has-nazending { border-left: 4px solid #e8842c; }
 
+@media (max-width: 1300px) {
+  .page-body { flex-wrap: wrap; }
+  .imports-panel, .verkoop-overzicht-panel { flex-basis: 100%; max-width: none; }
+}
+
 @media (max-width: 1100px) {
   .topbar { gap: 14px; }
-  .eurogreen-logo { width: 160px; height: 46px; }
   .gardenzo-card { width: 110px; height: 46px; }
-  .gardenzo-logo { width: 90px; height: 32px; }
+  .gardenzo-logo { width: 110px; height: 32px; }
   .header-actions { flex-direction: column; gap: 7px; }
 }
 
