@@ -2080,7 +2080,7 @@ function positioneerBijAnker(dialog, anchorEl) {
   const ankerRect = anchorEl.getBoundingClientRect();
   const dialogRect = dialog.getBoundingClientRect();
   const marge = 12;
-  let left = ankerRect.right + marge;
+  let left = ankerRect.left;
   if (left + dialogRect.width > window.innerWidth - marge) left = ankerRect.left - dialogRect.width - marge;
   left = Math.min(Math.max(left, marge), Math.max(marge, window.innerWidth - dialogRect.width - marge));
   let top = ankerRect.top;
