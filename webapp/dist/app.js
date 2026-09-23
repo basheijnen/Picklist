@@ -3054,7 +3054,7 @@ function renderImportsList() {
         ? `<button type="button" class="nazending-herstel-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} terugzetten naar een lijst" title="Terugzetten naar een lijst"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v1"/></svg></button>`
         : "";
       subRow.innerHTML = `
-        <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span>${escapeHtml(nz.pakketnummer)}</span><span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundel" : "Klacht"}</span></label>
+        <label class="nazending-subrow-toggle"><input type="checkbox" class="import-active-checkbox" ${nzActive ? "checked" : ""}><span class="nazending-subrow-nummer">${escapeHtml(nz.pakketnummer)}</span><span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundel" : "Klacht"}</span></label>
         <span class="nazending-subrow-acties">${herstelButtonHtml}<button type="button" class="nazending-delete-button" aria-label="${isBundel ? "Bundelpakket" : "Klacht"} verwijderen">×</button></span>`;
       subRow.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
         nz.active = event.target.checked;

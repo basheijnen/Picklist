@@ -120,6 +120,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .nazending-subrow.is-held { color: #b99a55; }
 .nazending-subrow-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .nazending-subrow-toggle input { width: 15px; height: 15px; }
+.nazending-subrow-nummer { min-width: 150px; color: #000; }
 .nazending-subrow .nazending-delete-button { width: 22px; height: 22px; font-size: .9rem; }
 .nazending-subrow-acties { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .nazending-herstel-button { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 0; border-radius: 8px; color: #2f7058; background: #e8f4ed; cursor: pointer; }
@@ -133,7 +134,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1.5px solid #000; border-radius: 999px; color: #000; background: #e8842c; font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
 .import-wacht-voorblad-button:hover { background: #d3762a; }
 .import-wacht-voorblad-button svg { flex-shrink: 0; }
-.import-delete-button { grid-area: delete; align-self: start; width: 20px; height: 20px; border: 1.3px solid #000; border-radius: 6px; color: var(--danger); background: #f9e9e7; font-size: .8rem; line-height: 1; cursor: pointer; }
+.import-delete-button { grid-area: delete; align-self: start; width: 20px; height: 20px; border: 1.3px solid #000; border-radius: 6px; color: white; background: #e5342a; font-size: .8rem; line-height: 1; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
 .count-diff-menu[hidden] { display: none; }
@@ -401,10 +402,10 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-row.is-bundel { background: #f1e7fb !important; }
 .nazending-row.is-bundel:hover { background: #e6d5f7 !important; }
 .nazending-row.is-bundel .package-number { color: #6a3fa0; }
-.nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 999px; background: #e8842c; color: white; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
+.nazending-badge { display: inline-block; margin-left: 8px; padding: 2px 8px; border: 1.3px solid #000; border-radius: 999px; background: #e8842c; color: #000; font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; }
 .nazending-badge-bundel { background: #8e5fd1; }
 .nazending-full-badge { display: inline-flex; align-items: center; justify-content: center; width: 64px; min-height: 34px; padding: 4px 8px; border-radius: 7px; background: #e8842c; color: #000; font-weight: 800; text-align: center; }
-.nazending-delete-button { width: 30px; height: 30px; border: 1.3px solid #000; border-radius: 8px; color: var(--danger); background: #f9e9e7; font-size: 1.1rem; cursor: pointer; }
+.nazending-delete-button { width: 30px; height: 30px; border: 1.3px solid #000; border-radius: 8px; color: white; background: #e5342a; font-size: 1.1rem; cursor: pointer; }
 .pakketkaart-reprint-button { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 0; border-radius: 8px; color: var(--brand); background: #e5ede8; cursor: pointer; }
 tr.has-nazending { border-left: 4px solid #e8842c; }
 
