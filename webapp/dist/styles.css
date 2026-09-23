@@ -65,14 +65,16 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .empty-state p { color: var(--muted); }
 .results { margin-top: 28px; }
 .imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
-.verkoop-overzicht-panel { flex: 0 0 230px; width: 230px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
+.verkoop-overzicht-panel { flex: 0 0 275px; width: 275px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
 .verkoop-overzicht-header { margin-bottom: 14px; }
 .verkoop-overzicht-tile { margin-bottom: 16px; }
 .verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.verkoop-overzicht-top10-item { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .8rem; }
-.verkoop-overzicht-top10-naam { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
-.verkoop-overzicht-top10-aantal { flex-shrink: 0; color: var(--brand); font-weight: 800; }
+.verkoop-overzicht-top10-item { display: flex; align-items: baseline; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; }
+.verkoop-overzicht-top10-rang { flex-shrink: 0; width: 13px; color: var(--gold); font-size: .74rem; font-weight: 800; }
+.verkoop-overzicht-top10-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+.verkoop-overzicht-top10-nummer { flex-shrink: 0; width: 32px; color: var(--muted); font-size: .68rem; font-weight: 700; text-align: right; }
+.verkoop-overzicht-top10-aantal { flex-shrink: 0; width: 30px; color: var(--brand); font-weight: 800; text-align: right; }
 .imports-panel-header { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
 .imports-panel-header .eyebrow { margin-bottom: 0; }
 .imports-panel-header-buttons { display: flex; align-items: center; gap: 6px; }

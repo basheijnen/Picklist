@@ -2054,8 +2054,10 @@ function renderVerkoopOverzichtPanel() {
   pakketOrders.forEach((o) => perPakket.set(o.pakketnummer, (perPakket.get(o.pakketnummer) || 0) + o.aantal));
   const top10 = [...perPakket.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
   document.querySelector("#verkoopOverzichtTop10").innerHTML = top10
-    .map(([pakketnummer, aantal]) => `<li class="verkoop-overzicht-top10-item">
-        <span class="verkoop-overzicht-top10-naam">${escapeHtml(pakketnummer)} – ${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
+    .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item">
+        <span class="verkoop-overzicht-top10-rang">${index < 3 ? index + 1 : ""}</span>
+        <span class="verkoop-overzicht-top10-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
+        <span class="verkoop-overzicht-top10-nummer">${escapeHtml(pakketnummer)}</span>
         <span class="verkoop-overzicht-top10-aantal">${displayNumber(aantal)}</span>
       </li>`)
     .join("");
