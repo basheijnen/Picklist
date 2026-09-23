@@ -32,8 +32,7 @@ h1, h2, p { margin-top: 0; }
 h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.15rem); letter-spacing: -.03em; }
 .brand p { margin: 0; color: #c9dbd3; font-size: .9rem; }
 .page-body { display: flex; align-items: flex-start; gap: 38px; padding: 36px clamp(20px, 5vw, 72px) 64px; }
-main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
-.page-body:has(#importsPanel[hidden]) main { margin: 0 auto; }
+main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .import-panel { display: flex; flex-direction: column; gap: 10px; padding: clamp(16px, 2.4vw, 24px); border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
 .import-panel p { margin: 0; color: var(--muted); font-size: .78rem; line-height: 1.5; }
@@ -66,6 +65,14 @@ main { flex: 0 1 1000px; min-width: 0; margin-left: auto; }
 .empty-state p { color: var(--muted); }
 .results { margin-top: 28px; }
 .imports-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
+.verkoop-overzicht-panel { flex: 0 0 230px; width: 230px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
+.verkoop-overzicht-header { margin-bottom: 14px; }
+.verkoop-overzicht-tile { margin-bottom: 16px; }
+.verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+.verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.verkoop-overzicht-top10-item { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .8rem; }
+.verkoop-overzicht-top10-naam { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 650; }
+.verkoop-overzicht-top10-aantal { flex-shrink: 0; color: var(--brand); font-weight: 800; }
 .imports-panel-header { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 14px; }
 .imports-panel-header .eyebrow { margin-bottom: 0; }
 .imports-panel-header-buttons { display: flex; align-items: center; gap: 6px; }
@@ -386,7 +393,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 
 @media (max-width: 720px) {
   .page-body { flex-wrap: wrap; }
-  .imports-panel { flex-basis: 100%; max-width: none; }
+  .imports-panel, .verkoop-overzicht-panel { flex-basis: 100%; max-width: none; }
   .topbar { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   .header-logos, .brand, .header-actions { grid-column: 1; justify-self: center; }
   .header-logos { order: 1; }

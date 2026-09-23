@@ -1880,6 +1880,7 @@ async function verstuurNaarVerkoop(imp, buttonEl) {
     imp.verkoopVerstuurd = true;
     saveImportState();
     renderImportsList();
+    renderVerkoopOverzichtPanel();
 
     let text = `Lijst "${imp.name}" naar Verkopen gestuurd: ${result.toegevoegd} orderregels verwerkt, ${result.overgeslagen} overgeslagen (al eerder geüpload).`;
     const onbekendeNamen = Object.keys(onbekend);
@@ -2027,6 +2028,37 @@ function renderVerkoopTiles() {
       renderVerkoopDialog();
     });
   });
+}
+
+// Los, altijd zichtbaar kaartje op de hoofdpagina (naast "Nieuwe picklist"),
+// zodat het seizoentotaal en de bestverkochte pakketten in één oogopslag
+// zichtbaar zijn zonder eerst het Verkopen-scherm te openen. Zelfde
+// seizoensafbakening (1 juli t/m 30 juni, ALDI en Pokon niet meegeteld) als
+// de "Totaal seizoen"-tegel in dat scherm, maar altijd het actuele seizoen —
+// volgt niet het seizoensmenu daar.
+function renderVerkoopOverzichtPanel() {
+  const panel = document.querySelector("#verkoopOverzichtPanel");
+  const orders = window.PICKLIST_VERKOOP || [];
+  if (!orders.length) { panel.hidden = true; return; }
+  panel.hidden = false;
+  const vandaag = todayIso();
+  const seizoenStart = verkoopHuidigSeizoenStart(vandaag);
+  const seizoenEindVolledig = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
+  const seizoenTot = seizoenEindVolledig > vandaag ? vandaag : seizoenEindVolledig;
+  const pakketOrders = orders.filter((o) => o.datum >= seizoenStart && o.datum <= seizoenTot
+    && o.pakketnummer !== "Pokon" && regioVoorKanaal(o.kanaal) !== "ALDI");
+  const totaal = pakketOrders.reduce((sum, o) => sum + o.aantal, 0);
+  document.querySelector("#verkoopOverzichtTotaal").textContent = displayNumber(totaal);
+
+  const perPakket = new Map();
+  pakketOrders.forEach((o) => perPakket.set(o.pakketnummer, (perPakket.get(o.pakketnummer) || 0) + o.aantal));
+  const top10 = [...perPakket.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
+  document.querySelector("#verkoopOverzichtTop10").innerHTML = top10
+    .map(([pakketnummer, aantal]) => `<li class="verkoop-overzicht-top10-item">
+        <span class="verkoop-overzicht-top10-naam">${escapeHtml(pakketnummer)} – ${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
+        <span class="verkoop-overzicht-top10-aantal">${displayNumber(aantal)}</span>
+      </li>`)
+    .join("");
 }
 
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
@@ -3014,6 +3046,7 @@ function renderImportsList() {
 }
 
 function renderAll() {
+  renderVerkoopOverzichtPanel();
   if (!imports.length && !nazendingen.length) {
     importsPanel.hidden = true;
     importsList.replaceChildren();
