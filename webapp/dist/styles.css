@@ -91,12 +91,17 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
   align-items: center;
   row-gap: 2px;
   column-gap: 8px;
-  padding: 7px 10px;
+  padding: 7px 10px 7px 8px;
   border: 1px solid var(--line);
+  border-left: 4px solid var(--brand);
   border-radius: 10px;
   background: #f8faf9;
 }
-.import-row.is-held { background: #fbf6ec; border-color: #e8d6a8; }
+/* Uitgevinkt ("Meetellen" uit) telt niet mee -- duidelijk gedimd en met een
+   oranje randje i.p.v. het groene randje van een actieve lijst, zodat in
+   één oogopslag te zien is welke lijsten wel/niet meetellen. */
+.import-row.is-held { border-left-color: #e8842c; background: #fbf6ec; border-color: #e8d6a8; opacity: .72; }
+.import-row.is-held .import-name-input, .import-row.is-held .nazending-list-label { color: var(--muted); }
 .import-active-toggle { grid-area: checkbox; align-self: center; display: flex; align-items: center; }
 .import-active-toggle input { width: 17px; height: 17px; }
 .import-name-input { grid-area: name; width: 100%; min-width: 0; min-height: 30px; padding: 4px 8px; border: 1px solid #bdcbc4; border-radius: 7px; font-size: .87rem; font-weight: 650; background: white; }
@@ -424,7 +429,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 @media print {
   @page { size: A4 portrait; margin: 11mm; }
   :root, body { background: white; }
-  .topbar, .import-panel, .imports-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
+  .topbar, .import-panel, .imports-panel, .verkoop-overzicht-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
   .page-body { display: block; width: 100%; padding: 0; margin: 0; }
   main, .results { width: 100%; max-width: none; margin: 0; }
   body, main, .results, #departmentPanels, .table-wrap { overflow: visible !important; }
