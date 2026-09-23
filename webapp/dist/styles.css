@@ -433,7 +433,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 @media print {
   @page { size: A4 portrait; margin: 11mm; }
   :root, body { background: white; }
-  .topbar, .import-panel, .imports-panel, .verkoop-overzicht-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
+  .topbar, .import-panel-header, .import-panel, .imports-panel, .verkoop-overzicht-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
   .page-body { display: block; width: 100%; padding: 0; margin: 0; }
   main, .results { width: 100%; max-width: none; margin: 0; }
   body, main, .results, #departmentPanels, .table-wrap { overflow: visible !important; }
