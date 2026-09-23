@@ -92,10 +92,10 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
   row-gap: 2px;
   column-gap: 8px;
   padding: 7px 10px 7px 8px;
-  border: 1px solid #bfe0cc;
+  border: 1px solid #9ed4b3;
   border-left: 4px solid var(--brand);
   border-radius: 10px;
-  background: #e8f4ed;
+  background: #cdead9;
 }
 /* Meetellen aan = de standaard, met groene vulling zodat de actieve lijsten
    er zelfverzekerd uitzien. Uitgevinkt blijft gewoon leesbaar/normaal (geen
