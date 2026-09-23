@@ -32,7 +32,9 @@ h1 { margin-bottom: 2px; font-family: Georgia, serif; font-size: clamp(2.2rem, 4
 .page-body { display: flex; align-items: flex-start; gap: 38px; padding: 36px clamp(20px, 5vw, 72px) 64px; }
 main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(16px, 2.4vw, 24px) + 1px); }
 .import-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; margin-bottom: 14px; }
-.import-panel-header .text-button { padding: 3px 10px; border: 1px solid var(--brand); border-radius: 999px; font-size: .72rem; background: white; white-space: nowrap; }
+.import-panel-header .text-button { padding: 7px 16px; border: 2px solid #000; border-radius: 999px; color: #000; font-size: .88rem; font-weight: 800; background: var(--gold); white-space: nowrap; }
+.import-panel-header .text-button:hover:not(:disabled) { background: #d9a94e; }
+.import-panel-header .text-button:disabled { opacity: .45; cursor: not-allowed; }
 .import-panel-header .eyebrow, .verkoop-overzicht-header .eyebrow, .imports-panel-header .eyebrow { margin-bottom: 0; }
 .import-panel { display: flex; flex-direction: column; gap: 10px; padding: clamp(16px, 2.4vw, 24px); border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
 .import-panel h2 { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.3rem); }
@@ -125,8 +127,8 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .import-row:not(.is-held) .import-order-total, .import-row:not(.is-held) .import-verkoop-status { color: #0d2e14; font-weight: 700; }
 .import-verkoop-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .import-verkoop-status { flex-shrink: 0; color: var(--brand); font-size: .68rem; font-weight: 700; white-space: nowrap; }
-.import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1.5px solid #000; border-radius: 999px; color: #000; background: var(--gold); font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
-.import-wacht-voorblad-button:hover { background: #d9a94e; }
+.import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1.5px solid #000; border-radius: 999px; color: #000; background: #e8842c; font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.import-wacht-voorblad-button:hover { background: #d3762a; }
 .import-wacht-voorblad-button svg { flex-shrink: 0; }
 .import-delete-button { grid-area: delete; align-self: start; width: 20px; height: 20px; border: 1.3px solid var(--danger); border-radius: 6px; color: var(--danger); background: #f9e9e7; font-size: .8rem; line-height: 1; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
