@@ -82,6 +82,10 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .print-status-reset-button:hover:not(:disabled) { background: #f9e9e7; }
 .print-status-reset-button:disabled { opacity: .4; cursor: not-allowed; }
 .imports-list { display: grid; gap: 6px; }
+/* Zelfde donkere bovenrand-accent als "Totaal seizoen" en het sleepvak,
+   op de bovenste kaart van deze kolom -- #importsList (ID) weegt zwaarder
+   dan .import-row.is-held, dus blijft ook zichtbaar als die kaart uitgevinkt is. */
+#importsList .import-row:first-child { border-top: 4px solid var(--brand); }
 .import-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
