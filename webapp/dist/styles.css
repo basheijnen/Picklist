@@ -123,7 +123,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1px solid #b9862f; border-radius: 999px; color: #000; background: var(--gold); font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
 .import-wacht-voorblad-button:hover { background: #d9a94e; }
 .import-wacht-voorblad-button svg { flex-shrink: 0; }
-.import-delete-button { grid-area: delete; width: 26px; height: 26px; border: 0; border-radius: 7px; color: var(--danger); background: #f9e9e7; font-size: 1rem; cursor: pointer; }
+.import-delete-button { grid-area: delete; align-self: start; width: 20px; height: 20px; border: 1.3px solid var(--danger); border-radius: 6px; color: var(--danger); background: #f9e9e7; font-size: .8rem; line-height: 1; cursor: pointer; }
 .count-diff-row td { padding: 12px 22px; background: #fbf6ec; border-bottom: 2px solid #e8d6a8; }
 .count-diff-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .82rem; }
 .count-diff-menu[hidden] { display: none; }
