@@ -91,15 +91,15 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
   row-gap: 2px;
   column-gap: 8px;
   padding: 7px 10px 7px 8px;
-  border: 1px solid #9ed4b3;
-  border-left: 4px solid var(--brand);
+  border: 2px solid #000;
   border-radius: 10px;
-  background: #cdead9;
+  background: #4caf50;
 }
-/* Meetellen aan = de standaard, met groene vulling zodat de actieve lijsten
-   er zelfverzekerd uitzien. Uitgevinkt blijft gewoon leesbaar/normaal (geen
-   gedimde "ver weg"-look) maar zonder de groene nadruk. */
-.import-row.is-held { border-left-color: var(--line); background: #f8faf9; border-color: var(--line); }
+/* Meetellen aan = de standaard, met dezelfde groene vulling als de
+   Verkopen-knop (zelfverzekerd, herkenbaar) zodat actieve lijsten er
+   zelfverzekerd uitzien. Uitgevinkt blijft gewoon leesbaar/normaal (geen
+   gedimde "ver weg"-look) maar zonder die groene nadruk. */
+.import-row.is-held { border-color: var(--line); background: #f8faf9; }
 .import-active-toggle { grid-area: checkbox; align-self: center; display: flex; align-items: center; }
 .import-active-checkbox { accent-color: var(--brand); }
 .import-active-toggle input { width: 17px; height: 17px; }
@@ -122,6 +122,7 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; }
 .herstel-menu-row { margin: 2px 0 6px; padding: 8px 10px; border-radius: 8px; background: #f4f8f5; }
 .import-meta-row { grid-area: meta; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
 .import-order-total { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--muted); font-size: .7rem; white-space: nowrap; }
+.import-row:not(.is-held) .import-order-total, .import-row:not(.is-held) .import-verkoop-status { color: #0d2e14; font-weight: 700; }
 .import-verkoop-button { flex-shrink: 0; padding: 2px 8px; border: 1px solid var(--brand); border-radius: 999px; color: var(--brand); background: white; font-size: .68rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .import-verkoop-status { flex-shrink: 0; color: var(--brand); font-size: .68rem; font-weight: 700; white-space: nowrap; }
 .import-wacht-voorblad-button { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 2px 9px 2px 7px; border: 1px solid #b9862f; border-radius: 999px; color: #000; background: var(--gold); font-size: .68rem; font-weight: 800; cursor: pointer; white-space: nowrap; }
