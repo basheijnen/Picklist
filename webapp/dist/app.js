@@ -66,7 +66,10 @@ let nazendingBrondata = null;
 const NEW_ITEMS_GROEP = "Nieuwe artikelen:";
 const IMPORTS_STORAGE_KEY = "picklist-imports-v1";
 const PRINTED_PAKKETNUMMERS_STORAGE_KEY = "picklist-printed-pakketnummers-v1";
-const KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY = "picklist-klant-duplicaten-gezien-v1";
+// v2: per naam ook de lijst-ids waarin de klant dubbel was (v1 had alleen
+// namen, waardoor een klant dagen later bij 1 nieuwe bestelling nog als
+// "dubbel" bleef staan). Oude v1-gegevens worden bij opstarten opgeruimd.
+const KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY = "picklist-klant-duplicaten-gezien-v2";
 const EXTRA_DOOSNUMMERS_STORAGE_KEY = "picklist-extra-doosnummers-v1";
 // Doosnummers die niet aan een bestaand pakket hangen (bijv. losse
 // bundel-dozen als "Doos 12 tubes") — apart bijgehouden zodat ze toch als
@@ -149,7 +152,8 @@ function loadPrintedPakketnummers() {
 }
 
 // Namen die ooit als "dubbele klant" (2+ bestellingen) zijn gezien, blijven
-// in dat overzicht staan zolang er nog minstens 1 regel van ze over is —
+// in dat overzicht staan zolang er nog minstens 1 regel van ze over is in
+// een van de lijsten waarin ze dubbel waren —
 // ook als je door gedeeltelijk bundelen (zie bundelKlantDirect) onder de 2
 // zakt. Bij bijv. 10 pakketten waarvan je er steeds een paar apart bundelt,
 // blijft de klant dus zichtbaar tot alles verwerkt is, i.p.v. halverwege
@@ -157,7 +161,8 @@ function loadPrintedPakketnummers() {
 function saveKlantDuplicatenGezien() {
   try {
     if (!klantDuplicatenGezien.size) { localStorage.removeItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY); return; }
-    localStorage.setItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY, JSON.stringify([...klantDuplicatenGezien]));
+    const opslag = Object.fromEntries([...klantDuplicatenGezien].map(([naam, ids]) => [naam, [...ids]]));
+    localStorage.setItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY, JSON.stringify(opslag));
   } catch (_error) {
     // localStorage unavailable — dan wordt dit gewoon niet onthouden.
   }
@@ -165,12 +170,14 @@ function saveKlantDuplicatenGezien() {
 
 function loadKlantDuplicatenGezien() {
   try {
+    localStorage.removeItem("picklist-klant-duplicaten-gezien-v1");
     const raw = localStorage.getItem(KLANT_DUPLICATEN_GEZIEN_STORAGE_KEY);
-    if (!raw) return new Set();
+    if (!raw) return new Map();
     const parsed = JSON.parse(raw);
-    return new Set(Array.isArray(parsed) ? parsed : []);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return new Map();
+    return new Map(Object.entries(parsed).map(([naam, ids]) => [naam, new Set(Array.isArray(ids) ? ids : [])]));
   } catch (_error) {
-    return new Set();
+    return new Map();
   }
 }
 
@@ -265,8 +272,8 @@ function vindOfMaakInDeWachtLijst() {
   return imports.find((imp) => imp.name === IN_DE_WACHT_NAAM) || createHeldImport(IN_DE_WACHT_NAAM);
 }
 
-// Zie saveKlantDuplicatenGezien hierboven.
-let klantDuplicatenGezien = new Set();
+// Zie saveKlantDuplicatenGezien hierboven: naam -> Set van lijst-ids.
+let klantDuplicatenGezien = new Map();
 
 // Klantnamen die vaker dan 1x voorkomen in de actieve lijsten, ongeacht
 // pakketnummer — die klant heeft dan meerdere bestellingen geplaatst die
@@ -284,8 +291,9 @@ function verzamelDubbeleKlanten() {
   const perNaam = new Map();
   imports.filter((imp) => imp.active).forEach((imp) => {
     (imp.orderNames || []).forEach(({ naam, pakketnummer, kanaal }) => {
-      if (!perNaam.has(naam)) perNaam.set(naam, { perRegel: new Map(), kanalen: new Set() });
+      if (!perNaam.has(naam)) perNaam.set(naam, { perRegel: new Map(), kanalen: new Set(), lijstIds: new Set() });
       const info = perNaam.get(naam);
+      info.lijstIds.add(imp.id);
       // Per pakketnummer + herkomstlijst een eigen regel (i.p.v. alleen per
       // pakketnummer) — zo blijft zichtbaar uit welke lijst elke bestelling
       // komt, ook als dezelfde klant hetzelfde pakket in meerdere lijsten
@@ -302,6 +310,7 @@ function verzamelDubbeleKlanten() {
       const regels = [...info.perRegel.values()];
       return {
         naam,
+        lijstIds: info.lijstIds,
         kanaal: [...info.kanalen].join(" / "),
         regels,
         totaal: regels.reduce((sum, r) => sum + r.aantal, 0),
@@ -310,21 +319,26 @@ function verzamelDubbeleKlanten() {
     });
   // Eenmaal als "dubbel" gezien, blijft een klant in dit overzicht staan tot
   // er niets meer van over is — ook als gedeeltelijk bundelen het aantal
-  // resterende regels (tijdelijk) onder de 2 brengt. Zodra een klant helemaal
-  // geen regels meer heeft, wordt de naam ook weer uit "gezien" gehaald —
-  // anders zou een latere, echt nieuwe klant met toevallig dezelfde naam en
-  // maar 1 bestelling hier onterecht blijven staan.
-  const huidigeNamen = new Set(alleEntries.map((entry) => entry.naam));
+  // resterende regels (tijdelijk) onder de 2 brengt. Dat geldt alleen voor
+  // de lijsten waarin de klant toen dubbel was: heeft hij daar niets meer
+  // staan, dan vervalt het "gezien" — anders bleef bijv. een klant van
+  // gisteren met 1 nieuwe bestelling in de lijst van vandaag onterecht staan.
+  const perEntry = new Map(alleEntries.map((entry) => [entry.naam, entry]));
   let gezienGewijzigd = false;
-  [...klantDuplicatenGezien].forEach((naam) => {
-    if (!huidigeNamen.has(naam)) {
+  [...klantDuplicatenGezien].forEach(([naam, ids]) => {
+    const entry = perEntry.get(naam);
+    if (!entry || ![...entry.lijstIds].some((id) => ids.has(id))) {
       klantDuplicatenGezien.delete(naam);
       gezienGewijzigd = true;
     }
   });
   alleEntries.forEach((entry) => {
-    if (entry.totaal >= 2 && !klantDuplicatenGezien.has(entry.naam)) {
-      klantDuplicatenGezien.add(entry.naam);
+    if (entry.totaal < 2) return;
+    const ids = klantDuplicatenGezien.get(entry.naam) || new Set();
+    const nieuw = [...entry.lijstIds].filter((id) => !ids.has(id));
+    if (!klantDuplicatenGezien.has(entry.naam) || nieuw.length) {
+      nieuw.forEach((id) => ids.add(id));
+      klantDuplicatenGezien.set(entry.naam, ids);
       gezienGewijzigd = true;
     }
   });
