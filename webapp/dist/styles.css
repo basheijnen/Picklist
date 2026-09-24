@@ -448,6 +448,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .topbar, .import-panel-header, .import-panel, .imports-panel, .verkoop-overzicht-panel, .summary-bar, .tabs, .unknown-panel, footer { display: none !important; }
   .page-body { display: block; width: 100%; padding: 0; margin: 0; }
   main, .results { width: 100%; max-width: none; margin: 0; }
+  main { padding: 0; }
+  body.printing-pakketkaarten .page-body,
+  body.printing-klantoverzicht .page-body,
+  body.printing-wachtlijst .page-body { display: none !important; }
   body, main, .results, #departmentPanels, .table-wrap { overflow: visible !important; }
   #departmentPanels { display: block; }
   .department[hidden] { display: block !important; }
