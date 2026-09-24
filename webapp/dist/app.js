@@ -902,22 +902,24 @@ function getDoosnummerList() {
 // Esc/sluiten nog gewoon "14 + 15" kunt typen.
 // Eén gedeelde pop-up, dus onthouden voor welk veld hij nu open staat.
 let doosKiezerInput = null;
-let doosKiezerLijstFn = getDoosnummerList;
+let doosKiezerLijstFn = getBeheerbareDoosnummerList;
 let doosKiezerBewerken = false;
 
-// Bij de Klacht/Bundel-doosvelden (getKnownDoosnummers) zijn de keuzes zelf
-// te beheren via "Dozen toevoegen / verwijderen" — pas dan verschijnen de
-// kruisjes. De lijst in Pakketten beheren komt uit de pakketten zelf en is
-// dus niet los te bewerken.
-function doosKiezerIsBeheerbaar() {
-  return doosKiezerLijstFn === getKnownDoosnummers;
+// De keuzes zijn overal zelf te beheren via "Dozen toevoegen / verwijderen"
+// — pas dan verschijnen de kruisjes. Toevoegen/weghalen gaat via dezelfde
+// extraDoosnummers/verborgenDoosnummers, dus geldt in alle doos-pop-ups.
+function getBeheerbareDoosnummerList() {
+  const doosnummers = new Set(getDoosnummerList());
+  extraDoosnummers.forEach((doosnummer) => doosnummers.add(doosnummer));
+  verborgenDoosnummers.forEach((doosnummer) => doosnummers.delete(doosnummer));
+  return [...doosnummers].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
 function renderDoosKiezer() {
   const dialog = document.querySelector("#doosKiezerDialog");
   const huidige = doosKiezerInput.value.trim();
-  const bewerken = doosKiezerBewerken && doosKiezerIsBeheerbaar();
-  document.querySelector("#doosKiezerBeheer").hidden = !doosKiezerIsBeheerbaar();
+  const bewerken = doosKiezerBewerken;
+  document.querySelector("#doosKiezerBeheer").hidden = false;
   document.querySelector("#doosKiezerToevoegen").hidden = !bewerken;
   document.querySelector("#doosKiezerBewerkButton").textContent = bewerken ? "Klaar" : "Dozen toevoegen / verwijderen";
   document.querySelector("#doosKiezerGrid").replaceChildren(...doosKiezerLijstFn().map((doosnummer) => {
@@ -967,7 +969,7 @@ function doosKiezerVoegToe() {
   const doosnummer = nieuwInput.value.trim();
   if (!doosnummer) return;
   if (verborgenDoosnummers.delete(doosnummer)) saveVerborgenDoosnummers();
-  if (!getKnownDoosnummers().includes(doosnummer)) {
+  if (!doosKiezerLijstFn().includes(doosnummer)) {
     extraDoosnummers.add(doosnummer);
     saveExtraDoosnummers();
   }
@@ -975,13 +977,12 @@ function doosKiezerVoegToe() {
   renderDoosKiezer();
 }
 
-function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
+function wireDoosKiezer(inputEl, lijstFn = getBeheerbareDoosnummerList) {
   inputEl.addEventListener("click", () => {
     if (inputEl.disabled) return;
     doosKiezerInput = inputEl;
     doosKiezerLijstFn = lijstFn;
     doosKiezerBewerken = false;
-    if (!lijstFn().length && !doosKiezerIsBeheerbaar()) return;
     renderDoosKiezer();
     const dialog = document.querySelector("#doosKiezerDialog");
     if (!dialog.open) dialog.showModal();
