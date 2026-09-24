@@ -881,43 +881,44 @@ function getDoosnummerList() {
   return [...doosnummers].sort((a, b) => a.localeCompare(b, "nl", { numeric: true }));
 }
 
-// Reused for both the normal doosnummer field and the Pokon-variant's own
-// doosnummer field: shows every known box number on click/focus (there's no
-// point filtering — a box number doesn't have a "search term" the way a
-// pakketnummer does) and closes as soon as you start typing.
-function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList) {
-  const hide = () => { listEl.hidden = true; listEl.replaceChildren(); };
+// Alle doosnummer-velden (Pakketten beheren, Klacht aanmaken, Bundelen):
+// i.p.v. een scrollende lijst een pop-up (zelfde stijl als de Top
+// 10-kanalen) met álle dozen als tegels, gecentreerd op de pagina — in 1
+// klik de juiste doos, geen scrollen. Opent alleen op klik, zodat je na
+// Esc/sluiten nog gewoon "14 + 15" kunt typen.
+function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
+  const dialog = document.querySelector("#doosKiezerDialog");
+  const grid = document.querySelector("#doosKiezerGrid");
   const render = () => {
-    const alleDoosnummers = lijstFn();
-    if (!alleDoosnummers.length) { hide(); return; }
-    listEl.replaceChildren();
-    alleDoosnummers.forEach((doosnummer) => {
-      const item = document.createElement("li");
+    const huidige = inputEl.value.trim();
+    grid.replaceChildren(...lijstFn().map((doosnummer) => {
+      const item = document.createElement("div");
+      item.className = "doos-kiezer-item";
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "nazending-suggestie-kies";
+      button.className = "doos-kiezer-tegel";
+      if (doosnummer === huidige) button.classList.add("is-actief");
+      // "Doos 12 tubes" e.d. passen anders alleen over 3 regels in een tegel.
+      if (doosnummer.length > 5) button.classList.add("is-lang");
       button.textContent = doosnummer;
-      // mousedown (not click) fires before the input's blur, so the list is
-      // still there to read from when the handler runs.
-      button.addEventListener("mousedown", (event) => {
-        event.preventDefault();
+      button.addEventListener("click", () => {
         inputEl.value = doosnummer;
-        hide();
+        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+        dialog.close();
       });
       item.append(button);
-      // Bij deze lijst (Klacht/Bundel-doosveld) is elk doosnummer weg te
-      // halen uit de suggesties — zelf toegevoegde verdwijnen helemaal,
-      // "echte" (uit bom.csv) worden alleen verborgen: bom.csv zelf blijft
-      // ongewijzigd, mocht het nummer ooit weer gebruikt worden.
+      // Bij de Klacht/Bundel-doosvelden is elk doosnummer weg te halen uit
+      // de keuzes — zelf toegevoegde verdwijnen helemaal, "echte" (uit
+      // bom.csv) worden alleen verborgen: bom.csv zelf blijft ongewijzigd,
+      // mocht het nummer ooit weer gebruikt worden.
       if (lijstFn === getKnownDoosnummers) {
         const verwijderButton = document.createElement("button");
         verwijderButton.type = "button";
-        verwijderButton.className = "nazending-doosnummer-verwijder";
+        verwijderButton.className = "doos-kiezer-verwijder";
         verwijderButton.textContent = "×";
-        verwijderButton.setAttribute("aria-label", `Doosnummer ${doosnummer} verwijderen uit suggesties`);
-        verwijderButton.addEventListener("mousedown", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
+        verwijderButton.title = "Weghalen uit de keuzes";
+        verwijderButton.setAttribute("aria-label", `Doosnummer ${doosnummer} verwijderen uit de keuzes`);
+        verwijderButton.addEventListener("click", () => {
           if (extraDoosnummers.has(doosnummer)) {
             extraDoosnummers.delete(doosnummer);
             saveExtraDoosnummers();
@@ -929,41 +930,12 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
         });
         item.append(verwijderButton);
       }
-      listEl.append(item);
-    });
-    listEl.hidden = false;
-  };
-  inputEl.addEventListener("focus", render);
-  inputEl.addEventListener("click", render);
-  inputEl.addEventListener("input", hide);
-  inputEl.addEventListener("blur", hide);
-}
-
-// Doosnummer-velden in "Pakketten beheren": i.p.v. een scrollende lijst een
-// pop-up (zelfde stijl als de Top 10-kanalen) met álle dozen als tegels,
-// gecentreerd op de pagina — in 1 klik de juiste doos, geen scrollen. Opent alleen op
-// klik, zodat je na Esc/sluiten nog gewoon "14 + 15" kunt typen.
-function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
-  inputEl.addEventListener("click", () => {
-    if (inputEl.disabled) return;
-    const alleDoosnummers = lijstFn();
-    if (!alleDoosnummers.length) return;
-    const dialog = document.querySelector("#doosKiezerDialog");
-    const huidige = inputEl.value.trim();
-    const grid = document.querySelector("#doosKiezerGrid");
-    grid.replaceChildren(...alleDoosnummers.map((doosnummer) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "doos-kiezer-tegel";
-      if (doosnummer === huidige) button.classList.add("is-actief");
-      button.textContent = doosnummer;
-      button.addEventListener("click", () => {
-        inputEl.value = doosnummer;
-        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
-        dialog.close();
-      });
-      return button;
+      return item;
     }));
+  };
+  inputEl.addEventListener("click", () => {
+    if (inputEl.disabled || !lijstFn().length) return;
+    render();
     if (!dialog.open) dialog.showModal();
   });
 }
@@ -1249,7 +1221,6 @@ function loadNazendingComponents() {
       const labelHtml = entry.gebied === "DOZEN"
         ? `Doos <div class="nazending-pakket-input-wrap nazending-doosnummer-wrap">
             <input type="text" class="nazending-doosnummer" value="${escapeHtml(entry.item)}" placeholder="Doosnummer" aria-label="Doosnummer" autocomplete="off">
-            <ul class="nazending-suggestions nazending-doosnummer-suggestions" hidden></ul>
           </div>${
             nazendingSoort === "bundel"
               ? `<textarea class="nazending-tracking" rows="3" placeholder="Trackingnummer(s), één per regel bij meerdere dozen (optioneel)" aria-label="Trackingnummer(s) voor deze doos"></textarea>`
@@ -1264,7 +1235,7 @@ function loadNazendingComponents() {
       checkbox.addEventListener("change", () => row.classList.toggle("is-unchecked", !checkbox.checked));
       const doosnummerInput = row.querySelector(".nazending-doosnummer");
       if (doosnummerInput) {
-        wireDoosnummerSuggestions(doosnummerInput, row.querySelector(".nazending-doosnummer-suggestions"), getKnownDoosnummers);
+        wireDoosKiezer(doosnummerInput, getKnownDoosnummers);
       }
       const trackingInput = row.querySelector(".nazending-tracking");
       if (trackingInput) wireTrackingPasteExtractie(trackingInput);
@@ -3360,7 +3331,7 @@ document.querySelector("#cancelNazendingButton").addEventListener("click", sluit
 document.querySelector("#nazendingDirectMeerDetailButton").addEventListener("click", () => {
   if (nazendingDraft.length) switchToNazendingDraftItem(0);
 });
-wireDoosnummerSuggestions(nazendingDirectDoosnummerInput, document.querySelector("#nazendingDirectDoosnummerSuggesties"), getKnownDoosnummers);
+wireDoosKiezer(nazendingDirectDoosnummerInput, getKnownDoosnummers);
 wireTrackingPasteExtractie(nazendingDirectTrackingInput);
 document.querySelector("#addNazendingButton").addEventListener("click", () => openNazendingDialog("klacht"));
 document.querySelector("#klantDuplicatenButton").addEventListener("click", openKlantDuplicatenDialog);

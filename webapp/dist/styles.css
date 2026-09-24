@@ -293,6 +293,11 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .doos-kiezer-tegel { min-height: 48px; padding: 6px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; color: var(--ink); font: inherit; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
 .doos-kiezer-tegel:hover { border-color: var(--brand); background: #eef5f0; }
 .doos-kiezer-tegel.is-actief { border-color: var(--brand); background: var(--brand); color: white; }
+.doos-kiezer-item { position: relative; display: grid; }
+.doos-kiezer-dialog { width: min(420px, calc(100% - 24px)); }
+.doos-kiezer-tegel.is-lang { font-size: .85rem; line-height: 1.15; }
+.doos-kiezer-verwijder { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; padding: 0; border: 1.5px solid #000; border-radius: 50%; background: white; color: var(--danger); font: inherit; font-size: .85rem; font-weight: 800; line-height: 1; cursor: pointer; }
+.doos-kiezer-verwijder:hover { background: #f9e9e7; }
 .verkoop-hardloper-kanalen-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-hardloper-kanaal-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; }
 .verkoop-hardloper-kanaal-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
@@ -330,12 +335,6 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .nazending-suggestions li + li { margin-top: 2px; }
 .nazending-suggestions button { display: block; width: 100%; padding: 8px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--ink); font: inherit; font-weight: 650; text-align: left; cursor: pointer; }
 .nazending-suggestions button:hover { background: #eef5f0; }
-/* Losse klasse i.p.v. :has() — het selectiegebied (de doosnaam) moet het
-   grootste, makkelijkst te raken vlak zijn; het rode kruisje juist klein. */
-.nazending-suggestions li:has(.nazending-doosnummer-verwijder) { flex-wrap: nowrap; }
-.nazending-suggestie-kies { flex: 1 1 auto; min-width: 0; }
-.nazending-doosnummer-verwijder { flex: 0 0 22px; width: 22px; padding: 8px 0 !important; border-radius: 7px; color: var(--danger) !important; text-align: center !important; font-weight: 800 !important; }
-.nazending-doosnummer-verwijder:hover { background: #f9e9e7 !important; }
 .nazending-pakket-naam { margin: 6px 0 0; color: var(--brand); font-weight: 750; min-height: 1.2em; }
 .nazending-component-rows { display: grid; gap: 8px; margin-top: 16px; }
 .nazending-component-row { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px; background: #f4f8f5; }
