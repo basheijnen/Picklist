@@ -33,6 +33,7 @@ const verkoopDialog = document.querySelector("#verkoopDialog");
 const nazendingDialog = document.querySelector("#nazendingDialog");
 const nazendingKlantnaamField = document.querySelector("#nazendingKlantnaamField");
 const nazendingKlantnaamInput = document.querySelector("#nazendingKlantnaam");
+const nazendingOpmerkingInput = document.querySelector("#nazendingOpmerking");
 const nazendingPakketnummerInput = document.querySelector("#nazendingPakketnummer");
 const nazendingPakketSuggestionsEl = document.querySelector("#nazendingPakketSuggestions");
 const nazendingPakketNaamEl = document.querySelector("#nazendingPakketNaam");
@@ -1224,6 +1225,7 @@ function openNazendingDialog(soort = "klacht") {
   document.querySelector("#saveNazendingButton").textContent = isBundel ? "Bundelpakket opslaan" : "Klacht opslaan";
   nazendingKlantnaamField.hidden = !isBundel;
   nazendingKlantnaamInput.value = "";
+  nazendingOpmerkingInput.value = "";
   nazendingDraft = [];
   renderNazendingDraftList();
   resetNazendingPakketPicker();
@@ -1557,6 +1559,9 @@ function saveNazending() {
     active: true,
     soort: nazendingSoort,
     klantnaam: nazendingSoort === "bundel" ? nazendingKlantnaamInput.value.trim() : "",
+    // Vrije tekst voor de productie (bijv. "Geen gele blaadjes"), komt groot
+    // in een eigen vak op de pakketkaart.
+    opmerking: nazendingOpmerkingInput.value.trim(),
     // Herhaalt het pakketnummer per samengevoegde bronbestelling (bijv.
     // "55.2 + 55.2" voor 2 gebundelde orders van hetzelfde pakket) i.p.v.
     // het maar 1x te tonen — zo blijft zichtbaar hoeveel orders er in deze
@@ -2878,6 +2883,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       ${toontPakketnummer ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
       ${isBundel && nz.klantnaam ? `<div class="pakketkaart-klantnaam">${escapeHtml(nz.klantnaam)}</div>` : ""}
+      ${nz.opmerking ? `<div class="pakketkaart-opmerking"><span class="pakketkaart-doos-label">OPMERKING:</span><p>${escapeHtml(nz.opmerking)}</p></div>` : ""}
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer${doosnummerFontKlasse(group.doosnummer)}">${escapeHtml(group.doosnummer)}</span></div>
