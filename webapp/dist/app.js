@@ -939,6 +939,38 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
   inputEl.addEventListener("blur", hide);
 }
 
+// Doosnummer-velden in "Pakketten beheren": i.p.v. een scrollende lijst een
+// pop-up (zelfde stijl als de Top 10-kanalen) met álle dozen als tegels
+// naast het veld — in 1 klik de juiste doos, geen scrollen. Opent alleen op
+// klik, zodat je na Esc/sluiten nog gewoon "14 + 15" kunt typen.
+function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
+  inputEl.addEventListener("click", () => {
+    if (inputEl.disabled) return;
+    const alleDoosnummers = lijstFn();
+    if (!alleDoosnummers.length) return;
+    const dialog = document.querySelector("#doosKiezerDialog");
+    const huidige = inputEl.value.trim();
+    const grid = document.querySelector("#doosKiezerGrid");
+    grid.replaceChildren(...alleDoosnummers.map((doosnummer) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "doos-kiezer-tegel";
+      if (doosnummer === huidige) button.classList.add("is-actief");
+      button.textContent = doosnummer;
+      button.addEventListener("click", () => {
+        inputEl.value = doosnummer;
+        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
+        dialog.close();
+      });
+      return button;
+    }));
+    if (!dialog.open) {
+      dialog.showModal();
+      positioneerBijAnker(dialog, inputEl);
+    }
+  });
+}
+
 // Plak je een trackingpagina-link (bijv. de DPD "mydpd"-zoeklink met
 // ?parcelNumber=...) in een trackingveld, dan is alleen het cijferreeksje
 // daarin het echte trackingnummer — de rest van de URL is ruis. Een gewoon
@@ -3375,8 +3407,13 @@ nazendingPakketnummerInput.addEventListener("input", () => {
 });
 nazendingPakketnummerInput.addEventListener("focus", renderNazendingPakketSuggestions);
 nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestions);
-wireDoosnummerSuggestions(document.querySelector("#newPackageBoxes"), document.querySelector("#newPackageBoxesSuggestions"));
-wireDoosnummerSuggestions(document.querySelector("#newPackagePokonDoos"), document.querySelector("#newPackagePokonDoosSuggestions"));
+wireDoosKiezer(document.querySelector("#newPackageBoxes"));
+wireDoosKiezer(document.querySelector("#newPackagePokonDoos"));
+document.querySelector("#closeDoosKiezerDialog").addEventListener("click", () => document.querySelector("#doosKiezerDialog").close());
+// Klik naast de pop-up (op de achtergrond) sluit hem ook.
+document.querySelector("#doosKiezerDialog").addEventListener("click", (event) => {
+  if (event.target === event.currentTarget) event.currentTarget.close();
+});
 document.querySelector("#saveNazendingButton").addEventListener("click", saveNazending);
 addAnotherNazendingPakketButton.addEventListener("click", addAnotherNazendingPakket);
 

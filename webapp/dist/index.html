@@ -159,7 +159,6 @@
               <label>Doosnummer(s)
                 <div class="nazending-pakket-input-wrap">
                   <input id="newPackageBoxes" required placeholder="Bijv. 14 of 14 + 15" autocomplete="off">
-                  <ul id="newPackageBoxesSuggestions" class="nazending-suggestions" hidden></ul>
                 </div>
               </label>
             </div>
@@ -173,7 +172,6 @@
               <label id="pokonVariantDoosField">Doosnummer Pokon-variant
                 <div class="nazending-pakket-input-wrap">
                   <input id="newPackagePokonDoos" disabled placeholder="Bijv. 2" autocomplete="off">
-                  <ul id="newPackagePokonDoosSuggestions" class="nazending-suggestions" hidden></ul>
                 </div>
               </label>
             </div>
@@ -336,6 +334,16 @@
     </div>
     <div class="nazending-dialog-body hardloper-dialog-body">
       <ol id="verkoopHardloperKanalenLijst" class="verkoop-hardloper-kanalen-lijst"></ol>
+    </div>
+  </dialog>
+
+  <dialog id="doosKiezerDialog" class="package-dialog nazending-dialog hardloper-dialog doos-kiezer-dialog">
+    <div class="dialog-header">
+      <div><span class="eyebrow">Doosnummer</span><h2>Kies een doos</h2></div>
+      <button id="closeDoosKiezerDialog" class="icon-button" type="button" aria-label="Sluiten">×</button>
+    </div>
+    <div class="nazending-dialog-body hardloper-dialog-body">
+      <div id="doosKiezerGrid" class="doos-kiezer-grid"></div>
     </div>
   </dialog>
 

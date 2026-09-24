@@ -289,6 +289,10 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .hardloper-dialog .dialog-header { padding: 18px 20px 14px; }
 .hardloper-dialog .nazending-dialog-body { padding: 14px 20px 20px; }
 .hardloper-dialog h2 { font-size: 1rem; }
+.doos-kiezer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.doos-kiezer-tegel { min-height: 48px; padding: 6px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; color: var(--ink); font: inherit; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
+.doos-kiezer-tegel:hover { border-color: var(--brand); background: #eef5f0; }
+.doos-kiezer-tegel.is-actief { border-color: var(--brand); background: var(--brand); color: white; }
 .verkoop-hardloper-kanalen-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-hardloper-kanaal-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #f8faf9; }
 .verkoop-hardloper-kanaal-naam { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
