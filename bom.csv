@@ -413,8 +413,6 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 106.1p,KAS,Citrus trifoliata - P9,,3.0,Mediterrane:,14
 106.2,KAS,Citrus trifoliata - P9,,6.0,Mediterrane:,14
 106.2p,KAS,Citrus trifoliata - P9,,6.0,Mediterrane:,14
-264.1,KAS,Ficus carica 'Brown Turkey' - P17,,1.0,Mediterrane:,16
-264.1p,KAS,Ficus carica 'Brown Turkey' - P17,,1.0,Mediterrane:,16
 264.2,KAS,Ficus carica 'Brown Turkey' - P17,,2.0,Mediterrane:,16
 264.2p,KAS,Ficus carica 'Brown Turkey' - P17,,2.0,Mediterrane:,16
 100.5,KAS,Olijfboom winterhard struik,,1.0,Mediterrane:,18
@@ -435,1040 +433,1034 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 100.1p,KAS,Olijfboom winterhard op stam XXL,,1.0,Mediterrane:,21
 100.2,KAS,Olijfboom winterhard op stam XXL,,2.0,Mediterrane:,21
 100.2p,KAS,Olijfboom winterhard op stam XXL,,2.0,Mediterrane:,21
-150.1,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,36
-150.1p,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,36
-150.2,KAS,Chamaerops humilis medium,,2.0,Tropische planten:,36
-150.2p,KAS,Chamaerops humilis medium,,2.0,Tropische planten:,36
-160.1,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,36
-160.1p,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,36
-150.3,KAS,Chamaerops humilis large,,1.0,Tropische planten:,37
-150.3p,KAS,Chamaerops humilis large,,1.0,Tropische planten:,37
-150.4,KAS,Chamaerops humilis large,,2.0,Tropische planten:,37
-150.4p,KAS,Chamaerops humilis large,,2.0,Tropische planten:,37
-151.1,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,38
-151.1p,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,38
-151.2,KAS,Phoenix canariensis medium,,2.0,Tropische planten:,38
-151.2p,KAS,Phoenix canariensis medium,,2.0,Tropische planten:,38
-160.1,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,38
-160.1p,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,38
-151.3,KAS,Phoenix canariensis large,,1.0,Tropische planten:,39
-151.3p,KAS,Phoenix canariensis large,,1.0,Tropische planten:,39
-151.4,KAS,Phoenix canariensis large,,2.0,Tropische planten:,39
-151.4p,KAS,Phoenix canariensis large,,2.0,Tropische planten:,39
-152.1,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,40
-152.1p,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,40
-152.2,KAS,Trachycarpus fortunei medium,,2.0,Tropische planten:,40
-152.2p,KAS,Trachycarpus fortunei medium,,2.0,Tropische planten:,40
-160.1,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,40
-160.1p,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,40
-152.3,KAS,Trachycarpus fortunei large,,1.0,Tropische planten:,41
-152.3p,KAS,Trachycarpus fortunei large,,1.0,Tropische planten:,41
-152.4,KAS,Trachycarpus fortunei large,,2.0,Tropische planten:,41
-152.4p,KAS,Trachycarpus fortunei large,,2.0,Tropische planten:,41
-153.1,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,42
-153.1p,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,42
-153.2,KAS,Washingtonia robusta medium,,2.0,Tropische planten:,42
-153.2p,KAS,Washingtonia robusta medium,,2.0,Tropische planten:,42
-160.1,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,42
-160.1p,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,42
-153.3,KAS,Washingtonia robusta large,,1.0,Tropische planten:,43
-153.3p,KAS,Washingtonia robusta large,,1.0,Tropische planten:,43
-153.4,KAS,Washingtonia robusta large,,2.0,Tropische planten:,43
-153.4p,KAS,Washingtonia robusta large,,2.0,Tropische planten:,43
-103.1,KAS,Asimina triloba – Pawpaw / Indianenbanaan - P9,,1.0,Tropische planten:,45
-103.1p,KAS,Asimina triloba – Pawpaw / Indianenbanaan - P9,,1.0,Tropische planten:,45
-3.1,KAS,Magnolia Soulangeana,,1.0,Magnolia:,49
-3.1p,KAS,Magnolia Soulangeana,,1.0,Magnolia:,49
-3.2,KAS,Magnolia Soulangeana,,2.0,Magnolia:,49
-3.2p,KAS,Magnolia Soulangeana,,2.0,Magnolia:,49
-3.3,KAS,Magnolia Soulangeana,,3.0,Magnolia:,49
-3.3p,KAS,Magnolia Soulangeana,,3.0,Magnolia:,49
-3.6,KAS,Magnolia Soulangeana,,6.0,Magnolia:,49
-3.6p,KAS,Magnolia Soulangeana,,6.0,Magnolia:,49
-3.1,KAS,Magnolia Stellata,,1.0,Magnolia:,50
-3.1p,KAS,Magnolia Stellata,,1.0,Magnolia:,50
-3.2,KAS,Magnolia Stellata,,2.0,Magnolia:,50
-3.2p,KAS,Magnolia Stellata,,2.0,Magnolia:,50
-3.5,KAS,Magnolia Stellata,,3.0,Magnolia:,50
-3.5p,KAS,Magnolia Stellata,,3.0,Magnolia:,50
-3.8,KAS,Magnolia Stellata,,6.0,Magnolia:,50
-3.8p,KAS,Magnolia Stellata,,6.0,Magnolia:,50
-3.1,KAS,Magnolia Susan,,1.0,Magnolia:,51
-3.1p,KAS,Magnolia Susan,,1.0,Magnolia:,51
-3.2,KAS,Magnolia Susan,,2.0,Magnolia:,51
-3.2p,KAS,Magnolia Susan,,2.0,Magnolia:,51
-3.4,KAS,Magnolia Susan,,3.0,Magnolia:,51
-3.4p,KAS,Magnolia Susan,,3.0,Magnolia:,51
-3.7,KAS,Magnolia Susan,,6.0,Magnolia:,51
-3.7p,KAS,Magnolia Susan,,6.0,Magnolia:,51
-13.1,KAS,Buddleja Davidii,,3.0,Buddleja:,54
-13.1p,KAS,Buddleja Davidii,,3.0,Buddleja:,54
-13.2,KAS,Buddleja Davidii,,6.0,Buddleja:,54
-13.2p,KAS,Buddleja Davidii,,6.0,Buddleja:,54
-13.7,KAS,Buddleja Davidii,,2.0,Buddleja:,54
-13.7p,KAS,Buddleja Davidii,,2.0,Buddleja:,54
-13.6,KAS,Buddleja dav. 'Black Knight',,3.0,Buddleja:,55
-13.6p,KAS,Buddleja dav. 'Black Knight',,3.0,Buddleja:,55
-13.5,KAS,Buddleja dav. 'Pink Delight',,3.0,Buddleja:,56
-13.5p,KAS,Buddleja dav. 'Pink Delight',,3.0,Buddleja:,56
-13.7,KAS,Buddleja dav. 'Pink Delight',,2.0,Buddleja:,56
-13.7p,KAS,Buddleja dav. 'Pink Delight',,2.0,Buddleja:,56
-13.3,KAS,Buddleja dav. 'Royal Red',,3.0,Buddleja:,57
-13.3p,KAS,Buddleja dav. 'Royal Red',,3.0,Buddleja:,57
-13.7,KAS,Buddleja dav. 'Royal Red',,2.0,Buddleja:,57
-13.7p,KAS,Buddleja dav. 'Royal Red',,2.0,Buddleja:,57
-13.4,KAS,Buddleja dav. 'White Profusion',,3.0,Buddleja:,58
-13.4p,KAS,Buddleja dav. 'White Profusion',,3.0,Buddleja:,58
-13.7,KAS,Buddleja dav. 'White Profusion',,2.0,Buddleja:,58
-13.7p,KAS,Buddleja dav. 'White Profusion',,2.0,Buddleja:,58
-330.1,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,1.0,Buddleja:,60
-330.1p,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,1.0,Buddleja:,60
-330.2,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,2.0,Buddleja:,60
-330.2p,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,2.0,Buddleja:,60
-331.1,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,1.0,Buddleja:,61
-331.1p,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,1.0,Buddleja:,61
-331.2,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,2.0,Buddleja:,61
-331.2p,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,2.0,Buddleja:,61
-332.1,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,1.0,Buddleja:,62
-332.1p,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,1.0,Buddleja:,62
-332.2,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,2.0,Buddleja:,62
-332.2p,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,2.0,Buddleja:,62
-333.1,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,1.0,Buddleja:,63
-333.1p,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,1.0,Buddleja:,63
-333.2,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,2.0,Buddleja:,63
-333.2p,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,2.0,Buddleja:,63
-4.0,KAS,Clematis montana 'Rubens',,3.0,Klimplanten:,66
-4.0p,KAS,Clematis montana 'Rubens',,3.0,Klimplanten:,66
-4.3,KAS,Clematis montana 'Rubens',,1.0,Klimplanten:,66
-4.3p,KAS,Clematis montana 'Rubens',,1.0,Klimplanten:,66
-35.1,KAS,Clematis montana 'Rubens',,2.0,Klimplanten:,66
-35.1p,KAS,Clematis montana 'Rubens',,2.0,Klimplanten:,66
-4.1,KAS,Clematis montana 'Wilsonii',,3.0,Klimplanten:,67
-4.1p,KAS,Clematis montana 'Wilsonii',,3.0,Klimplanten:,67
-4.3,KAS,Clematis montana 'Wilsonii',,1.0,Klimplanten:,67
-4.3p,KAS,Clematis montana 'Wilsonii',,1.0,Klimplanten:,67
-4.2,KAS,Clematis montana 'Mayleen',,3.0,Klimplanten:,68
-4.2p,KAS,Clematis montana 'Mayleen',,3.0,Klimplanten:,68
-4.3,KAS,Clematis montana 'Mayleen',,1.0,Klimplanten:,68
-4.3p,KAS,Clematis montana 'Mayleen',,1.0,Klimplanten:,68
-33.1,KAS,Lonicera per.'Belgica' - P9,,3.0,Klimplanten:,69
-33.1p,KAS,Lonicera per.'Belgica' - P9,,3.0,Klimplanten:,69
-33.2,KAS,Lonicera per.'Belgica' - P9,,6.0,Klimplanten:,69
-33.2p,KAS,Lonicera per.'Belgica' - P9,,6.0,Klimplanten:,69
-35.1,KAS,Lonicera per.'Belgica' - P9,,2.0,Klimplanten:,69
-35.1p,KAS,Lonicera per.'Belgica' - P9,,2.0,Klimplanten:,69
-34.1,KAS,Parthenocissus quin. 'Engelmannii' - P9,,3.0,Klimplanten:,70
-34.1p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,3.0,Klimplanten:,70
-34.2,KAS,Parthenocissus quin. 'Engelmannii' - P9,,6.0,Klimplanten:,70
-34.2p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,6.0,Klimplanten:,70
-35.1,KAS,Parthenocissus quin. 'Engelmannii' - P9,,2.0,Klimplanten:,70
-35.1p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,2.0,Klimplanten:,70
-37.0,KAS,Thunbergia oranje - P9,,2.0,Klimplanten:,71
-37.0p,KAS,Thunbergia oranje - P9,,2.0,Klimplanten:,71
-249.1,KAS,Trachelospermum jasminoides P9 Wit,,3.0,Klimplanten:,73
-249.1p,KAS,Trachelospermum jasminoides P9 Wit,,3.0,Klimplanten:,73
-249.0,KAS,Trachelospermum jasminoides P9 Wit,,2.0,Klimplanten:,73
-249.0p,KAS,Trachelospermum jasminoides P9 Wit,,2.0,Klimplanten:,73
-249.2,KAS,Trachelospermum jasminoides P9 Wit,,6.0,Klimplanten:,73
-249.2p,KAS,Trachelospermum jasminoides P9 Wit,,6.0,Klimplanten:,73
-249.3,KAS,Trachelospermum jasminoides P9 Roze,,3.0,Klimplanten:,74
-249.3p,KAS,Trachelospermum jasminoides P9 Roze,,3.0,Klimplanten:,74
-249.4,KAS,Trachelospermum jasminoides P9 Roze,,6.0,Klimplanten:,74
-249.4p,KAS,Trachelospermum jasminoides P9 Roze,,6.0,Klimplanten:,74
-250.1,KAS,Trachelospermum jasminoides XXL P17  (wit),,1.0,Klimplanten:,76
-250.1p,KAS,Trachelospermum jasminoides XXL P17  (wit),,1.0,Klimplanten:,76
-250.2,KAS,Trachelospermum jasminoides XXL P17  (wit),,2.0,Klimplanten:,76
-250.2p,KAS,Trachelospermum jasminoides XXL P17  (wit),,2.0,Klimplanten:,76
-251.1,KAS,Trachelospermum jasminoides XXL P17 (roze),,1.0,Klimplanten:,77
-251.1p,KAS,Trachelospermum jasminoides XXL P17 (roze),,1.0,Klimplanten:,77
-251.2,KAS,Trachelospermum jasminoides XXL P17 (roze),,2.0,Klimplanten:,77
-251.2p,KAS,Trachelospermum jasminoides XXL P17 (roze),,2.0,Klimplanten:,77
-252.1,KAS,Trachelospermum jasminoides XXL P17 (geel),,1.0,Klimplanten:,78
-252.1p,KAS,Trachelospermum jasminoides XXL P17 (geel),,1.0,Klimplanten:,78
-252.2,KAS,Trachelospermum jasminoides XXL P17 (geel),,2.0,Klimplanten:,78
-252.2p,KAS,Trachelospermum jasminoides XXL P17 (geel),,2.0,Klimplanten:,78
-263.1,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,1.0,Klimplanten:,80
-263.1p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,1.0,Klimplanten:,80
-263.2,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,80
-263.2p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,80
-253.1,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,82
-253.1p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,82
-253.2,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,82
-253.2p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,82
-254.1,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,84
-254.1p,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,84
-254.2,KAS,Campsis radicans 'Flava' XXL P17 (geel),,2.0,Klimplanten:,84
-254.2p,KAS,Campsis radicans 'Flava' XXL P17 (geel),,2.0,Klimplanten:,84
-255.1,KAS,Campsis radicans  XXL P17 (oranje),,1.0,Klimplanten:,85
-255.1p,KAS,Campsis radicans  XXL P17 (oranje),,1.0,Klimplanten:,85
-255.2,KAS,Campsis radicans  XXL P17 (oranje),,2.0,Klimplanten:,85
-255.2p,KAS,Campsis radicans  XXL P17 (oranje),,2.0,Klimplanten:,85
-256.1,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,1.0,Klimplanten:,86
-256.1p,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,1.0,Klimplanten:,86
-256.2,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,2.0,Klimplanten:,86
-256.2p,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,2.0,Klimplanten:,86
-257.1,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,1.0,Klimplanten:,88
-257.1p,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,1.0,Klimplanten:,88
-257.2,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,2.0,Klimplanten:,88
-257.2p,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,2.0,Klimplanten:,88
-258.1,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,1.0,Klimplanten:,89
-258.1p,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,1.0,Klimplanten:,89
-258.2,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,2.0,Klimplanten:,89
-258.2p,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,2.0,Klimplanten:,89
-260.1,KAS,Passiflora caerulea  XXL P17 (blauw),,1.0,Klimplanten:,91
-260.1p,KAS,Passiflora caerulea  XXL P17 (blauw),,1.0,Klimplanten:,91
-260.2,KAS,Passiflora caerulea  XXL P17 (blauw),,2.0,Klimplanten:,91
-260.2p,KAS,Passiflora caerulea  XXL P17 (blauw),,2.0,Klimplanten:,91
-261.1,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,1.0,Klimplanten:,92
-261.1p,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,1.0,Klimplanten:,92
-261.2,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,2.0,Klimplanten:,92
-261.2p,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,2.0,Klimplanten:,92
-262.1,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,1.0,Klimplanten:,93
-262.1p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,1.0,Klimplanten:,93
-262.2,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,93
-262.2p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,93
-230.1,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,96
-230.1p,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,96
-231.1,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,97
-231.1p,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,97
-232.1,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,98
-232.1p,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,98
-233.1,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,99
-233.1p,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,99
-237.1,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,100
-237.1p,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,100
-237.0,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,100
-237.0p,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,100
-234.1,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,101
-234.1p,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,101
-235.1,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,102
-235.1p,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,102
-236.1,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,103
-236.1p,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,103
-236.0,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,103
-236.0p,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,103
-6.1,KAS,Camellia Rood,,1.0,Camellia:,106
-6.1p,KAS,Camellia Rood,,1.0,Camellia:,106
-6.2,KAS,Camellia Rood,,2.0,Camellia:,106
-6.2p,KAS,Camellia Rood,,2.0,Camellia:,106
-6.3,KAS,Camellia Rood,,3.0,Camellia:,106
-6.3p,KAS,Camellia Rood,,3.0,Camellia:,106
-6.1,KAS,Camellia Roze,,1.0,Camellia:,107
-6.1p,KAS,Camellia Roze,,1.0,Camellia:,107
-6.2,KAS,Camellia Roze,,2.0,Camellia:,107
-6.2p,KAS,Camellia Roze,,2.0,Camellia:,107
-6.4,KAS,Camellia Roze,,3.0,Camellia:,107
-6.4p,KAS,Camellia Roze,,3.0,Camellia:,107
-6.1,KAS,Camellia Wit,,1.0,Camellia:,108
-6.1p,KAS,Camellia Wit,,1.0,Camellia:,108
-6.2,KAS,Camellia Wit,,2.0,Camellia:,108
-6.2p,KAS,Camellia Wit,,2.0,Camellia:,108
-6.5,KAS,Camellia Wit,,3.0,Camellia:,108
-6.5p,KAS,Camellia Wit,,3.0,Camellia:,108
-40.3,KAS,Camellia XL Rood,,1.0,Camellia XL:,111
-40.3p,KAS,Camellia XL Rood,,1.0,Camellia XL:,111
-40.4,KAS,Camellia XL Rood,,2.0,Camellia XL:,111
-40.4p,KAS,Camellia XL Rood,,2.0,Camellia XL:,111
-40.1,KAS,Camellia XL Roze,,1.0,Camellia XL:,112
-40.1p,KAS,Camellia XL Roze,,1.0,Camellia XL:,112
-40.2,KAS,Camellia XL Roze,,2.0,Camellia XL:,112
-40.2p,KAS,Camellia XL Roze,,2.0,Camellia XL:,112
-40.5,KAS,Camellia XL Wit,,1.0,Camellia XL:,113
-40.5p,KAS,Camellia XL Wit,,1.0,Camellia XL:,113
-40.6,KAS,Camellia XL Wit,,2.0,Camellia XL:,113
-40.6p,KAS,Camellia XL Wit,,2.0,Camellia XL:,113
-40.7,KAS,Camellia XL Tricolor,,1.0,Camellia XL:,114
-40.7p,KAS,Camellia XL Tricolor,,1.0,Camellia XL:,114
-40.8,KAS,Camellia XL Tricolor,,2.0,Camellia XL:,114
-40.8p,KAS,Camellia XL Tricolor,,2.0,Camellia XL:,114
-T001,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,117
-T001p,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,117
-T002,KAS,Camellia japonica P19 Roze,,2.0,Camellia P19:,117
-T002p,KAS,Camellia japonica P19 Roze,,2.0,Camellia P19:,117
-T005,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,117
-T005p,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,117
-T003,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,118
-T003p,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,118
-T004,KAS,Camellia japonica P19 Wit,,2.0,Camellia P19:,118
-T004p,KAS,Camellia japonica P19 Wit,,2.0,Camellia P19:,118
-T005,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,118
-T005p,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,118
-274.1,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,1.0,Acers:,121
-274.1p,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,1.0,Acers:,121
-274.2,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,2.0,Acers:,121
-274.2p,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,2.0,Acers:,121
-274.1,KAS,"Acer palm. 'Butterfly' (P10,5)",,1.0,Acers:,122
-274.1p,KAS,"Acer palm. 'Butterfly' (P10,5)",,1.0,Acers:,122
-274.3,KAS,"Acer palm. 'Butterfly' (P10,5)",,2.0,Acers:,122
-274.3p,KAS,"Acer palm. 'Butterfly' (P10,5)",,2.0,Acers:,122
-274.1,KAS,"Acer palm. 'Going Green' (P10,5)",,1.0,Acers:,123
-274.1p,KAS,"Acer palm. 'Going Green' (P10,5)",,1.0,Acers:,123
-274.4,KAS,"Acer palm. 'Going Green' (P10,5)",,2.0,Acers:,123
-274.4p,KAS,"Acer palm. 'Going Green' (P10,5)",,2.0,Acers:,123
-274.1,KAS,"Acer palm. 'Orange Dream' (P10,5)",,1.0,Acers:,124
-274.1p,KAS,"Acer palm. 'Orange Dream' (P10,5)",,1.0,Acers:,124
-274.5,KAS,"Acer palm. 'Orange Dream' (P10,5)",,2.0,Acers:,124
-274.5p,KAS,"Acer palm. 'Orange Dream' (P10,5)",,2.0,Acers:,124
-290.1,KAS,Acer palm. 'Atropurpureum' (P15),,1.0,Acers:,126
-290.1p,KAS,Acer palm. 'Atropurpureum' (P15),,1.0,Acers:,126
-290.2,KAS,Acer palm. 'Atropurpureum' (P15),,2.0,Acers:,126
-290.2p,KAS,Acer palm. 'Atropurpureum' (P15),,2.0,Acers:,126
-291.1,KAS,Acer palm. 'Butterfly' (P15),,1.0,Acers:,127
-291.1p,KAS,Acer palm. 'Butterfly' (P15),,1.0,Acers:,127
-291.2,KAS,Acer palm. 'Butterfly' (P15),,2.0,Acers:,127
-291.2p,KAS,Acer palm. 'Butterfly' (P15),,2.0,Acers:,127
-292.1,KAS,Acer palm. 'Going Green' (P15),,1.0,Acers:,128
-292.1p,KAS,Acer palm. 'Going Green' (P15),,1.0,Acers:,128
-292.2,KAS,Acer palm. 'Going Green' (P15),,2.0,Acers:,128
-292.2p,KAS,Acer palm. 'Going Green' (P15),,2.0,Acers:,128
-293.1,KAS,Acer palm. 'Orange Dream' (P15),,1.0,Acers:,129
-293.1p,KAS,Acer palm. 'Orange Dream' (P15),,1.0,Acers:,129
-293.2,KAS,Acer palm. 'Orange Dream' (P15),,2.0,Acers:,129
-293.2p,KAS,Acer palm. 'Orange Dream' (P15),,2.0,Acers:,129
-294.1,KAS,Acer palm. 'Extravaganza' (P15),,1.0,Acers:,130
-294.1p,KAS,Acer palm. 'Extravaganza' (P15),,1.0,Acers:,130
-294.2,KAS,Acer palm. 'Extravaganza' (P15),,2.0,Acers:,130
-294.2p,KAS,Acer palm. 'Extravaganza' (P15),,2.0,Acers:,130
-295.1,KAS,Acer palm. 'Taylor' (P15),,1.0,Acers:,131
-295.1p,KAS,Acer palm. 'Taylor' (P15),,1.0,Acers:,131
-295.2,KAS,Acer palm. 'Taylor' (P15),,2.0,Acers:,131
-295.2p,KAS,Acer palm. 'Taylor' (P15),,2.0,Acers:,131
-296.1,KAS,Acer palm. 'Moonrise' (P15),,1.0,Acers:,132
-296.1p,KAS,Acer palm. 'Moonrise' (P15),,1.0,Acers:,132
-296.2,KAS,Acer palm. 'Moonrise' (P15),,2.0,Acers:,132
-296.2p,KAS,Acer palm. 'Moonrise' (P15),,2.0,Acers:,132
-275.1,KAS,Acer palm. 'Atropurpureum' (P19),,1.0,Acers:,134
-275.1p,KAS,Acer palm. 'Atropurpureum' (P19),,1.0,Acers:,134
-275.2,KAS,Acer palm. 'Atropurpureum' (P19),,2.0,Acers:,134
-275.2p,KAS,Acer palm. 'Atropurpureum' (P19),,2.0,Acers:,134
-276.1,KAS,Acer palm. 'Beni-maiko' (P19),,1.0,Acers:,135
-276.1p,KAS,Acer palm. 'Beni-maiko' (P19),,1.0,Acers:,135
-276.2,KAS,Acer palm. 'Beni-maiko' (P19),,2.0,Acers:,135
-276.2p,KAS,Acer palm. 'Beni-maiko' (P19),,2.0,Acers:,135
-277.1,KAS,Acer palm. 'Butterfly' (P19),,1.0,Acers:,136
-277.1p,KAS,Acer palm. 'Butterfly' (P19),,1.0,Acers:,136
-277.2,KAS,Acer palm. 'Butterfly' (P19),,2.0,Acers:,136
-277.2p,KAS,Acer palm. 'Butterfly' (P19),,2.0,Acers:,136
-278.1,KAS,Acer palm. 'Orange Dream' (P19),,1.0,Acers:,137
-278.1p,KAS,Acer palm. 'Orange Dream' (P19),,1.0,Acers:,137
-278.2,KAS,Acer palm. 'Orange Dream' (P19),,2.0,Acers:,137
-278.2p,KAS,Acer palm. 'Orange Dream' (P19),,2.0,Acers:,137
-279.1,KAS,Acer palm. 'Shaina' (P19),,1.0,Acers:,138
-279.1p,KAS,Acer palm. 'Shaina' (P19),,1.0,Acers:,138
-279.2,KAS,Acer palm. 'Shaina' (P19),,2.0,Acers:,138
-279.2p,KAS,Acer palm. 'Shaina' (P19),,2.0,Acers:,138
-279.3,KAS,Acer palm. 'Shaina' Struik (P19),,1.0,Acers:,139
-279.3p,KAS,Acer palm. 'Shaina' Struik (P19),,1.0,Acers:,139
-279.4,KAS,Acer palm. 'Shaina' Struik (P19),,2.0,Acers:,139
-279.4p,KAS,Acer palm. 'Shaina' Struik (P19),,2.0,Acers:,139
-298.1,KAS,Acer palm. 'Dissectum' (P19),,1.0,Acers:,140
-298.1p,KAS,Acer palm. 'Dissectum' (P19),,1.0,Acers:,140
-298.2,KAS,Acer palm. 'Dissectum' (P19),,2.0,Acers:,140
-298.2p,KAS,Acer palm. 'Dissectum' (P19),,2.0,Acers:,140
-299.1,KAS,Acer palm. 'Extravaganza' (P19),,1.0,Acers:,141
-299.1p,KAS,Acer palm. 'Extravaganza' (P19),,1.0,Acers:,141
-299.2,KAS,Acer palm. 'Extravaganza' (P19),,2.0,Acers:,141
-299.2p,KAS,Acer palm. 'Extravaganza' (P19),,2.0,Acers:,141
-300.1,KAS,Acer palm. 'Garnet' (P19),,1.0,Acers:,142
-300.1p,KAS,Acer palm. 'Garnet' (P19),,1.0,Acers:,142
-300.2,KAS,Acer palm. 'Garnet' (P19),,2.0,Acers:,142
-300.2p,KAS,Acer palm. 'Garnet' (P19),,2.0,Acers:,142
-301.1,KAS,Acer palm. 'Orange Lace' (P19),,1.0,Acers:,143
-301.1p,KAS,Acer palm. 'Orange Lace' (P19),,1.0,Acers:,143
-301.2,KAS,Acer palm. 'Orange Lace' (P19),,2.0,Acers:,143
-301.2p,KAS,Acer palm. 'Orange Lace' (P19),,2.0,Acers:,143
-302.1,KAS,Acer palm. 'Taylor' (P19),,1.0,Acers:,144
-302.1p,KAS,Acer palm. 'Taylor' (P19),,1.0,Acers:,144
-302.2,KAS,Acer palm. 'Taylor' (P19),,2.0,Acers:,144
-302.2p,KAS,Acer palm. 'Taylor' (P19),,2.0,Acers:,144
-303.1,KAS,Acer palm. 'Trompenburg' (P19),,1.0,Acers:,145
-303.1p,KAS,Acer palm. 'Trompenburg' (P19),,1.0,Acers:,145
-303.2,KAS,Acer palm. 'Trompenburg' (P19),,2.0,Acers:,145
-303.2p,KAS,Acer palm. 'Trompenburg' (P19),,2.0,Acers:,145
-304.1,KAS,Acer palm. 'Ukigumo' (P19),,1.0,Acers:,146
-304.1p,KAS,Acer palm. 'Ukigumo' (P19),,1.0,Acers:,146
-304.2,KAS,Acer palm. 'Ukigumo' (P19),,2.0,Acers:,146
-304.2p,KAS,Acer palm. 'Ukigumo' (P19),,2.0,Acers:,146
-305.1,KAS,Acer shir. 'Aureum' (P19),,1.0,Acers:,148
-305.1p,KAS,Acer shir. 'Aureum' (P19),,1.0,Acers:,148
-305.2,KAS,Acer shir. 'Aureum' (P19),,2.0,Acers:,148
-305.2p,KAS,Acer shir. 'Aureum' (P19),,2.0,Acers:,148
-306.3,KAS,Acer shir. 'Moonrise' (P19),,1.0,Acers:,149
-306.3p,KAS,Acer shir. 'Moonrise' (P19),,1.0,Acers:,149
-306.4,KAS,Acer shir. 'Moonrise' (P19),,2.0,Acers:,149
-306.4p,KAS,Acer shir. 'Moonrise' (P19),,2.0,Acers:,149
-306.1,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,1.0,Acers:,150
-306.1p,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,1.0,Acers:,150
-306.2,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,2.0,Acers:,150
-306.2p,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,2.0,Acers:,150
-297.1,KAS,Acer cons. 'Red Flamingo' (P19),,1.0,Acers:,152
-297.1p,KAS,Acer cons. 'Red Flamingo' (P19),,1.0,Acers:,152
-297.2,KAS,Acer cons. 'Red Flamingo' (P19),,2.0,Acers:,152
-297.2p,KAS,Acer cons. 'Red Flamingo' (P19),,2.0,Acers:,152
-T006,KAS,Acer palm. 'Atropurpureum' Bonsai (P23) - patio,,1.0,Acers:,154
-T006p,KAS,Acer palm. 'Atropurpureum' Bonsai (P23) - patio,,1.0,Acers:,154
-T007,KAS,Acer palm. 'Beni-maiko' Bonsai (P23) - patio,,1.0,Acers:,155
-T007p,KAS,Acer palm. 'Beni-maiko' Bonsai (P23) - patio,,1.0,Acers:,155
-T008,KAS,Acer palm. 'Katsura' Bonsai (P23) - patio,,1.0,Acers:,156
-T008p,KAS,Acer palm. 'Katsura' Bonsai (P23) - patio,,1.0,Acers:,156
-T009,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,157
-T009p,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,157
-310.1,KAS,Acer palm. 'Emerald Lace' (P24),,1.0,Acers:,159
-310.1p,KAS,Acer palm. 'Emerald Lace' (P24),,1.0,Acers:,159
-310.2,KAS,Acer palm. 'Garnet' (P24),,1.0,Acers:,160
-310.2p,KAS,Acer palm. 'Garnet' (P24),,1.0,Acers:,160
-8.1,KAS,Hydrangea Blauw,,1.0,Hydrangea:,163
-8.1p,KAS,Hydrangea Blauw,,1.0,Hydrangea:,163
-8.2,KAS,Hydrangea Blauw,,2.0,Hydrangea:,163
-8.2p,KAS,Hydrangea Blauw,,2.0,Hydrangea:,163
-8.3,KAS,Hydrangea Blauw,,3.0,Hydrangea:,163
-8.3p,KAS,Hydrangea Blauw,,3.0,Hydrangea:,163
-8.4,KAS,Hydrangea Blauw,,6.0,Hydrangea:,163
-8.4p,KAS,Hydrangea Blauw,,6.0,Hydrangea:,163
-8.19,KAS,Hydrangea Blauw,,1.0,Hydrangea:,163
-8.19p,KAS,Hydrangea Blauw,,1.0,Hydrangea:,163
-8.20,KAS,Hydrangea Blauw,,2.0,Hydrangea:,163
-8.20p,KAS,Hydrangea Blauw,,2.0,Hydrangea:,163
-8.17,KAS,Hydrangea Rood,,3.0,Hydrangea:,164
-8.17p,KAS,Hydrangea Rood,,3.0,Hydrangea:,164
-8.18,KAS,Hydrangea Rood,,6.0,Hydrangea:,164
-8.18p,KAS,Hydrangea Rood,,6.0,Hydrangea:,164
-8.19,KAS,Hydrangea Rood,,1.0,Hydrangea:,164
-8.19p,KAS,Hydrangea Rood,,1.0,Hydrangea:,164
-8.20,KAS,Hydrangea Rood,,2.0,Hydrangea:,164
-8.20p,KAS,Hydrangea Rood,,2.0,Hydrangea:,164
-8.15,KAS,Hydrangea Roze,,3.0,Hydrangea:,165
-8.15p,KAS,Hydrangea Roze,,3.0,Hydrangea:,165
-8.16,KAS,Hydrangea Roze,,6.0,Hydrangea:,165
-8.16p,KAS,Hydrangea Roze,,6.0,Hydrangea:,165
-8.19,KAS,Hydrangea Roze,,1.0,Hydrangea:,165
-8.19p,KAS,Hydrangea Roze,,1.0,Hydrangea:,165
-8.20,KAS,Hydrangea Roze,,2.0,Hydrangea:,165
-8.20p,KAS,Hydrangea Roze,,2.0,Hydrangea:,165
-8.13,KAS,Hydrangea Wit,,3.0,Hydrangea:,166
-8.13p,KAS,Hydrangea Wit,,3.0,Hydrangea:,166
-8.14,KAS,Hydrangea Wit,,6.0,Hydrangea:,166
-8.14p,KAS,Hydrangea Wit,,6.0,Hydrangea:,166
-8.19,KAS,Hydrangea Wit,,1.0,Hydrangea:,166
-8.19p,KAS,Hydrangea Wit,,1.0,Hydrangea:,166
-8.20,KAS,Hydrangea Wit,,2.0,Hydrangea:,166
-8.20p,KAS,Hydrangea Wit,,2.0,Hydrangea:,166
-8.1,KAS,Hydrangea Kyushu,,1.0,Hydrangea:,167
-8.1p,KAS,Hydrangea Kyushu,,1.0,Hydrangea:,167
-8.2,KAS,Hydrangea Kyushu,,2.0,Hydrangea:,167
-8.2p,KAS,Hydrangea Kyushu,,2.0,Hydrangea:,167
-8.9,KAS,Hydrangea Kyushu,,3.0,Hydrangea:,167
-8.9p,KAS,Hydrangea Kyushu,,3.0,Hydrangea:,167
-8.10,KAS,Hydrangea Kyushu,,6.0,Hydrangea:,167
-8.10p,KAS,Hydrangea Kyushu,,6.0,Hydrangea:,167
-8.1,KAS,Hydrangea Phantom,,1.0,Hydrangea:,168
-8.1p,KAS,Hydrangea Phantom,,1.0,Hydrangea:,168
-8.2,KAS,Hydrangea Phantom,,2.0,Hydrangea:,168
-8.2p,KAS,Hydrangea Phantom,,2.0,Hydrangea:,168
-8.5,KAS,Hydrangea Phantom,,3.0,Hydrangea:,168
-8.5p,KAS,Hydrangea Phantom,,3.0,Hydrangea:,168
-8.6,KAS,Hydrangea Phantom,,6.0,Hydrangea:,168
-8.6p,KAS,Hydrangea Phantom,,6.0,Hydrangea:,168
-8.1,KAS,Hydrangea Pink Diamond,,1.0,Hydrangea:,169
-8.1p,KAS,Hydrangea Pink Diamond,,1.0,Hydrangea:,169
-8.2,KAS,Hydrangea Pink Diamond,,2.0,Hydrangea:,169
-8.2p,KAS,Hydrangea Pink Diamond,,2.0,Hydrangea:,169
-8.7,KAS,Hydrangea Pink Diamond,,3.0,Hydrangea:,169
-8.7p,KAS,Hydrangea Pink Diamond,,3.0,Hydrangea:,169
-8.8,KAS,Hydrangea Pink Diamond,,6.0,Hydrangea:,169
-8.8p,KAS,Hydrangea Pink Diamond,,6.0,Hydrangea:,169
-8.11,KAS,Hydrangea Annabelle,,3.0,Hydrangea:,170
-8.11p,KAS,Hydrangea Annabelle,,3.0,Hydrangea:,170
-8.12,KAS,Hydrangea Annabelle,,6.0,Hydrangea:,170
-8.12p,KAS,Hydrangea Annabelle,,6.0,Hydrangea:,170
-31.1,KAS,Hydrangea Petiolaris - P9,,4.0,Hydrangea:,171
-31.1p,KAS,Hydrangea Petiolaris - P9,,4.0,Hydrangea:,171
-31.2,KAS,Hydrangea Petiolaris - P9,,8.0,Hydrangea:,171
-31.2p,KAS,Hydrangea Petiolaris - P9,,8.0,Hydrangea:,171
-31.0,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,171
-31.0p,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,171
-35.1,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,171
-35.1p,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,171
-8.21,KAS,Hydrangea 'Limelight',,2.0,Hydrangea:,172
-8.21p,KAS,Hydrangea 'Limelight',,2.0,Hydrangea:,172
-8.22,KAS,Hydrangea 'Limelight',,3.0,Hydrangea:,172
-8.22p,KAS,Hydrangea 'Limelight',,3.0,Hydrangea:,172
-8.23,KAS,Hydrangea 'Limelight',,6.0,Hydrangea:,172
-8.23p,KAS,Hydrangea 'Limelight',,6.0,Hydrangea:,172
-8.24,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,2.0,Hydrangea:,173
-8.24p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,2.0,Hydrangea:,173
-8.25,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,3.0,Hydrangea:,173
-8.25p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,3.0,Hydrangea:,173
-8.26,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,6.0,Hydrangea:,173
-8.26p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,6.0,Hydrangea:,173
-281.1,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,1.0,Hydrangea:,175
-281.1p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,1.0,Hydrangea:,175
-281.2,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,2.0,Hydrangea:,175
-281.2p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,2.0,Hydrangea:,175
-281.3,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,3.0,Hydrangea:,175
-281.3p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,3.0,Hydrangea:,175
-282.1,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,1.0,Hydrangea:,176
-282.1p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,1.0,Hydrangea:,176
-282.2,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,2.0,Hydrangea:,176
-282.2p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,2.0,Hydrangea:,176
-282.3,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,3.0,Hydrangea:,176
-282.3p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,3.0,Hydrangea:,176
-283.1,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,1.0,Hydrangea:,177
-283.1p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,1.0,Hydrangea:,177
-283.2,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,2.0,Hydrangea:,177
-283.2p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,2.0,Hydrangea:,177
-283.3,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,3.0,Hydrangea:,177
-283.3p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,3.0,Hydrangea:,177
-55.1,KAS,Festuca glauca 'Elija Blue' - P9,,4.0,Grassen:,180
-55.1p,KAS,Festuca glauca 'Elija Blue' - P9,,4.0,Grassen:,180
-55.2,KAS,Festuca glauca 'Elija Blue' - P9,,8.0,Grassen:,180
-55.2p,KAS,Festuca glauca 'Elija Blue' - P9,,8.0,Grassen:,180
-56.2,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,180
-56.2p,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,180
-56.3,KAS,Festuca glauca 'Elija Blue' - P9,,1.0,Grassen:,180
-56.3p,KAS,Festuca glauca 'Elija Blue' - P9,,1.0,Grassen:,180
-56.4,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,180
-56.4p,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,180
-53.1,KAS,Imperata cyl. 'Red Baron' - P9,,4.0,Grassen:,181
-53.1p,KAS,Imperata cyl. 'Red Baron' - P9,,4.0,Grassen:,181
-53.2,KAS,Imperata cyl. 'Red Baron' - P9,,8.0,Grassen:,181
-53.2p,KAS,Imperata cyl. 'Red Baron' - P9,,8.0,Grassen:,181
-56.1,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-56.1p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-56.2,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-56.2p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-56.3,KAS,Imperata cyl. 'Red Baron' - P9,,1.0,Grassen:,181
-56.3p,KAS,Imperata cyl. 'Red Baron' - P9,,1.0,Grassen:,181
-56.4,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-56.4p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,181
-54.1,KAS,Liriope muscari - P9,,4.0,Grassen:,182
-54.1p,KAS,Liriope muscari - P9,,4.0,Grassen:,182
-54.2,KAS,Liriope muscari - P9,,8.0,Grassen:,182
-54.2p,KAS,Liriope muscari - P9,,8.0,Grassen:,182
-56.2,KAS,Liriope muscari - P9,,2.0,Grassen:,182
-56.2p,KAS,Liriope muscari - P9,,2.0,Grassen:,182
-9.1,KAS,Pampasgras Roze - P9,,2.0,Grassen:,183
-9.1p,KAS,Pampasgras Roze - P9,,2.0,Grassen:,183
-9.2,KAS,Pampasgras Roze - P9,,4.0,Grassen:,183
-9.2p,KAS,Pampasgras Roze - P9,,4.0,Grassen:,183
-9.4,KAS,Pampasgras Roze - P9,,3.0,Grassen:,183
-9.4p,KAS,Pampasgras Roze - P9,,3.0,Grassen:,183
-9.6,KAS,Pampasgras Roze - P9,,6.0,Grassen:,183
-9.6p,KAS,Pampasgras Roze - P9,,6.0,Grassen:,183
-9.8,KAS,Pampasgras Roze - P9,,3.0,Grassen:,183
-9.8p,KAS,Pampasgras Roze - P9,,3.0,Grassen:,183
-9.9,KAS,Pampasgras Roze - P9,,12.0,Grassen:,183
-9.9p,KAS,Pampasgras Roze - P9,,12.0,Grassen:,183
-9.11,KAS,Pampasgras Roze - P9,,2.0,Grassen:,183
-9.11p,KAS,Pampasgras Roze - P9,,2.0,Grassen:,183
-9.1,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-9.1p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-9.2,KAS,Pampasgras Wit - P9,,4.0,Grassen:,184
-9.2p,KAS,Pampasgras Wit - P9,,4.0,Grassen:,184
-9.4,KAS,Pampasgras Wit - P9,,3.0,Grassen:,184
-9.4p,KAS,Pampasgras Wit - P9,,3.0,Grassen:,184
-9.5,KAS,Pampasgras Wit - P9,,6.0,Grassen:,184
-9.5p,KAS,Pampasgras Wit - P9,,6.0,Grassen:,184
-9.7,KAS,Pampasgras Wit - P9,,3.0,Grassen:,184
-9.7p,KAS,Pampasgras Wit - P9,,3.0,Grassen:,184
-9.9,KAS,Pampasgras Wit - P9,,12.0,Grassen:,184
-9.9p,KAS,Pampasgras Wit - P9,,12.0,Grassen:,184
-56.1,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-56.1p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-9.10,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-9.10p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,184
-52.1,KAS,Pennisetum alap. 'Hameln' - P9,,4.0,Grassen:,185
-52.1p,KAS,Pennisetum alap. 'Hameln' - P9,,4.0,Grassen:,185
-52.2,KAS,Pennisetum alap. 'Hameln' - P9,,8.0,Grassen:,185
-52.2p,KAS,Pennisetum alap. 'Hameln' - P9,,8.0,Grassen:,185
-56.1,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-56.1p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-56.2,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-56.2p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-56.3,KAS,Pennisetum alap. 'Hameln' - P9,,1.0,Grassen:,185
-56.3p,KAS,Pennisetum alap. 'Hameln' - P9,,1.0,Grassen:,185
-56.4,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-56.4p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,185
-39.1,KAS,Stipa Tenuissima 'Ponytails' - P9,,4.0,Grassen:,186
-39.1p,KAS,Stipa Tenuissima 'Ponytails' - P9,,4.0,Grassen:,186
-39.2,KAS,Stipa Tenuissima 'Ponytails' - P9,,8.0,Grassen:,186
-39.2p,KAS,Stipa Tenuissima 'Ponytails' - P9,,8.0,Grassen:,186
-56.1,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,186
-56.1p,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,186
-56.3,KAS,Stipa Tenuissima 'Ponytails' - P9,,1.0,Grassen:,186
-56.3p,KAS,Stipa Tenuissima 'Ponytails' - P9,,1.0,Grassen:,186
-56.4,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,186
-56.4p,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,186
-39.0,KAS,Stipa Tenuissima 'Ponytails' - P9,,3.0,Grassen:,186
-39.0p,KAS,Stipa Tenuissima 'Ponytails' - P9,,3.0,Grassen:,186
-57.1,KAS,Miscanthus sin. 'Kleine Silbersp.' 23 cm,,1.0,Grassen:,187
-57.1p,KAS,Miscanthus sin. 'Kleine Silbersp.' 23 cm,,1.0,Grassen:,187
-57.2,KAS,Miscanthus sin. 'Red Chief' 23 cm,,1.0,Grassen:,188
-57.2p,KAS,Miscanthus sin. 'Red Chief' 23 cm,,1.0,Grassen:,188
-57.3,KAS,Miscanthus sin. 'Zebrinus'  23 cm,,1.0,Grassen:,189
-57.3p,KAS,Miscanthus sin. 'Zebrinus'  23 cm,,1.0,Grassen:,189
-58.1,KAS,Pennisetum al. 'Hameln' 23 cm,,1.0,Grassen:,190
-58.1p,KAS,Pennisetum al. 'Hameln' 23 cm,,1.0,Grassen:,190
-58.2,KAS,Pennisetum al. 'Hameln' 23 cm,,2.0,Grassen:,190
-58.2p,KAS,Pennisetum al. 'Hameln' 23 cm,,2.0,Grassen:,190
-340.1,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,1.0,Nandina:,193
-340.1p,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,1.0,Nandina:,193
-340.2,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,2.0,Nandina:,193
-340.2p,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,2.0,Nandina:,193
-341.1,KAS,Nandina dom. 'Magical Sunrise' (P15),,1.0,Nandina:,194
-341.1p,KAS,Nandina dom. 'Magical Sunrise' (P15),,1.0,Nandina:,194
-341.2,KAS,Nandina dom. 'Magical Sunrise' (P15),,2.0,Nandina:,194
-341.2p,KAS,Nandina dom. 'Magical Sunrise' (P15),,2.0,Nandina:,194
-342.1,KAS,Nandina dom. 'Obsessed' (P15),,1.0,Nandina:,195
-342.1p,KAS,Nandina dom. 'Obsessed' (P15),,1.0,Nandina:,195
-342.2,KAS,Nandina dom. 'Obsessed' (P15),,2.0,Nandina:,195
-342.2p,KAS,Nandina dom. 'Obsessed' (P15),,2.0,Nandina:,195
-343.1,KAS,Nandina dom. 'Twilight' (P15),,1.0,Nandina:,196
-343.1p,KAS,Nandina dom. 'Twilight' (P15),,1.0,Nandina:,196
-343.2,KAS,Nandina dom. 'Twilight' (P15),,2.0,Nandina:,196
-343.2p,KAS,Nandina dom. 'Twilight' (P15),,2.0,Nandina:,196
-50.1,KAS,Nandina Domestica Obsessed (P17),,1.0,Nandina:,198
-50.1p,KAS,Nandina Domestica Obsessed (P17),,1.0,Nandina:,198
-50.2,KAS,Nandina Domestica Obsessed (P17),,2.0,Nandina:,198
-50.2p,KAS,Nandina Domestica Obsessed (P17),,2.0,Nandina:,198
-345.1,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,1.0,Nandina:,200
-345.1p,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,1.0,Nandina:,200
-345.2,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,2.0,Nandina:,200
-345.2p,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,2.0,Nandina:,200
-346.1,KAS,Nandina dom. 'Magical Sunrise' (P19),,1.0,Nandina:,201
-346.1p,KAS,Nandina dom. 'Magical Sunrise' (P19),,1.0,Nandina:,201
-346.2,KAS,Nandina dom. 'Magical Sunrise' (P19),,2.0,Nandina:,201
-346.2p,KAS,Nandina dom. 'Magical Sunrise' (P19),,2.0,Nandina:,201
-347.1,KAS,Nandina dom. 'Obsessed' (P19),,1.0,Nandina:,202
-347.1p,KAS,Nandina dom. 'Obsessed' (P19),,1.0,Nandina:,202
-347.2,KAS,Nandina dom. 'Obsessed' (P19),,2.0,Nandina:,202
-347.2p,KAS,Nandina dom. 'Obsessed' (P19),,2.0,Nandina:,202
-348.1,KAS,Nandina dom. 'Twilight' (P19),,1.0,Nandina:,203
-348.1p,KAS,Nandina dom. 'Twilight' (P19),,1.0,Nandina:,203
-348.2,KAS,Nandina dom. 'Twilight' (P19),,2.0,Nandina:,203
-348.2p,KAS,Nandina dom. 'Twilight' (P19),,2.0,Nandina:,203
-41.3,KAS,"Fargesia Medium ""Niet woekerend"" C1",,2.0,Bamboe:,206
-41.3p,KAS,"Fargesia Medium ""Niet woekerend"" C1",,2.0,Bamboe:,206
-41.4,KAS,"Fargesia Medium ""Niet woekerend"" C1",,4.0,Bamboe:,206
-41.4p,KAS,"Fargesia Medium ""Niet woekerend"" C1",,4.0,Bamboe:,206
-41.1,KAS,"Fargesia XL ""Niet woekerend"" C2",,1.0,Bamboe:,207
-41.1p,KAS,"Fargesia XL ""Niet woekerend"" C2",,1.0,Bamboe:,207
-41.2,KAS,"Fargesia XL ""Niet woekerend"" C2",,2.0,Bamboe:,207
-41.2p,KAS,"Fargesia XL ""Niet woekerend"" C2",,2.0,Bamboe:,207
-269.1,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,208
-269.1p,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,208
-270.1,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,209
-270.1p,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,209
-270.2,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,209
-270.2p,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,209
-270.0,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,209
-270.0p,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,209
-271.1,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,210
-271.1p,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,210
-271.2,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,210
-271.2p,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,210
-273.1,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,211
-273.1p,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,211
-273.2,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,211
-273.2p,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,211
-273.3,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,211
-273.3p,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,211
-272.1,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,212
-272.1p,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,212
-272.2,KAS,Fargesia 'Groen' C2,,4.0,Bamboe:,212
-272.2p,KAS,Fargesia 'Groen' C2,,4.0,Bamboe:,212
-272.3,KAS,Fargesia 'Groen' C2,,6.0,Bamboe:,212
-272.3p,KAS,Fargesia 'Groen' C2,,6.0,Bamboe:,212
-7.1,KAS,Blauwe bes,,4.0,Vitamineplanten:,215
-7.1p,KAS,Blauwe bes,,4.0,Vitamineplanten:,215
-7.2,KAS,Blauwe bes,,8.0,Vitamineplanten:,215
-7.2p,KAS,Blauwe bes,,8.0,Vitamineplanten:,215
-29.1,KAS,Blauwe bes,,1.0,Vitamineplanten:,215
-29.1p,KAS,Blauwe bes,,1.0,Vitamineplanten:,215
-29.2,KAS,Blauwe bes,,2.0,Vitamineplanten:,215
-29.2p,KAS,Blauwe bes,,2.0,Vitamineplanten:,215
-15.1,KAS,Blauwe bes,,1.0,Vitamineplanten:,215
-15.1p,KAS,Blauwe bes,,1.0,Vitamineplanten:,215
-29.1,KAS,Gojibes,,1.0,Vitamineplanten:,216
-29.1p,KAS,Gojibes,,1.0,Vitamineplanten:,216
-29.2,KAS,Gojibes,,2.0,Vitamineplanten:,216
-29.2p,KAS,Gojibes,,2.0,Vitamineplanten:,216
-30.1,KAS,Gojibes,,4.0,Vitamineplanten:,216
-30.1p,KAS,Gojibes,,4.0,Vitamineplanten:,216
-29.1,KAS,Granaatappel,,1.0,Vitamineplanten:,217
-29.1p,KAS,Granaatappel,,1.0,Vitamineplanten:,217
-29.2,KAS,Granaatappel,,2.0,Vitamineplanten:,217
-29.2p,KAS,Granaatappel,,2.0,Vitamineplanten:,217
-29.1,KAS,Honingbes,,1.0,Vitamineplanten:,218
-29.1p,KAS,Honingbes,,1.0,Vitamineplanten:,218
-29.2,KAS,Honingbes,,2.0,Vitamineplanten:,218
-29.2p,KAS,Honingbes,,2.0,Vitamineplanten:,218
-25.1,KAS,Kiwi 'Jenny',,3.0,Vitamineplanten:,219
-25.1p,KAS,Kiwi 'Jenny',,3.0,Vitamineplanten:,219
-25.2,KAS,Kiwi 'Jenny',,6.0,Vitamineplanten:,219
-25.2p,KAS,Kiwi 'Jenny',,6.0,Vitamineplanten:,219
-44.1,KAS,Paeonia lactiflora Red,,3.0,Pioenrozen:,222
-44.1p,KAS,Paeonia lactiflora Red,,3.0,Pioenrozen:,222
-44.2,KAS,Paeonia lactiflora Red,,6.0,Pioenrozen:,222
-44.2p,KAS,Paeonia lactiflora Red,,6.0,Pioenrozen:,222
-44.3,KAS,Paeonia lactiflora Red,,1.0,Pioenrozen:,222
-44.3p,KAS,Paeonia lactiflora Red,,1.0,Pioenrozen:,222
-44.4,KAS,Paeonia lactiflora Red,,2.0,Pioenrozen:,222
-44.4p,KAS,Paeonia lactiflora Red,,2.0,Pioenrozen:,222
-44.3,KAS,Paeonia lactiflora Pink,,1.0,Pioenrozen:,223
-44.3p,KAS,Paeonia lactiflora Pink,,1.0,Pioenrozen:,223
-44.4,KAS,Paeonia lactiflora Pink,,2.0,Pioenrozen:,223
-44.4p,KAS,Paeonia lactiflora Pink,,2.0,Pioenrozen:,223
-44.5,KAS,Paeonia lactiflora Pink,,3.0,Pioenrozen:,223
-44.5p,KAS,Paeonia lactiflora Pink,,3.0,Pioenrozen:,223
-44.6,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,223
-44.6p,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,223
-44.3,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,224
-44.3p,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,224
-44.4,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,224
-44.4p,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,224
-44.7,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,224
-44.7p,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,224
-44.8,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,224
-44.8p,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,224
-70.1,KAS,Azalea Paars,,3.0,Rhododendrons:,227
-70.1p,KAS,Azalea Paars,,3.0,Rhododendrons:,227
-70.5,KAS,Azalea Paars,,1.0,Rhododendrons:,227
-70.5p,KAS,Azalea Paars,,1.0,Rhododendrons:,227
-70.6,KAS,Azalea Paars,,2.0,Rhododendrons:,227
-70.6p,KAS,Azalea Paars,,2.0,Rhododendrons:,227
-70.12,KAS,Azalea Paars,,6.0,Rhododendrons:,227
-70.12p,KAS,Azalea Paars,,6.0,Rhododendrons:,227
-70.2,KAS,Azalea Rood,,3.0,Rhododendrons:,228
-70.2p,KAS,Azalea Rood,,3.0,Rhododendrons:,228
-70.5,KAS,Azalea Rood,,1.0,Rhododendrons:,228
-70.5p,KAS,Azalea Rood,,1.0,Rhododendrons:,228
-70.6,KAS,Azalea Rood,,2.0,Rhododendrons:,228
-70.6p,KAS,Azalea Rood,,2.0,Rhododendrons:,228
-70.7,KAS,Azalea Rood,,6.0,Rhododendrons:,228
-70.7p,KAS,Azalea Rood,,6.0,Rhododendrons:,228
-70.10,KAS,Azalea Rood,,1.0,Rhododendrons:,228
-70.10p,KAS,Azalea Rood,,1.0,Rhododendrons:,228
-70.11,KAS,Azalea Rood,,2.0,Rhododendrons:,228
-70.11p,KAS,Azalea Rood,,2.0,Rhododendrons:,228
-70.3,KAS,Azalea Roze,,3.0,Rhododendrons:,229
-70.3p,KAS,Azalea Roze,,3.0,Rhododendrons:,229
-70.5,KAS,Azalea Roze,,1.0,Rhododendrons:,229
-70.5p,KAS,Azalea Roze,,1.0,Rhododendrons:,229
-70.6,KAS,Azalea Roze,,2.0,Rhododendrons:,229
-70.6p,KAS,Azalea Roze,,2.0,Rhododendrons:,229
-70.8,KAS,Azalea Roze,,6.0,Rhododendrons:,229
-70.8p,KAS,Azalea Roze,,6.0,Rhododendrons:,229
-70.10,KAS,Azalea Roze,,1.0,Rhododendrons:,229
-70.10p,KAS,Azalea Roze,,1.0,Rhododendrons:,229
-70.11,KAS,Azalea Roze,,2.0,Rhododendrons:,229
-70.11p,KAS,Azalea Roze,,2.0,Rhododendrons:,229
-70.4,KAS,Azalea Wit,,3.0,Rhododendrons:,230
-70.4p,KAS,Azalea Wit,,3.0,Rhododendrons:,230
-70.5,KAS,Azalea Wit,,1.0,Rhododendrons:,230
-70.5p,KAS,Azalea Wit,,1.0,Rhododendrons:,230
-70.6,KAS,Azalea Wit,,2.0,Rhododendrons:,230
-70.6p,KAS,Azalea Wit,,2.0,Rhododendrons:,230
-70.9,KAS,Azalea Wit,,6.0,Rhododendrons:,230
-70.9p,KAS,Azalea Wit,,6.0,Rhododendrons:,230
-70.10,KAS,Azalea Wit,,1.0,Rhododendrons:,230
-70.10p,KAS,Azalea Wit,,1.0,Rhododendrons:,230
-70.11,KAS,Azalea Wit,,2.0,Rhododendrons:,230
-70.11p,KAS,Azalea Wit,,2.0,Rhododendrons:,230
-71.0,KAS,Rhododendron 'Cunningham's White',,3.0,Rhododendrons:,231
-71.0p,KAS,Rhododendron 'Cunningham's White',,3.0,Rhododendrons:,231
-71.1,KAS,Rhododendron 'Cunningham's White',,6.0,Rhododendrons:,231
-71.1p,KAS,Rhododendron 'Cunningham's White',,6.0,Rhododendrons:,231
-71.8,KAS,Rhododendron 'Cunningham's White',,1.0,Rhododendrons:,231
-71.8p,KAS,Rhododendron 'Cunningham's White',,1.0,Rhododendrons:,231
-71.9,KAS,Rhododendron 'Cunningham's White',,2.0,Rhododendrons:,231
-71.9p,KAS,Rhododendron 'Cunningham's White',,2.0,Rhododendrons:,231
-71.2,KAS,Rhododendron 'Roseum Elegans',,3.0,Rhododendrons:,232
-71.2p,KAS,Rhododendron 'Roseum Elegans',,3.0,Rhododendrons:,232
-71.3,KAS,Rhododendron 'Roseum Elegans',,6.0,Rhododendrons:,232
-71.3p,KAS,Rhododendron 'Roseum Elegans',,6.0,Rhododendrons:,232
-71.8,KAS,Rhododendron 'Roseum Elegans',,1.0,Rhododendrons:,232
-71.8p,KAS,Rhododendron 'Roseum Elegans',,1.0,Rhododendrons:,232
-71.9,KAS,Rhododendron 'Roseum Elegans',,2.0,Rhododendrons:,232
-71.9p,KAS,Rhododendron 'Roseum Elegans',,2.0,Rhododendrons:,232
-71.4,KAS,Rhododendron 'Nova Zembla',,3.0,Rhododendrons:,233
-71.4p,KAS,Rhododendron 'Nova Zembla',,3.0,Rhododendrons:,233
-71.5,KAS,Rhododendron 'Nova Zembla',,6.0,Rhododendrons:,233
-71.5p,KAS,Rhododendron 'Nova Zembla',,6.0,Rhododendrons:,233
-71.8,KAS,Rhododendron 'Nova Zembla',,1.0,Rhododendrons:,233
-71.8p,KAS,Rhododendron 'Nova Zembla',,1.0,Rhododendrons:,233
-71.9,KAS,Rhododendron 'Nova Zembla',,2.0,Rhododendrons:,233
-71.9p,KAS,Rhododendron 'Nova Zembla',,2.0,Rhododendrons:,233
-71.6,KAS,Rhododendron 'Cosmopolitan',,3.0,Rhododendrons:,234
-71.6p,KAS,Rhododendron 'Cosmopolitan',,3.0,Rhododendrons:,234
-71.7,KAS,Rhododendron 'Cosmopolitan',,6.0,Rhododendrons:,234
-71.7p,KAS,Rhododendron 'Cosmopolitan',,6.0,Rhododendrons:,234
-71.8,KAS,Rhododendron 'Cosmopolitan',,1.0,Rhododendrons:,234
-71.8p,KAS,Rhododendron 'Cosmopolitan',,1.0,Rhododendrons:,234
-71.9,KAS,Rhododendron 'Cosmopolitan',,2.0,Rhododendrons:,234
-71.9p,KAS,Rhododendron 'Cosmopolitan',,2.0,Rhododendrons:,234
-72.6,KAS,Rhododendron P13 Roze,,3.0,Rhododendrons:,235
-72.6p,KAS,Rhododendron P13 Roze,,3.0,Rhododendrons:,235
-72.7,KAS,Rhododendron P13 Roze,,6.0,Rhododendrons:,235
-72.7p,KAS,Rhododendron P13 Roze,,6.0,Rhododendrons:,235
-72.8,KAS,Rhododendron P13 Roze,,1.0,Rhododendrons:,235
-72.8p,KAS,Rhododendron P13 Roze,,1.0,Rhododendrons:,235
-72.9,KAS,Rhododendron P13 Roze,,2.0,Rhododendrons:,235
-72.9p,KAS,Rhododendron P13 Roze,,2.0,Rhododendrons:,235
-72.0,KAS,Rhododendron P13 Paars,,3.0,Rhododendrons:,236
-72.0p,KAS,Rhododendron P13 Paars,,3.0,Rhododendrons:,236
-72.1,KAS,Rhododendron P13 Paars,,6.0,Rhododendrons:,236
-72.1p,KAS,Rhododendron P13 Paars,,6.0,Rhododendrons:,236
-72.4,KAS,Rhododendron P13 Rood,,3.0,Rhododendrons:,237
-72.4p,KAS,Rhododendron P13 Rood,,3.0,Rhododendrons:,237
-72.5,KAS,Rhododendron P13 Rood,,6.0,Rhododendrons:,237
-72.5p,KAS,Rhododendron P13 Rood,,6.0,Rhododendrons:,237
-72.8,KAS,Rhododendron P13 Rood,,1.0,Rhododendrons:,237
-72.8p,KAS,Rhododendron P13 Rood,,1.0,Rhododendrons:,237
-72.9,KAS,Rhododendron P13 Rood,,2.0,Rhododendrons:,237
-72.9p,KAS,Rhododendron P13 Rood,,2.0,Rhododendrons:,237
-72.2,KAS,Rhododendron P13 Wit,,3.0,Rhododendrons:,238
-72.2p,KAS,Rhododendron P13 Wit,,3.0,Rhododendrons:,238
-72.3,KAS,Rhododendron P13 Wit,,6.0,Rhododendrons:,238
-72.3p,KAS,Rhododendron P13 Wit,,6.0,Rhododendrons:,238
-72.8,KAS,Rhododendron P13 Wit,,1.0,Rhododendrons:,238
-72.8p,KAS,Rhododendron P13 Wit,,1.0,Rhododendrons:,238
-72.9,KAS,Rhododendron P13 Wit,,2.0,Rhododendrons:,238
-72.9p,KAS,Rhododendron P13 Wit,,2.0,Rhododendrons:,238
-200.0,KAS,C2 - Blauwe Bes,,2.0,Planten 2 liter ( C2 ):,241
-200.0p,KAS,C2 - Blauwe Bes,,2.0,Planten 2 liter ( C2 ):,241
-201.0,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.0p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.1,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.1p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.4,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.4p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.5,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.5p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.6,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-201.6p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,241
-200.1,KAS,C2 - Braam,,2.0,Planten 2 liter ( C2 ):,242
-200.1p,KAS,C2 - Braam,,2.0,Planten 2 liter ( C2 ):,242
-201.1,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-201.1p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-201.2,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-201.2p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-201.4,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-201.4p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,242
-200.2,KAS,C2 - Druif Blauw,,2.0,Planten 2 liter ( C2 ):,243
-200.2p,KAS,C2 - Druif Blauw,,2.0,Planten 2 liter ( C2 ):,243
-201.2,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,243
-201.2p,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,243
-201.5,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,243
-201.5p,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,243
-200.3,KAS,C2 - Druif Wit,,2.0,Planten 2 liter ( C2 ):,244
-200.3p,KAS,C2 - Druif Wit,,2.0,Planten 2 liter ( C2 ):,244
-201.2,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,244
-201.2p,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,244
-201.4,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,244
-201.4p,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,244
-200.4,KAS,C2 - Framboos,,2.0,Planten 2 liter ( C2 ):,245
-200.4p,KAS,C2 - Framboos,,2.0,Planten 2 liter ( C2 ):,245
-201.1,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.1p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.2,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.2p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.4,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.4p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.5,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-201.5p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,245
-200.5,KAS,C2 - Rode Bes,,2.0,Planten 2 liter ( C2 ):,246
-200.5p,KAS,C2 - Rode Bes,,2.0,Planten 2 liter ( C2 ):,246
-201.0,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.0p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.1,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.1p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.3,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.3p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.5,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-201.5p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,246
-200.6,KAS,C2 - Kruisbes Groen,,2.0,Planten 2 liter ( C2 ):,247
-200.6p,KAS,C2 - Kruisbes Groen,,2.0,Planten 2 liter ( C2 ):,247
-201.3,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,247
-201.3p,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,247
-201.6,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,247
-201.6p,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,247
-200.7,KAS,C2 - Kruisbes Rood,,2.0,Planten 2 liter ( C2 ):,248
-200.7p,KAS,C2 - Kruisbes Rood,,2.0,Planten 2 liter ( C2 ):,248
-201.3,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,248
-201.3p,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,248
-201.6,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,248
-201.6p,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,248
-200.8,KAS,C2 - Witte Bes,,2.0,Planten 2 liter ( C2 ):,249
-200.8p,KAS,C2 - Witte Bes,,2.0,Planten 2 liter ( C2 ):,249
-201.0,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,249
-201.0p,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,249
-201.6,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,249
-201.6p,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,249
-200.9,KAS,C2 - Zwarte Bes,,2.0,Planten 2 liter ( C2 ):,250
-200.9p,KAS,C2 - Zwarte Bes,,2.0,Planten 2 liter ( C2 ):,250
-201.0,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,250
-201.0p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,250
-201.3,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,250
-201.3p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,250
-204.0,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,252
-204.0p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,252
-204.3,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,252
-204.3p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,252
-204.1,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,253
-204.1p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,253
-204.3,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,253
-204.3p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,253
-204.2,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,254
-204.2p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,254
-204.3,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,254
-204.3p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,254
-207.0,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,256
-207.0p,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,256
-207.4,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,256
-207.4p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,256
-206.1,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,256
-206.1p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,256
-207.1,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,257
-207.1p,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,257
-207.4,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,257
-207.4p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,257
-206.2,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,257
-206.2p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,257
-207.2,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,258
-207.2p,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,258
-207.4,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,258
-207.4p,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,258
-206.3,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,258
-206.3p,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,258
-207.3,KAS,C2 - Hydrangea macr. Wit,,2.0,Planten 2 liter ( C2 ):,259
-207.3p,KAS,C2 - Hydrangea macr. Wit,,2.0,Planten 2 liter ( C2 ):,259
-207.4,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,259
-207.4p,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,259
-206.4,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,259
-206.4p,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,259
-T010,KAS,C2 - Lavendel,,4.0,Planten 2 liter ( C2 ):,261
-T010p,KAS,C2 - Lavendel,,4.0,Planten 2 liter ( C2 ):,261
-T011,KAS,C2 - Lavendel,,6.0,Planten 2 liter ( C2 ):,261
-T011p,KAS,C2 - Lavendel,,6.0,Planten 2 liter ( C2 ):,261
-T012,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,261
-T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,261
-209.0,KAS,C2 - Cornus alba 'Siberica',,2.0,Planten 2 liter ( C2 ):,263
-209.0p,KAS,C2 - Cornus alba 'Siberica',,2.0,Planten 2 liter ( C2 ):,263
-209.5,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,263
-209.5p,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,263
-209.1,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,264
-209.1p,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,264
-209.5,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,264
-209.5p,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,264
-209.2,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,265
-209.2p,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,265
-209.5,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,265
-209.5p,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,265
-209.3,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,266
-209.3p,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,266
-209.5,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,266
-209.5p,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,266
-209.4,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,267
-209.4p,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,267
-209.5,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,267
-209.5p,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,267
-210.0,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,270
-210.0p,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,270
-210.4,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,1.0,Planten 3 liter ( C3 ):,270
-210.4p,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,1.0,Planten 3 liter ( C3 ):,270
-210.1,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,2.0,Planten 3 liter ( C3 ):,271
-210.1p,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,2.0,Planten 3 liter ( C3 ):,271
-210.4,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,1.0,Planten 3 liter ( C3 ):,271
-210.4p,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,1.0,Planten 3 liter ( C3 ):,271
-210.2,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,2.0,Planten 3 liter ( C3 ):,272
-210.2p,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,2.0,Planten 3 liter ( C3 ):,272
-210.4,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,1.0,Planten 3 liter ( C3 ):,272
-210.4p,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,1.0,Planten 3 liter ( C3 ):,272
-210.3,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,2.0,Planten 3 liter ( C3 ):,273
-210.3p,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,2.0,Planten 3 liter ( C3 ):,273
-210.4,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,1.0,Planten 3 liter ( C3 ):,273
-210.4p,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,1.0,Planten 3 liter ( C3 ):,273
-64.1,KAS,Elaeagnus ebbingei,,3.0,Wintergroene heesters:,276
-64.1p,KAS,Elaeagnus ebbingei,,3.0,Wintergroene heesters:,276
-64.2,KAS,Elaeagnus ebbingei,,6.0,Wintergroene heesters:,276
-64.2p,KAS,Elaeagnus ebbingei,,6.0,Wintergroene heesters:,276
-61.1,KAS,Ilex aquifolium 'Argentea Marginata',,3.0,Wintergroene heesters:,277
-61.1p,KAS,Ilex aquifolium 'Argentea Marginata',,3.0,Wintergroene heesters:,277
-61.2,KAS,Ilex aquifolium 'Argentea Marginata',,6.0,Wintergroene heesters:,277
-61.2p,KAS,Ilex aquifolium 'Argentea Marginata',,6.0,Wintergroene heesters:,277
-63.1,KAS,Ilex aquifolium 'Argentea Marginata',,1.0,Wintergroene heesters:,277
-63.1p,KAS,Ilex aquifolium 'Argentea Marginata',,1.0,Wintergroene heesters:,277
-63.2,KAS,Ilex aquifolium 'Argentea Marginata',,2.0,Wintergroene heesters:,277
-63.2p,KAS,Ilex aquifolium 'Argentea Marginata',,2.0,Wintergroene heesters:,277
-60.1,KAS,Ilex meserveae 'Blue Maid',,3.0,Wintergroene heesters:,278
-60.1p,KAS,Ilex meserveae 'Blue Maid',,3.0,Wintergroene heesters:,278
-60.2,KAS,Ilex meserveae 'Blue Maid',,6.0,Wintergroene heesters:,278
-60.2p,KAS,Ilex meserveae 'Blue Maid',,6.0,Wintergroene heesters:,278
-63.1,KAS,Ilex meserveae 'Blue Maid',,1.0,Wintergroene heesters:,278
-63.1p,KAS,Ilex meserveae 'Blue Maid',,1.0,Wintergroene heesters:,278
-63.2,KAS,Ilex meserveae 'Blue Maid',,2.0,Wintergroene heesters:,278
-63.2p,KAS,Ilex meserveae 'Blue Maid',,2.0,Wintergroene heesters:,278
-63.1,KAS,Photinia fras. 'Red Robin' - P9,,1.0,Wintergroene heesters:,279
-63.1p,KAS,Photinia fras. 'Red Robin' - P9,,1.0,Wintergroene heesters:,279
-63.2,KAS,Photinia fras. 'Red Robin' - P9,,2.0,Wintergroene heesters:,279
-63.2p,KAS,Photinia fras. 'Red Robin' - P9,,2.0,Wintergroene heesters:,279
-24.1,KAS,Photinia fras. 'Red Robin' - P9,,3.0,Wintergroene heesters:,279
-24.1p,KAS,Photinia fras. 'Red Robin' - P9,,3.0,Wintergroene heesters:,279
-24.2,KAS,Photinia fras. 'Red Robin' - P9,,6.0,Wintergroene heesters:,279
-24.2p,KAS,Photinia fras. 'Red Robin' - P9,,6.0,Wintergroene heesters:,279
-12.1,KAS,Photinia fras. Carré Rouge - P15,,2.0,Wintergroene heesters:,280
-12.1p,KAS,Photinia fras. Carré Rouge - P15,,2.0,Wintergroene heesters:,280
-12.2,KAS,Photinia fras. Carré Rouge - P15,,4.0,Wintergroene heesters:,280
-12.2p,KAS,Photinia fras. Carré Rouge - P15,,4.0,Wintergroene heesters:,280
-62.1,KAS,Prunus lusitanica 'Angustifolia',,3.0,Wintergroene heesters:,281
-62.1p,KAS,Prunus lusitanica 'Angustifolia',,3.0,Wintergroene heesters:,281
-62.2,KAS,Prunus lusitanica 'Angustifolia',,6.0,Wintergroene heesters:,281
-62.2p,KAS,Prunus lusitanica 'Angustifolia',,6.0,Wintergroene heesters:,281
-63.1,KAS,Prunus lusitanica 'Angustifolia',,1.0,Wintergroene heesters:,281
-63.1p,KAS,Prunus lusitanica 'Angustifolia',,1.0,Wintergroene heesters:,281
-63.2,KAS,Prunus lusitanica 'Angustifolia',,2.0,Wintergroene heesters:,281
-63.2p,KAS,Prunus lusitanica 'Angustifolia',,2.0,Wintergroene heesters:,281
-202.0,KAS,C4 - Zuil Appel,,2.0,Kas diversen:,284
-202.0p,KAS,C4 - Zuil Appel,,2.0,Kas diversen:,284
-202.2,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,284
-202.2p,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,284
-202.3,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,284
-202.3p,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,284
-202.1,KAS,C4 - Zuil Peer,,2.0,Kas diversen:,285
-202.1p,KAS,C4 - Zuil Peer,,2.0,Kas diversen:,285
-202.2,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,285
-202.2p,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,285
-202.4,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,285
-202.4p,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,285
-107.0,KAS,Choisya ternata 'Sundance' - P9,,2.0,Kas diversen:,286
-107.0p,KAS,Choisya ternata 'Sundance' - P9,,2.0,Kas diversen:,286
-107.1,KAS,Choisya ternata 'Sundance' - P9,,3.0,Kas diversen:,286
-107.1p,KAS,Choisya ternata 'Sundance' - P9,,3.0,Kas diversen:,286
-107.2,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,286
-107.2p,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,286
-22.1,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,287
-22.1p,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,287
-259.1,KAS,Eucalyptus 'Silver Dollar' XXL,,1.0,Kas diversen:,288
-259.1p,KAS,Eucalyptus 'Silver Dollar' XXL,,1.0,Kas diversen:,288
-259.2,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,288
-259.2p,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,288
-280.1,KAS,Eucalyptus Gunnii Azura struik,,1.0,Kas diversen:,289
-280.1p,KAS,Eucalyptus Gunnii Azura struik,,1.0,Kas diversen:,289
-280.2,KAS,Eucalyptus Gunnii Azura struik,,2.0,Kas diversen:,289
-280.2p,KAS,Eucalyptus Gunnii Azura struik,,2.0,Kas diversen:,289
-23.1,KAS,"Salix integra ""Flamingo"" struik",,3.0,Kas diversen:,290
-23.1p,KAS,"Salix integra ""Flamingo"" struik",,3.0,Kas diversen:,290
-23.2,KAS,"Salix integra ""Flamingo"" struik",,6.0,Kas diversen:,290
-23.2p,KAS,"Salix integra ""Flamingo"" struik",,6.0,Kas diversen:,290
-23.3,KAS,"Salix integra ""Flamingo"" op stam",,1.0,Kas diversen:,291
-23.3p,KAS,"Salix integra ""Flamingo"" op stam",,1.0,Kas diversen:,291
-23.4,KAS,"Salix integra ""Flamingo"" op stam",,2.0,Kas diversen:,291
-23.4p,KAS,"Salix integra ""Flamingo"" op stam",,2.0,Kas diversen:,291
-32.1,KAS,Wisteria,,3.0,Kas diversen:,292
-32.1p,KAS,Wisteria,,3.0,Kas diversen:,292
-32.2,KAS,Wisteria,,6.0,Kas diversen:,292
-32.2p,KAS,Wisteria,,6.0,Kas diversen:,292
+150.1,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,38
+150.1p,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,38
+150.2,KAS,Chamaerops humilis medium,,2.0,Tropische planten:,38
+150.2p,KAS,Chamaerops humilis medium,,2.0,Tropische planten:,38
+160.1,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,38
+160.1p,KAS,Chamaerops humilis medium,,1.0,Tropische planten:,38
+150.3,KAS,Chamaerops humilis large,,1.0,Tropische planten:,39
+150.3p,KAS,Chamaerops humilis large,,1.0,Tropische planten:,39
+150.4,KAS,Chamaerops humilis large,,2.0,Tropische planten:,39
+150.4p,KAS,Chamaerops humilis large,,2.0,Tropische planten:,39
+151.1,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,40
+151.1p,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,40
+151.2,KAS,Phoenix canariensis medium,,2.0,Tropische planten:,40
+151.2p,KAS,Phoenix canariensis medium,,2.0,Tropische planten:,40
+160.1,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,40
+160.1p,KAS,Phoenix canariensis medium,,1.0,Tropische planten:,40
+151.3,KAS,Phoenix canariensis large,,1.0,Tropische planten:,41
+151.3p,KAS,Phoenix canariensis large,,1.0,Tropische planten:,41
+151.4,KAS,Phoenix canariensis large,,2.0,Tropische planten:,41
+151.4p,KAS,Phoenix canariensis large,,2.0,Tropische planten:,41
+152.1,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,42
+152.1p,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,42
+152.2,KAS,Trachycarpus fortunei medium,,2.0,Tropische planten:,42
+152.2p,KAS,Trachycarpus fortunei medium,,2.0,Tropische planten:,42
+160.1,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,42
+160.1p,KAS,Trachycarpus fortunei medium,,1.0,Tropische planten:,42
+152.3,KAS,Trachycarpus fortunei large,,1.0,Tropische planten:,43
+152.3p,KAS,Trachycarpus fortunei large,,1.0,Tropische planten:,43
+152.4,KAS,Trachycarpus fortunei large,,2.0,Tropische planten:,43
+152.4p,KAS,Trachycarpus fortunei large,,2.0,Tropische planten:,43
+153.1,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,44
+153.1p,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,44
+153.2,KAS,Washingtonia robusta medium,,2.0,Tropische planten:,44
+153.2p,KAS,Washingtonia robusta medium,,2.0,Tropische planten:,44
+160.1,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,44
+160.1p,KAS,Washingtonia robusta medium,,1.0,Tropische planten:,44
+153.3,KAS,Washingtonia robusta large,,1.0,Tropische planten:,45
+153.3p,KAS,Washingtonia robusta large,,1.0,Tropische planten:,45
+153.4,KAS,Washingtonia robusta large,,2.0,Tropische planten:,45
+153.4p,KAS,Washingtonia robusta large,,2.0,Tropische planten:,45
+103.1,KAS,Asimina triloba – Pawpaw / Indianenbanaan - P9,,1.0,Tropische planten:,47
+103.1p,KAS,Asimina triloba – Pawpaw / Indianenbanaan - P9,,1.0,Tropische planten:,47
+3.1,KAS,Magnolia Soulangeana,,1.0,Magnolia:,51
+3.1p,KAS,Magnolia Soulangeana,,1.0,Magnolia:,51
+3.2,KAS,Magnolia Soulangeana,,2.0,Magnolia:,51
+3.2p,KAS,Magnolia Soulangeana,,2.0,Magnolia:,51
+3.3,KAS,Magnolia Soulangeana,,3.0,Magnolia:,51
+3.3p,KAS,Magnolia Soulangeana,,3.0,Magnolia:,51
+3.6,KAS,Magnolia Soulangeana,,6.0,Magnolia:,51
+3.6p,KAS,Magnolia Soulangeana,,6.0,Magnolia:,51
+3.1,KAS,Magnolia Stellata,,1.0,Magnolia:,52
+3.1p,KAS,Magnolia Stellata,,1.0,Magnolia:,52
+3.2,KAS,Magnolia Stellata,,2.0,Magnolia:,52
+3.2p,KAS,Magnolia Stellata,,2.0,Magnolia:,52
+3.5,KAS,Magnolia Stellata,,3.0,Magnolia:,52
+3.5p,KAS,Magnolia Stellata,,3.0,Magnolia:,52
+3.8,KAS,Magnolia Stellata,,6.0,Magnolia:,52
+3.8p,KAS,Magnolia Stellata,,6.0,Magnolia:,52
+3.1,KAS,Magnolia Susan,,1.0,Magnolia:,53
+3.1p,KAS,Magnolia Susan,,1.0,Magnolia:,53
+3.2,KAS,Magnolia Susan,,2.0,Magnolia:,53
+3.2p,KAS,Magnolia Susan,,2.0,Magnolia:,53
+3.4,KAS,Magnolia Susan,,3.0,Magnolia:,53
+3.4p,KAS,Magnolia Susan,,3.0,Magnolia:,53
+3.7,KAS,Magnolia Susan,,6.0,Magnolia:,53
+3.7p,KAS,Magnolia Susan,,6.0,Magnolia:,53
+13.1,KAS,Buddleja Davidii,,3.0,Buddleja:,56
+13.1p,KAS,Buddleja Davidii,,3.0,Buddleja:,56
+13.2,KAS,Buddleja Davidii,,6.0,Buddleja:,56
+13.2p,KAS,Buddleja Davidii,,6.0,Buddleja:,56
+13.7,KAS,Buddleja Davidii,,2.0,Buddleja:,56
+13.7p,KAS,Buddleja Davidii,,2.0,Buddleja:,56
+13.6,KAS,Buddleja dav. 'Black Knight',,3.0,Buddleja:,57
+13.6p,KAS,Buddleja dav. 'Black Knight',,3.0,Buddleja:,57
+13.5,KAS,Buddleja dav. 'Pink Delight',,3.0,Buddleja:,58
+13.5p,KAS,Buddleja dav. 'Pink Delight',,3.0,Buddleja:,58
+13.7,KAS,Buddleja dav. 'Pink Delight',,2.0,Buddleja:,58
+13.7p,KAS,Buddleja dav. 'Pink Delight',,2.0,Buddleja:,58
+13.3,KAS,Buddleja dav. 'Royal Red',,3.0,Buddleja:,59
+13.3p,KAS,Buddleja dav. 'Royal Red',,3.0,Buddleja:,59
+13.7,KAS,Buddleja dav. 'Royal Red',,2.0,Buddleja:,59
+13.7p,KAS,Buddleja dav. 'Royal Red',,2.0,Buddleja:,59
+13.4,KAS,Buddleja dav. 'White Profusion',,3.0,Buddleja:,60
+13.4p,KAS,Buddleja dav. 'White Profusion',,3.0,Buddleja:,60
+13.7,KAS,Buddleja dav. 'White Profusion',,2.0,Buddleja:,60
+13.7p,KAS,Buddleja dav. 'White Profusion',,2.0,Buddleja:,60
+330.1,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,1.0,Buddleja:,62
+330.1p,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,1.0,Buddleja:,62
+330.2,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,2.0,Buddleja:,62
+330.2p,KAS,Buddleja Butterfly Candy® 'Little Magenta' (P19),,2.0,Buddleja:,62
+331.1,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,1.0,Buddleja:,63
+331.1p,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,1.0,Buddleja:,63
+331.2,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,2.0,Buddleja:,63
+331.2p,KAS,Buddleja Butterfly Candy® 'Little Pink' (P19),,2.0,Buddleja:,63
+332.1,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,1.0,Buddleja:,64
+332.1p,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,1.0,Buddleja:,64
+332.2,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,2.0,Buddleja:,64
+332.2p,KAS,Buddleja Butterfly Candy® 'Little Ruby' (P19),,2.0,Buddleja:,64
+333.1,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,1.0,Buddleja:,65
+333.1p,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,1.0,Buddleja:,65
+333.2,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,2.0,Buddleja:,65
+333.2p,KAS,Buddleja Butterfly Candy® 'Little White' (P19),,2.0,Buddleja:,65
+4.0,KAS,Clematis montana 'Rubens',,3.0,Klimplanten:,68
+4.0p,KAS,Clematis montana 'Rubens',,3.0,Klimplanten:,68
+4.3,KAS,Clematis montana 'Rubens',,1.0,Klimplanten:,68
+4.3p,KAS,Clematis montana 'Rubens',,1.0,Klimplanten:,68
+35.1,KAS,Clematis montana 'Rubens',,2.0,Klimplanten:,68
+35.1p,KAS,Clematis montana 'Rubens',,2.0,Klimplanten:,68
+4.1,KAS,Clematis montana 'Wilsonii',,3.0,Klimplanten:,69
+4.1p,KAS,Clematis montana 'Wilsonii',,3.0,Klimplanten:,69
+4.3,KAS,Clematis montana 'Wilsonii',,1.0,Klimplanten:,69
+4.3p,KAS,Clematis montana 'Wilsonii',,1.0,Klimplanten:,69
+4.2,KAS,Clematis montana 'Mayleen',,3.0,Klimplanten:,70
+4.2p,KAS,Clematis montana 'Mayleen',,3.0,Klimplanten:,70
+4.3,KAS,Clematis montana 'Mayleen',,1.0,Klimplanten:,70
+4.3p,KAS,Clematis montana 'Mayleen',,1.0,Klimplanten:,70
+33.1,KAS,Lonicera per.'Belgica' - P9,,3.0,Klimplanten:,71
+33.1p,KAS,Lonicera per.'Belgica' - P9,,3.0,Klimplanten:,71
+33.2,KAS,Lonicera per.'Belgica' - P9,,6.0,Klimplanten:,71
+33.2p,KAS,Lonicera per.'Belgica' - P9,,6.0,Klimplanten:,71
+35.1,KAS,Lonicera per.'Belgica' - P9,,2.0,Klimplanten:,71
+35.1p,KAS,Lonicera per.'Belgica' - P9,,2.0,Klimplanten:,71
+34.1,KAS,Parthenocissus quin. 'Engelmannii' - P9,,3.0,Klimplanten:,72
+34.1p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,3.0,Klimplanten:,72
+34.2,KAS,Parthenocissus quin. 'Engelmannii' - P9,,6.0,Klimplanten:,72
+34.2p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,6.0,Klimplanten:,72
+35.1,KAS,Parthenocissus quin. 'Engelmannii' - P9,,2.0,Klimplanten:,72
+35.1p,KAS,Parthenocissus quin. 'Engelmannii' - P9,,2.0,Klimplanten:,72
+37.0,KAS,Thunbergia oranje - P9,,2.0,Klimplanten:,73
+37.0p,KAS,Thunbergia oranje - P9,,2.0,Klimplanten:,73
+249.1,KAS,Trachelospermum jasminoides P9 Wit,,3.0,Klimplanten:,75
+249.1p,KAS,Trachelospermum jasminoides P9 Wit,,3.0,Klimplanten:,75
+249.0,KAS,Trachelospermum jasminoides P9 Wit,,2.0,Klimplanten:,75
+249.0p,KAS,Trachelospermum jasminoides P9 Wit,,2.0,Klimplanten:,75
+249.2,KAS,Trachelospermum jasminoides P9 Wit,,6.0,Klimplanten:,75
+249.2p,KAS,Trachelospermum jasminoides P9 Wit,,6.0,Klimplanten:,75
+249.3,KAS,Trachelospermum jasminoides P9 Roze,,3.0,Klimplanten:,76
+249.3p,KAS,Trachelospermum jasminoides P9 Roze,,3.0,Klimplanten:,76
+249.4,KAS,Trachelospermum jasminoides P9 Roze,,6.0,Klimplanten:,76
+249.4p,KAS,Trachelospermum jasminoides P9 Roze,,6.0,Klimplanten:,76
+250.1,KAS,Trachelospermum jasminoides XXL P17  (wit),,1.0,Klimplanten:,78
+250.1p,KAS,Trachelospermum jasminoides XXL P17  (wit),,1.0,Klimplanten:,78
+250.2,KAS,Trachelospermum jasminoides XXL P17  (wit),,2.0,Klimplanten:,78
+250.2p,KAS,Trachelospermum jasminoides XXL P17  (wit),,2.0,Klimplanten:,78
+251.1,KAS,Trachelospermum jasminoides XXL P17 (roze),,1.0,Klimplanten:,79
+251.1p,KAS,Trachelospermum jasminoides XXL P17 (roze),,1.0,Klimplanten:,79
+251.2,KAS,Trachelospermum jasminoides XXL P17 (roze),,2.0,Klimplanten:,79
+251.2p,KAS,Trachelospermum jasminoides XXL P17 (roze),,2.0,Klimplanten:,79
+252.1,KAS,Trachelospermum jasminoides XXL P17 (geel),,1.0,Klimplanten:,80
+252.1p,KAS,Trachelospermum jasminoides XXL P17 (geel),,1.0,Klimplanten:,80
+252.2,KAS,Trachelospermum jasminoides XXL P17 (geel),,2.0,Klimplanten:,80
+252.2p,KAS,Trachelospermum jasminoides XXL P17 (geel),,2.0,Klimplanten:,80
+263.1,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,1.0,Klimplanten:,82
+263.1p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,1.0,Klimplanten:,82
+263.2,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,82
+263.2p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,82
+253.1,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,84
+253.1p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,84
+253.2,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,84
+253.2p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,84
+254.1,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,86
+254.1p,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,86
+254.2,KAS,Campsis radicans 'Flava' XXL P17 (geel),,2.0,Klimplanten:,86
+254.2p,KAS,Campsis radicans 'Flava' XXL P17 (geel),,2.0,Klimplanten:,86
+255.1,KAS,Campsis radicans  XXL P17 (oranje),,1.0,Klimplanten:,87
+255.1p,KAS,Campsis radicans  XXL P17 (oranje),,1.0,Klimplanten:,87
+255.2,KAS,Campsis radicans  XXL P17 (oranje),,2.0,Klimplanten:,87
+255.2p,KAS,Campsis radicans  XXL P17 (oranje),,2.0,Klimplanten:,87
+256.1,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,1.0,Klimplanten:,88
+256.1p,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,1.0,Klimplanten:,88
+256.2,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,2.0,Klimplanten:,88
+256.2p,KAS,Campsis tagliabuana 'Madame Galen' XXL P17 (rood),,2.0,Klimplanten:,88
+257.1,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,1.0,Klimplanten:,90
+257.1p,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,1.0,Klimplanten:,90
+257.2,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,2.0,Klimplanten:,90
+257.2p,KAS,Lonicera henryi 'Copper Beauty' XXL P17 (geel),,2.0,Klimplanten:,90
+258.1,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,1.0,Klimplanten:,91
+258.1p,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,1.0,Klimplanten:,91
+258.2,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,2.0,Klimplanten:,91
+258.2p,KAS,Lonicera heckrottii 'American Beauty' XXL P17 (rood/geel),,2.0,Klimplanten:,91
+260.1,KAS,Passiflora caerulea  XXL P17 (blauw),,1.0,Klimplanten:,93
+260.1p,KAS,Passiflora caerulea  XXL P17 (blauw),,1.0,Klimplanten:,93
+260.2,KAS,Passiflora caerulea  XXL P17 (blauw),,2.0,Klimplanten:,93
+260.2p,KAS,Passiflora caerulea  XXL P17 (blauw),,2.0,Klimplanten:,93
+261.1,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,1.0,Klimplanten:,94
+261.1p,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,1.0,Klimplanten:,94
+261.2,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,2.0,Klimplanten:,94
+261.2p,KAS,Passiflora caerulea 'Victoria' XXL P17 (roze/paars),,2.0,Klimplanten:,94
+262.1,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,1.0,Klimplanten:,95
+262.1p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,1.0,Klimplanten:,95
+262.2,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,95
+262.2p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,95
+230.1,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,98
+230.1p,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,98
+231.1,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,99
+231.1p,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,99
+232.1,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,100
+232.1p,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,100
+233.1,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,101
+233.1p,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,101
+237.1,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,102
+237.1p,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,102
+237.0,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,102
+237.0p,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,102
+234.1,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,103
+234.1p,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,103
+235.1,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,104
+235.1p,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,104
+236.1,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,105
+236.1p,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,105
+236.0,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,105
+236.0p,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,105
+6.1,KAS,Camellia Rood,,1.0,Camellia:,108
+6.1p,KAS,Camellia Rood,,1.0,Camellia:,108
+6.2,KAS,Camellia Rood,,2.0,Camellia:,108
+6.2p,KAS,Camellia Rood,,2.0,Camellia:,108
+6.3,KAS,Camellia Rood,,3.0,Camellia:,108
+6.3p,KAS,Camellia Rood,,3.0,Camellia:,108
+6.1,KAS,Camellia Roze,,1.0,Camellia:,109
+6.1p,KAS,Camellia Roze,,1.0,Camellia:,109
+6.2,KAS,Camellia Roze,,2.0,Camellia:,109
+6.2p,KAS,Camellia Roze,,2.0,Camellia:,109
+6.4,KAS,Camellia Roze,,3.0,Camellia:,109
+6.4p,KAS,Camellia Roze,,3.0,Camellia:,109
+6.1,KAS,Camellia Wit,,1.0,Camellia:,110
+6.1p,KAS,Camellia Wit,,1.0,Camellia:,110
+6.2,KAS,Camellia Wit,,2.0,Camellia:,110
+6.2p,KAS,Camellia Wit,,2.0,Camellia:,110
+6.5,KAS,Camellia Wit,,3.0,Camellia:,110
+6.5p,KAS,Camellia Wit,,3.0,Camellia:,110
+40.3,KAS,Camellia XL Rood,,1.0,Camellia XL:,113
+40.3p,KAS,Camellia XL Rood,,1.0,Camellia XL:,113
+40.4,KAS,Camellia XL Rood,,2.0,Camellia XL:,113
+40.4p,KAS,Camellia XL Rood,,2.0,Camellia XL:,113
+40.1,KAS,Camellia XL Roze,,1.0,Camellia XL:,114
+40.1p,KAS,Camellia XL Roze,,1.0,Camellia XL:,114
+40.2,KAS,Camellia XL Roze,,2.0,Camellia XL:,114
+40.2p,KAS,Camellia XL Roze,,2.0,Camellia XL:,114
+40.5,KAS,Camellia XL Wit,,1.0,Camellia XL:,115
+40.5p,KAS,Camellia XL Wit,,1.0,Camellia XL:,115
+40.6,KAS,Camellia XL Wit,,2.0,Camellia XL:,115
+40.6p,KAS,Camellia XL Wit,,2.0,Camellia XL:,115
+40.7,KAS,Camellia XL Tricolor,,1.0,Camellia XL:,116
+40.7p,KAS,Camellia XL Tricolor,,1.0,Camellia XL:,116
+40.8,KAS,Camellia XL Tricolor,,2.0,Camellia XL:,116
+40.8p,KAS,Camellia XL Tricolor,,2.0,Camellia XL:,116
+T001,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,119
+T001p,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,119
+T002,KAS,Camellia japonica P19 Roze,,2.0,Camellia P19:,119
+T002p,KAS,Camellia japonica P19 Roze,,2.0,Camellia P19:,119
+T005,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,119
+T005p,KAS,Camellia japonica P19 Roze,,1.0,Camellia P19:,119
+T003,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,120
+T003p,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,120
+T004,KAS,Camellia japonica P19 Wit,,2.0,Camellia P19:,120
+T004p,KAS,Camellia japonica P19 Wit,,2.0,Camellia P19:,120
+T005,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,120
+T005p,KAS,Camellia japonica P19 Wit,,1.0,Camellia P19:,120
+274.1,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,1.0,Acers:,123
+274.1p,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,1.0,Acers:,123
+274.2,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,2.0,Acers:,123
+274.2p,KAS,"Acer palm. 'Atropurpureum' (P10,5)",,2.0,Acers:,123
+274.1,KAS,"Acer palm. 'Butterfly' (P10,5)",,1.0,Acers:,124
+274.1p,KAS,"Acer palm. 'Butterfly' (P10,5)",,1.0,Acers:,124
+274.3,KAS,"Acer palm. 'Butterfly' (P10,5)",,2.0,Acers:,124
+274.3p,KAS,"Acer palm. 'Butterfly' (P10,5)",,2.0,Acers:,124
+274.1,KAS,"Acer palm. 'Going Green' (P10,5)",,1.0,Acers:,125
+274.1p,KAS,"Acer palm. 'Going Green' (P10,5)",,1.0,Acers:,125
+274.4,KAS,"Acer palm. 'Going Green' (P10,5)",,2.0,Acers:,125
+274.4p,KAS,"Acer palm. 'Going Green' (P10,5)",,2.0,Acers:,125
+274.1,KAS,"Acer palm. 'Orange Dream' (P10,5)",,1.0,Acers:,126
+274.1p,KAS,"Acer palm. 'Orange Dream' (P10,5)",,1.0,Acers:,126
+274.5,KAS,"Acer palm. 'Orange Dream' (P10,5)",,2.0,Acers:,126
+274.5p,KAS,"Acer palm. 'Orange Dream' (P10,5)",,2.0,Acers:,126
+290.1,KAS,Acer palm. 'Atropurpureum' (P15),,1.0,Acers:,128
+290.1p,KAS,Acer palm. 'Atropurpureum' (P15),,1.0,Acers:,128
+290.2,KAS,Acer palm. 'Atropurpureum' (P15),,2.0,Acers:,128
+290.2p,KAS,Acer palm. 'Atropurpureum' (P15),,2.0,Acers:,128
+291.1,KAS,Acer palm. 'Butterfly' (P15),,1.0,Acers:,129
+291.1p,KAS,Acer palm. 'Butterfly' (P15),,1.0,Acers:,129
+291.2,KAS,Acer palm. 'Butterfly' (P15),,2.0,Acers:,129
+291.2p,KAS,Acer palm. 'Butterfly' (P15),,2.0,Acers:,129
+292.1,KAS,Acer palm. 'Going Green' (P15),,1.0,Acers:,130
+292.1p,KAS,Acer palm. 'Going Green' (P15),,1.0,Acers:,130
+292.2,KAS,Acer palm. 'Going Green' (P15),,2.0,Acers:,130
+292.2p,KAS,Acer palm. 'Going Green' (P15),,2.0,Acers:,130
+293.1,KAS,Acer palm. 'Orange Dream' (P15),,1.0,Acers:,131
+293.1p,KAS,Acer palm. 'Orange Dream' (P15),,1.0,Acers:,131
+293.2,KAS,Acer palm. 'Orange Dream' (P15),,2.0,Acers:,131
+293.2p,KAS,Acer palm. 'Orange Dream' (P15),,2.0,Acers:,131
+294.1,KAS,Acer palm. 'Extravaganza' (P15),,1.0,Acers:,132
+294.1p,KAS,Acer palm. 'Extravaganza' (P15),,1.0,Acers:,132
+294.2,KAS,Acer palm. 'Extravaganza' (P15),,2.0,Acers:,132
+294.2p,KAS,Acer palm. 'Extravaganza' (P15),,2.0,Acers:,132
+295.1,KAS,Acer palm. 'Taylor' (P15),,1.0,Acers:,133
+295.1p,KAS,Acer palm. 'Taylor' (P15),,1.0,Acers:,133
+295.2,KAS,Acer palm. 'Taylor' (P15),,2.0,Acers:,133
+295.2p,KAS,Acer palm. 'Taylor' (P15),,2.0,Acers:,133
+296.1,KAS,Acer palm. 'Moonrise' (P15),,1.0,Acers:,134
+296.1p,KAS,Acer palm. 'Moonrise' (P15),,1.0,Acers:,134
+296.2,KAS,Acer palm. 'Moonrise' (P15),,2.0,Acers:,134
+296.2p,KAS,Acer palm. 'Moonrise' (P15),,2.0,Acers:,134
+275.1,KAS,Acer palm. 'Atropurpureum' (P19),,1.0,Acers:,136
+275.1p,KAS,Acer palm. 'Atropurpureum' (P19),,1.0,Acers:,136
+275.2,KAS,Acer palm. 'Atropurpureum' (P19),,2.0,Acers:,136
+275.2p,KAS,Acer palm. 'Atropurpureum' (P19),,2.0,Acers:,136
+276.1,KAS,Acer palm. 'Beni-maiko' (P19),,1.0,Acers:,137
+276.1p,KAS,Acer palm. 'Beni-maiko' (P19),,1.0,Acers:,137
+276.2,KAS,Acer palm. 'Beni-maiko' (P19),,2.0,Acers:,137
+276.2p,KAS,Acer palm. 'Beni-maiko' (P19),,2.0,Acers:,137
+277.1,KAS,Acer palm. 'Butterfly' (P19),,1.0,Acers:,138
+277.1p,KAS,Acer palm. 'Butterfly' (P19),,1.0,Acers:,138
+277.2,KAS,Acer palm. 'Butterfly' (P19),,2.0,Acers:,138
+277.2p,KAS,Acer palm. 'Butterfly' (P19),,2.0,Acers:,138
+278.1,KAS,Acer palm. 'Orange Dream' (P19),,1.0,Acers:,139
+278.1p,KAS,Acer palm. 'Orange Dream' (P19),,1.0,Acers:,139
+278.2,KAS,Acer palm. 'Orange Dream' (P19),,2.0,Acers:,139
+278.2p,KAS,Acer palm. 'Orange Dream' (P19),,2.0,Acers:,139
+279.1,KAS,Acer palm. 'Shaina' (P19),,1.0,Acers:,140
+279.1p,KAS,Acer palm. 'Shaina' (P19),,1.0,Acers:,140
+279.2,KAS,Acer palm. 'Shaina' (P19),,2.0,Acers:,140
+279.2p,KAS,Acer palm. 'Shaina' (P19),,2.0,Acers:,140
+279.3,KAS,Acer palm. 'Shaina' Struik (P19),,1.0,Acers:,141
+279.3p,KAS,Acer palm. 'Shaina' Struik (P19),,1.0,Acers:,141
+279.4,KAS,Acer palm. 'Shaina' Struik (P19),,2.0,Acers:,141
+279.4p,KAS,Acer palm. 'Shaina' Struik (P19),,2.0,Acers:,141
+298.1,KAS,Acer palm. 'Dissectum' (P19),,1.0,Acers:,142
+298.1p,KAS,Acer palm. 'Dissectum' (P19),,1.0,Acers:,142
+298.2,KAS,Acer palm. 'Dissectum' (P19),,2.0,Acers:,142
+298.2p,KAS,Acer palm. 'Dissectum' (P19),,2.0,Acers:,142
+299.1,KAS,Acer palm. 'Extravaganza' (P19),,1.0,Acers:,143
+299.1p,KAS,Acer palm. 'Extravaganza' (P19),,1.0,Acers:,143
+299.2,KAS,Acer palm. 'Extravaganza' (P19),,2.0,Acers:,143
+299.2p,KAS,Acer palm. 'Extravaganza' (P19),,2.0,Acers:,143
+300.1,KAS,Acer palm. 'Garnet' (P19),,1.0,Acers:,144
+300.1p,KAS,Acer palm. 'Garnet' (P19),,1.0,Acers:,144
+301.1,KAS,Acer palm. 'Orange Lace' (P19),,1.0,Acers:,145
+301.1p,KAS,Acer palm. 'Orange Lace' (P19),,1.0,Acers:,145
+301.2,KAS,Acer palm. 'Orange Lace' (P19),,2.0,Acers:,145
+301.2p,KAS,Acer palm. 'Orange Lace' (P19),,2.0,Acers:,145
+302.1,KAS,Acer palm. 'Taylor' (P19),,1.0,Acers:,146
+302.1p,KAS,Acer palm. 'Taylor' (P19),,1.0,Acers:,146
+302.2,KAS,Acer palm. 'Taylor' (P19),,2.0,Acers:,146
+302.2p,KAS,Acer palm. 'Taylor' (P19),,2.0,Acers:,146
+303.1,KAS,Acer palm. 'Trompenburg' (P19),,1.0,Acers:,147
+303.1p,KAS,Acer palm. 'Trompenburg' (P19),,1.0,Acers:,147
+303.2,KAS,Acer palm. 'Trompenburg' (P19),,2.0,Acers:,147
+303.2p,KAS,Acer palm. 'Trompenburg' (P19),,2.0,Acers:,147
+304.1,KAS,Acer palm. 'Ukigumo' (P19),,1.0,Acers:,148
+304.1p,KAS,Acer palm. 'Ukigumo' (P19),,1.0,Acers:,148
+304.2,KAS,Acer palm. 'Ukigumo' (P19),,2.0,Acers:,148
+304.2p,KAS,Acer palm. 'Ukigumo' (P19),,2.0,Acers:,148
+305.1,KAS,Acer shir. 'Aureum' (P19),,1.0,Acers:,150
+305.1p,KAS,Acer shir. 'Aureum' (P19),,1.0,Acers:,150
+305.2,KAS,Acer shir. 'Aureum' (P19),,2.0,Acers:,150
+305.2p,KAS,Acer shir. 'Aureum' (P19),,2.0,Acers:,150
+306.3,KAS,Acer shir. 'Moonrise' (P19),,1.0,Acers:,151
+306.3p,KAS,Acer shir. 'Moonrise' (P19),,1.0,Acers:,151
+306.4,KAS,Acer shir. 'Moonrise' (P19),,2.0,Acers:,151
+306.4p,KAS,Acer shir. 'Moonrise' (P19),,2.0,Acers:,151
+306.1,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,1.0,Acers:,152
+306.1p,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,1.0,Acers:,152
+306.2,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,2.0,Acers:,152
+306.2p,KAS,Acer shir. 'Moonrise' (P19) OP STAM,,2.0,Acers:,152
+297.1,KAS,Acer cons. 'Red Flamingo' (P19),,1.0,Acers:,154
+297.1p,KAS,Acer cons. 'Red Flamingo' (P19),,1.0,Acers:,154
+297.2,KAS,Acer cons. 'Red Flamingo' (P19),,2.0,Acers:,154
+297.2p,KAS,Acer cons. 'Red Flamingo' (P19),,2.0,Acers:,154
+T006,KAS,Acer palm. 'Atropurpureum' Bonsai (P23) - patio,,1.0,Acers:,156
+T006p,KAS,Acer palm. 'Atropurpureum' Bonsai (P23) - patio,,1.0,Acers:,156
+T007,KAS,Acer palm. 'Beni-maiko' Bonsai (P23) - patio,,1.0,Acers:,157
+T007p,KAS,Acer palm. 'Beni-maiko' Bonsai (P23) - patio,,1.0,Acers:,157
+T008,KAS,Acer palm. 'Katsura' Bonsai (P23) - patio,,1.0,Acers:,158
+T008p,KAS,Acer palm. 'Katsura' Bonsai (P23) - patio,,1.0,Acers:,158
+T009,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,159
+T009p,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,159
+310.1,KAS,Acer palm. 'Emerald Lace' (P24),,1.0,Acers:,161
+310.1p,KAS,Acer palm. 'Emerald Lace' (P24),,1.0,Acers:,161
+310.2,KAS,Acer palm. 'Garnet' (P24),,1.0,Acers:,162
+310.2p,KAS,Acer palm. 'Garnet' (P24),,1.0,Acers:,162
+8.1,KAS,Hydrangea Blauw,,1.0,Hydrangea:,167
+8.1p,KAS,Hydrangea Blauw,,1.0,Hydrangea:,167
+8.2,KAS,Hydrangea Blauw,,2.0,Hydrangea:,167
+8.2p,KAS,Hydrangea Blauw,,2.0,Hydrangea:,167
+8.3,KAS,Hydrangea Blauw,,3.0,Hydrangea:,167
+8.3p,KAS,Hydrangea Blauw,,3.0,Hydrangea:,167
+8.4,KAS,Hydrangea Blauw,,6.0,Hydrangea:,167
+8.4p,KAS,Hydrangea Blauw,,6.0,Hydrangea:,167
+8.19,KAS,Hydrangea Blauw,,1.0,Hydrangea:,167
+8.19p,KAS,Hydrangea Blauw,,1.0,Hydrangea:,167
+8.20,KAS,Hydrangea Blauw,,2.0,Hydrangea:,167
+8.20p,KAS,Hydrangea Blauw,,2.0,Hydrangea:,167
+8.17,KAS,Hydrangea Rood,,3.0,Hydrangea:,168
+8.17p,KAS,Hydrangea Rood,,3.0,Hydrangea:,168
+8.18,KAS,Hydrangea Rood,,6.0,Hydrangea:,168
+8.18p,KAS,Hydrangea Rood,,6.0,Hydrangea:,168
+8.19,KAS,Hydrangea Rood,,1.0,Hydrangea:,168
+8.19p,KAS,Hydrangea Rood,,1.0,Hydrangea:,168
+8.20,KAS,Hydrangea Rood,,2.0,Hydrangea:,168
+8.20p,KAS,Hydrangea Rood,,2.0,Hydrangea:,168
+8.15,KAS,Hydrangea Roze,,3.0,Hydrangea:,169
+8.15p,KAS,Hydrangea Roze,,3.0,Hydrangea:,169
+8.16,KAS,Hydrangea Roze,,6.0,Hydrangea:,169
+8.16p,KAS,Hydrangea Roze,,6.0,Hydrangea:,169
+8.19,KAS,Hydrangea Roze,,1.0,Hydrangea:,169
+8.19p,KAS,Hydrangea Roze,,1.0,Hydrangea:,169
+8.20,KAS,Hydrangea Roze,,2.0,Hydrangea:,169
+8.20p,KAS,Hydrangea Roze,,2.0,Hydrangea:,169
+8.13,KAS,Hydrangea Wit,,3.0,Hydrangea:,170
+8.13p,KAS,Hydrangea Wit,,3.0,Hydrangea:,170
+8.14,KAS,Hydrangea Wit,,6.0,Hydrangea:,170
+8.14p,KAS,Hydrangea Wit,,6.0,Hydrangea:,170
+8.19,KAS,Hydrangea Wit,,1.0,Hydrangea:,170
+8.19p,KAS,Hydrangea Wit,,1.0,Hydrangea:,170
+8.20,KAS,Hydrangea Wit,,2.0,Hydrangea:,170
+8.20p,KAS,Hydrangea Wit,,2.0,Hydrangea:,170
+8.1,KAS,Hydrangea Kyushu,,1.0,Hydrangea:,171
+8.1p,KAS,Hydrangea Kyushu,,1.0,Hydrangea:,171
+8.2,KAS,Hydrangea Kyushu,,2.0,Hydrangea:,171
+8.2p,KAS,Hydrangea Kyushu,,2.0,Hydrangea:,171
+8.9,KAS,Hydrangea Kyushu,,3.0,Hydrangea:,171
+8.9p,KAS,Hydrangea Kyushu,,3.0,Hydrangea:,171
+8.10,KAS,Hydrangea Kyushu,,6.0,Hydrangea:,171
+8.10p,KAS,Hydrangea Kyushu,,6.0,Hydrangea:,171
+8.1,KAS,Hydrangea Phantom,,1.0,Hydrangea:,172
+8.1p,KAS,Hydrangea Phantom,,1.0,Hydrangea:,172
+8.2,KAS,Hydrangea Phantom,,2.0,Hydrangea:,172
+8.2p,KAS,Hydrangea Phantom,,2.0,Hydrangea:,172
+8.5,KAS,Hydrangea Phantom,,3.0,Hydrangea:,172
+8.5p,KAS,Hydrangea Phantom,,3.0,Hydrangea:,172
+8.6,KAS,Hydrangea Phantom,,6.0,Hydrangea:,172
+8.6p,KAS,Hydrangea Phantom,,6.0,Hydrangea:,172
+8.1,KAS,Hydrangea Pink Diamond,,1.0,Hydrangea:,173
+8.1p,KAS,Hydrangea Pink Diamond,,1.0,Hydrangea:,173
+8.2,KAS,Hydrangea Pink Diamond,,2.0,Hydrangea:,173
+8.2p,KAS,Hydrangea Pink Diamond,,2.0,Hydrangea:,173
+8.7,KAS,Hydrangea Pink Diamond,,3.0,Hydrangea:,173
+8.7p,KAS,Hydrangea Pink Diamond,,3.0,Hydrangea:,173
+8.8,KAS,Hydrangea Pink Diamond,,6.0,Hydrangea:,173
+8.8p,KAS,Hydrangea Pink Diamond,,6.0,Hydrangea:,173
+8.11,KAS,Hydrangea Annabelle,,3.0,Hydrangea:,174
+8.11p,KAS,Hydrangea Annabelle,,3.0,Hydrangea:,174
+8.12,KAS,Hydrangea Annabelle,,6.0,Hydrangea:,174
+8.12p,KAS,Hydrangea Annabelle,,6.0,Hydrangea:,174
+31.1,KAS,Hydrangea Petiolaris - P9,,4.0,Hydrangea:,175
+31.1p,KAS,Hydrangea Petiolaris - P9,,4.0,Hydrangea:,175
+31.2,KAS,Hydrangea Petiolaris - P9,,8.0,Hydrangea:,175
+31.2p,KAS,Hydrangea Petiolaris - P9,,8.0,Hydrangea:,175
+31.0,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,175
+31.0p,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,175
+35.1,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,175
+35.1p,KAS,Hydrangea Petiolaris - P9,,2.0,Hydrangea:,175
+8.21,KAS,Hydrangea 'Limelight',,2.0,Hydrangea:,176
+8.21p,KAS,Hydrangea 'Limelight',,2.0,Hydrangea:,176
+8.22,KAS,Hydrangea 'Limelight',,3.0,Hydrangea:,176
+8.22p,KAS,Hydrangea 'Limelight',,3.0,Hydrangea:,176
+8.23,KAS,Hydrangea 'Limelight',,6.0,Hydrangea:,176
+8.23p,KAS,Hydrangea 'Limelight',,6.0,Hydrangea:,176
+8.24,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,2.0,Hydrangea:,177
+8.24p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,2.0,Hydrangea:,177
+8.25,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,3.0,Hydrangea:,177
+8.25p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,3.0,Hydrangea:,177
+8.26,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,6.0,Hydrangea:,177
+8.26p,KAS,Hydrangea quercifolia 'Snow Queen' - P9,,6.0,Hydrangea:,177
+281.1,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,1.0,Hydrangea:,179
+281.1p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,1.0,Hydrangea:,179
+281.2,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,2.0,Hydrangea:,179
+281.2p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,2.0,Hydrangea:,179
+281.3,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,3.0,Hydrangea:,179
+281.3p,KAS,Hydarngea arbo. 'Strong Annabelle' (P19),,3.0,Hydrangea:,179
+282.1,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,1.0,Hydrangea:,180
+282.1p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,1.0,Hydrangea:,180
+282.3,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,3.0,Hydrangea:,180
+282.3p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,3.0,Hydrangea:,180
+283.1,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,1.0,Hydrangea:,181
+283.1p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,1.0,Hydrangea:,181
+283.2,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,2.0,Hydrangea:,181
+283.2p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,2.0,Hydrangea:,181
+283.3,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,3.0,Hydrangea:,181
+283.3p,KAS,Hydarngea arbo. 'Ruby Annabelle' (P19),,3.0,Hydrangea:,181
+55.1,KAS,Festuca glauca 'Elija Blue' - P9,,4.0,Grassen:,186
+55.1p,KAS,Festuca glauca 'Elija Blue' - P9,,4.0,Grassen:,186
+55.2,KAS,Festuca glauca 'Elija Blue' - P9,,8.0,Grassen:,186
+55.2p,KAS,Festuca glauca 'Elija Blue' - P9,,8.0,Grassen:,186
+56.2,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,186
+56.2p,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,186
+56.3,KAS,Festuca glauca 'Elija Blue' - P9,,1.0,Grassen:,186
+56.3p,KAS,Festuca glauca 'Elija Blue' - P9,,1.0,Grassen:,186
+56.4,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,186
+56.4p,KAS,Festuca glauca 'Elija Blue' - P9,,2.0,Grassen:,186
+53.1,KAS,Imperata cyl. 'Red Baron' - P9,,4.0,Grassen:,187
+53.1p,KAS,Imperata cyl. 'Red Baron' - P9,,4.0,Grassen:,187
+53.2,KAS,Imperata cyl. 'Red Baron' - P9,,8.0,Grassen:,187
+53.2p,KAS,Imperata cyl. 'Red Baron' - P9,,8.0,Grassen:,187
+56.1,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+56.1p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+56.2,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+56.2p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+56.3,KAS,Imperata cyl. 'Red Baron' - P9,,1.0,Grassen:,187
+56.3p,KAS,Imperata cyl. 'Red Baron' - P9,,1.0,Grassen:,187
+56.4,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+56.4p,KAS,Imperata cyl. 'Red Baron' - P9,,2.0,Grassen:,187
+54.1,KAS,Liriope muscari - P9,,4.0,Grassen:,188
+54.1p,KAS,Liriope muscari - P9,,4.0,Grassen:,188
+54.2,KAS,Liriope muscari - P9,,8.0,Grassen:,188
+54.2p,KAS,Liriope muscari - P9,,8.0,Grassen:,188
+56.2,KAS,Liriope muscari - P9,,2.0,Grassen:,188
+56.2p,KAS,Liriope muscari - P9,,2.0,Grassen:,188
+9.1,KAS,Pampasgras Roze - P9,,2.0,Grassen:,189
+9.1p,KAS,Pampasgras Roze - P9,,2.0,Grassen:,189
+9.2,KAS,Pampasgras Roze - P9,,4.0,Grassen:,189
+9.2p,KAS,Pampasgras Roze - P9,,4.0,Grassen:,189
+9.4,KAS,Pampasgras Roze - P9,,3.0,Grassen:,189
+9.4p,KAS,Pampasgras Roze - P9,,3.0,Grassen:,189
+9.6,KAS,Pampasgras Roze - P9,,6.0,Grassen:,189
+9.6p,KAS,Pampasgras Roze - P9,,6.0,Grassen:,189
+9.8,KAS,Pampasgras Roze - P9,,3.0,Grassen:,189
+9.8p,KAS,Pampasgras Roze - P9,,3.0,Grassen:,189
+9.9,KAS,Pampasgras Roze - P9,,12.0,Grassen:,189
+9.9p,KAS,Pampasgras Roze - P9,,12.0,Grassen:,189
+9.11,KAS,Pampasgras Roze - P9,,2.0,Grassen:,189
+9.11p,KAS,Pampasgras Roze - P9,,2.0,Grassen:,189
+9.1,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+9.1p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+9.2,KAS,Pampasgras Wit - P9,,4.0,Grassen:,190
+9.2p,KAS,Pampasgras Wit - P9,,4.0,Grassen:,190
+9.4,KAS,Pampasgras Wit - P9,,3.0,Grassen:,190
+9.4p,KAS,Pampasgras Wit - P9,,3.0,Grassen:,190
+9.5,KAS,Pampasgras Wit - P9,,6.0,Grassen:,190
+9.5p,KAS,Pampasgras Wit - P9,,6.0,Grassen:,190
+9.7,KAS,Pampasgras Wit - P9,,3.0,Grassen:,190
+9.7p,KAS,Pampasgras Wit - P9,,3.0,Grassen:,190
+9.9,KAS,Pampasgras Wit - P9,,12.0,Grassen:,190
+9.9p,KAS,Pampasgras Wit - P9,,12.0,Grassen:,190
+56.1,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+56.1p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+9.10,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+9.10p,KAS,Pampasgras Wit - P9,,2.0,Grassen:,190
+52.1,KAS,Pennisetum alap. 'Hameln' - P9,,4.0,Grassen:,191
+52.1p,KAS,Pennisetum alap. 'Hameln' - P9,,4.0,Grassen:,191
+52.2,KAS,Pennisetum alap. 'Hameln' - P9,,8.0,Grassen:,191
+52.2p,KAS,Pennisetum alap. 'Hameln' - P9,,8.0,Grassen:,191
+56.1,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+56.1p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+56.2,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+56.2p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+56.3,KAS,Pennisetum alap. 'Hameln' - P9,,1.0,Grassen:,191
+56.3p,KAS,Pennisetum alap. 'Hameln' - P9,,1.0,Grassen:,191
+56.4,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+56.4p,KAS,Pennisetum alap. 'Hameln' - P9,,2.0,Grassen:,191
+39.1,KAS,Stipa Tenuissima 'Ponytails' - P9,,4.0,Grassen:,192
+39.1p,KAS,Stipa Tenuissima 'Ponytails' - P9,,4.0,Grassen:,192
+39.2,KAS,Stipa Tenuissima 'Ponytails' - P9,,8.0,Grassen:,192
+39.2p,KAS,Stipa Tenuissima 'Ponytails' - P9,,8.0,Grassen:,192
+56.1,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,192
+56.1p,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,192
+56.3,KAS,Stipa Tenuissima 'Ponytails' - P9,,1.0,Grassen:,192
+56.3p,KAS,Stipa Tenuissima 'Ponytails' - P9,,1.0,Grassen:,192
+56.4,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,192
+56.4p,KAS,Stipa Tenuissima 'Ponytails' - P9,,2.0,Grassen:,192
+39.0,KAS,Stipa Tenuissima 'Ponytails' - P9,,3.0,Grassen:,192
+39.0p,KAS,Stipa Tenuissima 'Ponytails' - P9,,3.0,Grassen:,192
+57.1,KAS,Miscanthus sin. 'Kleine Silbersp.' 23 cm,,1.0,Grassen:,193
+57.1p,KAS,Miscanthus sin. 'Kleine Silbersp.' 23 cm,,1.0,Grassen:,193
+57.2,KAS,Miscanthus sin. 'Red Chief' 23 cm,,1.0,Grassen:,194
+57.2p,KAS,Miscanthus sin. 'Red Chief' 23 cm,,1.0,Grassen:,194
+57.3,KAS,Miscanthus sin. 'Zebrinus'  23 cm,,1.0,Grassen:,195
+57.3p,KAS,Miscanthus sin. 'Zebrinus'  23 cm,,1.0,Grassen:,195
+58.1,KAS,Pennisetum al. 'Hameln' 23 cm,,1.0,Grassen:,196
+58.1p,KAS,Pennisetum al. 'Hameln' 23 cm,,1.0,Grassen:,196
+58.2,KAS,Pennisetum al. 'Hameln' 23 cm,,2.0,Grassen:,196
+58.2p,KAS,Pennisetum al. 'Hameln' 23 cm,,2.0,Grassen:,196
+340.1,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,1.0,Nandina:,199
+340.1p,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,1.0,Nandina:,199
+340.2,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,2.0,Nandina:,199
+340.2p,KAS,Nandina dom. 'Magical Lemon and Lime' (P15),,2.0,Nandina:,199
+341.1,KAS,Nandina dom. 'Magical Sunrise' (P15),,1.0,Nandina:,200
+341.1p,KAS,Nandina dom. 'Magical Sunrise' (P15),,1.0,Nandina:,200
+341.2,KAS,Nandina dom. 'Magical Sunrise' (P15),,2.0,Nandina:,200
+341.2p,KAS,Nandina dom. 'Magical Sunrise' (P15),,2.0,Nandina:,200
+342.1,KAS,Nandina dom. 'Obsessed' (P15),,1.0,Nandina:,201
+342.1p,KAS,Nandina dom. 'Obsessed' (P15),,1.0,Nandina:,201
+342.2,KAS,Nandina dom. 'Obsessed' (P15),,2.0,Nandina:,201
+342.2p,KAS,Nandina dom. 'Obsessed' (P15),,2.0,Nandina:,201
+343.1,KAS,Nandina dom. 'Twilight' (P15),,1.0,Nandina:,202
+343.1p,KAS,Nandina dom. 'Twilight' (P15),,1.0,Nandina:,202
+343.2,KAS,Nandina dom. 'Twilight' (P15),,2.0,Nandina:,202
+343.2p,KAS,Nandina dom. 'Twilight' (P15),,2.0,Nandina:,202
+50.1,KAS,Nandina Domestica Obsessed (P17),,1.0,Nandina:,204
+50.1p,KAS,Nandina Domestica Obsessed (P17),,1.0,Nandina:,204
+50.2,KAS,Nandina Domestica Obsessed (P17),,2.0,Nandina:,204
+50.2p,KAS,Nandina Domestica Obsessed (P17),,2.0,Nandina:,204
+345.1,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,1.0,Nandina:,206
+345.1p,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,1.0,Nandina:,206
+345.2,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,2.0,Nandina:,206
+345.2p,KAS,Nandina dom. 'Magical Lemon and Lime' (P19),,2.0,Nandina:,206
+346.1,KAS,Nandina dom. 'Magical Sunrise' (P19),,1.0,Nandina:,207
+346.1p,KAS,Nandina dom. 'Magical Sunrise' (P19),,1.0,Nandina:,207
+346.2,KAS,Nandina dom. 'Magical Sunrise' (P19),,2.0,Nandina:,207
+346.2p,KAS,Nandina dom. 'Magical Sunrise' (P19),,2.0,Nandina:,207
+347.1,KAS,Nandina dom. 'Obsessed' (P19),,1.0,Nandina:,208
+347.1p,KAS,Nandina dom. 'Obsessed' (P19),,1.0,Nandina:,208
+347.2,KAS,Nandina dom. 'Obsessed' (P19),,2.0,Nandina:,208
+347.2p,KAS,Nandina dom. 'Obsessed' (P19),,2.0,Nandina:,208
+348.1,KAS,Nandina dom. 'Twilight' (P19),,1.0,Nandina:,209
+348.1p,KAS,Nandina dom. 'Twilight' (P19),,1.0,Nandina:,209
+348.2,KAS,Nandina dom. 'Twilight' (P19),,2.0,Nandina:,209
+348.2p,KAS,Nandina dom. 'Twilight' (P19),,2.0,Nandina:,209
+41.3,KAS,"Fargesia Medium ""Niet woekerend"" C1",,2.0,Bamboe:,212
+41.3p,KAS,"Fargesia Medium ""Niet woekerend"" C1",,2.0,Bamboe:,212
+41.4,KAS,"Fargesia Medium ""Niet woekerend"" C1",,4.0,Bamboe:,212
+41.4p,KAS,"Fargesia Medium ""Niet woekerend"" C1",,4.0,Bamboe:,212
+41.1,KAS,"Fargesia XL ""Niet woekerend"" C2",,1.0,Bamboe:,213
+41.1p,KAS,"Fargesia XL ""Niet woekerend"" C2",,1.0,Bamboe:,213
+41.2,KAS,"Fargesia XL ""Niet woekerend"" C2",,2.0,Bamboe:,213
+41.2p,KAS,"Fargesia XL ""Niet woekerend"" C2",,2.0,Bamboe:,213
+269.1,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,214
+269.1p,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,214
+270.1,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,215
+270.1p,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,215
+270.2,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,215
+270.2p,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,215
+270.0,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,215
+270.0p,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,215
+271.1,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,216
+271.1p,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,216
+271.2,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,216
+271.2p,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,216
+273.1,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,217
+273.1p,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,217
+273.2,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,217
+273.2p,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,217
+273.3,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,217
+273.3p,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,217
+272.1,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,218
+272.1p,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,218
+272.2,KAS,Fargesia 'Groen' C2,,4.0,Bamboe:,218
+272.2p,KAS,Fargesia 'Groen' C2,,4.0,Bamboe:,218
+272.3,KAS,Fargesia 'Groen' C2,,6.0,Bamboe:,218
+272.3p,KAS,Fargesia 'Groen' C2,,6.0,Bamboe:,218
+7.1,KAS,Blauwe bes,,4.0,Vitamineplanten:,221
+7.1p,KAS,Blauwe bes,,4.0,Vitamineplanten:,221
+7.2,KAS,Blauwe bes,,8.0,Vitamineplanten:,221
+7.2p,KAS,Blauwe bes,,8.0,Vitamineplanten:,221
+29.1,KAS,Blauwe bes,,1.0,Vitamineplanten:,221
+29.1p,KAS,Blauwe bes,,1.0,Vitamineplanten:,221
+29.2,KAS,Blauwe bes,,2.0,Vitamineplanten:,221
+29.2p,KAS,Blauwe bes,,2.0,Vitamineplanten:,221
+15.1,KAS,Blauwe bes,,1.0,Vitamineplanten:,221
+15.1p,KAS,Blauwe bes,,1.0,Vitamineplanten:,221
+29.1,KAS,Gojibes,,1.0,Vitamineplanten:,222
+29.1p,KAS,Gojibes,,1.0,Vitamineplanten:,222
+29.2,KAS,Gojibes,,2.0,Vitamineplanten:,222
+29.2p,KAS,Gojibes,,2.0,Vitamineplanten:,222
+30.1,KAS,Gojibes,,4.0,Vitamineplanten:,222
+30.1p,KAS,Gojibes,,4.0,Vitamineplanten:,222
+29.1,KAS,Granaatappel,,1.0,Vitamineplanten:,223
+29.1p,KAS,Granaatappel,,1.0,Vitamineplanten:,223
+29.2,KAS,Granaatappel,,2.0,Vitamineplanten:,223
+29.2p,KAS,Granaatappel,,2.0,Vitamineplanten:,223
+29.1,KAS,Honingbes,,1.0,Vitamineplanten:,224
+29.1p,KAS,Honingbes,,1.0,Vitamineplanten:,224
+29.2,KAS,Honingbes,,2.0,Vitamineplanten:,224
+29.2p,KAS,Honingbes,,2.0,Vitamineplanten:,224
+25.1,KAS,Kiwi 'Jenny',,3.0,Vitamineplanten:,225
+25.1p,KAS,Kiwi 'Jenny',,3.0,Vitamineplanten:,225
+25.2,KAS,Kiwi 'Jenny',,6.0,Vitamineplanten:,225
+25.2p,KAS,Kiwi 'Jenny',,6.0,Vitamineplanten:,225
+44.1,KAS,Paeonia lactiflora Red,,3.0,Pioenrozen:,228
+44.1p,KAS,Paeonia lactiflora Red,,3.0,Pioenrozen:,228
+44.2,KAS,Paeonia lactiflora Red,,6.0,Pioenrozen:,228
+44.2p,KAS,Paeonia lactiflora Red,,6.0,Pioenrozen:,228
+44.3,KAS,Paeonia lactiflora Red,,1.0,Pioenrozen:,228
+44.3p,KAS,Paeonia lactiflora Red,,1.0,Pioenrozen:,228
+44.4,KAS,Paeonia lactiflora Red,,2.0,Pioenrozen:,228
+44.4p,KAS,Paeonia lactiflora Red,,2.0,Pioenrozen:,228
+44.3,KAS,Paeonia lactiflora Pink,,1.0,Pioenrozen:,229
+44.3p,KAS,Paeonia lactiflora Pink,,1.0,Pioenrozen:,229
+44.4,KAS,Paeonia lactiflora Pink,,2.0,Pioenrozen:,229
+44.4p,KAS,Paeonia lactiflora Pink,,2.0,Pioenrozen:,229
+44.5,KAS,Paeonia lactiflora Pink,,3.0,Pioenrozen:,229
+44.5p,KAS,Paeonia lactiflora Pink,,3.0,Pioenrozen:,229
+44.6,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,229
+44.6p,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,229
+44.3,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,230
+44.3p,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,230
+44.4,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,230
+44.4p,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,230
+44.7,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,230
+44.7p,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,230
+44.8,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,230
+44.8p,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,230
+70.1,KAS,Azalea Paars,,3.0,Rhododendrons:,233
+70.1p,KAS,Azalea Paars,,3.0,Rhododendrons:,233
+70.5,KAS,Azalea Paars,,1.0,Rhododendrons:,233
+70.5p,KAS,Azalea Paars,,1.0,Rhododendrons:,233
+70.6,KAS,Azalea Paars,,2.0,Rhododendrons:,233
+70.6p,KAS,Azalea Paars,,2.0,Rhododendrons:,233
+70.12,KAS,Azalea Paars,,6.0,Rhododendrons:,233
+70.12p,KAS,Azalea Paars,,6.0,Rhododendrons:,233
+70.2,KAS,Azalea Rood,,3.0,Rhododendrons:,234
+70.2p,KAS,Azalea Rood,,3.0,Rhododendrons:,234
+70.5,KAS,Azalea Rood,,1.0,Rhododendrons:,234
+70.5p,KAS,Azalea Rood,,1.0,Rhododendrons:,234
+70.6,KAS,Azalea Rood,,2.0,Rhododendrons:,234
+70.6p,KAS,Azalea Rood,,2.0,Rhododendrons:,234
+70.7,KAS,Azalea Rood,,6.0,Rhododendrons:,234
+70.7p,KAS,Azalea Rood,,6.0,Rhododendrons:,234
+70.10,KAS,Azalea Rood,,1.0,Rhododendrons:,234
+70.10p,KAS,Azalea Rood,,1.0,Rhododendrons:,234
+70.11,KAS,Azalea Rood,,2.0,Rhododendrons:,234
+70.11p,KAS,Azalea Rood,,2.0,Rhododendrons:,234
+70.3,KAS,Azalea Roze,,3.0,Rhododendrons:,235
+70.3p,KAS,Azalea Roze,,3.0,Rhododendrons:,235
+70.5,KAS,Azalea Roze,,1.0,Rhododendrons:,235
+70.5p,KAS,Azalea Roze,,1.0,Rhododendrons:,235
+70.6,KAS,Azalea Roze,,2.0,Rhododendrons:,235
+70.6p,KAS,Azalea Roze,,2.0,Rhododendrons:,235
+70.8,KAS,Azalea Roze,,6.0,Rhododendrons:,235
+70.8p,KAS,Azalea Roze,,6.0,Rhododendrons:,235
+70.10,KAS,Azalea Roze,,1.0,Rhododendrons:,235
+70.10p,KAS,Azalea Roze,,1.0,Rhododendrons:,235
+70.11,KAS,Azalea Roze,,2.0,Rhododendrons:,235
+70.11p,KAS,Azalea Roze,,2.0,Rhododendrons:,235
+70.4,KAS,Azalea Wit,,3.0,Rhododendrons:,236
+70.4p,KAS,Azalea Wit,,3.0,Rhododendrons:,236
+70.5,KAS,Azalea Wit,,1.0,Rhododendrons:,236
+70.5p,KAS,Azalea Wit,,1.0,Rhododendrons:,236
+70.6,KAS,Azalea Wit,,2.0,Rhododendrons:,236
+70.6p,KAS,Azalea Wit,,2.0,Rhododendrons:,236
+70.9,KAS,Azalea Wit,,6.0,Rhododendrons:,236
+70.9p,KAS,Azalea Wit,,6.0,Rhododendrons:,236
+70.10,KAS,Azalea Wit,,1.0,Rhododendrons:,236
+70.10p,KAS,Azalea Wit,,1.0,Rhododendrons:,236
+70.11,KAS,Azalea Wit,,2.0,Rhododendrons:,236
+70.11p,KAS,Azalea Wit,,2.0,Rhododendrons:,236
+71.0,KAS,Rhododendron 'Cunningham's White',,3.0,Rhododendrons:,237
+71.0p,KAS,Rhododendron 'Cunningham's White',,3.0,Rhododendrons:,237
+71.1,KAS,Rhododendron 'Cunningham's White',,6.0,Rhododendrons:,237
+71.1p,KAS,Rhododendron 'Cunningham's White',,6.0,Rhododendrons:,237
+71.8,KAS,Rhododendron 'Cunningham's White',,1.0,Rhododendrons:,237
+71.8p,KAS,Rhododendron 'Cunningham's White',,1.0,Rhododendrons:,237
+71.9,KAS,Rhododendron 'Cunningham's White',,2.0,Rhododendrons:,237
+71.9p,KAS,Rhododendron 'Cunningham's White',,2.0,Rhododendrons:,237
+71.2,KAS,Rhododendron 'Roseum Elegans',,3.0,Rhododendrons:,238
+71.2p,KAS,Rhododendron 'Roseum Elegans',,3.0,Rhododendrons:,238
+71.3,KAS,Rhododendron 'Roseum Elegans',,6.0,Rhododendrons:,238
+71.3p,KAS,Rhododendron 'Roseum Elegans',,6.0,Rhododendrons:,238
+71.8,KAS,Rhododendron 'Roseum Elegans',,1.0,Rhododendrons:,238
+71.8p,KAS,Rhododendron 'Roseum Elegans',,1.0,Rhododendrons:,238
+71.9,KAS,Rhododendron 'Roseum Elegans',,2.0,Rhododendrons:,238
+71.9p,KAS,Rhododendron 'Roseum Elegans',,2.0,Rhododendrons:,238
+71.4,KAS,Rhododendron 'Nova Zembla',,3.0,Rhododendrons:,239
+71.4p,KAS,Rhododendron 'Nova Zembla',,3.0,Rhododendrons:,239
+71.5,KAS,Rhododendron 'Nova Zembla',,6.0,Rhododendrons:,239
+71.5p,KAS,Rhododendron 'Nova Zembla',,6.0,Rhododendrons:,239
+71.8,KAS,Rhododendron 'Nova Zembla',,1.0,Rhododendrons:,239
+71.8p,KAS,Rhododendron 'Nova Zembla',,1.0,Rhododendrons:,239
+71.9,KAS,Rhododendron 'Nova Zembla',,2.0,Rhododendrons:,239
+71.9p,KAS,Rhododendron 'Nova Zembla',,2.0,Rhododendrons:,239
+71.6,KAS,Rhododendron 'Cosmopolitan',,3.0,Rhododendrons:,240
+71.6p,KAS,Rhododendron 'Cosmopolitan',,3.0,Rhododendrons:,240
+71.7,KAS,Rhododendron 'Cosmopolitan',,6.0,Rhododendrons:,240
+71.7p,KAS,Rhododendron 'Cosmopolitan',,6.0,Rhododendrons:,240
+71.8,KAS,Rhododendron 'Cosmopolitan',,1.0,Rhododendrons:,240
+71.8p,KAS,Rhododendron 'Cosmopolitan',,1.0,Rhododendrons:,240
+71.9,KAS,Rhododendron 'Cosmopolitan',,2.0,Rhododendrons:,240
+71.9p,KAS,Rhododendron 'Cosmopolitan',,2.0,Rhododendrons:,240
+72.6,KAS,Rhododendron P13 Roze,,3.0,Rhododendrons:,241
+72.6p,KAS,Rhododendron P13 Roze,,3.0,Rhododendrons:,241
+72.7,KAS,Rhododendron P13 Roze,,6.0,Rhododendrons:,241
+72.7p,KAS,Rhododendron P13 Roze,,6.0,Rhododendrons:,241
+72.8,KAS,Rhododendron P13 Roze,,1.0,Rhododendrons:,241
+72.8p,KAS,Rhododendron P13 Roze,,1.0,Rhododendrons:,241
+72.9,KAS,Rhododendron P13 Roze,,2.0,Rhododendrons:,241
+72.9p,KAS,Rhododendron P13 Roze,,2.0,Rhododendrons:,241
+72.0,KAS,Rhododendron P13 Paars,,3.0,Rhododendrons:,242
+72.0p,KAS,Rhododendron P13 Paars,,3.0,Rhododendrons:,242
+72.1,KAS,Rhododendron P13 Paars,,6.0,Rhododendrons:,242
+72.1p,KAS,Rhododendron P13 Paars,,6.0,Rhododendrons:,242
+72.4,KAS,Rhododendron P13 Rood,,3.0,Rhododendrons:,243
+72.4p,KAS,Rhododendron P13 Rood,,3.0,Rhododendrons:,243
+72.5,KAS,Rhododendron P13 Rood,,6.0,Rhododendrons:,243
+72.5p,KAS,Rhododendron P13 Rood,,6.0,Rhododendrons:,243
+72.8,KAS,Rhododendron P13 Rood,,1.0,Rhododendrons:,243
+72.8p,KAS,Rhododendron P13 Rood,,1.0,Rhododendrons:,243
+72.9,KAS,Rhododendron P13 Rood,,2.0,Rhododendrons:,243
+72.9p,KAS,Rhododendron P13 Rood,,2.0,Rhododendrons:,243
+72.2,KAS,Rhododendron P13 Wit,,3.0,Rhododendrons:,244
+72.2p,KAS,Rhododendron P13 Wit,,3.0,Rhododendrons:,244
+72.3,KAS,Rhododendron P13 Wit,,6.0,Rhododendrons:,244
+72.3p,KAS,Rhododendron P13 Wit,,6.0,Rhododendrons:,244
+72.8,KAS,Rhododendron P13 Wit,,1.0,Rhododendrons:,244
+72.8p,KAS,Rhododendron P13 Wit,,1.0,Rhododendrons:,244
+72.9,KAS,Rhododendron P13 Wit,,2.0,Rhododendrons:,244
+72.9p,KAS,Rhododendron P13 Wit,,2.0,Rhododendrons:,244
+200.0,KAS,C2 - Blauwe Bes,,2.0,Planten 2 liter ( C2 ):,247
+200.0p,KAS,C2 - Blauwe Bes,,2.0,Planten 2 liter ( C2 ):,247
+201.0,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.0p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.1,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.1p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.4,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.4p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.5,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.5p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.6,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+201.6p,KAS,C2 - Blauwe Bes,,1.0,Planten 2 liter ( C2 ):,247
+200.1,KAS,C2 - Braam,,2.0,Planten 2 liter ( C2 ):,248
+200.1p,KAS,C2 - Braam,,2.0,Planten 2 liter ( C2 ):,248
+201.1,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+201.1p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+201.2,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+201.2p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+201.4,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+201.4p,KAS,C2 - Braam,,1.0,Planten 2 liter ( C2 ):,248
+200.2,KAS,C2 - Druif Blauw,,2.0,Planten 2 liter ( C2 ):,249
+200.2p,KAS,C2 - Druif Blauw,,2.0,Planten 2 liter ( C2 ):,249
+201.2,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,249
+201.2p,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,249
+201.5,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,249
+201.5p,KAS,C2 - Druif Blauw,,1.0,Planten 2 liter ( C2 ):,249
+200.3,KAS,C2 - Druif Wit,,2.0,Planten 2 liter ( C2 ):,250
+200.3p,KAS,C2 - Druif Wit,,2.0,Planten 2 liter ( C2 ):,250
+201.2,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,250
+201.2p,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,250
+201.4,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,250
+201.4p,KAS,C2 - Druif Wit,,1.0,Planten 2 liter ( C2 ):,250
+200.4,KAS,C2 - Framboos,,2.0,Planten 2 liter ( C2 ):,251
+200.4p,KAS,C2 - Framboos,,2.0,Planten 2 liter ( C2 ):,251
+201.1,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.1p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.2,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.2p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.4,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.4p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.5,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+201.5p,KAS,C2 - Framboos,,1.0,Planten 2 liter ( C2 ):,251
+200.5,KAS,C2 - Rode Bes,,2.0,Planten 2 liter ( C2 ):,252
+200.5p,KAS,C2 - Rode Bes,,2.0,Planten 2 liter ( C2 ):,252
+201.0,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.0p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.1,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.1p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.3,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.3p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.5,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+201.5p,KAS,C2 - Rode Bes,,1.0,Planten 2 liter ( C2 ):,252
+200.6,KAS,C2 - Kruisbes Groen,,2.0,Planten 2 liter ( C2 ):,253
+200.6p,KAS,C2 - Kruisbes Groen,,2.0,Planten 2 liter ( C2 ):,253
+201.3,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,253
+201.3p,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,253
+201.6,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,253
+201.6p,KAS,C2 - Kruisbes Groen,,1.0,Planten 2 liter ( C2 ):,253
+200.7,KAS,C2 - Kruisbes Rood,,2.0,Planten 2 liter ( C2 ):,254
+200.7p,KAS,C2 - Kruisbes Rood,,2.0,Planten 2 liter ( C2 ):,254
+201.3,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,254
+201.3p,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,254
+201.6,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,254
+201.6p,KAS,C2 - Kruisbes Rood,,1.0,Planten 2 liter ( C2 ):,254
+200.8,KAS,C2 - Witte Bes,,2.0,Planten 2 liter ( C2 ):,255
+200.8p,KAS,C2 - Witte Bes,,2.0,Planten 2 liter ( C2 ):,255
+201.0,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,255
+201.0p,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,255
+201.6,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,255
+201.6p,KAS,C2 - Witte Bes,,1.0,Planten 2 liter ( C2 ):,255
+200.9,KAS,C2 - Zwarte Bes,,2.0,Planten 2 liter ( C2 ):,256
+200.9p,KAS,C2 - Zwarte Bes,,2.0,Planten 2 liter ( C2 ):,256
+201.0,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
+201.0p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
+201.3,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
+201.3p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
+204.0,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,258
+204.0p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,258
+204.3,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,258
+204.3p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,258
+204.1,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,259
+204.1p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,259
+204.3,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,259
+204.3p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,259
+204.2,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,260
+204.2p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,260
+204.3,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,260
+204.3p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,260
+207.0,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,262
+207.0p,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,262
+207.4,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
+207.4p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
+206.1,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
+206.1p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
+207.1,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,263
+207.1p,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,263
+207.4,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+207.4p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+206.2,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+206.2p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+207.2,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,264
+207.2p,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,264
+207.4,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,264
+207.4p,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,264
+206.3,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,264
+206.3p,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,264
+207.3,KAS,C2 - Hydrangea macr. Wit,,2.0,Planten 2 liter ( C2 ):,265
+207.3p,KAS,C2 - Hydrangea macr. Wit,,2.0,Planten 2 liter ( C2 ):,265
+207.4,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,265
+207.4p,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,265
+206.4,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,265
+206.4p,KAS,C2 - Hydrangea macr. Wit,,1.0,Planten 2 liter ( C2 ):,265
+T010,KAS,C2 - Lavendel,,4.0,Planten 2 liter ( C2 ):,267
+T010p,KAS,C2 - Lavendel,,4.0,Planten 2 liter ( C2 ):,267
+T011,KAS,C2 - Lavendel,,6.0,Planten 2 liter ( C2 ):,267
+T011p,KAS,C2 - Lavendel,,6.0,Planten 2 liter ( C2 ):,267
+T012,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,267
+T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,267
+209.0,KAS,C2 - Cornus alba 'Siberica',,2.0,Planten 2 liter ( C2 ):,269
+209.0p,KAS,C2 - Cornus alba 'Siberica',,2.0,Planten 2 liter ( C2 ):,269
+209.5,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,269
+209.5p,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,269
+209.1,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,270
+209.1p,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,270
+209.5,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,270
+209.5p,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,270
+209.2,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,271
+209.2p,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,271
+209.5,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,271
+209.5p,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,271
+209.3,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,272
+209.3p,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,272
+209.5,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,272
+209.5p,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,272
+209.4,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,273
+209.4p,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,273
+209.5,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,273
+209.5p,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,273
+210.0,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,276
+210.0p,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,276
+210.4,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,1.0,Planten 3 liter ( C3 ):,276
+210.4p,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,1.0,Planten 3 liter ( C3 ):,276
+210.1,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,2.0,Planten 3 liter ( C3 ):,277
+210.1p,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,2.0,Planten 3 liter ( C3 ):,277
+210.4,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,1.0,Planten 3 liter ( C3 ):,277
+210.4p,KAS,C3 - Hibiscus syr. 'Oiseau Bleu' Blauw,,1.0,Planten 3 liter ( C3 ):,277
+210.2,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,2.0,Planten 3 liter ( C3 ):,278
+210.2p,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,2.0,Planten 3 liter ( C3 ):,278
+210.4,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,1.0,Planten 3 liter ( C3 ):,278
+210.4p,KAS,C3 - Hibiscus syr. 'Woodbridge' Roze,,1.0,Planten 3 liter ( C3 ):,278
+210.3,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,2.0,Planten 3 liter ( C3 ):,279
+210.3p,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,2.0,Planten 3 liter ( C3 ):,279
+210.4,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,1.0,Planten 3 liter ( C3 ):,279
+210.4p,KAS,C3 - Hibiscus syr. 'Hamabo' Wit met rood hart,,1.0,Planten 3 liter ( C3 ):,279
+64.1,KAS,Elaeagnus ebbingei,,3.0,Wintergroene heesters:,282
+64.1p,KAS,Elaeagnus ebbingei,,3.0,Wintergroene heesters:,282
+64.2,KAS,Elaeagnus ebbingei,,6.0,Wintergroene heesters:,282
+64.2p,KAS,Elaeagnus ebbingei,,6.0,Wintergroene heesters:,282
+61.1,KAS,Ilex aquifolium 'Argentea Marginata',,3.0,Wintergroene heesters:,283
+61.1p,KAS,Ilex aquifolium 'Argentea Marginata',,3.0,Wintergroene heesters:,283
+61.2,KAS,Ilex aquifolium 'Argentea Marginata',,6.0,Wintergroene heesters:,283
+61.2p,KAS,Ilex aquifolium 'Argentea Marginata',,6.0,Wintergroene heesters:,283
+63.1,KAS,Ilex aquifolium 'Argentea Marginata',,1.0,Wintergroene heesters:,283
+63.1p,KAS,Ilex aquifolium 'Argentea Marginata',,1.0,Wintergroene heesters:,283
+63.2,KAS,Ilex aquifolium 'Argentea Marginata',,2.0,Wintergroene heesters:,283
+63.2p,KAS,Ilex aquifolium 'Argentea Marginata',,2.0,Wintergroene heesters:,283
+60.1,KAS,Ilex meserveae 'Blue Maid',,3.0,Wintergroene heesters:,284
+60.1p,KAS,Ilex meserveae 'Blue Maid',,3.0,Wintergroene heesters:,284
+60.2,KAS,Ilex meserveae 'Blue Maid',,6.0,Wintergroene heesters:,284
+60.2p,KAS,Ilex meserveae 'Blue Maid',,6.0,Wintergroene heesters:,284
+63.1,KAS,Ilex meserveae 'Blue Maid',,1.0,Wintergroene heesters:,284
+63.1p,KAS,Ilex meserveae 'Blue Maid',,1.0,Wintergroene heesters:,284
+63.2,KAS,Ilex meserveae 'Blue Maid',,2.0,Wintergroene heesters:,284
+63.2p,KAS,Ilex meserveae 'Blue Maid',,2.0,Wintergroene heesters:,284
+63.1,KAS,Photinia fras. 'Red Robin' - P9,,1.0,Wintergroene heesters:,285
+63.1p,KAS,Photinia fras. 'Red Robin' - P9,,1.0,Wintergroene heesters:,285
+63.2,KAS,Photinia fras. 'Red Robin' - P9,,2.0,Wintergroene heesters:,285
+63.2p,KAS,Photinia fras. 'Red Robin' - P9,,2.0,Wintergroene heesters:,285
+24.1,KAS,Photinia fras. 'Red Robin' - P9,,3.0,Wintergroene heesters:,285
+24.1p,KAS,Photinia fras. 'Red Robin' - P9,,3.0,Wintergroene heesters:,285
+24.2,KAS,Photinia fras. 'Red Robin' - P9,,6.0,Wintergroene heesters:,285
+24.2p,KAS,Photinia fras. 'Red Robin' - P9,,6.0,Wintergroene heesters:,285
+12.1,KAS,Photinia fras. Carré Rouge - P15,,2.0,Wintergroene heesters:,286
+12.1p,KAS,Photinia fras. Carré Rouge - P15,,2.0,Wintergroene heesters:,286
+12.2,KAS,Photinia fras. Carré Rouge - P15,,4.0,Wintergroene heesters:,286
+12.2p,KAS,Photinia fras. Carré Rouge - P15,,4.0,Wintergroene heesters:,286
+62.1,KAS,Prunus lusitanica 'Angustifolia',,3.0,Wintergroene heesters:,287
+62.1p,KAS,Prunus lusitanica 'Angustifolia',,3.0,Wintergroene heesters:,287
+62.2,KAS,Prunus lusitanica 'Angustifolia',,6.0,Wintergroene heesters:,287
+62.2p,KAS,Prunus lusitanica 'Angustifolia',,6.0,Wintergroene heesters:,287
+63.1,KAS,Prunus lusitanica 'Angustifolia',,1.0,Wintergroene heesters:,287
+63.1p,KAS,Prunus lusitanica 'Angustifolia',,1.0,Wintergroene heesters:,287
+63.2,KAS,Prunus lusitanica 'Angustifolia',,2.0,Wintergroene heesters:,287
+63.2p,KAS,Prunus lusitanica 'Angustifolia',,2.0,Wintergroene heesters:,287
+202.0,KAS,C4 - Zuil Appel,,2.0,Kas diversen:,290
+202.0p,KAS,C4 - Zuil Appel,,2.0,Kas diversen:,290
+202.2,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,290
+202.2p,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,290
+202.3,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,290
+202.3p,KAS,C4 - Zuil Appel,,1.0,Kas diversen:,290
+202.1,KAS,C4 - Zuil Peer,,2.0,Kas diversen:,291
+202.1p,KAS,C4 - Zuil Peer,,2.0,Kas diversen:,291
+202.2,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,291
+202.2p,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,291
+202.4,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,291
+202.4p,KAS,C4 - Zuil Peer,,1.0,Kas diversen:,291
+107.0,KAS,Choisya ternata 'Sundance' - P9,,2.0,Kas diversen:,292
+107.0p,KAS,Choisya ternata 'Sundance' - P9,,2.0,Kas diversen:,292
+107.1,KAS,Choisya ternata 'Sundance' - P9,,3.0,Kas diversen:,292
+107.1p,KAS,Choisya ternata 'Sundance' - P9,,3.0,Kas diversen:,292
+107.2,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,292
+107.2p,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,292
+22.1,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,293
+22.1p,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,293
+259.2,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,294
+259.2p,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,294
+280.1,KAS,Eucalyptus Gunnii Azura struik,,1.0,Kas diversen:,295
+280.1p,KAS,Eucalyptus Gunnii Azura struik,,1.0,Kas diversen:,295
+280.2,KAS,Eucalyptus Gunnii Azura struik,,2.0,Kas diversen:,295
+280.2p,KAS,Eucalyptus Gunnii Azura struik,,2.0,Kas diversen:,295
+23.1,KAS,"Salix integra ""Flamingo"" struik",,3.0,Kas diversen:,296
+23.1p,KAS,"Salix integra ""Flamingo"" struik",,3.0,Kas diversen:,296
+23.2,KAS,"Salix integra ""Flamingo"" struik",,6.0,Kas diversen:,296
+23.2p,KAS,"Salix integra ""Flamingo"" struik",,6.0,Kas diversen:,296
+23.3,KAS,"Salix integra ""Flamingo"" op stam",,1.0,Kas diversen:,297
+23.3p,KAS,"Salix integra ""Flamingo"" op stam",,1.0,Kas diversen:,297
+23.4,KAS,"Salix integra ""Flamingo"" op stam",,2.0,Kas diversen:,297
+23.4p,KAS,"Salix integra ""Flamingo"" op stam",,2.0,Kas diversen:,297
+32.1,KAS,Wisteria,,3.0,Kas diversen:,298
+32.1p,KAS,Wisteria,,3.0,Kas diversen:,298
+32.2,KAS,Wisteria,,6.0,Kas diversen:,298
+32.2p,KAS,Wisteria,,6.0,Kas diversen:,298
 114.1,KAMER,Alocasia 'Polly' - P12,,1.0,Kamerplanten klein:,7
 114.1p,KAMER,Alocasia 'Polly' - P12,,1.0,Kamerplanten klein:,7
 123.1,KAMER,Areca Dypsis Lutescens - P12,,1.0,Kamerplanten klein:,8
@@ -1690,7 +1682,6 @@ T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,261
 257.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 258.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 258.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
-259.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 259.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 260.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 260.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
@@ -1735,7 +1726,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 299.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 299.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 300.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
-300.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 301.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 301.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 302.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
@@ -1992,7 +1982,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 58.1p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 58.2p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 282.1p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
-282.2p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 282.3p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 283.1p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 283.2p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
@@ -2966,8 +2955,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 258.1p,DOZEN,11,,1.0,,10
 258.2,DOZEN,11,,1.0,,10
 258.2p,DOZEN,11,,1.0,,10
-259.1,DOZEN,11,,1.0,,10
-259.1p,DOZEN,11,,1.0,,10
 259.2,DOZEN,11,,1.0,,10
 259.2p,DOZEN,11,,1.0,,10
 260.1,DOZEN,11,,1.0,,10
@@ -2986,8 +2973,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 263.1p,DOZEN,3,,1.0,,2
 263.2,DOZEN,10,,1.0,,9
 263.2p,DOZEN,10,,1.0,,9
-264.1,DOZEN,3,,1.0,,2
-264.1p,DOZEN,3,,1.0,,2
 264.2,DOZEN,3,,1.0,,2
 264.2p,DOZEN,3,,1.0,,2
 269.1,DOZEN,15,,1.0,,14
@@ -3060,8 +3045,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 281.3p,DOZEN,4,,1.0,,3
 282.1,DOZEN,3,,1.0,,2
 282.1p,DOZEN,3,,1.0,,2
-282.2,DOZEN,3,,1.0,,2
-282.2p,DOZEN,3,,1.0,,2
 282.3,DOZEN,4,,1.0,,3
 282.3p,DOZEN,4,,1.0,,3
 283.1,DOZEN,3,,1.0,,2
@@ -3112,8 +3095,6 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 299.2p,DOZEN,10,,1.0,,9
 300.1,DOZEN,3,,1.0,,2
 300.1p,DOZEN,3,,1.0,,2
-300.2,DOZEN,10,,1.0,,9
-300.2p,DOZEN,10,,1.0,,9
 301.1,DOZEN,3,,1.0,,2
 301.1p,DOZEN,3,,1.0,,2
 301.2,DOZEN,10,,1.0,,9
@@ -3248,13 +3229,32 @@ T012p,DOZEN,EUR40,,1.0,,17
 101.5p,KAS,Nerium Oleander Wit - P9,,8.0,Mediterrane:,33
 101.5p,POKON,Pokon Mediterrane Planten Mest 1kg,,1.0,Pokon:,900
 101.5p,DOZEN,12,,1.0,,900
-22.2,KAS,Eucalyptus Gunnii Azura op stam,,2.0,Kas diversen:,293
+22.2,KAS,Eucalyptus Gunnii Azura op stam,,2.0,Kas diversen:,299
 22.2,DOZEN,10,,1.0,,900
 141.4,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,36
 141.4,DOZEN,10,,1.0,,900
 141.4p,KAMER,Cycas Revoluta Large,,2.0,Kamerplanten groot:,37
 141.4p,POKON,Pokon Mediterrane Planten Mest 1kg,,1.0,Pokon:,900
 141.4p,DOZEN,10,,1.0,,900
-22.2p,KAS,Eucalyptus Gunnii Azura op stam,,2.0,Kas diversen:,294
+22.2p,KAS,Eucalyptus Gunnii Azura op stam,,2.0,Kas diversen:,300
 22.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,900
 22.2p,DOZEN,10,,1.0,,900
+259.1,KAS,Eucalyptus 'Silver Dollar' XXL,,1.0,Kas diversen:,301
+259.1,DOZEN,10,,1.0,,900
+259.1p,KAS,Eucalyptus 'Silver Dollar' XXL,,1.0,Kas diversen:,302
+259.1p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,900
+259.1p,DOZEN,10,,1.0,,900
+264.1,KAS,Ficus carica 'Brown Turkey' - P17,,1.0,Mediterrane:,34
+264.1,DOZEN,10,,1.0,,900
+264.1p,KAS,Ficus carica 'Brown Turkey' - P17,,1.0,Mediterrane:,35
+264.1p,DOZEN,10,,1.0,,900
+282.2,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,2.0,Hydrangea:,182
+282.2,DOZEN,4,,1.0,,900
+282.2p,KAS,Hydarngea arbo. 'Pink Annabelle' (P19),,2.0,Hydrangea:,183
+282.2p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,900
+282.2p,DOZEN,4,,1.0,,900
+300.2,KAS,Acer palm. 'Garnet' (P19),,2.0,Acers:,163
+300.2,DOZEN,11,,1.0,,900
+300.2p,KAS,Acer palm. 'Garnet' (P19),,2.0,Acers:,164
+300.2p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,900
+300.2p,DOZEN,11,,1.0,,900

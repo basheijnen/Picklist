@@ -815,8 +815,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 258.1p,Lonicera heckrottii 'American Beauty' XXL rood/geel x 1,ja,11
 258.2,Lonicera heckrottii 'American Beauty' XXL rood/geel x 2,nee,11
 258.2p,Lonicera heckrottii 'American Beauty' XXL rood/geel x 2,ja,11
-259.1,Eucalyptus 'Silver Dollar' XXL x 1,nee,11
-259.1p,Eucalyptus 'Silver Dollar' XXL x 1,ja,11
 259.2,Eucalyptus 'Silver Dollar' XXL x 2,nee,11
 259.2p,Eucalyptus 'Silver Dollar' XXL x 2,ja,11
 260.1,Passiflora caerulea XXL blauw x 1,nee,11
@@ -835,8 +833,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 263.1p,Bougainvillea glabra 'Alexandra' paars op rek x 1,ja,3
 263.2,Bougainvillea glabra 'Alexandra' paars op rek x 2,nee,10
 263.2p,Bougainvillea glabra 'Alexandra' paars op rek x 2,ja,10
-264.1,Ficus carica 'Brown Turkey' x 1 - P17,nee,3
-264.1p,Ficus carica 'Brown Turkey' x 1 - P17,ja,3
 264.2,Ficus carica 'Brown Turkey' x 2 - P17,nee,3
 264.2p,Ficus carica 'Brown Turkey' x 2 - P17,ja,3
 269.1,P10 - Fargesia 'Rufa' groene Bamboe x2,nee,15
@@ -909,8 +905,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 281.3p,Hydrangea arbo. 'Strong Annabelle'® x3,ja,4
 282.1,Hydrangea arbo. 'Pink Annabelle'® x1,nee,3
 282.1p,Hydrangea arbo. 'Pink Annabelle'® x1,ja,3
-282.2,Hydrangea arbo. 'Pink Annabelle'® x2,nee,3
-282.2p,Hydrangea arbo. 'Pink Annabelle'® x2,ja,3
 282.3,Hydrangea arbo. 'Pink Annabelle'® x3,nee,4
 282.3p,Hydrangea arbo. 'Pink Annabelle'® x3,ja,4
 283.1,Hydrangea arbo. 'Ruby Annabelle'® x1,nee,3
@@ -961,8 +955,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 299.2p,Acer palm. 'Extravaganza' x2 - P19,ja,10
 300.1,Acer palm. 'Garnet' x1 - P19,nee,3
 300.1p,Acer palm. 'Garnet' x1 - P19,ja,3
-300.2,Acer palm. 'Garnet' x2 - P19,nee,10
-300.2p,Acer palm. 'Garnet' x2 - P19,ja,10
 301.1,Acer palm. 'Orange Lace' x1 - P19,nee,3
 301.1p,Acer palm. 'Orange Lace' x1 - P19,ja,3
 301.2,Acer palm. 'Orange Lace' x2 - P19,nee,10
@@ -1083,3 +1075,11 @@ T012p,Lavendel C2 x 8,ja,EUR40
 141.4,Cycas Revoluta x 2 Large,nee,10
 141.4p,Cycas Revoluta x 2 Large,ja,10
 22.2p,Eucalyptus Gunnii Azura op stam x2,ja,10
+259.1,Eucalyptus 'Silver Dollar' XXL x 1,nee,10
+259.1p,Eucalyptus 'Silver Dollar' XXL x 1,ja,10
+264.1,Ficus carica 'Brown Turkey' x 1 - P17,nee,10
+264.1p,Ficus carica 'Brown Turkey' x 1 - P17,nee,10
+282.2,Hydrangea arbo. 'Pink Annabelle'® x2,nee,4
+282.2p,Hydrangea arbo. 'Pink Annabelle'® x2,ja,4
+300.2,Acer palm. 'Garnet' x2 - P19,nee,11
+300.2p,Acer palm. 'Garnet' x2 - P19,ja,11
