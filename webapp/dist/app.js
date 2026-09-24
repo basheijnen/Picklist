@@ -940,8 +940,8 @@ function wireDoosnummerSuggestions(inputEl, listEl, lijstFn = getDoosnummerList)
 }
 
 // Doosnummer-velden in "Pakketten beheren": i.p.v. een scrollende lijst een
-// pop-up (zelfde stijl als de Top 10-kanalen) met álle dozen als tegels
-// naast het veld — in 1 klik de juiste doos, geen scrollen. Opent alleen op
+// pop-up (zelfde stijl als de Top 10-kanalen) met álle dozen als tegels,
+// gecentreerd op de pagina — in 1 klik de juiste doos, geen scrollen. Opent alleen op
 // klik, zodat je na Esc/sluiten nog gewoon "14 + 15" kunt typen.
 function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
   inputEl.addEventListener("click", () => {
@@ -964,10 +964,7 @@ function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
       });
       return button;
     }));
-    if (!dialog.open) {
-      dialog.showModal();
-      positioneerBijAnker(dialog, inputEl);
-    }
+    if (!dialog.open) dialog.showModal();
   });
 }
 
