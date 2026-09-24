@@ -886,56 +886,90 @@ function getDoosnummerList() {
 // 10-kanalen) met álle dozen als tegels, gecentreerd op de pagina — in 1
 // klik de juiste doos, geen scrollen. Opent alleen op klik, zodat je na
 // Esc/sluiten nog gewoon "14 + 15" kunt typen.
-function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
+// Eén gedeelde pop-up, dus onthouden voor welk veld hij nu open staat.
+let doosKiezerInput = null;
+let doosKiezerLijstFn = getDoosnummerList;
+let doosKiezerBewerken = false;
+
+// Bij de Klacht/Bundel-doosvelden (getKnownDoosnummers) zijn de keuzes zelf
+// te beheren via "Dozen toevoegen / verwijderen" — pas dan verschijnen de
+// kruisjes. De lijst in Pakketten beheren komt uit de pakketten zelf en is
+// dus niet los te bewerken.
+function doosKiezerIsBeheerbaar() {
+  return doosKiezerLijstFn === getKnownDoosnummers;
+}
+
+function renderDoosKiezer() {
   const dialog = document.querySelector("#doosKiezerDialog");
-  const grid = document.querySelector("#doosKiezerGrid");
-  const render = () => {
-    const huidige = inputEl.value.trim();
-    grid.replaceChildren(...lijstFn().map((doosnummer) => {
-      const item = document.createElement("div");
-      item.className = "doos-kiezer-item";
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "doos-kiezer-tegel";
-      if (doosnummer === huidige) button.classList.add("is-actief");
-      // "Doos 12 tubes" e.d. passen anders alleen over 3 regels in een tegel.
-      if (doosnummer.length > 5) button.classList.add("is-lang");
-      button.textContent = doosnummer;
-      button.addEventListener("click", () => {
-        inputEl.value = doosnummer;
-        inputEl.dispatchEvent(new Event("input", { bubbles: true }));
-        dialog.close();
+  const huidige = doosKiezerInput.value.trim();
+  const bewerken = doosKiezerBewerken && doosKiezerIsBeheerbaar();
+  document.querySelector("#doosKiezerBeheer").hidden = !doosKiezerIsBeheerbaar();
+  document.querySelector("#doosKiezerToevoegen").hidden = !bewerken;
+  document.querySelector("#doosKiezerBewerkButton").textContent = bewerken ? "Klaar" : "Dozen toevoegen / verwijderen";
+  document.querySelector("#doosKiezerGrid").replaceChildren(...doosKiezerLijstFn().map((doosnummer) => {
+    const item = document.createElement("div");
+    item.className = "doos-kiezer-item";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "doos-kiezer-tegel";
+    if (doosnummer === huidige) button.classList.add("is-actief");
+    // "Doos 12 tubes" e.d. passen anders alleen over 3 regels in een tegel.
+    if (doosnummer.length > 5) button.classList.add("is-lang");
+    button.textContent = doosnummer;
+    button.addEventListener("click", () => {
+      doosKiezerInput.value = doosnummer;
+      doosKiezerInput.dispatchEvent(new Event("input", { bubbles: true }));
+      dialog.close();
+    });
+    item.append(button);
+    if (bewerken) {
+      // Zelf toegevoegde dozen verdwijnen helemaal, "echte" (uit bom.csv)
+      // worden alleen verborgen: bom.csv zelf blijft ongewijzigd, mocht het
+      // nummer ooit weer gebruikt worden.
+      const verwijderButton = document.createElement("button");
+      verwijderButton.type = "button";
+      verwijderButton.className = "doos-kiezer-verwijder";
+      verwijderButton.textContent = "×";
+      verwijderButton.title = "Weghalen uit de keuzes";
+      verwijderButton.setAttribute("aria-label", `Doosnummer ${doosnummer} verwijderen uit de keuzes`);
+      verwijderButton.addEventListener("click", () => {
+        if (extraDoosnummers.has(doosnummer)) {
+          extraDoosnummers.delete(doosnummer);
+          saveExtraDoosnummers();
+        } else {
+          verborgenDoosnummers.add(doosnummer);
+          saveVerborgenDoosnummers();
+        }
+        renderDoosKiezer();
       });
-      item.append(button);
-      // Bij de Klacht/Bundel-doosvelden is elk doosnummer weg te halen uit
-      // de keuzes — zelf toegevoegde verdwijnen helemaal, "echte" (uit
-      // bom.csv) worden alleen verborgen: bom.csv zelf blijft ongewijzigd,
-      // mocht het nummer ooit weer gebruikt worden.
-      if (lijstFn === getKnownDoosnummers) {
-        const verwijderButton = document.createElement("button");
-        verwijderButton.type = "button";
-        verwijderButton.className = "doos-kiezer-verwijder";
-        verwijderButton.textContent = "×";
-        verwijderButton.title = "Weghalen uit de keuzes";
-        verwijderButton.setAttribute("aria-label", `Doosnummer ${doosnummer} verwijderen uit de keuzes`);
-        verwijderButton.addEventListener("click", () => {
-          if (extraDoosnummers.has(doosnummer)) {
-            extraDoosnummers.delete(doosnummer);
-            saveExtraDoosnummers();
-          } else {
-            verborgenDoosnummers.add(doosnummer);
-            saveVerborgenDoosnummers();
-          }
-          render();
-        });
-        item.append(verwijderButton);
-      }
-      return item;
-    }));
-  };
+      item.append(verwijderButton);
+    }
+    return item;
+  }));
+}
+
+function doosKiezerVoegToe() {
+  const nieuwInput = document.querySelector("#doosKiezerNieuw");
+  const doosnummer = nieuwInput.value.trim();
+  if (!doosnummer) return;
+  if (verborgenDoosnummers.delete(doosnummer)) saveVerborgenDoosnummers();
+  if (!getKnownDoosnummers().includes(doosnummer)) {
+    extraDoosnummers.add(doosnummer);
+    saveExtraDoosnummers();
+  }
+  nieuwInput.value = "";
+  renderDoosKiezer();
+}
+
+function wireDoosKiezer(inputEl, lijstFn = getDoosnummerList) {
   inputEl.addEventListener("click", () => {
-    if (inputEl.disabled || !lijstFn().length) return;
-    render();
+    if (inputEl.disabled) return;
+    doosKiezerInput = inputEl;
+    doosKiezerLijstFn = lijstFn;
+    doosKiezerBewerken = false;
+    if (!lijstFn().length && !doosKiezerIsBeheerbaar()) return;
+    renderDoosKiezer();
+    const dialog = document.querySelector("#doosKiezerDialog");
     if (!dialog.open) dialog.showModal();
   });
 }
@@ -3378,6 +3412,17 @@ nazendingPakketnummerInput.addEventListener("blur", hideNazendingPakketSuggestio
 wireDoosKiezer(document.querySelector("#newPackageBoxes"));
 wireDoosKiezer(document.querySelector("#newPackagePokonDoos"));
 document.querySelector("#closeDoosKiezerDialog").addEventListener("click", () => document.querySelector("#doosKiezerDialog").close());
+document.querySelector("#doosKiezerBewerkButton").addEventListener("click", () => {
+  doosKiezerBewerken = !doosKiezerBewerken;
+  renderDoosKiezer();
+  if (doosKiezerBewerken) document.querySelector("#doosKiezerNieuw").focus();
+});
+document.querySelector("#doosKiezerToevoegenButton").addEventListener("click", doosKiezerVoegToe);
+document.querySelector("#doosKiezerNieuw").addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  doosKiezerVoegToe();
+});
 // Klik naast de pop-up (op de achtergrond) sluit hem ook.
 document.querySelector("#doosKiezerDialog").addEventListener("click", (event) => {
   if (event.target === event.currentTarget) event.currentTarget.close();
