@@ -299,8 +299,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 21.2p,Prunus Triloba XXL x 4,ja,13
 22.1,Eucalyptus Gunnii Azura op stam x1,nee,3
 22.1p,Eucalyptus Gunnii Azura op stam x1,ja,3
-22.2,Eucalyptus Gunnii Azura op stam x2,nee,3
-22.2p,Eucalyptus Gunnii Azura op stam x2,ja,3
 23.1,"Salix integra ""Flamingo"" struik x3",nee,8
 23.1p,"Salix integra ""Flamingo"" struik x3",ja,8
 23.2,"Salix integra ""Flamingo"" struik x6",nee,9
@@ -619,8 +617,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 141.2p,Cycas Revoluta x2,ja,3
 141.3,Cycas Revoluta x 1 Large,nee,10
 141.3p,Cycas Revoluta x 1 Large,ja,10
-141.4,Cycas Revoluta x 2 Large,nee,11
-141.4p,Cycas Revoluta x 2 Large,ja,11
 150.1,Chamaerops humilis medium x 1,nee,3
 150.1p,Chamaerops humilis medium x 1,ja,3
 150.2,Chamaerops humilis medium x 2,nee,10
@@ -1083,3 +1079,7 @@ T012p,Lavendel C2 x 8,ja,EUR40
 101.4p,Tropische oleander planten x 4 (wit),ja,14
 101.5,Tropische oleander planten x 8 (wit),nee,2
 101.5p,Tropische oleander planten x 8 (wit),ja,12
+22.2,Eucalyptus Gunnii Azura op stam x2,nee,10
+141.4,Cycas Revoluta x 2 Large,nee,10
+141.4p,Cycas Revoluta x 2 Large,ja,10
+22.2p,Eucalyptus Gunnii Azura op stam x2,ja,10
