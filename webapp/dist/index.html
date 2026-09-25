@@ -290,7 +290,7 @@
           <label>Datum <input name="datum" type="date" required></label>
           <label>Omschrijving <input name="omschrijving" type="text" placeholder="Vooruitbetaling okt."></label>
           <label>Bedrag (€) <input name="bedrag" type="text" inputmode="decimal" required placeholder="500,00"></label>
-          <button class="button" type="submit">Toevoegen</button>
+          <button class="button button-primary" type="submit">Toevoegen</button>
         </form>
         <table class="verkoop-table"><thead><tr><th>Datum</th><th>Omschrijving</th><th class="verkoop-col-aantal">Bedrag</th><th></th></tr></thead>
           <tbody id="mmpBetalingenBody"></tbody></table>
@@ -314,7 +314,7 @@
           <label>EAN <input name="ean" type="text"></label>
           <label>Prijs (€) <input name="prijs" type="text" inputmode="decimal" required></label>
           <label>Geldig vanaf <input name="geldig_vanaf" type="date" required></label>
-          <button class="button" type="submit">Opslaan</button>
+          <button class="button button-primary" type="submit">Opslaan</button>
         </form>
         <p class="mmp-uitleg">Een nieuwe prijs geldt voor orders vanaf de ingangsdatum; oudere orders houden hun oude prijs. Klik op een regel om de prijs aan te passen.</p>
         <input id="mmpPrijsZoek" type="search" placeholder="Zoek pakketnummer of artikel…">
@@ -328,7 +328,7 @@
         <form id="mmpCorrectieForm" class="mmp-form">
           <label>Ordernr. intern <input name="ordernummer" type="text" required></label>
           <label>Reden <input name="reden" type="text"></label>
-          <button class="button" type="submit">Toevoegen</button>
+          <button class="button button-primary" type="submit">Toevoegen</button>
         </form>
         <table class="verkoop-table"><thead><tr><th>Ordernummer</th><th>Reden</th><th></th></tr></thead>
           <tbody id="mmpCorrectiesBody"></tbody></table>
@@ -339,7 +339,7 @@
         <form id="mmpInstellingenForm" class="mmp-form">
           <label>Orders tellen mee vanaf <input name="startdatum" type="date" required></label>
           <label>Pokon-toeslag (€) <input name="pokon_toeslag" type="text" inputmode="decimal" required></label>
-          <button class="button" type="submit">Opslaan</button>
+          <button class="button button-primary" type="submit">Opslaan</button>
         </form>
       </section>
     </div>

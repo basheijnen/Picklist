@@ -599,10 +599,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 }
 
 .mmp-dialog .verkoop-dialog-body { overflow-y: auto; max-height: calc(100vh - 110px); }
-.mmp-sectie { border: 1px solid var(--line); border-radius: 12px; background: white; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
-.mmp-sectie h3 { margin: 0; font-size: 1rem; }
-.mmp-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
-.mmp-form label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; }
+.mmp-sectie { border: 1px solid var(--line); border-radius: 16px; background: white; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 24px rgba(25,52,43,.05); }
+.mmp-sectie h3 { margin: 0; font-size: 1.05rem; }
+.mmp-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end; padding: 14px; border-radius: 12px; background: #f4f8f5; }
+.mmp-form label { display: grid; gap: 6px; color: var(--muted); font-size: .82rem; font-weight: 750; }
+.mmp-form input, #mmpPrijsZoek { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; color: var(--ink); background: white; font: inherit; font-size: .95rem; box-sizing: border-box; }
+.mmp-form input:focus, #mmpPrijsZoek:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: transparent; }
+.mmp-form .button { min-height: 42px; justify-self: start; padding: 0 22px; }
+#mmpPrijsForm { grid-template-columns: 1fr 2.2fr 1.3fr .9fr 1.1fr auto; }
+#mmpPrijsZoek { max-width: 360px; }
 .mmp-uitleg { margin: 0; font-size: .85rem; opacity: .75; }
 .mmp-waarschuwing { padding: 10px 14px; border-radius: 10px; background: #fdf1dc; border: 1px solid #e6b85c; margin-bottom: 6px; }
 .mmp-negatief { color: #b3261e; }
@@ -610,3 +615,4 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-rij-geen-prijs td { background: #fdf1dc; }
 .mmp-rij-oud td { color: var(--muted); font-size: .85rem; }
 #mmpPrijzenBody tr { cursor: pointer; }
+@media (max-width: 900px) { #mmpPrijsForm { grid-template-columns: 1fr 1fr; } }
