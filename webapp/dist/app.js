@@ -197,6 +197,8 @@ function saveImportState() {
       orderNames: imp.orderNames || [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
+      verkoopGeannuleerd: imp.verkoopGeannuleerd || [],
+      mmpOrders: imp.mmpOrders || [],
       // Optioneel "pas versturen na"-datum per pakketnummer, gezet bij het
       // verplaatsen naar de wachtlijst (zie finalizeDecrease) — bepaalt de
       // groepering op het wachtlijst-voorblad (printWachtlijstVoorblad).
@@ -222,6 +224,8 @@ function loadImportState() {
       orderNames: Array.isArray(imp.orderNames) ? imp.orderNames : [],
       verkoopOrders: imp.verkoopOrders || null,
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
+      verkoopGeannuleerd: Array.isArray(imp.verkoopGeannuleerd) ? imp.verkoopGeannuleerd : [],
+      mmpOrders: Array.isArray(imp.mmpOrders) ? imp.mmpOrders : [],
       wachtDatums: new Map(Object.entries(imp.wachtDatums || {})),
     }));
   } catch (_error) {
@@ -1795,6 +1799,26 @@ function verkoopPakketPokonSplitsing(pakketnummer) {
   return { basis: pakketnummer, pokon: false };
 }
 
+// Rijen met Status "Cancelled" zijn geannuleerd en tellen nergens mee (niet
+// op de picklijst, niet in Verkopen, niet in het Maison Privée-saldo).
+// Oudere exports zonder Status-kolom tellen gewoon allemaal mee.
+function isGeannuleerdeRij(header, row) {
+  const statusIndex = header.indexOf("Status");
+  return statusIndex >= 0 && (row[statusIndex] || "").trim().toLowerCase() === "cancelled";
+}
+
+function leesGeannuleerdeOrdernummers(text) {
+  const rows = parseDelimited(text);
+  if (!rows.length) return [];
+  const header = rows[0].map((value) => value.trim());
+  const ordernummerIndex = header.indexOf("Ordernr. intern");
+  if (ordernummerIndex < 0) return [];
+  return rows.slice(1)
+    .filter((row) => isGeannuleerdeRij(header, row))
+    .map((row) => (row[ordernummerIndex] || "").trim())
+    .filter(Boolean);
+}
+
 function parseVerkoopExport(text) {
   const rows = parseDelimited(text);
   if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
@@ -1804,12 +1828,14 @@ function parseVerkoopExport(text) {
     pakketnummer: header.indexOf("Package Number"),
     client: header.indexOf("Client"),
     shop: header.indexOf("Shop"),
+    datum: header.indexOf("Order date"),
   };
   if (kolomIndex.ordernummer < 0 || kolomIndex.pakketnummer < 0 || kolomIndex.client < 0) {
     throw new Error('De kolommen "Ordernr. intern", "Package Number" en "Client" zijn verplicht.');
   }
   const orders = [];
   rows.slice(1).forEach((row) => {
+    if (isGeannuleerdeRij(header, row)) return;
     const ordernummer = (row[kolomIndex.ordernummer] || "").trim();
     const pakketnummer = (row[kolomIndex.pakketnummer] || "").trim();
     if (!ordernummer || !pakketnummer) return;
@@ -1819,9 +1845,10 @@ function parseVerkoopExport(text) {
     const shop = kolomIndex.shop >= 0 ? row[kolomIndex.shop] || "" : "";
     let kanaal = normalizeKanaal(client, shop);
     if (regioVoorKanaal(kanaal) === "Onbekend") kanaal = `Onbekend: ${kanaal || "?"}`;
+    const datum = mmpParseDatum(kolomIndex.datum >= 0 ? row[kolomIndex.datum] : "", todayIso());
     const { basis, pokon } = verkoopPakketPokonSplitsing(pakketnummer);
-    if (basis) orders.push({ ordernummer, kanaal, pakketnummer: basis });
-    if (pokon) orders.push({ ordernummer: `${ordernummer}-pokon`, kanaal, pakketnummer: "Pokon" });
+    if (basis) orders.push({ ordernummer, kanaal, pakketnummer: basis, datum });
+    if (pokon) orders.push({ ordernummer: `${ordernummer}-pokon`, kanaal, pakketnummer: "Pokon", datum });
   });
   return orders;
 }
@@ -1913,7 +1940,7 @@ function sluitVerkoopSeizoenDropdown() {
 }
 
 async function verstuurNaarVerkoop(imp, buttonEl) {
-  if (!imp.verkoopOrders || !imp.verkoopOrders.length) return;
+  if (!imp.verkoopOrders || (!imp.verkoopOrders.length && !(imp.verkoopGeannuleerd || []).length)) return;
   buttonEl.disabled = true;
   const datum = todayIso();
   try {
@@ -1925,7 +1952,7 @@ async function verstuurNaarVerkoop(imp, buttonEl) {
     const response = await fetch("/api/verkoop", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ datum, rows: imp.verkoopOrders }),
+      body: JSON.stringify({ datum, rows: imp.verkoopOrders, geannuleerd: imp.verkoopGeannuleerd || [] }),
     });
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Versturen naar Verkopen mislukt.");
@@ -1937,6 +1964,7 @@ async function verstuurNaarVerkoop(imp, buttonEl) {
     renderVerkoopOverzichtPanel();
 
     let text = `Lijst "${imp.name}" naar Verkopen gestuurd: ${result.toegevoegd} orderregels verwerkt, ${result.overgeslagen} overgeslagen (al eerder geüpload).`;
+    if (result.verwijderd) text += ` ${result.verwijderd} geannuleerde orderregel(s) verwijderd.`;
     const onbekendeNamen = Object.keys(onbekend);
     if (onbekendeNamen.length) {
       const detail = onbekendeNamen.map((naam) => `${naam} (${onbekend[naam]}×)`).join(", ");
@@ -2389,10 +2417,12 @@ function renderVerkoopDialog() {
 function readOrders(text) {
   const rows = parseDelimited(text);
   if (!rows.length) throw new Error("Het CSV-bestand is leeg.");
-  const packageIndex = rows[0].findIndex((value) => value.trim() === "Package Number");
+  const header = rows[0].map((value) => value.trim());
+  const packageIndex = header.indexOf("Package Number");
   if (packageIndex < 0) throw new Error('De kolom "Package Number" ontbreekt.');
   const counts = new Map();
   rows.slice(1).forEach((row) => {
+    if (isGeannuleerdeRij(header, row)) return;
     const packageNumber = (row[packageIndex] || "").trim();
     if (packageNumber) counts.set(packageNumber, (counts.get(packageNumber) || 0) + 1);
   });
@@ -2416,6 +2446,7 @@ function readOrderNames(text) {
   const shopIndex = header.indexOf("Shop");
   const result = [];
   rows.slice(1).forEach((row) => {
+    if (isGeannuleerdeRij(header, row)) return;
     const pakketnummer = (row[packageIndex] || "").trim();
     const naam = (row[nameIndex] || "").trim();
     if (!pakketnummer || !naam) return;
@@ -3233,11 +3264,12 @@ async function handleFile(file) {
     // required column just means no "Naar Verkopen" button for this lijst.
     let verkoopOrders = null;
     try { verkoopOrders = parseVerkoopExport(text); } catch (_error) { verkoopOrders = null; }
+    const verkoopGeannuleerd = leesGeannuleerdeOrdernummers(text);
     const baseName = formatShortDate(new Date());
     const name = imports.some((imp) => imp.name === baseName)
       ? await promptImportName(uniqueImportName(baseName))
       : baseName;
-    imports.push({ id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false });
+    imports.push({ id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false, verkoopGeannuleerd });
     saveImportState();
     renderAll();
   } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
