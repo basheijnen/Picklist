@@ -638,3 +638,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    rand; een warmbruine rand en een kleine schaduw houden de blokken strak. */
 .mmp-dialog .verkoop-tile, .mmp-dialog .mmp-sectie { border: 1px solid #a8784c; box-shadow: 0 2px 6px rgba(90, 40, 20, .18); }
 .mmp-dialog .verkoop-tile { border-top: 4px solid var(--brand); }
+/* Okervakken en tabellen met dezelfde bruine rand als de blokken, en
+   afgeronde hoeken in plaats van hoekige kopregels. */
+.mmp-dialog .mmp-form { border: 1px solid #a8784c; }
+.mmp-dialog .mmp-sectie .verkoop-table { border-collapse: separate; border-spacing: 0; border: 1px solid #a8784c; border-radius: 10px; overflow: hidden; }
+.mmp-dialog .verkoop-table thead th { border-bottom: 1px solid #a8784c; }
+.mmp-dialog .verkoop-table tbody tr:last-child td { border-bottom: 0; }
+.mmp-dialog .verkoop-table tfoot td { border-top: 2px solid #a8784c; }
+.mmp-dialog .mmp-scroll { border-color: #a8784c; }
+.mmp-dialog .mmp-scroll .verkoop-table { border: 0; border-radius: 0; overflow: visible; }
+.mmp-dialog #mmpPrijsZoek { border-color: #a8784c; }
+.mmp-dialog .verkoop-datum-bereik input, .mmp-dialog .button-quiet, .mmp-dialog .mmp-form input { border-color: #a8784c; }
+.mmp-dialog .button-terug { background: #d4a478; border-color: #a8784c; color: var(--ink); }
