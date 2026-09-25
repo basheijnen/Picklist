@@ -599,6 +599,11 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 }
 
 .mmp-dialog .verkoop-dialog-body { overflow-y: auto; max-height: calc(100vh - 110px); }
+/* Inhoud niet schermbreed: gecentreerde kolom, net als een gewone pagina. */
+.mmp-dialog .verkoop-dialog-body > * { width: 100%; max-width: 1000px; margin-left: auto; margin-right: auto; box-sizing: border-box; }
+.mmp-dialog .verkoop-dialog-body { align-items: center; }
+.mmp-scroll { max-height: 420px; overflow-y: auto; border: 1px solid var(--line); border-radius: 10px; }
+.mmp-scroll thead th { position: sticky; top: 0; background: #f4f8f5; z-index: 1; }
 .mmp-sectie { border: 1px solid var(--line); border-radius: 16px; background: white; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 24px rgba(25,52,43,.05); }
 .mmp-sectie h3 { margin: 0; font-size: 1.05rem; }
 .mmp-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end; padding: 14px; border-radius: 12px; background: #f4f8f5; }
@@ -616,3 +621,5 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-rij-oud td { color: var(--muted); font-size: .85rem; }
 #mmpPrijzenBody tr { cursor: pointer; }
 @media (max-width: 900px) { #mmpPrijsForm { grid-template-columns: 1fr 1fr; } }
+.mmp-dialog .verkoop-table th, .mmp-dialog .verkoop-table td { padding: 6px 10px; }
+.mmp-dialog .verkoop-dialog-body { gap: 12px; }
