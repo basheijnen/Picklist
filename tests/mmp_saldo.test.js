@@ -109,3 +109,12 @@ test("factuuroverzicht per pakket binnen periode, met pokon-toeslag als eigen re
   assert.equal(f.aantal, 2);
   assert.equal(f.zonderPrijs, 1);
 });
+
+test("geannuleerde order (en zijn pokon-regel) telt niet mee", () => {
+  const orders = mmpVerzamelOrders([[
+    { ordernummer: "1", datum: "2026-09-26", kanaal: "Maison Privee", pakketnummer: "9.1" },
+    { ordernummer: "1-pokon", datum: "2026-09-26", kanaal: "Maison Privee", pakketnummer: "Pokon" },
+    { ordernummer: "2", datum: "2026-09-26", kanaal: "Maison Privee", pakketnummer: "9.1p" },
+  ]], new Set(["1", "2"]));
+  assert.deepEqual(orders, []);
+});

@@ -724,7 +724,7 @@ def test_add_verkoop_orders_rejects_invalid_payloads(tmp_path, payload):
         add_verkoop_orders(payload, verkoop_csv_path, tmp_path / "verkoop_geannuleerd.csv")
 
 
-from mmp import load_betalingen, load_instellingen
+from mmp import load_betalingen, load_correcties, load_instellingen, load_prijzen
 from webapp_server import save_mmp_sectie
 
 
@@ -732,11 +732,35 @@ def _mmp_paths(tmp_path):
     return {naam: tmp_path / f"mmp_{naam}.csv" for naam in ("prijzen", "betalingen", "correcties", "instellingen")}
 
 
-def test_save_mmp_sectie_replaces_betalingen(tmp_path):
+def test_save_mmp_sectie_adds_to_what_is_on_disk(tmp_path):
+    # Twee tabbladen (of twee servers op K:) die elk vanuit een verouderde
+    # stand een betaling toevoegen: beide moeten bewaard blijven.
     paths = _mmp_paths(tmp_path)
-    save_mmp_sectie("betalingen", {"rows": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": "100"}]}, paths)
-    save_mmp_sectie("betalingen", {"rows": [{"id": "b", "datum": "2026-09-27", "omschrijving": "y", "bedrag": "50"}]}, paths)
+    save_mmp_sectie("betalingen", {"toevoegen": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": "100"}]}, paths)
+    save_mmp_sectie("betalingen", {"toevoegen": [{"id": "b", "datum": "2026-09-27", "omschrijving": "y", "bedrag": "50"}]}, paths)
+    assert [b.id for b in load_betalingen(paths["betalingen"])] == ["a", "b"]
+
+
+def test_save_mmp_sectie_deletes_by_key(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    save_mmp_sectie("betalingen", {"toevoegen": [
+        {"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": "100"},
+        {"id": "b", "datum": "2026-09-27", "omschrijving": "y", "bedrag": "50"},
+    ]}, paths)
+    save_mmp_sectie("betalingen", {"verwijderen": ["a"]}, paths)
     assert [b.id for b in load_betalingen(paths["betalingen"])] == ["b"]
+    save_mmp_sectie("correcties", {"toevoegen": [{"ordernummer": "7", "reden": "retour"}]}, paths)
+    save_mmp_sectie("correcties", {"verwijderen": ["7"]}, paths)
+    assert load_correcties(paths["correcties"]) == []
+
+
+def test_save_mmp_sectie_upserts_prijs_by_pakketnummer(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    save_mmp_sectie("prijzen", {"toevoegen": [{"pakketnummer": "1.1", "artikel": "a", "ean": "", "prijs": "10"},
+                                              {"pakketnummer": "1.2", "artikel": "b", "ean": "", "prijs": "20"}]}, paths)
+    save_mmp_sectie("prijzen", {"toevoegen": [{"pakketnummer": "1.1", "artikel": "a2", "ean": "", "prijs": "11,5"}]}, paths)
+    assert [(p.pakketnummer, p.artikel, p.prijs) for p in load_prijzen(paths["prijzen"])] == [
+        ("1.1", "a2", 11.5), ("1.2", "b", 20.0)]
 
 
 def test_save_mmp_sectie_instellingen(tmp_path):
@@ -748,13 +772,13 @@ def test_save_mmp_sectie_instellingen(tmp_path):
 def test_save_mmp_sectie_invalid_writes_nothing(tmp_path):
     paths = _mmp_paths(tmp_path)
     with pytest.raises(ValueError):
-        save_mmp_sectie("betalingen", {"rows": [{"datum": "fout", "bedrag": 1}]}, paths)
+        save_mmp_sectie("betalingen", {"toevoegen": [{"datum": "fout", "bedrag": 1}]}, paths)
     assert not paths["betalingen"].exists()
 
 
 def test_save_mmp_sectie_unknown_section(tmp_path):
     with pytest.raises(KeyError):
-        save_mmp_sectie("onzin", {"rows": []}, _mmp_paths(tmp_path))
+        save_mmp_sectie("onzin", {"toevoegen": []}, _mmp_paths(tmp_path))
 
 
 def test_push_code_seeds_missing_shared_data_but_never_overwrites(tmp_path, monkeypatch):
@@ -797,9 +821,9 @@ def test_server_saves_mmp_sections_via_http_put(tmp_path, monkeypatch):
     thread = _threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     try:
-        ok = _mmp_put(port, "betalingen", {"rows": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": 100}]})
-        fout = _mmp_put(port, "betalingen", {"rows": [{"datum": "x", "bedrag": 1}]})
-        onbekend = _mmp_put(port, "onzin", {"rows": []})
+        ok = _mmp_put(port, "betalingen", {"toevoegen": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": 100}]})
+        fout = _mmp_put(port, "betalingen", {"toevoegen": [{"datum": "x", "bedrag": 1}]})
+        onbekend = _mmp_put(port, "onzin", {"toevoegen": []})
     finally:
         server.shutdown()
         server.server_close()

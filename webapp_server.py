@@ -21,6 +21,9 @@ from pathlib import Path
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
 from mmp import (
+    load_betalingen,
+    load_correcties,
+    load_prijzen,
     parse_betalingen,
     parse_correcties,
     parse_instellingen,
@@ -325,17 +328,22 @@ def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH, geannuleerd_c
     return all_orders, toegevoegd, overgeslagen, verwijderd
 
 
+# Per sectie: (inlezen, valideren, wegschrijven, sleutel van een regel).
 _MMP_SECTIES = {
-    "prijzen": (parse_prijzen, write_prijzen),
-    "betalingen": (parse_betalingen, write_betalingen),
-    "correcties": (parse_correcties, write_correcties),
+    "prijzen": (load_prijzen, parse_prijzen, write_prijzen, "pakketnummer"),
+    "betalingen": (load_betalingen, parse_betalingen, write_betalingen, "id"),
+    "correcties": (load_correcties, parse_correcties, write_correcties, "ordernummer"),
 }
 
 
 def save_mmp_sectie(sectie, payload, paths=MMP_PATHS):
-    """Vervangt één sectie (prijzen/betalingen/correcties/instellingen) van
-    de Maison Privée-gegevens in zijn geheel. Valideert eerst alles, zodat
-    een fout nooit een half weggeschreven bestand oplevert.
+    """Wijzigt één sectie van de Maison Privée-gegevens. Prijzen, betalingen
+    en correcties worden per regel gewijzigd (`toevoegen`: regels erbij, of
+    vervangen bij dezelfde sleutel; `verwijderen`: lijst met sleutels) op
+    basis van wat er NU op schijf staat — nooit de hele lijst uit de browser
+    overnemen, want een ouder tabblad of een collega met een eigen server op
+    K: zou dan intussen toegevoegde betalingen wissen. Valideert eerst alles,
+    zodat een fout nooit een half weggeschreven bestand oplevert.
     """
     if sectie != "instellingen" and sectie not in _MMP_SECTIES:
         raise KeyError(sectie)
@@ -344,8 +352,22 @@ def save_mmp_sectie(sectie, payload, paths=MMP_PATHS):
     if sectie == "instellingen":
         write_instellingen(parse_instellingen(payload.get("instellingen")), paths["instellingen"])
         return
-    parse, write = _MMP_SECTIES[sectie]
-    write(parse(payload.get("rows")), paths[sectie])
+    load, parse, write, sleutel = _MMP_SECTIES[sectie]
+    toevoegen = parse(payload.get("toevoegen") or [])
+    verwijderen = payload.get("verwijderen") or []
+    if not isinstance(verwijderen, list):
+        raise ValueError("Ongeldige aanvraag.")
+    weg = {str(waarde).strip() for waarde in verwijderen}
+    nieuw = {getattr(regel, sleutel): regel for regel in toevoegen}
+    rijen = []
+    for regel in load(paths[sectie]):
+        waarde = getattr(regel, sleutel)
+        if waarde in weg:
+            continue
+        # Een bestaande regel met dezelfde sleutel wordt op zijn plek vervangen.
+        rijen.append(asdict(nieuw.pop(waarde, regel)))
+    rijen.extend(asdict(regel) for regel in nieuw.values())
+    write(parse(rijen), paths[sectie])
 
 
 def _run_git(args):

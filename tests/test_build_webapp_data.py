@@ -48,7 +48,7 @@ def test_build_verkoop_data_js_writes_orders_as_window_global(tmp_path):
 
     assert count == 1
     text = output_path.read_text(encoding="utf-8")
-    orders_json = text.split("window.PICKLIST_VERKOOP = ", 1)[1].rstrip(";\n")
+    orders_json = text.split("window.PICKLIST_VERKOOP = ", 1)[1].split(";\n", 1)[0]
     assert json.loads(orders_json) == [
         {"ordernummer": "123", "datum": "2026-09-17", "kanaal": "Amazon", "pakketnummer": "9.1", "aantal": 1.0}
     ]
@@ -59,7 +59,7 @@ def test_build_verkoop_data_js_with_missing_csv_writes_empty_list(tmp_path):
 
     assert count == 0
     text = (tmp_path / "verkoop_data.js").read_text(encoding="utf-8")
-    assert text == "window.PICKLIST_VERKOOP = [];\n"
+    assert text == "window.PICKLIST_VERKOOP = [];\nwindow.PICKLIST_VERKOOP_GEANNULEERD = [];\n"
 
 
 def test_build_mmp_data_js_writes_all_sections(tmp_path):
@@ -83,3 +83,16 @@ def test_build_mmp_data_js_writes_all_sections(tmp_path):
     assert data["betalingen"][0]["bedrag"] == 100.0
     assert data["correcties"] == []
     assert data["instellingen"] == {"startdatum": "2026-09-26", "pokon_toeslag": "6.01"}
+
+
+def test_build_verkoop_data_js_exposes_cancelled_ordernummers(tmp_path):
+    from sales import write_geannuleerd
+    verkoop_csv_path = tmp_path / "verkoop_orders.csv"
+    write_verkoop_csv([], verkoop_csv_path)
+    write_geannuleerd({"9002"}, tmp_path / "verkoop_geannuleerd.csv")
+    output_path = tmp_path / "verkoop_data.js"
+
+    build_verkoop_data_js(verkoop_csv_path, output_path)
+
+    text = output_path.read_text(encoding="utf-8")
+    assert 'window.PICKLIST_VERKOOP_GEANNULEERD = ["9002"];' in text

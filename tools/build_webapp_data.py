@@ -11,7 +11,7 @@ sys.path.insert(0, str(PROJECT_DIR))
 from bom import load_bom_csv
 from mmp import load_betalingen, load_correcties, load_instellingen, load_prijzen
 from packages import load_package_info_csv
-from sales import load_verkoop_csv
+from sales import load_geannuleerd, load_verkoop_csv
 
 BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
@@ -69,11 +69,17 @@ def build_verkoop_data_js(verkoop_csv_path=VERKOOP_CSV_PATH, output_path=VERKOOP
         }
         for order in load_verkoop_csv(verkoop_csv_path)
     ]
+    # De geannuleerde ordernummers staan naast verkoop_orders.csv; de browser
+    # heeft ze nodig om een geannuleerde Maison Privée-order ook uit het saldo
+    # en de wachtlijst te houden.
+    geannuleerd = sorted(load_geannuleerd(Path(verkoop_csv_path).with_name("verkoop_geannuleerd.csv")))
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         "window.PICKLIST_VERKOOP = "
         + json.dumps(orders, ensure_ascii=False, separators=(",", ":"))
+        + ";\nwindow.PICKLIST_VERKOOP_GEANNULEERD = "
+        + json.dumps(geannuleerd, ensure_ascii=False, separators=(",", ":"))
         + ";\n",
         encoding="utf-8",
     )

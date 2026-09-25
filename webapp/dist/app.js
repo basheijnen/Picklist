@@ -199,6 +199,7 @@ function saveImportState() {
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
       verkoopGeannuleerd: imp.verkoopGeannuleerd || [],
       mmpOrders: imp.mmpOrders || [],
+      mmpWacht: Boolean(imp.mmpWacht),
       // Optioneel "pas versturen na"-datum per pakketnummer, gezet bij het
       // verplaatsen naar de wachtlijst (zie finalizeDecrease) — bepaalt de
       // groepering op het wachtlijst-voorblad (printWachtlijstVoorblad).
@@ -226,6 +227,7 @@ function loadImportState() {
       verkoopVerstuurd: Boolean(imp.verkoopVerstuurd),
       verkoopGeannuleerd: Array.isArray(imp.verkoopGeannuleerd) ? imp.verkoopGeannuleerd : [],
       mmpOrders: Array.isArray(imp.mmpOrders) ? imp.mmpOrders : [],
+      mmpWacht: Boolean(imp.mmpWacht),
       wachtDatums: new Map(Object.entries(imp.wachtDatums || {})),
     }));
   } catch (_error) {
@@ -719,6 +721,7 @@ function openVerplaatsMenu(geselecteerd, kanalen) {
     .map((kanaal) => `<button type="button" class="verplaats-kanaal-target" data-kanaal="${escapeHtml(kanaal)}">${escapeHtml(kanaal)}</button>`)
     .join("");
   const importButtons = imports
+    .filter((imp) => !isMmpWachtlijst(imp))
     .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
     .join("");
   menuEl.innerHTML = `
@@ -2003,10 +2006,19 @@ function mmpData() {
 
 // Alle bekende Maison Privée-orders: de verkoopdata plus wat er in de
 // ingeladen lijsten en de wachtlijst staat (nog niet naar Verkopen gestuurd).
+// De ingeladen lijsten gaan vóór de verkoopdata: zij dragen de echte
+// orderdatum ("Order date"), terwijl Verkopen de uploaddatum bewaart.
 function mmpAlleOrders() {
-  const bronnen = [window.PICKLIST_VERKOOP || []];
+  const bronnen = [];
   imports.forEach((imp) => { bronnen.push(imp.verkoopOrders || []); bronnen.push(imp.mmpOrders || []); });
-  return mmpVerzamelOrders(bronnen);
+  bronnen.push(window.PICKLIST_VERKOOP || []);
+  return mmpVerzamelOrders(bronnen, mmpGeannuleerd());
+}
+
+function mmpGeannuleerd() {
+  const geannuleerd = new Set(window.PICKLIST_VERKOOP_GEANNULEERD || []);
+  imports.forEach((imp) => (imp.verkoopGeannuleerd || []).forEach((nr) => geannuleerd.add(nr)));
+  return geannuleerd;
 }
 
 function mmpBereken() {
@@ -2040,7 +2052,7 @@ async function mmpBewaar(sectie, body) {
   try {
     await mmpOpslaan(sectie, body);
     renderMmpDialog();
-    if (sectie === "betalingen" && imports.some((i) => i.name === MMP_WACHT_NAAM)) {
+    if (sectie === "betalingen" && imports.some(isMmpWachtlijst)) {
       melding.textContent = `Opgeslagen. Vink de lijst "${MMP_WACHT_NAAM}" aan om orders die nu gedekt zijn vrij te geven.`;
     }
     return true;
@@ -2115,45 +2127,80 @@ function renderMmpFactuur(saldo) {
   document.querySelector("#mmpFactuur").innerHTML = mmpFactuurTabelHtml(saldo);
 }
 
-function mmpRuwPakketnummer(order) {
-  return order.pokon ? `${order.pakketnummer}p` : order.pakketnummer;
+// De wachtlijst herkennen we aan een eigen vlag (niet aan de naam, die kan
+// hernoemd worden); de naam blijft als terugval voor lijsten van vóór de vlag.
+function isMmpWachtlijst(imp) {
+  return Boolean(imp.mmpWacht) || imp.name === MMP_WACHT_NAAM;
+}
+
+function vindOfMaakMmpWachtlijst() {
+  const lijst = imports.find(isMmpWachtlijst) || createHeldImport(MMP_WACHT_NAAM);
+  lijst.mmpWacht = true;
+  if (!lijst.mmpOrders) lijst.mmpOrders = [];
+  return lijst;
+}
+
+// De sleutel waaronder een order in orderCounts staat: het basisnummer, of
+// bij een Pokon-variant "9.1p"/"9.1P" (de export kent beide schrijfwijzen).
+function mmpSleutelIn(imp, order) {
+  const kandidaten = order.pokon ? [`${order.pakketnummer}p`, `${order.pakketnummer}P`] : [order.pakketnummer];
+  return kandidaten.find((sleutel) => imp.orderCounts.get(sleutel)) || null;
 }
 
 // Verplaatst 1 stuk van een pakketnummer (plus 1 bijbehorende klantnaam-
-// regel van Maison Privée) van de ene lijst naar de andere.
+// regel van Maison Privée) van de ene lijst naar de andere; zonder `naar`
+// wordt het stuk alleen weggehaald.
 function verplaatsMmpOrder(van, naar, pakketnummer) {
   const huidig = van.orderCounts.get(pakketnummer) || 0;
   if (!huidig) return false;
   if (huidig === 1) van.orderCounts.delete(pakketnummer);
   else van.orderCounts.set(pakketnummer, huidig - 1);
-  naar.orderCounts.set(pakketnummer, (naar.orderCounts.get(pakketnummer) || 0) + 1);
   const index = (van.orderNames || []).findIndex((n) => n.pakketnummer === pakketnummer && n.kanaal === MMP_KANAAL);
-  if (index >= 0) {
+  const naam = index >= 0 ? van.orderNames.splice(index, 1) : [];
+  if (naar) {
+    naar.orderCounts.set(pakketnummer, (naar.orderCounts.get(pakketnummer) || 0) + 1);
     if (!naar.orderNames) naar.orderNames = [];
-    naar.orderNames.push(...van.orderNames.splice(index, 1));
+    naar.orderNames.push(...naam);
   }
   return true;
 }
 
 // Zet de Maison Privée-orders uit een net ingeladen lijst die niet door het
-// saldo gedekt zijn in de wachtlijst MMP_WACHT_NAAM (inactief, telt dus niet
-// mee op de picklijst). Geeft het saldo terug, of null als de lijst geen
-// Maison Privée-orders heeft.
+// saldo gedekt zijn in de wachtlijst (inactief, telt dus niet mee op de
+// picklijst). Een order die al in de wachtlijst staat (zelfde export nog
+// eens ingeladen) wordt alleen uit de nieuwe lijst gehaald, niet dubbel
+// vastgehouden. Geeft { saldo, mislukt } terug, of null als de lijst geen
+// Maison Privée-orders heeft; `mislukt` zijn ordernummers die niet
+// verplaatst konden worden en dus nog op de picklijst staan.
 function houdMmpOrdersVast(imp) {
   const nummers = new Set((imp.verkoopOrders || []).filter((o) => o.kanaal === MMP_KANAAL).map((o) => o.ordernummer));
   if (!nummers.size) return null;
   const saldo = mmpBereken();
   const wachtend = saldo.orders.filter((o) => o.status === "wacht" && nummers.has(o.ordernummer));
-  if (!wachtend.length) return saldo;
-  const lijst = imports.find((i) => i.name === MMP_WACHT_NAAM) || createHeldImport(MMP_WACHT_NAAM);
-  if (!lijst.mmpOrders) lijst.mmpOrders = [];
+  const mislukt = [];
+  if (!wachtend.length) return { saldo, mislukt };
+  const lijst = vindOfMaakMmpWachtlijst();
+  const alVast = new Set(lijst.mmpOrders.map((o) => o.ordernummer));
   wachtend.forEach((o) => {
-    const pakketnummer = mmpRuwPakketnummer(o);
-    if (verplaatsMmpOrder(imp, lijst, pakketnummer)) {
-      lijst.mmpOrders.push({ ordernummer: o.ordernummer, datum: o.datum, kanaal: MMP_KANAAL, pakketnummer, aantal: o.aantal });
-    }
+    const sleutel = mmpSleutelIn(imp, o);
+    if (!sleutel) { mislukt.push(o.ordernummer); return; }
+    if (alVast.has(o.ordernummer)) { verplaatsMmpOrder(imp, null, sleutel); return; }
+    verplaatsMmpOrder(imp, lijst, sleutel);
+    lijst.mmpOrders.push({ ordernummer: o.ordernummer, datum: o.datum, kanaal: MMP_KANAAL, pakketnummer: sleutel, aantal: o.aantal });
   });
-  return saldo;
+  return { saldo, mislukt };
+}
+
+// Haalt geannuleerde orders uit de wachtlijst (ze mogen nooit meer
+// vrijgegeven worden). Geeft het aantal verwijderde orders terug.
+function verwijderGeannuleerdUitMmpWachtlijst(geannuleerd) {
+  const lijst = imports.find(isMmpWachtlijst);
+  if (!lijst || !geannuleerd.size) return 0;
+  const weg = (lijst.mmpOrders || []).filter((o) => geannuleerd.has(o.ordernummer));
+  weg.forEach((o) => verplaatsMmpOrder(lijst, null, o.pakketnummer));
+  lijst.mmpOrders = lijst.mmpOrders.filter((o) => !geannuleerd.has(o.ordernummer));
+  if (!lijst.orderCounts.size) imports = imports.filter((i) => i !== lijst);
+  return weg.length;
 }
 
 // Haalt de orders die nu wél gedekt zijn uit de wachtlijst, naar een nieuwe
@@ -2928,7 +2975,7 @@ function openCountDiffMenu(input, pakketnummer, diff) {
   const row = input.closest("tr");
   // De standaard "In de wacht"-lijst krijgt zijn eigen vaste knop i.p.v. hem
   // ook nog eens tussen de andere bestaande wachtlijsten te tonen.
-  const heldImports = imports.filter((imp) => !imp.active && imp.name !== IN_DE_WACHT_NAAM);
+  const heldImports = imports.filter((imp) => !imp.active && imp.name !== IN_DE_WACHT_NAAM && !isMmpWachtlijst(imp));
   const existingButtons = heldImports
     .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
     .join("");
@@ -2989,6 +3036,7 @@ function openHerstelMenu(subRow, nz) {
   closeHerstelMenu();
   closeCountDiffMenu();
   const importButtons = imports
+    .filter((imp) => !isMmpWachtlijst(imp))
     .map((imp) => `<button type="button" class="count-diff-target" data-id="${escapeHtml(imp.id)}">${escapeHtml(imp.name)}</button>`)
     .join("");
   const menuRow = document.createElement("div");
@@ -3290,7 +3338,7 @@ function renderImportsList() {
     row.className = `import-row${imp.active ? "" : " is-held"}`;
     row.innerHTML = `
       <label class="import-active-toggle" title="Meetellen"><input type="checkbox" class="import-active-checkbox" aria-label="Meetellen" ${imp.active ? "checked" : ""}></label>
-      <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst">
+      <input class="import-name-input" value="${escapeHtml(imp.name)}" aria-label="Naam van lijst"${isMmpWachtlijst(imp) ? " readonly" : ""}>
       <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}${wachtVoorbladKnopHtml}</span>
       <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
     row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
@@ -3298,7 +3346,7 @@ function renderImportsList() {
       // De Maison Privée-wachtlijst gaat nooit in zijn geheel aan: aanvinken
       // controleert het saldo opnieuw en haalt alleen de nu gedekte orders
       // eruit, naar een nieuwe actieve lijst.
-      if (imp.name === MMP_WACHT_NAAM && event.target.checked) {
+      if (isMmpWachtlijst(imp) && event.target.checked) {
         const { vrij, saldo } = geefMmpOrdersVrij(imp);
         const rest = mmpSaldoMelding(saldo);
         setMessage(vrij
@@ -3322,7 +3370,13 @@ function renderImportsList() {
     const wachtVoorbladButton = row.querySelector(".import-wacht-voorblad-button");
     if (wachtVoorbladButton) wachtVoorbladButton.addEventListener("click", () => printWachtlijstVoorblad(imp));
     row.querySelector(".import-delete-button").addEventListener("click", async () => {
-      if (!(await confirmDialog(`Lijst "${imp.name}" verwijderen?`))) return;
+      // Maison Privée-orders die niet naar Verkopen zijn gestuurd, bestaan
+      // alleen in deze lijst: weg ermee betekent dat ze uit het saldo vallen.
+      const mmpNietInVerkopen = !imp.verkoopVerstuurd && (imp.verkoopOrders || []).some((o) => o.kanaal === MMP_KANAAL);
+      const vraag = mmpNietInVerkopen
+        ? `Lijst "${imp.name}" verwijderen? Let op: de Maison Privée-orders in deze lijst zijn nog niet naar Verkopen gestuurd en tellen dan niet meer mee in het saldo. Stuur de lijst eerst naar Verkopen.`
+        : `Lijst "${imp.name}" verwijderen?`;
+      if (!(await confirmDialog(vraag))) return;
       imports = imports.filter((entry) => entry.id !== imp.id);
       saveImportState();
       if (imports.length || nazendingen.length) renderAll(); else resetImport();
@@ -3496,11 +3550,18 @@ async function handleFile(file) {
       : baseName;
     const nieuweLijst = { id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false, verkoopGeannuleerd };
     imports.push(nieuweLijst);
-    const saldo = houdMmpOrdersVast(nieuweLijst);
+    const geannuleerdUitWacht = verwijderGeannuleerdUitMmpWachtlijst(new Set(verkoopGeannuleerd));
+    const vast = houdMmpOrdersVast(nieuweLijst);
     saveImportState();
     renderAll();
-    const melding = saldo ? mmpSaldoMelding(saldo) : "";
-    if (melding) setMessage(`${melding} Zie de lijst "${MMP_WACHT_NAAM}".`);
+    const meldingen = [];
+    if (vast && vast.mislukt.length) {
+      meldingen.push(`LET OP: Maison Privée-order(s) ${vast.mislukt.join(", ")} hebben geen dekking maar konden niet in de wacht gezet worden — haal ze met de hand van de picklijst.`);
+    }
+    const saldoMelding = vast ? mmpSaldoMelding(vast.saldo) : "";
+    if (saldoMelding) meldingen.push(`${saldoMelding} Zie de lijst "${MMP_WACHT_NAAM}".`);
+    if (geannuleerdUitWacht) meldingen.push(`${geannuleerdUitWacht} geannuleerde order(s) uit de Maison Privée-wachtlijst gehaald.`);
+    if (meldingen.length) setMessage(meldingen.join(" "));
   } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
 }
 
@@ -3606,7 +3667,7 @@ document.querySelector("#mmpBetalingForm").addEventListener("submit", async (eve
   event.preventDefault();
   const form = event.target;
   const nieuw = { id: makeImportId(), datum: form.datum.value, omschrijving: form.omschrijving.value, bedrag: form.bedrag.value };
-  if (await mmpBewaar("betalingen", { rows: [...mmpData().betalingen, nieuw] })) {
+  if (await mmpBewaar("betalingen", { toevoegen: [nieuw] })) {
     form.omschrijving.value = "";
     form.bedrag.value = "";
   }
@@ -3616,14 +3677,13 @@ document.querySelector("#mmpPrijsForm").addEventListener("submit", async (event)
   const form = event.target;
   const pakketnummer = form.pakketnummer.value.trim();
   const nieuw = { pakketnummer, artikel: form.artikel.value, ean: form.ean.value, prijs: form.prijs.value };
-  const rows = [...mmpData().prijzen.filter((p) => p.pakketnummer !== pakketnummer), nieuw];
-  if (await mmpBewaar("prijzen", { rows })) form.reset();
+  if (await mmpBewaar("prijzen", { toevoegen: [nieuw] })) form.reset();
 });
 document.querySelector("#mmpCorrectieForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = event.target;
   const nieuw = { ordernummer: form.ordernummer.value, reden: form.reden.value };
-  if (await mmpBewaar("correcties", { rows: [...mmpData().correcties, nieuw] })) form.reset();
+  if (await mmpBewaar("correcties", { toevoegen: [nieuw] })) form.reset();
 });
 document.querySelector("#mmpInstellingenForm").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -3633,13 +3693,12 @@ document.querySelector("#mmpInstellingenForm").addEventListener("submit", async 
 mmpDialog.addEventListener("click", async (event) => {
   const knop = event.target.closest("button");
   if (!knop) return;
-  const data = mmpData();
   if (knop.dataset.betalingId && await confirmDialog("Deze betaling verwijderen?")) {
-    await mmpBewaar("betalingen", { rows: data.betalingen.filter((b) => b.id !== knop.dataset.betalingId) });
+    await mmpBewaar("betalingen", { verwijderen: [knop.dataset.betalingId] });
   } else if (knop.dataset.prijsPakket && await confirmDialog(`Prijs van pakket ${knop.dataset.prijsPakket} verwijderen?`)) {
-    await mmpBewaar("prijzen", { rows: data.prijzen.filter((p) => p.pakketnummer !== knop.dataset.prijsPakket) });
+    await mmpBewaar("prijzen", { verwijderen: [knop.dataset.prijsPakket] });
   } else if (knop.dataset.correctie && await confirmDialog("Deze correctie verwijderen?")) {
-    await mmpBewaar("correcties", { rows: data.correcties.filter((c) => c.ordernummer !== knop.dataset.correctie) });
+    await mmpBewaar("correcties", { verwijderen: [knop.dataset.correctie] });
   }
 });
 // Klik op een prijsregel vult het formulier, zodat je hem kunt aanpassen.

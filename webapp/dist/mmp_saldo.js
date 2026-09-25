@@ -17,11 +17,13 @@
   }
 
   // Voegt orders uit meerdere bronnen (verkoopdata, ingeladen lijsten,
-  // wachtlijst) samen op ordernummer; de eerste bron wint.
-  function mmpVerzamelOrders(bronnen) {
+  // wachtlijst) samen op ordernummer; de eerste bron wint. Geannuleerde
+  // ordernummers (en hun "<nr>-pokon"-regel) vallen weg.
+  function mmpVerzamelOrders(bronnen, geannuleerd = new Set()) {
     const gezien = new Map();
     bronnen.forEach((bron) => (bron || []).forEach((order) => {
       if (order.kanaal !== MMP_KANAAL || gezien.has(order.ordernummer)) return;
+      if (geannuleerd.has(order.ordernummer) || geannuleerd.has(order.ordernummer.replace(/-pokon$/, ""))) return;
       gezien.set(order.ordernummer, {
         ordernummer: order.ordernummer, datum: order.datum,
         pakketnummer: order.pakketnummer, aantal: Number(order.aantal) || 1,
