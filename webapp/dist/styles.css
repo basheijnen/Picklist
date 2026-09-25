@@ -483,6 +483,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   #wachtlijstOverzichtPanel { display: none; }
   body.printing-wachtlijst .results { display: none !important; }
   body.printing-wachtlijst #wachtlijstOverzichtPanel { display: block !important; }
+  #mmpFactuurPrintPanel { display: none; }
+  body.printing-mmpfactuur .page-body { display: none !important; }
+  body.printing-mmpfactuur #mmpFactuurPrintPanel { display: block !important; }
   .department-header { padding: 0 0 6px; border-bottom: 3px solid var(--accent); background: white; }
   .department-header h2 { font-size: 18pt; }
   .department-header p, .eyebrow { margin-bottom: 2px; font-size: 8pt; }
@@ -594,3 +597,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 @media (max-width: 720px) {
   .verkoop-tiles { grid-template-columns: 1fr 1fr; }
 }
+
+.mmp-dialog .verkoop-dialog-body { overflow-y: auto; max-height: calc(100vh - 110px); }
+.mmp-sectie { border: 1px solid var(--line); border-radius: 12px; background: white; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.mmp-sectie h3 { margin: 0; font-size: 1rem; }
+.mmp-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.mmp-form label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; }
+.mmp-uitleg { margin: 0; font-size: .85rem; opacity: .75; }
+.mmp-waarschuwing { padding: 10px 14px; border-radius: 10px; background: #fdf1dc; border: 1px solid #e6b85c; margin-bottom: 6px; }
+.mmp-negatief { color: #b3261e; }
+.mmp-tekst-knop { border: 0; background: none; color: #b3261e; cursor: pointer; font-size: 1rem; }
+.mmp-rij-geen-prijs td { background: #fdf1dc; }
+#mmpPrijzenBody tr { cursor: pointer; }
