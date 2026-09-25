@@ -2040,6 +2040,9 @@ async function mmpBewaar(sectie, body) {
   try {
     await mmpOpslaan(sectie, body);
     renderMmpDialog();
+    if (sectie === "betalingen" && imports.some((i) => i.name === MMP_WACHT_NAAM)) {
+      melding.textContent = `Opgeslagen. Vink de lijst "${MMP_WACHT_NAAM}" aan om orders die nu gedekt zijn vrij te geven.`;
+    }
     return true;
   } catch (error) {
     melding.textContent = `Kan niet opslaan: ${error.message}`;
@@ -2110,6 +2113,69 @@ function mmpFactuurTabelHtml(saldo = mmpBereken()) {
 
 function renderMmpFactuur(saldo) {
   document.querySelector("#mmpFactuur").innerHTML = mmpFactuurTabelHtml(saldo);
+}
+
+function mmpRuwPakketnummer(order) {
+  return order.pokon ? `${order.pakketnummer}p` : order.pakketnummer;
+}
+
+// Verplaatst 1 stuk van een pakketnummer (plus 1 bijbehorende klantnaam-
+// regel van Maison Privée) van de ene lijst naar de andere.
+function verplaatsMmpOrder(van, naar, pakketnummer) {
+  const huidig = van.orderCounts.get(pakketnummer) || 0;
+  if (!huidig) return false;
+  if (huidig === 1) van.orderCounts.delete(pakketnummer);
+  else van.orderCounts.set(pakketnummer, huidig - 1);
+  naar.orderCounts.set(pakketnummer, (naar.orderCounts.get(pakketnummer) || 0) + 1);
+  const index = (van.orderNames || []).findIndex((n) => n.pakketnummer === pakketnummer && n.kanaal === MMP_KANAAL);
+  if (index >= 0) {
+    if (!naar.orderNames) naar.orderNames = [];
+    naar.orderNames.push(...van.orderNames.splice(index, 1));
+  }
+  return true;
+}
+
+// Zet de Maison Privée-orders uit een net ingeladen lijst die niet door het
+// saldo gedekt zijn in de wachtlijst MMP_WACHT_NAAM (inactief, telt dus niet
+// mee op de picklijst). Geeft het saldo terug, of null als de lijst geen
+// Maison Privée-orders heeft.
+function houdMmpOrdersVast(imp) {
+  const nummers = new Set((imp.verkoopOrders || []).filter((o) => o.kanaal === MMP_KANAAL).map((o) => o.ordernummer));
+  if (!nummers.size) return null;
+  const saldo = mmpBereken();
+  const wachtend = saldo.orders.filter((o) => o.status === "wacht" && nummers.has(o.ordernummer));
+  if (!wachtend.length) return saldo;
+  const lijst = imports.find((i) => i.name === MMP_WACHT_NAAM) || createHeldImport(MMP_WACHT_NAAM);
+  if (!lijst.mmpOrders) lijst.mmpOrders = [];
+  wachtend.forEach((o) => {
+    const pakketnummer = mmpRuwPakketnummer(o);
+    if (verplaatsMmpOrder(imp, lijst, pakketnummer)) {
+      lijst.mmpOrders.push({ ordernummer: o.ordernummer, datum: o.datum, kanaal: MMP_KANAAL, pakketnummer, aantal: o.aantal });
+    }
+  });
+  return saldo;
+}
+
+// Haalt de orders die nu wél gedekt zijn uit de wachtlijst, naar een nieuwe
+// actieve lijst; de rest blijft wachten.
+function geefMmpOrdersVrij(lijst) {
+  const saldo = mmpBereken();
+  const gedekt = new Set(saldo.orders.filter((o) => o.status === "ok").map((o) => o.ordernummer));
+  const vrij = (lijst.mmpOrders || []).filter((o) => gedekt.has(o.ordernummer));
+  if (!vrij.length) return { vrij: 0, saldo };
+  const doel = {
+    id: makeImportId(),
+    name: uniqueImportName(`Maison Privée vrijgegeven ${formatShortDate(new Date())}`),
+    active: true, orderCounts: new Map(), orderNames: [], wachtDatums: new Map(),
+    // Bewaard zodat het saldo deze orders blijft kennen, ook als de
+    // oorspronkelijke lijst later verwijderd wordt.
+    mmpOrders: vrij,
+  };
+  imports.push(doel);
+  vrij.forEach((o) => verplaatsMmpOrder(lijst, doel, o.pakketnummer));
+  lijst.mmpOrders = lijst.mmpOrders.filter((o) => !gedekt.has(o.ordernummer));
+  if (!lijst.orderCounts.size) imports = imports.filter((i) => i !== lijst);
+  return { vrij: vrij.length, saldo };
 }
 
 // Zelfde opzet als printKlantOverzicht: dialoog dicht, los paneel vullen,
@@ -3228,8 +3294,21 @@ function renderImportsList() {
       <span class="import-meta-row"><span class="import-order-total">${displayNumber(total)} orders · ${imp.orderCounts.size} pakketten</span>${verkoopKnopHtml}${wachtVoorbladKnopHtml}</span>
       <button type="button" class="import-delete-button" aria-label="Lijst verwijderen">×</button>`;
     row.querySelector(".import-active-checkbox").addEventListener("change", (event) => {
-      imp.active = event.target.checked;
       closeCountDiffMenu();
+      // De Maison Privée-wachtlijst gaat nooit in zijn geheel aan: aanvinken
+      // controleert het saldo opnieuw en haalt alleen de nu gedekte orders
+      // eruit, naar een nieuwe actieve lijst.
+      if (imp.name === MMP_WACHT_NAAM && event.target.checked) {
+        const { vrij, saldo } = geefMmpOrdersVrij(imp);
+        const rest = mmpSaldoMelding(saldo);
+        setMessage(vrij
+          ? `${vrij} order(s) van Maison Privée vrijgegeven.${rest ? ` ${rest}` : ""}`
+          : `Maison Privée: nog steeds te weinig saldo, er is niets vrijgegeven.${rest ? ` ${rest}` : ""}`);
+        saveImportState();
+        renderAll();
+        return;
+      }
+      imp.active = event.target.checked;
       saveImportState();
       renderAll();
     });
@@ -3415,9 +3494,13 @@ async function handleFile(file) {
     const name = imports.some((imp) => imp.name === baseName)
       ? await promptImportName(uniqueImportName(baseName))
       : baseName;
-    imports.push({ id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false, verkoopGeannuleerd });
+    const nieuweLijst = { id: makeImportId(), name, active: true, orderCounts, orderNames, verkoopOrders, verkoopVerstuurd: false, verkoopGeannuleerd };
+    imports.push(nieuweLijst);
+    const saldo = houdMmpOrdersVast(nieuweLijst);
     saveImportState();
     renderAll();
+    const melding = saldo ? mmpSaldoMelding(saldo) : "";
+    if (melding) setMessage(`${melding} Zie de lijst "${MMP_WACHT_NAAM}".`);
   } catch (error) { setMessage(`Kan bestand niet lezen: ${error.message}`); }
 }
 
