@@ -1,309 +1,309 @@
-pakketnummer,artikel,ean,prijs,geldig_vanaf
-1.1,Roses à grandes fleurs MIX x 6,8717032003863,29.4,
-1.2,Roses Polyantha x6,8717032003870,29.4,
-1.3,Roses grimpantes MIX x4,8717032003887,29.4,
-1.4,Roses à grandes fleurs x3,8717032006079,24.71,
-1.5,Roses Polyantha x3,8717032006086,24.71,
-1.10,Rose à grande fleur ROUGE x3,8717032007762,22.71,
-1.11,Rose à grande fleur BLANCHE x3,8717032007779,22.71,
-1.12,Rose à grande fleur ROSE x3,8717032007786,22.71,
-1.13,Rose à grande fleur ORANGE x3,8717032007793,22.71,
-1.14,Rose à grande fleur JAUNE/ROSE x3,8717032007809,22.71,
-1.15,Rose à grande fleur ROUGE/BLANCHE x3,8717032007816,22.71,
-1.20,Rose Polyantha ROUGE x3,8717032007823,22.71,
-1.21,Rose Polyantha ROSE x3,8717032007830,22.71,
-1.22,Rose Polyantha JAUNE x3,8717032007847,22.71,
-1.30,Rose grimpante ROUGE x3,8717032007854,24.71,
-1.31,Rose grimpante JAUNE x3,8717032007861,24.71,
-1.32,Rose grimpante ROSE x3,8717032007878,24.71,
-2.1,Mediterrane x 4,8717032004068,28.14,
-2.2,Mediterrane x 8,8717032004075,35.02,
-2.3,Olive set Petit x 4,8717032007090,28.27,
-2.4,Olive set Grand x 8,8717032007106,35.29,
-2.5,Citrus Mix x 4,8717032007113,28.43,
-2.6,Ficus set x 4,8717032007120,27.41,
-2.7,Olive & Ficus set x 8,8717032007137,34.43,
-2.8,Mediterrane set Petit x 6,8717032007144,31.03,
-2.9,Mediterrane set Grand x 12,8717032007151,40.72,
-3.1,Magnolia mix x 3,8717032004105,26.26,
-3.2,Magnolia mix x 6,8717032004112,30.97,
-3.3,Magnolia soulangeana x 3,8717032007885,26.26,
-3.4,Magnolia Susan x 3,8717032007892,26.26,
-3.5,Magnolia stellata x 3,8717032007908,26.26,
-3.6,Magnolia soulangeana x6,8717032009292,30.97,
-3.7,Magnolia Susan x6,8717032009308,30.97,
-3.8,Magnolia stellata x6,8717032009315,30.97,
-4.0,Clematis montana 'Rubens' x 3,8717032008943,25.46,
-4.1,Clematis montana 'Wilsonii' x 3,8717032008950,25.46,
-4.2,Clematis montana 'Mayleen' x 3,8717032008967,25.46,
-4.3,Clematis montana x 3,8717032008790,25.46,
-5.1,Mini rosiers tiges x 3 mix,8717032003900,30.14,
-5.2,Mini rosiers tiges x 5 mix,8717032003917,36.35,
-5.3,Mini rosiers tiges blanc x 3,8717032007915,30.14,
-5.4,Mini rosiers tiges rouge x 3,8717032007922,30.14,
-5.5,Mini rosiers tiges jaune x 3,8717032007939,30.14,
-5.6,Mini rosiers tiges rose x 3,8717032007946,30.14,
-5.7,Mini rosiers tiges 2 couleurs x 3,8717032007953,30.14,
-6.1,Camélia x3,8717032004082,22.1,
-6.2,Camélia x6,8717032004099,29.5,
-6.3,Camélia ROUGE x3,8717032007960,22.1,
-6.4,Camélia ROSE x3,8717032007977,22.1,
-6.5,Camélia BLANC x3,8717032007984,22.1,
-7.1,Myrtille x 4,8717032004006,27.37,
-7.2,Myrtille x 8,8717032004013,33.5,
-8.1,Hydrangea x 4,8717032004020,26.24,
-8.2,Hydrangea x 8,8717032004037,31.22,
-8.3,Hydrangea macrophylla Blauw x3,8717032007991,22.79,
-8.4,Hydrangea macrophylla Blauw x6,8717032008004,30.02,
-8.5,Hydrangea pan. 'Phantom' x3,8717032008011,22.79,
-8.6,Hydrangea pan. 'Phantom' x6,8717032008028,30.02,
-8.7,Hydrangea pan. 'Pink Diamond' x3,8717032008035,22.79,
-8.8,Hydrangea pan. 'Pink Diamond' x6,8717032008042,30.02,
-8.9,Hydrangea pan. 'Kyushu' x3,8717032008059,22.79,
-8.10,Hydrangea pan. 'Kyushu' x6,8717032008066,30.02,
-8.11,Hydrangea arb. 'Annabelle' x3,8717032008073,24.28,
-8.12,Hydrangea arb. 'Annabelle' x6,8717032008080,31.12,
-8.13,Hydrangea macrophylla Wit x 3,8717032009681,22.79,
-8.14,Hydrangea macrophylla Wit x 6,8717032009698,30.02,
-8.15,Hydrangea macrophylla Roze x 3,8717032009704,22.79,
-8.16,Hydrangea macrophylla Roze x 6,8717032009711,30.02,
-8.17,Hydrangea macrophylla Rood x 3,8717032009728,22.79,
-8.18,Hydrangea macrophylla Rood x 6,8717032009735,30.02,
-8.19,Hydrangea macrophylla mix x 4,8717032011110,25.9,
-8.20,Hydrangea macrophylla mix x 8,8717032011127,33.98,
-9.1,Herbe de la pampa x 4 (blanc+rose),8717032004327,24.17,
-9.2,Herbe de la pampa x 8 (blanc+rose),8717032004334,27.09,
-9.4,Herbe de la pampa x 6 (blanc + rose),8717032006178,25.5,
-9.5,Herbe de la pampa x 6 (blanc),8717032006192,25.5,
-9.6,Herbe de la pampa x 6 (rose),8717032006208,25.5,
-9.7,Herbe de la pampa x 3 (blanc),8717032006215,23.53,
-9.8,Herbe de la pampa x 3 (rose),8717032006222,23.53,
-9.9,Herbe de la pampa x 24 (blanc + rose),8717032006970,37.81,
-10.1,Plantes fruitières x 4,8717032003955,24.91,
-10.2,Plantes fruitières x 8,8717032003962,28.73,
-10.3,Ribes rouges x 3,8717032008097,24.11,
-10.4,Cassis x 3,8717032008103,24.35,
-10.5,Ribes Mix x 6,8717032008110,27.14,
-10.6,Framboise x 3,8717032008127,23.89,
-10.7,Le ronce x 3,8717032008134,24.34,
-10.8,Rubus Mix x 6,8717032008141,26.67,
-10.9,Groseille à maquereau rouge x 3,8717032008158,24.96,
-10.10,Groseille à maquereau verte x 3,8717032008165,24.96,
-10.11,Groseille à maquereau x6,8717032008172,28.36,
-11.0,Arbres fruitiers x 3,8717032008189,28.84,
-11.1,Arbres fruitiers x 5,8717032003931,32.58,
-11.2,Arbres fruitiers x 10,8717032003948,41.85,
-11.3,Pommier Jonagold x 3,8717032008196,28.84,
-11.4,Poirier Conference x 3,8717032008202,28.84,
-11.5,Cerise Schattenmorelle x 3,8717032008219,28.84,
-11.6,Prune Opal x 3,8717032008226,28.84,
-11.7,Pêche Red heaven x 3,8717032008233,28.84,
-12.1,Photinia 'Carré Rouge' x 2,8717032008240,27.75,
-12.2,Photinia 'Carré Rouge' x 4,8717032008257,35.4,
-13.1,Buddleja davidii Bleu/lila x 3,8717032004129,24.92,
-13.2,Buddleja x 6,8717032004136,28.29,
-13.3,Buddleja davidii purperrouge x 3,8717032008271,24.92,
-13.4,Buddleja davidii blanc x 3,8717032008288,24.92,
-13.5,Buddleja davidii rose x 3,8717032008295,24.92,
-13.6,Buddleja davidii zwart/violet x 3,8717032008301,24.92,
-13.7,Buddleja davidii mix x 8,8717032008318,30.82,
-14.1,Arbustes d'ornement x 4,8717032004853,24.18,
-14.2,Arbustes d'ornement x 8,8717032004860,27.11,
-15.1,Super Fruit Mix x 25,8717032010403,29.92,
-16.1,Planter des noix mix x 4,8717032004891,26.47,
-16.2,Planter des noix mix x 8,8717032004907,31.76,
-16.3,Kastanje + Walnoot set,8717032009742,24.17,
-16.4,Kastanje + Hazelnoot set,8717032009759,24.17,
-16.5,Walnoot + Hazelnoot set,8717032009766,24.17,
-16.6,Kastanje x 2,8717032009773,24.17,
-16.7,Walnoot x 2,8717032009780,24.17,
-16.8,Hazelnoot x 2,8717032009797,24.17,
-16.9,Japanse Notenboom x 2,8717032009803,24.17,
-17.1,Arbres fruitiers XXL x 5,7444757822882,42.91,
-17.2,Arbres fruitiers XXL x 3,8717032008387,33.91,
-17.3,Pommiers Jonagold XXL x 3,8717032008394,33.91,
-17.4,Poiriers Conference XXL x 3,8717032008400,33.91,
-17.5,Cerisiers Kordia Douce XXL x 3,8717032008417,33.91,
-17.6,Cerisiers Schattenmorrelle Acerbe XXL x 3,8717032008424,33.91,
-17.7,Prunier Hauszwetsche XXL x 3,8717032008431,33.91,
-18.1,Roses sur tige ROUGE XXL x3,8717032004945,41.94,
-18.2,Roses sur tige ROSE XXL x3,8717032004983,41.94,
-18.3,Roses sur tige BLANC XXL x3,8717032004990,41.94,
-18.4,"Roses sur tige mélange 3 couleurs XXL x3 (Rouge, Blanc, Rose)",8717032005003,41.94,
-18.5,"Roses sur tige mélange 3 couleurs XXL x3 (Rouge, Bicolore, Rose)",8717032009469,41.94,
-18.6,Roses sur tige BICOLORE x3,8717032009476,41.94,
-18.7,Roses sur tige JAUNE XXL x3,8717032009483,41.94,
-18.8,Roses sur tige ORANGE XXL x3,8717032009490,41.94,
-19.0,Salix integra 'Hakuro Nishiki' XXL x 1,8717032006093,29.82,
-19.1,Salix integra 'Hakuro Nishiki' XXL x 2,8717032004952,33.62,
-19.2,Salix integra 'Hakuro Nishiki' XXL x 4,8717032005010,41.2,
-21.0,Prunus Triloba XXL x 1,8717032006109,31.46,
-21.1,Prunus Triloba XXL x 2,8717032004976,36.9,
-21.2,Prunus Triloba XXL x 4,8717032005034,47.76,
-22.1,Eucalyptus Gunnii Azura sur tige x 1,8717032006376,29.78,
-22.2,Eucalyptus Gunnii Azura sur tige x 2,8717032006383,37.68,
-23.1,"Salix integra ""Flamingo"" buisson x 3",8717032006390,28.4,
-23.2,"Salix integra ""Flamingo"" buisson x 6",8717032006963,34.74,
-23.3,"Salix integra ""Flamingo"" sur tige x 1",8717032009810,28.62,
-23.4,"Salix integra ""Flamingo"" sur tige x 2",8717032009827,33.91,
-24.1,Photinia fras. 'Red Robin' x 3,8717032008448,25.7,
-24.2,Photinia fras. 'Red Robin' x 6,8717032008455,29.84,
-25.1,Kiwi 'Jenny' x 3,8717032006635,26.07,
-25.2,Kiwi 'Jenny' x 6,8717032006642,30.57,
-26.1,Aarbustes à baies sur tige mix x 4,8717032006949,36.4,
-26.2,Groseillier rouge sur tige x 2,8717032008462,29.73,
-26.3,Cassis sur tige x 2,8717032008479,29.73,
-26.4,Groseille blanche sur tige x 2,8717032008486,29.73,
-26.5,Groseille rouge sur tige x 2,8717032008493,29.73,
-27.1,Plants de fraises Frigo x 20,8717032009834,25.0,
-27.2,Plants de fraises Frigo x 40,8717032009841,28.38,
-27.3,Plants de fraises Frigo x 60,8717032009858,31.77,
-28.1,Vignes greffées x 4,8717032005164,27.46,
-28.2,Vignes greffées x 2 Blanc,8717032006253,24.67,
-28.3,Vignes greffées x 2 Bleu,8717032006260,24.67,
-29.1,Mélange de vitamines pour plantes x 4,8717032005171,26.68,
-29.2,Mélange de vitamines pour plantes x 8,8717032005188,32.12,
-30.1,Baie de goji x 4,8717032008509,26.56,
-31.0,Hortensia grimpant x 2,8717032006116,24.58,
-31.1,Hortensia grimpant x 4,8717032005218,27.56,
-31.2,Hortensia grimpant x 8,8717032005225,33.86,
-32.1,Plantes de glycine x 3,8717032005232,25.81,
-32.2,Plantes de glycine x 6,8717032005249,30.06,
-33.1,Lonicera periclymenum x 3,8717032008516,25.46,
-33.2,Lonicera periclymenum x 6,8717032008523,29.36,
-34.1,Parthenocissus quinquefolia x 3,8717032008530,25.15,
-34.2,Parthenocissus quinquefolia x 6,8717032008547,28.75,
-35.1,Assortiment de plantes grimpantes x 8,8717032008554,32.44,
-36.1,Roses de jardin parfumées à grandes fleurs x4,8717032005317,25.11,
-36.2,Roses de jardin parfumées à grandes fleurs ROUGES x4,8717032008561,25.11,
-36.3,Roses de jardin parfumées à grandes fleurs ROSES x4,8717032008578,25.11,
-36.4,Roses de jardin parfumées à grandes fleurs JAUNES x4,8717032008585,25.11,
-36.5,Roses de jardin parfumées à grandes fleurs BICOLORES x4,8717032008592,25.11,
-39.1,Vedergras (Stipa ten. 'Ponytails') x 4,8717032005485,25.18,
-39.2,Vedergras (Stipa ten. 'Ponytails') x 8,8717032005492,29.11,
-40.1,Camélia arbuste 'Rose du Japon' XL x1,8717032005577,23.1,
-40.2,Camélia arbuste 'Rose du Japon' XL x2,8717032006338,30.5,
-40.3,Camélia arbuste 'Rose du Japon' XL x1 Rouge,8717032009865,23.1,
-40.4,Camélia arbuste 'Rose du Japon' XL x2 Rouge,8717032009872,30.5,
-40.5,Camélia arbuste 'Rose du Japon' XL x1 Blanc,8717032009889,23.1,
-40.6,Camélia arbuste 'Rose du Japon' XL x2 Blanc,8717032009896,30.5,
-40.7,Camélia arbuste 'Rose du Japon' XL x1 Tricolore,8717032009902,23.1,
-40.8,Camélia arbuste 'Rose du Japon' XL x2 Tricolore,8717032009919,30.5,
-41.1,"Bambou Grand ""Niet woekerend"" x 1",8717032006406,27.75,
-41.2,"Bambou Grand ""Niet woekerend"" x 2",8717032006413,33.42,
-41.3,"Bambou Moyen ""Niet woekerend"" x 2",8717032009926,30.33,
-41.4,"Bambou Moyen ""Niet woekerend"" x 4",8717032009933,38.65,
-44.1,Paeonia lactiflora Red x 3,8717032009520,25.05,
-44.2,Paeonia lactiflora Red x 6,8717032009537,28.53,
-44.3,Paeonia lactiflora Mix x 3,8717032009544,25.05,
-44.4,Paeonia lactiflora Mix x 6,8717032009551,28.53,
-44.5,Paeonia lactiflora rose x 3,8717032009940,25.05,
-44.6,Paeonia lactiflora rose x 6,8717032009957,28.53,
-44.7,Paeonia lactiflora blanc x 3,8717032009964,25.05,
-44.8,Paeonia lactiflora blanc x 6,8717032009971,28.53,
-50.1,Nandina Domestica Obsessed x 1 ®,8717032006888,27.48,
-50.2,Nandina Domestica Obsessed x 2 ®,8717032006895,33.08,
-52.1,Pennisetum alop. 'Hameln' x 4,8717032008608,25.59,
-52.2,Pennisetum alop. 'Hameln' x 8,8717032008615,29.92,
-53.1,Imperata cyl. 'Red Baron' x 4,8717032008622,26.2,
-53.2,Imperata cyl. 'Red Baron' x 8,8717032008639,31.14,
-54.1,Herbe aux lis (Liriope muscari) x4,8717032008646,23.8,
-54.2,Herbe aux lis (Liriope muscari) x8,8717032008653,30.96,
-55.1,Fétuque bleue (Festuca glauca 'Elijah Blue') x4,8717032008660,22.5,
-55.2,Fétuque bleue (Festuca glauca 'Elijah Blue') x8,8717032008677,29.72,
-56.1,Mélange d'herbes Premium x 8,8717032008684,29.32,
-56.2,Mélange d'herbes Excellent x 8,8717032008691,30.43,
-56.3,"Mélange de graminées x 4 (Stipa, Pennisetum, Imperata, Festuca)",8717032009506,25.59,
-56.4,"Mélange de graminées x 8 (Stipa, Pennisetum, Imperata, Festuca)",8717032009513,29.92,
-60.1,Ilex meserveae 'Blue Maid' x 3,8717032009988,25.93,
-60.2,Ilex meserveae 'Blue Maid' x 6,8717032009995,30.3,
-61.1,Ilex aquifolium 'Argentea Marginata' x 3,8717032010007,25.93,
-61.2,Ilex aquifolium 'Argentea Marginata' x 6,8717032010014,30.3,
-62.1,Prunus lusitanica 'Angustifolia' x 3,8717032010021,25.47,
-62.2,Prunus lusitanica 'Angustifolia' x 6,8717032010038,29.39,
-63.1,Evergreen Mix x 4,8717032010045,27.14,
-63.2,Evergreen Mix x 8,8717032010052,33.04,
-64.1,Elaeagnus ebbingei x 3,8717032010069,26.23,
-64.2,Elaeagnus ebbingei x 6,8717032010076,30.91,
-70.1,Azalée pourpre x 3,8717032010083,22.8,
-70.2,Azalée rouge x 3,8717032010090,22.8,
-70.3,Azalée rose x 3,8717032010106,22.8,
-70.4,Azalée blanche x 3,8717032010113,22.8,
-70.5,Azalea Mix x 4,8717032010120,26.36,
-70.6,Azalea Mix x 8,8717032010137,31.47,
-70.7,Azalea rouge x 6,8717032011158,28.78,
-70.8,Azalea rose x 6,8717032011165,28.78,
-70.9,Azalea blanc x 6,8717032011172,28.78,
-70.10,Azalea Mix x 3,8717032011189,25.17,
-70.11,Azalea Mix x 6,8717032011196,28.78,
-71.0,Rhododendron 'Cunningham's White' x 3,8717032010144,24.33,
-71.1,Rhododendron 'Cunningham's White' x 6,8717032010151,30.3,
-71.2,Rhododendron 'Roseum Elegans' x 3,8717032010168,24.33,
-71.3,Rhododendron 'Roseum Elegans' x 6,8717032010175,30.3,
-71.4,Rhododendron 'Nova Zembla' x 3,8717032010182,24.33,
-71.5,Rhododendron 'Nova Zembla' x 6,8717032010199,30.3,
-71.6,Rhododendron 'Cosmopolitan' x 3,8717032010205,24.33,
-71.7,Rhododendron 'Cosmopolitan' x 6,8717032010212,30.3,
-71.8,Rhododendron Mix x 4,8717032010229,30.59,
-71.9,Rhododendron Mix x 8,8717032010236,39.94,
-72.0,Rhododendron P13 Purple x 3,8717032009360,29.02,
-72.1,Rhododendron P13 Purple x 6,8717032009407,36.03,
-72.2,Rhododendron P13 White x 3,8717032009377,29.02,
-72.3,Rhododendron P13 White x 6,8717032009414,36.03,
-72.4,Rhododendron P13 Red x 3,8717032009384,29.02,
-72.5,Rhododendron P13 Red x 6,8717032009421,36.03,
-72.6,Rhododendron P13 Pink x 3,8717032009391,29.02,
-72.7,Rhododendron P13 Pink x 6,8717032009438,36.03,
-72.8,Rhododendron P13 Mix x 3,8717032010397,29.02,
-72.9,Rhododendron P13 Mix x 6,8717032011141,36.03,
-100.1,Oliviers rustiques sur tige XXL x 1,8717032005140,34.08,
-100.2,Oliviers rustiques sur tige XXL x 2,8717032005157,45.12,
-100.3,Oliviers rustiques sur tige moyenne x 1,8717032010533,29.28,
-100.4,Oliviers rustiques sur tige moyenne x 2,8717032010540,36.69,
-100.5,Olivier arbuste rustique x1,8717032010557,28.25,
-100.6,Olivier arbuste rustique x2,8717032010564,34.63,
-101.0,Plantes de lauriers roses tropicaux x 2 roses,8717032006123,24.08,
-101.1,Plantes de lauriers roses tropicaux x 4 roses,8717032005256,26.56,
-101.2,Plantes de lauriers roses tropicaux x 8 roses,8717032005263,31.87,
-101.3,Plantes tropicales de lauriers roses x 2 blanc,8717032010243,24.08,
-101.4,Plantes tropicales de lauriers roses x 4 blanc,8717032010250,26.56,
-101.5,Plantes tropicales de lauriers roses x 8 blanc,8717032010267,31.87,
-101.6,Plantes de lauriers roses tropicaux x 4 Assortiment,8717032010274,26.56,
-101.7,Plantes de lauriers roses tropicaux x 8 Assortiment,8717032010281,31.87,
-102.1,Ensemble de trois plants de bananiers x3,8717032014869,31.94,
-102.2,Ensemble de trois plants de bananiers x6,8717032014876,40.57,
-104.1,Strelitzia reginae x3,8717032005102,23.5,
-104.2,Strelitzia reginae x6,8717032005119,32.1,
-114.1,Mix exotique de plantes d'intérieur x 4,8717032008905,32.1,
-115.1,Mix tendance de plantes d'intérieur x 4,8717032008912,29.1,
-116.1,Mix premium de plantes d'intérieur x 4,8717032008929,29.1,
-117.1,Plantes d'intérieur purificatrices d'air x 5,8717032005447,30.5,
-118.1,Plantes tropicales d'intérieur x 4,8717032005454,29.1,
-119.1,Plantes d'intérieur faciles d'entretien x 4,8717032005478,29.1,
-120.1,Dragonnier x 4,8717032005683,27.5,
-121.1,Set de plantes d'intérieur Ficus benjamina x 3,8717032005690,25.7,
-122.1,Set de plantes d'intérieur fougères x 3,8717032010298,25.4,
-123.1,Set de plantes d'intérieur orientales x 3,8717032010304,26.4,
-128.1,Chamaedorea Elegans Grande x 1,8717032014845,27.87,
-128.2,Chamaedorea Elegans Grande x 2,8717032014852,33.56,
-141.1,Cycas Revoluta x 1 Moyen,8717032006789,31.15,
-141.2,Cycas Revoluta x 2 Moyen,8717032006796,40.12,
-141.3,Cycas Revoluta x 1 Grand,8717032010779,35.91,
-141.4,Cycas Revoluta x 2 Grand,8717032010786,47.86,
-150.1,Chamaerops humilis Moyen x 1,8717032010793,27.3,
-150.2,Chamaerops humilis Moyen x 2,8717032010809,33.9,
-150.3,Chamaerops humilis Grand x 1,8717032010816,35.54,
-150.4,Chamaerops humilis Grand x 2,8717032010823,47.73,
-151.1,Phoenix canariensis Moyen x 1,8717032010830,27.58,
-151.2,Phoenix canariensis Moyen x 2,8717032010847,34.45,
-151.3,Phoenix canariensis Grand x 1,8717032010854,31.75,
-151.4,Phoenix canariensis Grand x 2,8717032010861,39.55,
-152.1,Trachycarpus fortunei Moyen x 1,8717032010878,27.29,
-152.2,Trachycarpus fortunei Moyen x 2,8717032010885,33.87,
-152.3,Trachycarpus fortunei Grand x 1,8717032010892,35.95,
-152.4,Trachycarpus fortunei Grand x 2,8717032010908,48.54,
-153.1,Washingtonia robusta Moyen x 1,8717032010915,27.15,
-153.2,Washingtonia robusta Moyen x 2,8717032010922,33.59,
-153.3,Washingtonia robusta Grand x 1,8717032010939,33.92,
-153.4,Washingtonia robusta Grand x 2,8717032010946,44.48,
-160.1,Mélange de palmiers x 4,8717032010977,44.4,
+pakketnummer,artikel,ean,prijs
+1.1,Roses à grandes fleurs MIX x 6,8717032003863,29.4
+1.2,Roses Polyantha x6,8717032003870,29.4
+1.3,Roses grimpantes MIX x4,8717032003887,29.4
+1.4,Roses à grandes fleurs x3,8717032006079,24.71
+1.5,Roses Polyantha x3,8717032006086,24.71
+1.10,Rose à grande fleur ROUGE x3,8717032007762,22.71
+1.11,Rose à grande fleur BLANCHE x3,8717032007779,22.71
+1.12,Rose à grande fleur ROSE x3,8717032007786,22.71
+1.13,Rose à grande fleur ORANGE x3,8717032007793,22.71
+1.14,Rose à grande fleur JAUNE/ROSE x3,8717032007809,22.71
+1.15,Rose à grande fleur ROUGE/BLANCHE x3,8717032007816,22.71
+1.20,Rose Polyantha ROUGE x3,8717032007823,22.71
+1.21,Rose Polyantha ROSE x3,8717032007830,22.71
+1.22,Rose Polyantha JAUNE x3,8717032007847,22.71
+1.30,Rose grimpante ROUGE x3,8717032007854,24.71
+1.31,Rose grimpante JAUNE x3,8717032007861,24.71
+1.32,Rose grimpante ROSE x3,8717032007878,24.71
+2.1,Mediterrane x 4,8717032004068,28.14
+2.2,Mediterrane x 8,8717032004075,35.02
+2.3,Olive set Petit x 4,8717032007090,28.27
+2.4,Olive set Grand x 8,8717032007106,35.29
+2.5,Citrus Mix x 4,8717032007113,28.43
+2.6,Ficus set x 4,8717032007120,27.41
+2.7,Olive & Ficus set x 8,8717032007137,34.43
+2.8,Mediterrane set Petit x 6,8717032007144,31.03
+2.9,Mediterrane set Grand x 12,8717032007151,40.72
+3.1,Magnolia mix x 3,8717032004105,26.26
+3.2,Magnolia mix x 6,8717032004112,30.97
+3.3,Magnolia soulangeana x 3,8717032007885,26.26
+3.4,Magnolia Susan x 3,8717032007892,26.26
+3.5,Magnolia stellata x 3,8717032007908,26.26
+3.6,Magnolia soulangeana x6,8717032009292,30.97
+3.7,Magnolia Susan x6,8717032009308,30.97
+3.8,Magnolia stellata x6,8717032009315,30.97
+4.0,Clematis montana 'Rubens' x 3,8717032008943,25.46
+4.1,Clematis montana 'Wilsonii' x 3,8717032008950,25.46
+4.2,Clematis montana 'Mayleen' x 3,8717032008967,25.46
+4.3,Clematis montana x 3,8717032008790,25.46
+5.1,Mini rosiers tiges x 3 mix,8717032003900,30.14
+5.2,Mini rosiers tiges x 5 mix,8717032003917,36.35
+5.3,Mini rosiers tiges blanc x 3,8717032007915,30.14
+5.4,Mini rosiers tiges rouge x 3,8717032007922,30.14
+5.5,Mini rosiers tiges jaune x 3,8717032007939,30.14
+5.6,Mini rosiers tiges rose x 3,8717032007946,30.14
+5.7,Mini rosiers tiges 2 couleurs x 3,8717032007953,30.14
+6.1,Camélia x3,8717032004082,22.1
+6.2,Camélia x6,8717032004099,29.5
+6.3,Camélia ROUGE x3,8717032007960,22.1
+6.4,Camélia ROSE x3,8717032007977,22.1
+6.5,Camélia BLANC x3,8717032007984,22.1
+7.1,Myrtille x 4,8717032004006,27.37
+7.2,Myrtille x 8,8717032004013,33.5
+8.1,Hydrangea x 4,8717032004020,26.24
+8.2,Hydrangea x 8,8717032004037,31.22
+8.3,Hydrangea macrophylla Blauw x3,8717032007991,22.79
+8.4,Hydrangea macrophylla Blauw x6,8717032008004,30.02
+8.5,Hydrangea pan. 'Phantom' x3,8717032008011,22.79
+8.6,Hydrangea pan. 'Phantom' x6,8717032008028,30.02
+8.7,Hydrangea pan. 'Pink Diamond' x3,8717032008035,22.79
+8.8,Hydrangea pan. 'Pink Diamond' x6,8717032008042,30.02
+8.9,Hydrangea pan. 'Kyushu' x3,8717032008059,22.79
+8.10,Hydrangea pan. 'Kyushu' x6,8717032008066,30.02
+8.11,Hydrangea arb. 'Annabelle' x3,8717032008073,24.28
+8.12,Hydrangea arb. 'Annabelle' x6,8717032008080,31.12
+8.13,Hydrangea macrophylla Wit x 3,8717032009681,22.79
+8.14,Hydrangea macrophylla Wit x 6,8717032009698,30.02
+8.15,Hydrangea macrophylla Roze x 3,8717032009704,22.79
+8.16,Hydrangea macrophylla Roze x 6,8717032009711,30.02
+8.17,Hydrangea macrophylla Rood x 3,8717032009728,22.79
+8.18,Hydrangea macrophylla Rood x 6,8717032009735,30.02
+8.19,Hydrangea macrophylla mix x 4,8717032011110,25.9
+8.20,Hydrangea macrophylla mix x 8,8717032011127,33.98
+9.1,Herbe de la pampa x 4 (blanc+rose),8717032004327,24.17
+9.2,Herbe de la pampa x 8 (blanc+rose),8717032004334,27.09
+9.4,Herbe de la pampa x 6 (blanc + rose),8717032006178,25.5
+9.5,Herbe de la pampa x 6 (blanc),8717032006192,25.5
+9.6,Herbe de la pampa x 6 (rose),8717032006208,25.5
+9.7,Herbe de la pampa x 3 (blanc),8717032006215,23.53
+9.8,Herbe de la pampa x 3 (rose),8717032006222,23.53
+9.9,Herbe de la pampa x 24 (blanc + rose),8717032006970,37.81
+10.1,Plantes fruitières x 4,8717032003955,24.91
+10.2,Plantes fruitières x 8,8717032003962,28.73
+10.3,Ribes rouges x 3,8717032008097,24.11
+10.4,Cassis x 3,8717032008103,24.35
+10.5,Ribes Mix x 6,8717032008110,27.14
+10.6,Framboise x 3,8717032008127,23.89
+10.7,Le ronce x 3,8717032008134,24.34
+10.8,Rubus Mix x 6,8717032008141,26.67
+10.9,Groseille à maquereau rouge x 3,8717032008158,24.96
+10.10,Groseille à maquereau verte x 3,8717032008165,24.96
+10.11,Groseille à maquereau x6,8717032008172,28.36
+11.0,Arbres fruitiers x 3,8717032008189,28.84
+11.1,Arbres fruitiers x 5,8717032003931,32.58
+11.2,Arbres fruitiers x 10,8717032003948,41.85
+11.3,Pommier Jonagold x 3,8717032008196,28.84
+11.4,Poirier Conference x 3,8717032008202,28.84
+11.5,Cerise Schattenmorelle x 3,8717032008219,28.84
+11.6,Prune Opal x 3,8717032008226,28.84
+11.7,Pêche Red heaven x 3,8717032008233,28.84
+12.1,Photinia 'Carré Rouge' x 2,8717032008240,27.75
+12.2,Photinia 'Carré Rouge' x 4,8717032008257,35.4
+13.1,Buddleja davidii Bleu/lila x 3,8717032004129,24.92
+13.2,Buddleja x 6,8717032004136,28.29
+13.3,Buddleja davidii purperrouge x 3,8717032008271,24.92
+13.4,Buddleja davidii blanc x 3,8717032008288,24.92
+13.5,Buddleja davidii rose x 3,8717032008295,24.92
+13.6,Buddleja davidii zwart/violet x 3,8717032008301,24.92
+13.7,Buddleja davidii mix x 8,8717032008318,30.82
+14.1,Arbustes d'ornement x 4,8717032004853,24.18
+14.2,Arbustes d'ornement x 8,8717032004860,27.11
+15.1,Super Fruit Mix x 25,8717032010403,29.92
+16.1,Planter des noix mix x 4,8717032004891,26.47
+16.2,Planter des noix mix x 8,8717032004907,31.76
+16.3,Kastanje + Walnoot set,8717032009742,24.17
+16.4,Kastanje + Hazelnoot set,8717032009759,24.17
+16.5,Walnoot + Hazelnoot set,8717032009766,24.17
+16.6,Kastanje x 2,8717032009773,24.17
+16.7,Walnoot x 2,8717032009780,24.17
+16.8,Hazelnoot x 2,8717032009797,24.17
+16.9,Japanse Notenboom x 2,8717032009803,24.17
+17.1,Arbres fruitiers XXL x 5,7444757822882,42.91
+17.2,Arbres fruitiers XXL x 3,8717032008387,33.91
+17.3,Pommiers Jonagold XXL x 3,8717032008394,33.91
+17.4,Poiriers Conference XXL x 3,8717032008400,33.91
+17.5,Cerisiers Kordia Douce XXL x 3,8717032008417,33.91
+17.6,Cerisiers Schattenmorrelle Acerbe XXL x 3,8717032008424,33.91
+17.7,Prunier Hauszwetsche XXL x 3,8717032008431,33.91
+18.1,Roses sur tige ROUGE XXL x3,8717032004945,41.94
+18.2,Roses sur tige ROSE XXL x3,8717032004983,41.94
+18.3,Roses sur tige BLANC XXL x3,8717032004990,41.94
+18.4,"Roses sur tige mélange 3 couleurs XXL x3 (Rouge, Blanc, Rose)",8717032005003,41.94
+18.5,"Roses sur tige mélange 3 couleurs XXL x3 (Rouge, Bicolore, Rose)",8717032009469,41.94
+18.6,Roses sur tige BICOLORE x3,8717032009476,41.94
+18.7,Roses sur tige JAUNE XXL x3,8717032009483,41.94
+18.8,Roses sur tige ORANGE XXL x3,8717032009490,41.94
+19.0,Salix integra 'Hakuro Nishiki' XXL x 1,8717032006093,29.82
+19.1,Salix integra 'Hakuro Nishiki' XXL x 2,8717032004952,33.62
+19.2,Salix integra 'Hakuro Nishiki' XXL x 4,8717032005010,41.2
+21.0,Prunus Triloba XXL x 1,8717032006109,31.46
+21.1,Prunus Triloba XXL x 2,8717032004976,36.9
+21.2,Prunus Triloba XXL x 4,8717032005034,47.76
+22.1,Eucalyptus Gunnii Azura sur tige x 1,8717032006376,29.78
+22.2,Eucalyptus Gunnii Azura sur tige x 2,8717032006383,37.68
+23.1,"Salix integra ""Flamingo"" buisson x 3",8717032006390,28.4
+23.2,"Salix integra ""Flamingo"" buisson x 6",8717032006963,34.74
+23.3,"Salix integra ""Flamingo"" sur tige x 1",8717032009810,28.62
+23.4,"Salix integra ""Flamingo"" sur tige x 2",8717032009827,33.91
+24.1,Photinia fras. 'Red Robin' x 3,8717032008448,25.7
+24.2,Photinia fras. 'Red Robin' x 6,8717032008455,29.84
+25.1,Kiwi 'Jenny' x 3,8717032006635,26.07
+25.2,Kiwi 'Jenny' x 6,8717032006642,30.57
+26.1,Aarbustes à baies sur tige mix x 4,8717032006949,36.4
+26.2,Groseillier rouge sur tige x 2,8717032008462,29.73
+26.3,Cassis sur tige x 2,8717032008479,29.73
+26.4,Groseille blanche sur tige x 2,8717032008486,29.73
+26.5,Groseille rouge sur tige x 2,8717032008493,29.73
+27.1,Plants de fraises Frigo x 20,8717032009834,25.0
+27.2,Plants de fraises Frigo x 40,8717032009841,28.38
+27.3,Plants de fraises Frigo x 60,8717032009858,31.77
+28.1,Vignes greffées x 4,8717032005164,27.46
+28.2,Vignes greffées x 2 Blanc,8717032006253,24.67
+28.3,Vignes greffées x 2 Bleu,8717032006260,24.67
+29.1,Mélange de vitamines pour plantes x 4,8717032005171,26.68
+29.2,Mélange de vitamines pour plantes x 8,8717032005188,32.12
+30.1,Baie de goji x 4,8717032008509,26.56
+31.0,Hortensia grimpant x 2,8717032006116,24.58
+31.1,Hortensia grimpant x 4,8717032005218,27.56
+31.2,Hortensia grimpant x 8,8717032005225,33.86
+32.1,Plantes de glycine x 3,8717032005232,25.81
+32.2,Plantes de glycine x 6,8717032005249,30.06
+33.1,Lonicera periclymenum x 3,8717032008516,25.46
+33.2,Lonicera periclymenum x 6,8717032008523,29.36
+34.1,Parthenocissus quinquefolia x 3,8717032008530,25.15
+34.2,Parthenocissus quinquefolia x 6,8717032008547,28.75
+35.1,Assortiment de plantes grimpantes x 8,8717032008554,32.44
+36.1,Roses de jardin parfumées à grandes fleurs x4,8717032005317,25.11
+36.2,Roses de jardin parfumées à grandes fleurs ROUGES x4,8717032008561,25.11
+36.3,Roses de jardin parfumées à grandes fleurs ROSES x4,8717032008578,25.11
+36.4,Roses de jardin parfumées à grandes fleurs JAUNES x4,8717032008585,25.11
+36.5,Roses de jardin parfumées à grandes fleurs BICOLORES x4,8717032008592,25.11
+39.1,Vedergras (Stipa ten. 'Ponytails') x 4,8717032005485,25.18
+39.2,Vedergras (Stipa ten. 'Ponytails') x 8,8717032005492,29.11
+40.1,Camélia arbuste 'Rose du Japon' XL x1,8717032005577,23.1
+40.2,Camélia arbuste 'Rose du Japon' XL x2,8717032006338,30.5
+40.3,Camélia arbuste 'Rose du Japon' XL x1 Rouge,8717032009865,23.1
+40.4,Camélia arbuste 'Rose du Japon' XL x2 Rouge,8717032009872,30.5
+40.5,Camélia arbuste 'Rose du Japon' XL x1 Blanc,8717032009889,23.1
+40.6,Camélia arbuste 'Rose du Japon' XL x2 Blanc,8717032009896,30.5
+40.7,Camélia arbuste 'Rose du Japon' XL x1 Tricolore,8717032009902,23.1
+40.8,Camélia arbuste 'Rose du Japon' XL x2 Tricolore,8717032009919,30.5
+41.1,"Bambou Grand ""Niet woekerend"" x 1",8717032006406,27.75
+41.2,"Bambou Grand ""Niet woekerend"" x 2",8717032006413,33.42
+41.3,"Bambou Moyen ""Niet woekerend"" x 2",8717032009926,30.33
+41.4,"Bambou Moyen ""Niet woekerend"" x 4",8717032009933,38.65
+44.1,Paeonia lactiflora Red x 3,8717032009520,25.05
+44.2,Paeonia lactiflora Red x 6,8717032009537,28.53
+44.3,Paeonia lactiflora Mix x 3,8717032009544,25.05
+44.4,Paeonia lactiflora Mix x 6,8717032009551,28.53
+44.5,Paeonia lactiflora rose x 3,8717032009940,25.05
+44.6,Paeonia lactiflora rose x 6,8717032009957,28.53
+44.7,Paeonia lactiflora blanc x 3,8717032009964,25.05
+44.8,Paeonia lactiflora blanc x 6,8717032009971,28.53
+50.1,Nandina Domestica Obsessed x 1 ®,8717032006888,27.48
+50.2,Nandina Domestica Obsessed x 2 ®,8717032006895,33.08
+52.1,Pennisetum alop. 'Hameln' x 4,8717032008608,25.59
+52.2,Pennisetum alop. 'Hameln' x 8,8717032008615,29.92
+53.1,Imperata cyl. 'Red Baron' x 4,8717032008622,26.2
+53.2,Imperata cyl. 'Red Baron' x 8,8717032008639,31.14
+54.1,Herbe aux lis (Liriope muscari) x4,8717032008646,23.8
+54.2,Herbe aux lis (Liriope muscari) x8,8717032008653,30.96
+55.1,Fétuque bleue (Festuca glauca 'Elijah Blue') x4,8717032008660,22.5
+55.2,Fétuque bleue (Festuca glauca 'Elijah Blue') x8,8717032008677,29.72
+56.1,Mélange d'herbes Premium x 8,8717032008684,29.32
+56.2,Mélange d'herbes Excellent x 8,8717032008691,30.43
+56.3,"Mélange de graminées x 4 (Stipa, Pennisetum, Imperata, Festuca)",8717032009506,25.59
+56.4,"Mélange de graminées x 8 (Stipa, Pennisetum, Imperata, Festuca)",8717032009513,29.92
+60.1,Ilex meserveae 'Blue Maid' x 3,8717032009988,25.93
+60.2,Ilex meserveae 'Blue Maid' x 6,8717032009995,30.3
+61.1,Ilex aquifolium 'Argentea Marginata' x 3,8717032010007,25.93
+61.2,Ilex aquifolium 'Argentea Marginata' x 6,8717032010014,30.3
+62.1,Prunus lusitanica 'Angustifolia' x 3,8717032010021,25.47
+62.2,Prunus lusitanica 'Angustifolia' x 6,8717032010038,29.39
+63.1,Evergreen Mix x 4,8717032010045,27.14
+63.2,Evergreen Mix x 8,8717032010052,33.04
+64.1,Elaeagnus ebbingei x 3,8717032010069,26.23
+64.2,Elaeagnus ebbingei x 6,8717032010076,30.91
+70.1,Azalée pourpre x 3,8717032010083,22.8
+70.2,Azalée rouge x 3,8717032010090,22.8
+70.3,Azalée rose x 3,8717032010106,22.8
+70.4,Azalée blanche x 3,8717032010113,22.8
+70.5,Azalea Mix x 4,8717032010120,26.36
+70.6,Azalea Mix x 8,8717032010137,31.47
+70.7,Azalea rouge x 6,8717032011158,28.78
+70.8,Azalea rose x 6,8717032011165,28.78
+70.9,Azalea blanc x 6,8717032011172,28.78
+70.10,Azalea Mix x 3,8717032011189,25.17
+70.11,Azalea Mix x 6,8717032011196,28.78
+71.0,Rhododendron 'Cunningham's White' x 3,8717032010144,24.33
+71.1,Rhododendron 'Cunningham's White' x 6,8717032010151,30.3
+71.2,Rhododendron 'Roseum Elegans' x 3,8717032010168,24.33
+71.3,Rhododendron 'Roseum Elegans' x 6,8717032010175,30.3
+71.4,Rhododendron 'Nova Zembla' x 3,8717032010182,24.33
+71.5,Rhododendron 'Nova Zembla' x 6,8717032010199,30.3
+71.6,Rhododendron 'Cosmopolitan' x 3,8717032010205,24.33
+71.7,Rhododendron 'Cosmopolitan' x 6,8717032010212,30.3
+71.8,Rhododendron Mix x 4,8717032010229,30.59
+71.9,Rhododendron Mix x 8,8717032010236,39.94
+72.0,Rhododendron P13 Purple x 3,8717032009360,29.02
+72.1,Rhododendron P13 Purple x 6,8717032009407,36.03
+72.2,Rhododendron P13 White x 3,8717032009377,29.02
+72.3,Rhododendron P13 White x 6,8717032009414,36.03
+72.4,Rhododendron P13 Red x 3,8717032009384,29.02
+72.5,Rhododendron P13 Red x 6,8717032009421,36.03
+72.6,Rhododendron P13 Pink x 3,8717032009391,29.02
+72.7,Rhododendron P13 Pink x 6,8717032009438,36.03
+72.8,Rhododendron P13 Mix x 3,8717032010397,29.02
+72.9,Rhododendron P13 Mix x 6,8717032011141,36.03
+100.1,Oliviers rustiques sur tige XXL x 1,8717032005140,34.08
+100.2,Oliviers rustiques sur tige XXL x 2,8717032005157,45.12
+100.3,Oliviers rustiques sur tige moyenne x 1,8717032010533,29.28
+100.4,Oliviers rustiques sur tige moyenne x 2,8717032010540,36.69
+100.5,Olivier arbuste rustique x1,8717032010557,28.25
+100.6,Olivier arbuste rustique x2,8717032010564,34.63
+101.0,Plantes de lauriers roses tropicaux x 2 roses,8717032006123,24.08
+101.1,Plantes de lauriers roses tropicaux x 4 roses,8717032005256,26.56
+101.2,Plantes de lauriers roses tropicaux x 8 roses,8717032005263,31.87
+101.3,Plantes tropicales de lauriers roses x 2 blanc,8717032010243,24.08
+101.4,Plantes tropicales de lauriers roses x 4 blanc,8717032010250,26.56
+101.5,Plantes tropicales de lauriers roses x 8 blanc,8717032010267,31.87
+101.6,Plantes de lauriers roses tropicaux x 4 Assortiment,8717032010274,26.56
+101.7,Plantes de lauriers roses tropicaux x 8 Assortiment,8717032010281,31.87
+102.1,Ensemble de trois plants de bananiers x3,8717032014869,31.94
+102.2,Ensemble de trois plants de bananiers x6,8717032014876,40.57
+104.1,Strelitzia reginae x3,8717032005102,23.5
+104.2,Strelitzia reginae x6,8717032005119,32.1
+114.1,Mix exotique de plantes d'intérieur x 4,8717032008905,32.1
+115.1,Mix tendance de plantes d'intérieur x 4,8717032008912,29.1
+116.1,Mix premium de plantes d'intérieur x 4,8717032008929,29.1
+117.1,Plantes d'intérieur purificatrices d'air x 5,8717032005447,30.5
+118.1,Plantes tropicales d'intérieur x 4,8717032005454,29.1
+119.1,Plantes d'intérieur faciles d'entretien x 4,8717032005478,29.1
+120.1,Dragonnier x 4,8717032005683,27.5
+121.1,Set de plantes d'intérieur Ficus benjamina x 3,8717032005690,25.7
+122.1,Set de plantes d'intérieur fougères x 3,8717032010298,25.4
+123.1,Set de plantes d'intérieur orientales x 3,8717032010304,26.4
+128.1,Chamaedorea Elegans Grande x 1,8717032014845,27.87
+128.2,Chamaedorea Elegans Grande x 2,8717032014852,33.56
+141.1,Cycas Revoluta x 1 Moyen,8717032006789,31.15
+141.2,Cycas Revoluta x 2 Moyen,8717032006796,40.12
+141.3,Cycas Revoluta x 1 Grand,8717032010779,35.91
+141.4,Cycas Revoluta x 2 Grand,8717032010786,47.86
+150.1,Chamaerops humilis Moyen x 1,8717032010793,27.3
+150.2,Chamaerops humilis Moyen x 2,8717032010809,33.9
+150.3,Chamaerops humilis Grand x 1,8717032010816,35.54
+150.4,Chamaerops humilis Grand x 2,8717032010823,47.73
+151.1,Phoenix canariensis Moyen x 1,8717032010830,27.58
+151.2,Phoenix canariensis Moyen x 2,8717032010847,34.45
+151.3,Phoenix canariensis Grand x 1,8717032010854,31.75
+151.4,Phoenix canariensis Grand x 2,8717032010861,39.55
+152.1,Trachycarpus fortunei Moyen x 1,8717032010878,27.29
+152.2,Trachycarpus fortunei Moyen x 2,8717032010885,33.87
+152.3,Trachycarpus fortunei Grand x 1,8717032010892,35.95
+152.4,Trachycarpus fortunei Grand x 2,8717032010908,48.54
+153.1,Washingtonia robusta Moyen x 1,8717032010915,27.15
+153.2,Washingtonia robusta Moyen x 2,8717032010922,33.59
+153.3,Washingtonia robusta Grand x 1,8717032010939,33.92
+153.4,Washingtonia robusta Grand x 2,8717032010946,44.48
+160.1,Mélange de palmiers x 4,8717032010977,44.4
