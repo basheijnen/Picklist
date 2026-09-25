@@ -626,5 +626,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Warme, zandkleurige achtergrond; de witte blokken en de kopbalk steken daar
    tegen af. */
 .mmp-dialog { background: radial-gradient(circle at 90% 0, #f6e3c8 0, transparent 38%), #f8f2e8; }
-.mmp-dialog .dialog-header { background: white; }
+.mmp-dialog .dialog-header { background: var(--brand); border-bottom: 0; }
+.mmp-dialog .dialog-header h2 { color: white; }
+.mmp-dialog .dialog-header .eyebrow { color: var(--gold); }
 .mmp-dialog .mmp-form, .mmp-dialog .mmp-scroll thead th { background: #faf5ec; }
