@@ -631,3 +631,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .dialog-header .eyebrow { color: var(--gold); }
 .mmp-dialog .mmp-form, .mmp-dialog .mmp-scroll thead th { background: #faf5ec; }
 #mmpMessage:not(:empty) { padding: 8px 14px; border-radius: 10px; background: white; }
+/* Scherpe randen: op de terracotta achtergrond verdwijnt de standaard lichte
+   rand; een warmbruine rand en een kleine schaduw houden de blokken strak. */
+.mmp-dialog .verkoop-tile, .mmp-dialog .mmp-sectie { border: 1px solid #b27a62; box-shadow: 0 2px 6px rgba(90, 40, 20, .18); }
+.mmp-dialog .verkoop-tile { border-top: 4px solid var(--brand); }
