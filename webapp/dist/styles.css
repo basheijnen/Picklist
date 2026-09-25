@@ -629,7 +629,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .dialog-header { background: var(--brand); border-bottom: 0; }
 .mmp-dialog .dialog-header h2 { color: white; }
 .mmp-dialog .dialog-header .eyebrow { color: var(--gold); }
-.mmp-dialog .mmp-form, .mmp-dialog .mmp-scroll thead th { background: #faf5ec; }
+/* Vakken binnen de blokken in dezelfde oker als de achtergrond; labels en
+   kolomkoppen donker zodat ze op oker leesbaar blijven. */
+.mmp-dialog .mmp-form, .mmp-dialog .verkoop-table thead th { background: #d4a478; }
+.mmp-dialog .mmp-form label, .mmp-dialog .verkoop-table thead th { color: var(--ink); }
 #mmpMessage:not(:empty) { padding: 8px 14px; border-radius: 10px; background: white; }
 /* Scherpe randen: op de terracotta achtergrond verdwijnt de standaard lichte
    rand; een warmbruine rand en een kleine schaduw houden de blokken strak. */
