@@ -2,7 +2,7 @@ import pytest
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
-from sales import VerkoopOrder, load_verkoop_csv, write_verkoop_csv
+from sales import VerkoopOrder, load_geannuleerd, load_verkoop_csv, write_geannuleerd, write_verkoop_csv
 from webapp_server import add_package, add_verkoop_orders, update_package
 
 
@@ -672,7 +672,7 @@ def test_add_verkoop_orders_appends_and_forces_aantal_to_one(tmp_path):
     verkoop_csv_path = tmp_path / "verkoop_orders.csv"
     write_verkoop_csv([], verkoop_csv_path)
 
-    all_orders, toegevoegd, overgeslagen = add_verkoop_orders(
+    all_orders, toegevoegd, overgeslagen, _verwijderd = add_verkoop_orders(
         {
             "datum": "2026-09-17",
             "rows": [
@@ -681,6 +681,7 @@ def test_add_verkoop_orders_appends_and_forces_aantal_to_one(tmp_path):
             ],
         },
         verkoop_csv_path,
+        tmp_path / "verkoop_geannuleerd.csv",
     )
 
     assert toegevoegd == 2
@@ -696,9 +697,10 @@ def test_add_verkoop_orders_dedupes_against_existing_ordernummers(tmp_path):
     verkoop_csv_path = tmp_path / "verkoop_orders.csv"
     write_verkoop_csv([VerkoopOrder("123", "2026-09-16", "Amazon", "9.1", 1.0)], verkoop_csv_path)
 
-    all_orders, toegevoegd, overgeslagen = add_verkoop_orders(
+    all_orders, toegevoegd, overgeslagen, _verwijderd = add_verkoop_orders(
         {"datum": "2026-09-17", "rows": [{"ordernummer": "123", "kanaal": "Amazon", "pakketnummer": "9.1"}]},
         verkoop_csv_path,
+        tmp_path / "verkoop_geannuleerd.csv",
     )
 
     assert toegevoegd == 0
@@ -719,7 +721,7 @@ def test_add_verkoop_orders_rejects_invalid_payloads(tmp_path, payload):
     write_verkoop_csv([], verkoop_csv_path)
 
     with pytest.raises(ValueError):
-        add_verkoop_orders(payload, verkoop_csv_path)
+        add_verkoop_orders(payload, verkoop_csv_path, tmp_path / "verkoop_geannuleerd.csv")
 
 
 from mmp import load_betalingen, load_instellingen
@@ -806,3 +808,41 @@ def test_server_saves_mmp_sections_via_http_put(tmp_path, monkeypatch):
     assert (tmp_path / "mmp_data.js").exists()
     assert fout[0] == 400 and "datum" in fout[1]["error"].lower()
     assert onbekend[0] == 404
+
+
+def test_add_verkoop_orders_removes_and_remembers_cancelled(tmp_path):
+    verkoop_csv_path = tmp_path / "verkoop_orders.csv"
+    geannuleerd_path = tmp_path / "verkoop_geannuleerd.csv"
+    write_verkoop_csv([
+        VerkoopOrder("1", "2026-09-26", "Maison Privee", "9.1", 1.0),
+        VerkoopOrder("1-pokon", "2026-09-26", "Maison Privee", "Pokon", 1.0),
+    ], verkoop_csv_path)
+
+    all_orders, toegevoegd, _, verwijderd = add_verkoop_orders(
+        {"datum": "2026-09-27", "rows": [], "geannuleerd": ["1"]}, verkoop_csv_path, geannuleerd_path)
+
+    assert all_orders == [] and toegevoegd == 0 and verwijderd == 2
+    assert load_geannuleerd(geannuleerd_path) == {"1"}
+    # later nog eens aangeboden (oude export) -> blijft weg
+    all_orders, toegevoegd, _, _ = add_verkoop_orders(
+        {"datum": "2026-09-28", "rows": [{"ordernummer": "1", "kanaal": "Maison Privee", "pakketnummer": "9.1"}]},
+        verkoop_csv_path, geannuleerd_path)
+    assert all_orders == [] and toegevoegd == 0
+
+
+def test_merge_verkoop_orders_does_not_resurrect_cancelled(tmp_path, monkeypatch):
+    repo, shared = tmp_path / "repo", tmp_path / "shared"
+    repo.mkdir()
+    shared.mkdir()
+    order = VerkoopOrder("1", "2026-09-26", "Maison Privee", "9.1", 1.0)
+    write_verkoop_csv([], repo / "verkoop_orders.csv")
+    write_geannuleerd({"1"}, repo / "verkoop_geannuleerd.csv")
+    write_verkoop_csv([order], shared / "verkoop_orders.csv")
+    monkeypatch.setattr(webapp_server, "CANONICAL_REPO_DIR", repo)
+    monkeypatch.setattr(webapp_server, "SHARED_COPY_DIR", shared)
+
+    webapp_server._merge_verkoop_orders()
+
+    assert load_verkoop_csv(repo / "verkoop_orders.csv") == []
+    assert load_verkoop_csv(shared / "verkoop_orders.csv") == []
+    assert load_geannuleerd(shared / "verkoop_geannuleerd.csv") == {"1"}

@@ -1,4 +1,12 @@
-from sales import VerkoopOrder, load_verkoop_csv, merge_new_orders, write_verkoop_csv
+from sales import (
+    VerkoopOrder,
+    load_geannuleerd,
+    load_verkoop_csv,
+    merge_new_orders,
+    verwijder_geannuleerd,
+    write_geannuleerd,
+    write_verkoop_csv,
+)
 
 
 def test_write_then_load_roundtrips_orders(tmp_path):
@@ -42,3 +50,19 @@ def test_merge_new_orders_with_no_existing_orders_adds_everything():
     assert toegevoegd == 1
     assert overgeslagen == 0
     assert len(all_orders) == 1
+
+
+def test_geannuleerd_round_trip_and_missing(tmp_path):
+    path = tmp_path / "verkoop_geannuleerd.csv"
+    assert load_geannuleerd(path) == set()
+    write_geannuleerd({"2", "1"}, path)
+    assert load_geannuleerd(path) == {"1", "2"}
+
+
+def test_verwijder_geannuleerd_also_drops_pokon_row():
+    orders = [
+        VerkoopOrder("1", "2026-09-26", "Maison Privee", "9.1", 1.0),
+        VerkoopOrder("1-pokon", "2026-09-26", "Maison Privee", "Pokon", 1.0),
+        VerkoopOrder("2", "2026-09-26", "Maison Privee", "9.2", 1.0),
+    ]
+    assert verwijder_geannuleerd(orders, {"1"}) == [orders[2]]

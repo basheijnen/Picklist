@@ -59,3 +59,29 @@ def merge_new_orders(existing, new_orders):
         known.add(order.ordernummer)
         toegevoegd.append(order)
     return existing + toegevoegd, len(toegevoegd), overgeslagen
+
+
+def write_geannuleerd(ordernummers, path):
+    with Path(path).open("w", newline="", encoding="utf-8") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(["ordernummer"])
+        writer.writerows([nr] for nr in sorted(ordernummers))
+
+
+def load_geannuleerd(path):
+    path = Path(path)
+    if not path.exists():
+        return set()
+    with path.open("r", newline="", encoding="utf-8") as csv_file:
+        return {row["ordernummer"] for row in csv.DictReader(csv_file) if row["ordernummer"]}
+
+
+def verwijder_geannuleerd(orders, geannuleerd):
+    """Laat orders weg die geannuleerd zijn, inclusief de losse
+    `<nr>-pokon`-regel die parseVerkoopExport voor een Pokon-variant maakt.
+    """
+    return [
+        order for order in orders
+        if order.ordernummer not in geannuleerd
+        and order.ordernummer.removesuffix("-pokon") not in geannuleerd
+    ]

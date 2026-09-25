@@ -30,7 +30,15 @@ from mmp import (
     write_instellingen,
     write_prijzen,
 )
-from sales import VerkoopOrder, load_verkoop_csv, merge_new_orders, write_verkoop_csv
+from sales import (
+    VerkoopOrder,
+    load_geannuleerd,
+    load_verkoop_csv,
+    merge_new_orders,
+    verwijder_geannuleerd,
+    write_geannuleerd,
+    write_verkoop_csv,
+)
 from tools.build_webapp_data import MMP_PATHS, build_data_js, build_mmp_data_js, build_verkoop_data_js, mmp_data
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -39,6 +47,7 @@ BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = DIST_DIR / "data.js"
 VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
+GEANNULEERD_CSV_PATH = PROJECT_DIR / "verkoop_geannuleerd.csv"
 VERKOOP_DATA_JS_PATH = DIST_DIR / "verkoop_data.js"
 MMP_DATA_JS_PATH = DIST_DIR / "mmp_data.js"
 
@@ -55,6 +64,7 @@ SHARED_DATA_FILES = [
     "bom.csv",
     "package_info.csv",
     "verkoop_orders.csv",
+    "verkoop_geannuleerd.csv",
     "mmp_prijzen.csv",
     "mmp_betalingen.csv",
     "mmp_correcties.csv",
@@ -277,12 +287,18 @@ def update_package(pakketnummer, payload, bom_csv_path=BOM_CSV_PATH, package_inf
     return new_package, new_entries
 
 
-def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH):
+def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH, geannuleerd_csv_path=GEANNULEERD_CSV_PATH):
+    """Voegt de orderregels uit een upload toe en verwerkt de meegestuurde
+    geannuleerde ordernummers: die (en hun `-pokon`-regel) verdwijnen uit
+    verkoop_orders.csv en worden onthouden in verkoop_geannuleerd.csv, zodat
+    een latere (oudere) export ze niet opnieuw toevoegt.
+    """
     if not isinstance(payload, dict):
         raise ValueError("Ongeldige aanvraag.")
     datum = str(payload.get("datum", "")).strip()
     rows = payload.get("rows") or []
-    if not datum or not rows:
+    nieuw_geannuleerd = {str(nr).strip() for nr in (payload.get("geannuleerd") or []) if str(nr).strip()}
+    if not datum or not (rows or nieuw_geannuleerd):
         raise ValueError("Kies een datum en upload minstens één orderregel.")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", datum):
         raise ValueError("Datum moet het formaat JJJJ-MM-DD hebben.")
@@ -298,10 +314,15 @@ def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH):
             raise ValueError("Elke orderregel moet een ordernummer, kanaal en pakketnummer hebben.")
         new_orders.append(VerkoopOrder(ordernummer, datum, kanaal, pakketnummer, 1.0))
 
+    geannuleerd = load_geannuleerd(geannuleerd_csv_path) | nieuw_geannuleerd
     existing = load_verkoop_csv(verkoop_csv_path)
-    all_orders, toegevoegd, overgeslagen = merge_new_orders(existing, new_orders)
+    behouden = verwijder_geannuleerd(existing, geannuleerd)
+    verwijderd = len(existing) - len(behouden)
+    all_orders, toegevoegd, overgeslagen = merge_new_orders(behouden, verwijder_geannuleerd(new_orders, geannuleerd))
     write_verkoop_csv(all_orders, verkoop_csv_path)
-    return all_orders, toegevoegd, overgeslagen
+    if nieuw_geannuleerd:
+        write_geannuleerd(geannuleerd, geannuleerd_csv_path)
+    return all_orders, toegevoegd, overgeslagen, verwijderd
 
 
 _MMP_SECTIES = {
@@ -341,26 +362,36 @@ def _merge_verkoop_orders():
     checkout, or one from a colleague running the app off K: — so unlike
     bom.csv/package_info.csv it can't just be pulled one-way. Both sides
     get unioned by ordernummer and each gets the merged result written
-    back, so neither side's uploads are ever lost.
+    back, so neither side's uploads are ever lost. Cancellations
+    (verkoop_geannuleerd.csv) get unioned the same way and applied to the
+    merged orders, so an order cancelled on one side can't come back from
+    the other side's older copy.
     """
     c_path = CANONICAL_REPO_DIR / "verkoop_orders.csv"
     k_path = SHARED_COPY_DIR / "verkoop_orders.csv"
+    c_geannuleerd_path = CANONICAL_REPO_DIR / "verkoop_geannuleerd.csv"
+    k_geannuleerd_path = SHARED_COPY_DIR / "verkoop_geannuleerd.csv"
     c_orders = load_verkoop_csv(c_path)
     k_orders = load_verkoop_csv(k_path)
+    geannuleerd = load_geannuleerd(c_geannuleerd_path) | load_geannuleerd(k_geannuleerd_path)
     merged, _, _ = merge_new_orders(c_orders, k_orders)
+    merged = verwijder_geannuleerd(merged, geannuleerd)
     write_verkoop_csv(merged, c_path)
     write_verkoop_csv(merged, k_path)
+    write_geannuleerd(geannuleerd, c_geannuleerd_path)
+    write_geannuleerd(geannuleerd, k_geannuleerd_path)
 
 
 def _pull_shared_data():
     """Copy bom.csv/package_info.csv FROM the shared K: copy INTO the git
     checkout — the only direction that can't lose a colleague's in-app edit,
     since they run the app from K:, not from this checkout. verkoop_orders.csv
-    is handled separately (see _merge_verkoop_orders) since, unlike those two
-    files, it can grow independently on either side.
+    and verkoop_geannuleerd.csv are handled separately (see
+    _merge_verkoop_orders) since, unlike the other files, they can grow
+    independently on either side.
     """
     for filename in SHARED_DATA_FILES:
-        if filename == "verkoop_orders.csv":
+        if filename in ("verkoop_orders.csv", "verkoop_geannuleerd.csv"):
             continue
         source = SHARED_COPY_DIR / filename
         if source.exists():
@@ -558,11 +589,14 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             # read the same "before" state and each append their own copy
             # of the uploaded rows.
             with _write_lock:
-                all_orders, toegevoegd, overgeslagen = add_verkoop_orders(payload, VERKOOP_CSV_PATH)
+                all_orders, toegevoegd, overgeslagen, verwijderd = add_verkoop_orders(
+                    payload, VERKOOP_CSV_PATH, GEANNULEERD_CSV_PATH
+                )
                 build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
             self._send_json(200, {
                 "toegevoegd": toegevoegd,
                 "overgeslagen": overgeslagen,
+                "verwijderd": verwijderd,
                 "orders": [asdict(order) for order in all_orders],
             })
         except ValueError as error:
