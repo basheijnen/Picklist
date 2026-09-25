@@ -70,6 +70,29 @@ picklist meteen opnieuw berekend, en de gegevens worden direct weggeschreven naa
 `bom.csv`/`package_info.csv` — dus zichtbaar voor iedereen die de app opent, en
 voor `run_picklist.bat`.
 
+### Ma Maison Privée — vooruitbetaling
+
+Ma Maison Privée betaalt vooruit. Met de knop **Maison Privée** bovenaan open je
+het overzicht: ontvangen, besteld, saldo nu en welke orders wachten op betaling.
+Vul daar elke ontvangen betaling in (een terugbetaling vul je negatief in).
+
+Laad je een export in, dan worden de Maison Privée-orders van oud naar nieuw
+tegen het saldo gelegd. Orders die niet meer gedekt zijn gaan automatisch naar de
+lijst **Maison Privée – wacht op betaling** en tellen niet mee op de picklijst.
+Is er een nieuwe betaling binnen, vink die lijst dan aan: de orders die nu wel
+gedekt zijn komen in een nieuwe, actieve lijst "Maison Privée vrijgegeven …",
+de rest blijft wachten. Een order waarvan het pakket nog geen prijs heeft wacht
+altijd, tot je de prijs invult.
+
+Op dezelfde pagina beheer je de prijslijst, correcties (orders die niet mogen
+meetellen, bijv. een retour), de startdatum en de Pokon-toeslag, en maak je een
+factuuroverzicht per periode (met afdrukknop). De gegevens staan in
+`mmp_prijzen.csv`, `mmp_betalingen.csv`, `mmp_correcties.csv` en
+`mmp_instellingen.csv` en gaan met de **Back-up**-knop mee naar K:.
+
+Geannuleerde orders (Status "Cancelled" in de export) tellen nergens meer mee:
+niet op de picklijst, niet in Verkopen en niet in het saldo.
+
 ## Alternatieve bron: los CSV-bestand
 
 In plaats van automatisch `Bron.xlsm` van vandaag te zoeken, kun je ook een los
@@ -100,5 +123,6 @@ Voeg een regel toe aan `bom.csv`:
 
 ## Ontwikkelaars
 
-Tests draaien met `python -m pytest`. Zie
+Tests draaien met `python -m pytest`; de saldoberekening van Ma Maison Privée
+(`webapp/dist/mmp_saldo.js`) wordt getest met `node --test tests/*.test.js`. Zie
 `docs/superpowers/specs/2026-09-15-picklist-automation-design.md` voor het ontwerp.
