@@ -2082,7 +2082,7 @@ function renderMmpDialog() {
   const wachtend = saldo.orders.filter((o) => o.status === "wacht");
   document.querySelector("#mmpWachtend").innerHTML = wachtend.length
     ? `<table class="verkoop-table"><thead><tr><th>Datum</th><th>Ordernummer</th><th>Pakket</th><th class="verkoop-col-aantal">Bedrag</th><th>Reden</th></tr></thead><tbody>${
-      wachtend.map((o) => `<tr><td>${escapeHtml(o.datum)}</td><td>${escapeHtml(o.ordernummer)}</td><td>${escapeHtml(o.pakketnummer)}${o.pokon ? " + Pokon" : ""}</td><td class="verkoop-col-aantal">${o.bedrag === null ? "—" : formatEuro(o.bedrag)}</td><td>${escapeHtml(o.reden)}</td></tr>`).join("")
+      wachtend.map((o) => `<tr><td>${escapeHtml(o.datum)}</td><td>${escapeHtml(o.ordernummer)}</td><td>${escapeHtml(o.pakketnummer)} – ${escapeHtml(verkoopPakketnaam(o.pakketnummer))}${o.pokon ? " + Pokon" : ""}</td><td class="verkoop-col-aantal">${o.bedrag === null ? "—" : formatEuro(o.bedrag)}</td><td>${escapeHtml(o.reden)}</td></tr>`).join("")
     }</tbody></table>`
     : "<p class=\"mmp-uitleg\">Er wacht niets — alle orders zijn gedekt.</p>";
 
@@ -2092,20 +2092,22 @@ function renderMmpDialog() {
     .join("") || `<tr><td colspan="4">Nog geen betalingen.</td></tr>`;
 
   const zoek = mmpPrijsZoekterm.trim().toLowerCase();
-  const ontbrekend = saldo.ontbrekendePrijzen.map((p) => ({ pakketnummer: p, artikel: "", ean: "", prijs: null }));
+  // Namen komen uit de eigen pakketdatabase (zoals overal in de app), niet
+  // uit de Franse artikelnamen van de oude Excel-prijslijst.
+  const ontbrekend = saldo.ontbrekendePrijzen.map((p) => ({ pakketnummer: p, ean: "", prijs: null }));
   // Per pakket de nieuwste prijs bovenaan; eerdere prijzen (die nog gelden
   // voor oudere orders) eronder, lichter weergegeven.
   const prijsRijen = [...ontbrekend, ...[...data.prijzen]
     .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true })
       || (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))]
-    .filter((p) => !zoek || p.pakketnummer.toLowerCase().includes(zoek) || p.artikel.toLowerCase().includes(zoek));
+    .filter((p) => !zoek || p.pakketnummer.toLowerCase().includes(zoek) || verkoopPakketnaam(p.pakketnummer).toLowerCase().includes(zoek));
   document.querySelector("#mmpPrijzenBody").innerHTML = prijsRijen.map((p, index) => {
     if (p.prijs === null) {
       return `<tr class="mmp-rij-geen-prijs"><td>${escapeHtml(p.pakketnummer)}</td><td colspan="3">besteld, maar nog geen prijs</td><td class="verkoop-col-aantal">—</td><td></td></tr>`;
     }
     const eerder = index > 0 && prijsRijen[index - 1].pakketnummer === p.pakketnummer && prijsRijen[index - 1].prijs !== null;
     const sleutel = `${p.pakketnummer}@${p.geldig_vanaf || ""}`;
-    return `<tr${eerder ? ' class="mmp-rij-oud"' : ""}><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(p.artikel)}</td><td>${escapeHtml(p.ean)}</td><td>${p.geldig_vanaf ? escapeHtml(p.geldig_vanaf) : "start"}</td><td class="verkoop-col-aantal">${formatEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-sleutel="${escapeHtml(sleutel)}" aria-label="Prijs verwijderen">×</button></td></tr>`;
+    return `<tr${eerder ? ' class="mmp-rij-oud"' : ""}><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(verkoopPakketnaam(p.pakketnummer))}</td><td>${escapeHtml(p.ean)}</td><td>${p.geldig_vanaf ? escapeHtml(p.geldig_vanaf) : "start"}</td><td class="verkoop-col-aantal">${formatEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-sleutel="${escapeHtml(sleutel)}" aria-label="Prijs verwijderen">×</button></td></tr>`;
   }).join("");
 
   document.querySelector("#mmpCorrectiesBody").innerHTML = data.correcties
@@ -2123,10 +2125,9 @@ function mmpFactuurTabelHtml(saldo = mmpBereken()) {
   const van = document.querySelector("#mmpFactuurVan").value;
   const tot = document.querySelector("#mmpFactuurTot").value;
   if (!van || !tot) return "";
-  const pakketnaam = new Map(mmpData().prijzen.map((p) => [p.pakketnummer, p.artikel]));
   const factuur = mmpFactuurOverzicht(saldo, van, tot, Number(mmpData().instellingen.pokon_toeslag));
-  return `<table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Artikel</th><th class="verkoop-col-aantal">Aantal</th><th class="verkoop-col-aantal">Prijs</th><th class="verkoop-col-aantal">Totaal</th></tr></thead><tbody>${
-    factuur.regels.map((r) => `<tr><td>${escapeHtml(r.pakketnummer)}</td><td>${escapeHtml(pakketnaam.get(r.pakketnummer) || "")}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${formatEuro(r.prijs)}</td><td class="verkoop-col-aantal">${formatEuro(r.totaal)}</td></tr>`).join("")
+  return `<table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th class="verkoop-col-aantal">Aantal</th><th class="verkoop-col-aantal">Prijs</th><th class="verkoop-col-aantal">Totaal</th></tr></thead><tbody>${
+    factuur.regels.map((r) => `<tr><td>${escapeHtml(r.pakketnummer)}</td><td>${escapeHtml(r.pakketnummer === "Pokon-toeslag" ? "" : verkoopPakketnaam(r.pakketnummer))}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${formatEuro(r.prijs)}</td><td class="verkoop-col-aantal">${formatEuro(r.totaal)}</td></tr>`).join("")
   }</tbody><tfoot><tr><td colspan="2">Totaal (${displayNumber(factuur.aantal)} pakketten)</td><td></td><td></td><td class="verkoop-col-aantal">${formatEuro(factuur.totaal)}</td></tr></tfoot></table>${
     factuur.zonderPrijs ? `<div class="mmp-waarschuwing">${factuur.zonderPrijs} order(s) in deze periode hebben nog geen prijs en staan niet in dit overzicht.</div>` : ""}`;
 }
@@ -3685,7 +3686,7 @@ document.querySelector("#mmpPrijsForm").addEventListener("submit", async (event)
   event.preventDefault();
   const form = event.target;
   const pakketnummer = form.pakketnummer.value.trim();
-  const nieuw = { pakketnummer, artikel: form.artikel.value, ean: form.ean.value, prijs: form.prijs.value, geldig_vanaf: form.geldig_vanaf.value };
+  const nieuw = { pakketnummer, ean: form.ean.value, prijs: form.prijs.value, geldig_vanaf: form.geldig_vanaf.value };
   if (await mmpBewaar("prijzen", { toevoegen: [nieuw] })) {
     form.reset();
     form.geldig_vanaf.value = todayIso();
@@ -3726,7 +3727,6 @@ document.querySelector("#mmpPrijzenBody").addEventListener("click", (event) => {
     .sort((a, b) => (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))[0];
   const form = document.querySelector("#mmpPrijsForm");
   form.pakketnummer.value = pakketnummer;
-  form.artikel.value = prijs ? prijs.artikel : "";
   form.ean.value = prijs ? prijs.ean : "";
   form.prijs.value = prijs ? String(prijs.prijs).replace(".", ",") : "";
   form.geldig_vanaf.value = todayIso();
