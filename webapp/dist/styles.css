@@ -623,7 +623,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 @media (max-width: 900px) { #mmpPrijsForm { grid-template-columns: 1fr 1fr; } }
 .mmp-dialog .verkoop-table th, .mmp-dialog .verkoop-table td { padding: 6px 10px; }
 .mmp-dialog .verkoop-dialog-body { gap: 12px; }
-/* Zelfde lichtgroene achtergrond als de hoofdpagina; de witte blokken en de
-   kopbalk steken daar tegen af. */
-.mmp-dialog { background: radial-gradient(circle at 90% 0, #e0eee6 0, transparent 35%), var(--canvas); }
+/* Warme, zandkleurige achtergrond; de witte blokken en de kopbalk steken daar
+   tegen af. */
+.mmp-dialog { background: radial-gradient(circle at 90% 0, #f6e3c8 0, transparent 38%), #f8f2e8; }
 .mmp-dialog .dialog-header { background: white; }
+.mmp-dialog .mmp-form, .mmp-dialog .mmp-scroll thead th { background: #faf5ec; }
