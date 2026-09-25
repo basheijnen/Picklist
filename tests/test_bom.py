@@ -56,3 +56,19 @@ def test_load_bom_csv_defaults_groep_and_volgorde_when_values_empty(tmp_path):
     loaded = load_bom_csv(csv_path)
 
     assert loaded == [BomEntry("1.3", "KOELING", "Parade", "CL Pink", 1.0, "", 0)]
+
+
+def test_load_bom_csv_strips_whitespace_from_names(tmp_path):
+    # A trailing space in an item name made "op stam " and "op stam" count as
+    # two separate lines on the picklist instead of one total.
+    path = tmp_path / "bom.csv"
+    path.write_text(
+        "pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde\n"
+        "22.1,KAS,Eucalyptus op stam ,,1.0,Kas diversen: ,293\n",
+        encoding="utf-8",
+    )
+
+    [entry] = load_bom_csv(path)
+
+    assert entry.item == "Eucalyptus op stam"
+    assert entry.groep == "Kas diversen:"
