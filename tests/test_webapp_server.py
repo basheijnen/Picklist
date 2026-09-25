@@ -720,3 +720,89 @@ def test_add_verkoop_orders_rejects_invalid_payloads(tmp_path, payload):
 
     with pytest.raises(ValueError):
         add_verkoop_orders(payload, verkoop_csv_path)
+
+
+from mmp import load_betalingen, load_instellingen
+from webapp_server import save_mmp_sectie
+
+
+def _mmp_paths(tmp_path):
+    return {naam: tmp_path / f"mmp_{naam}.csv" for naam in ("prijzen", "betalingen", "correcties", "instellingen")}
+
+
+def test_save_mmp_sectie_replaces_betalingen(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    save_mmp_sectie("betalingen", {"rows": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": "100"}]}, paths)
+    save_mmp_sectie("betalingen", {"rows": [{"id": "b", "datum": "2026-09-27", "omschrijving": "y", "bedrag": "50"}]}, paths)
+    assert [b.id for b in load_betalingen(paths["betalingen"])] == ["b"]
+
+
+def test_save_mmp_sectie_instellingen(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    save_mmp_sectie("instellingen", {"instellingen": {"startdatum": "2026-10-01", "pokon_toeslag": "6.01"}}, paths)
+    assert load_instellingen(paths["instellingen"])["startdatum"] == "2026-10-01"
+
+
+def test_save_mmp_sectie_invalid_writes_nothing(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    with pytest.raises(ValueError):
+        save_mmp_sectie("betalingen", {"rows": [{"datum": "fout", "bedrag": 1}]}, paths)
+    assert not paths["betalingen"].exists()
+
+
+def test_save_mmp_sectie_unknown_section(tmp_path):
+    with pytest.raises(KeyError):
+        save_mmp_sectie("onzin", {"rows": []}, _mmp_paths(tmp_path))
+
+
+def test_push_code_seeds_missing_shared_data_but_never_overwrites(tmp_path, monkeypatch):
+    repo = tmp_path / "repo"
+    shared = tmp_path / "shared"
+    repo.mkdir()
+    shared.mkdir()
+    (repo / "mmp_betalingen.csv").write_text("nieuw", encoding="utf-8")
+    (repo / "mmp_prijzen.csv").write_text("repo-versie", encoding="utf-8")
+    (shared / "mmp_prijzen.csv").write_text("k-versie", encoding="utf-8")
+    monkeypatch.setattr(webapp_server, "CANONICAL_REPO_DIR", repo)
+    monkeypatch.setattr(webapp_server, "SHARED_COPY_DIR", shared)
+
+    webapp_server._push_code_to_shared_copy()
+
+    assert (shared / "mmp_betalingen.csv").read_text(encoding="utf-8") == "nieuw"
+    assert (shared / "mmp_prijzen.csv").read_text(encoding="utf-8") == "k-versie"
+
+
+def _mmp_put(port, sectie, body):
+    import urllib.error as _urllib_error
+    request = _urllib_request.Request(
+        f"http://127.0.0.1:{port}/api/mmp/{sectie}",
+        data=_json.dumps(body).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="PUT",
+    )
+    try:
+        with _urllib_request.urlopen(request, timeout=5) as response:
+            return response.status, _json.loads(response.read())
+    except _urllib_error.HTTPError as error:
+        return error.code, _json.loads(error.read())
+
+
+def test_server_saves_mmp_sections_via_http_put(tmp_path, monkeypatch):
+    monkeypatch.setattr(webapp_server, "MMP_PATHS", _mmp_paths(tmp_path))
+    monkeypatch.setattr(webapp_server, "MMP_DATA_JS_PATH", tmp_path / "mmp_data.js")
+    server = _ThreadingHTTPServer(("127.0.0.1", 0), webapp_server.PicklistRequestHandler)
+    port = server.server_address[1]
+    thread = _threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        ok = _mmp_put(port, "betalingen", {"rows": [{"id": "a", "datum": "2026-09-26", "omschrijving": "x", "bedrag": 100}]})
+        fout = _mmp_put(port, "betalingen", {"rows": [{"datum": "x", "bedrag": 1}]})
+        onbekend = _mmp_put(port, "onzin", {"rows": []})
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    assert ok[0] == 200 and ok[1]["betalingen"][0]["bedrag"] == 100.0
+    assert (tmp_path / "mmp_data.js").exists()
+    assert fout[0] == 400 and "datum" in fout[1]["error"].lower()
+    assert onbekend[0] == 404

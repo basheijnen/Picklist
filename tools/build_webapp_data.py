@@ -2,12 +2,14 @@
 
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 
 from bom import load_bom_csv
+from mmp import load_betalingen, load_correcties, load_instellingen, load_prijzen
 from packages import load_package_info_csv
 from sales import load_verkoop_csv
 
@@ -16,6 +18,8 @@ PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "data.js"
 VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
 VERKOOP_DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "verkoop_data.js"
+MMP_DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "mmp_data.js"
+MMP_PATHS = {naam: PROJECT_DIR / f"mmp_{naam}.csv" for naam in ("prijzen", "betalingen", "correcties", "instellingen")}
 
 
 def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH,
@@ -76,11 +80,33 @@ def build_verkoop_data_js(verkoop_csv_path=VERKOOP_CSV_PATH, output_path=VERKOOP
     return len(orders)
 
 
+def mmp_data(paths=MMP_PATHS):
+    return {
+        "prijzen": [asdict(p) for p in load_prijzen(paths["prijzen"])],
+        "betalingen": [asdict(b) for b in load_betalingen(paths["betalingen"])],
+        "correcties": [asdict(c) for c in load_correcties(paths["correcties"])],
+        "instellingen": load_instellingen(paths["instellingen"]),
+    }
+
+
+def build_mmp_data_js(paths=MMP_PATHS, output_path=MMP_DATA_JS_PATH):
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        "window.PICKLIST_MMP = "
+        + json.dumps(mmp_data(paths), ensure_ascii=False, separators=(",", ":"))
+        + ";\n",
+        encoding="utf-8",
+    )
+
+
 def main():
     bom_count, package_count = build_data_js()
     verkoop_count = build_verkoop_data_js()
+    build_mmp_data_js()
     print(f"{bom_count} BOM-regels en {package_count} pakketten geschreven naar {DATA_JS_PATH}")
     print(f"{verkoop_count} verkooporders geschreven naar {VERKOOP_DATA_JS_PATH}")
+    print(f"Maison Privée-gegevens geschreven naar {MMP_DATA_JS_PATH}")
 
 
 if __name__ == "__main__":

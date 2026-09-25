@@ -20,8 +20,18 @@ from pathlib import Path
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
+from mmp import (
+    parse_betalingen,
+    parse_correcties,
+    parse_instellingen,
+    parse_prijzen,
+    write_betalingen,
+    write_correcties,
+    write_instellingen,
+    write_prijzen,
+)
 from sales import VerkoopOrder, load_verkoop_csv, merge_new_orders, write_verkoop_csv
-from tools.build_webapp_data import build_data_js, build_verkoop_data_js
+from tools.build_webapp_data import MMP_PATHS, build_data_js, build_mmp_data_js, build_verkoop_data_js, mmp_data
 
 PROJECT_DIR = Path(__file__).resolve().parent
 DIST_DIR = PROJECT_DIR / "webapp" / "dist"
@@ -30,6 +40,7 @@ PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
 DATA_JS_PATH = DIST_DIR / "data.js"
 VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
 VERKOOP_DATA_JS_PATH = DIST_DIR / "verkoop_data.js"
+MMP_DATA_JS_PATH = DIST_DIR / "mmp_data.js"
 
 # The "Back-up" button in the app. Bas and a colleague both run the app from
 # the shared K: copy, so bom.csv/package_info.csv there can be newer than
@@ -40,7 +51,15 @@ VERKOOP_DATA_JS_PATH = DIST_DIR / "verkoop_data.js"
 # colleague launching from there also gets the latest app code.
 CANONICAL_REPO_DIR = Path(r"C:\picklist")
 SHARED_COPY_DIR = Path(r"K:\Bas Heijnen\PICKLIST CLAUDE")
-SHARED_DATA_FILES = ["bom.csv", "package_info.csv", "verkoop_orders.csv"]
+SHARED_DATA_FILES = [
+    "bom.csv",
+    "package_info.csv",
+    "verkoop_orders.csv",
+    "mmp_prijzen.csv",
+    "mmp_betalingen.csv",
+    "mmp_correcties.csv",
+    "mmp_instellingen.csv",
+]
 BACKUP_EXCLUDE_NAMES = {".git", ".claude", "__pycache__", ".pytest_cache"}
 
 NEW_ITEMS_GROEP = "Nieuwe artikelen:"
@@ -285,6 +304,29 @@ def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH):
     return all_orders, toegevoegd, overgeslagen
 
 
+_MMP_SECTIES = {
+    "prijzen": (parse_prijzen, write_prijzen),
+    "betalingen": (parse_betalingen, write_betalingen),
+    "correcties": (parse_correcties, write_correcties),
+}
+
+
+def save_mmp_sectie(sectie, payload, paths=MMP_PATHS):
+    """Vervangt één sectie (prijzen/betalingen/correcties/instellingen) van
+    de Maison Privée-gegevens in zijn geheel. Valideert eerst alles, zodat
+    een fout nooit een half weggeschreven bestand oplevert.
+    """
+    if sectie != "instellingen" and sectie not in _MMP_SECTIES:
+        raise KeyError(sectie)
+    if not isinstance(payload, dict):
+        raise ValueError("Ongeldige aanvraag.")
+    if sectie == "instellingen":
+        write_instellingen(parse_instellingen(payload.get("instellingen")), paths["instellingen"])
+        return
+    parse, write = _MMP_SECTIES[sectie]
+    write(parse(payload.get("rows")), paths[sectie])
+
+
 def _run_git(args):
     # Always targets the canonical checkout, never `PROJECT_DIR` — the
     # server (and this same button) can just as well be running from the
@@ -328,6 +370,13 @@ def _pull_shared_data():
         CANONICAL_REPO_DIR / "package_info.csv",
         CANONICAL_REPO_DIR / "webapp" / "dist" / "data.js",
     )
+    try:
+        build_mmp_data_js(
+            {naam: CANONICAL_REPO_DIR / f"mmp_{naam}.csv" for naam in MMP_PATHS},
+            CANONICAL_REPO_DIR / "webapp" / "dist" / "mmp_data.js",
+        )
+    except Exception as error:
+        print(f"WAARSCHUWING: kan Maison Privée-gegevens niet inlezen: {error}")
     _merge_verkoop_orders()
     # A sales-data problem should never block the Back-up flow's core job of
     # committing/pushing/pulling code, so this gets its own try/except
@@ -354,9 +403,16 @@ def _push_code_to_shared_copy():
     """
     SHARED_COPY_DIR.mkdir(parents=True, exist_ok=True)
     for item in CANONICAL_REPO_DIR.iterdir():
-        if item.name in BACKUP_EXCLUDE_NAMES or item.name in SHARED_DATA_FILES:
+        if item.name in BACKUP_EXCLUDE_NAMES:
             continue
         destination = SHARED_COPY_DIR / item.name
+        if item.name in SHARED_DATA_FILES:
+            # Nieuwe gedeelde bestanden (bijv. mmp_*.csv bij de eerste
+            # uitrol) moeten één keer op K: komen, maar een bestaande K:-
+            # versie wint altijd — die kan nieuwere invoer van een collega bevatten.
+            if not destination.exists():
+                shutil.copy2(item, destination)
+            continue
         if item.is_dir():
             shutil.copytree(item, destination, dirs_exist_ok=True)
         else:
@@ -447,6 +503,10 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             self._send_json(500, {"ok": False, "error": str(error)})
 
     def do_PUT(self):
+        mmp_prefix = "/api/mmp/"
+        if self.path.startswith(mmp_prefix):
+            self._handle_mmp_write(urllib.parse.unquote(self.path[len(mmp_prefix):]))
+            return
         prefix = "/api/pakketten/"
         if not self.path.startswith(prefix) or len(self.path) <= len(prefix):
             self._send_json(404, {"error": "Onbekend endpoint."})
@@ -510,6 +570,26 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         except Exception as error:
             self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
 
+    def _handle_mmp_write(self, sectie):
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            payload = json.loads(self.rfile.read(length) or b"{}")
+        except (TypeError, ValueError):
+            self._send_json(400, {"error": "Ongeldige aanvraag: kan de gegevens niet lezen."})
+            return
+        try:
+            with _write_lock:
+                save_mmp_sectie(sectie, payload, MMP_PATHS)
+                build_mmp_data_js(MMP_PATHS, MMP_DATA_JS_PATH)
+                response_body = mmp_data(MMP_PATHS)
+            self._send_json(200, response_body)
+        except KeyError:
+            self._send_json(404, {"error": "Onbekend endpoint."})
+        except ValueError as error:
+            self._send_json(400, {"error": str(error)})
+        except Exception as error:
+            self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
+
     def _send_json(self, status, payload):
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
@@ -532,6 +612,10 @@ def main(port=8765, open_browser=True):
         build_verkoop_data_js(VERKOOP_CSV_PATH, VERKOOP_DATA_JS_PATH)
     except Exception as error:
         print(f"WAARSCHUWING: kan verkoop_orders.csv niet inlezen: {error}")
+    try:
+        build_mmp_data_js(MMP_PATHS, MMP_DATA_JS_PATH)
+    except Exception as error:
+        print(f"WAARSCHUWING: kan Maison Privée-gegevens niet inlezen: {error}")
     try:
         server = ThreadingHTTPServer(("127.0.0.1", port), PicklistRequestHandler)
     except OSError as error:
