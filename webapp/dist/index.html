@@ -313,10 +313,12 @@
           <label>Artikel <input name="artikel" type="text"></label>
           <label>EAN <input name="ean" type="text"></label>
           <label>Prijs (€) <input name="prijs" type="text" inputmode="decimal" required></label>
+          <label>Geldig vanaf <input name="geldig_vanaf" type="date" required></label>
           <button class="button" type="submit">Opslaan</button>
         </form>
+        <p class="mmp-uitleg">Een nieuwe prijs geldt voor orders vanaf de ingangsdatum; oudere orders houden hun oude prijs. Klik op een regel om de prijs aan te passen.</p>
         <input id="mmpPrijsZoek" type="search" placeholder="Zoek pakketnummer of artikel…">
-        <table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Artikel</th><th>EAN</th><th class="verkoop-col-aantal">Prijs</th><th></th></tr></thead>
+        <table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Artikel</th><th>EAN</th><th>Geldig vanaf</th><th class="verkoop-col-aantal">Prijs</th><th></th></tr></thead>
           <tbody id="mmpPrijzenBody"></tbody></table>
       </section>
 

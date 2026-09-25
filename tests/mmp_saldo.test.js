@@ -118,3 +118,41 @@ test("geannuleerde order (en zijn pokon-regel) telt niet mee", () => {
   ]], new Set(["1", "2"]));
   assert.deepEqual(orders, []);
 });
+
+test("prijs geldt vanaf ingangsdatum; oudere orders houden de oude prijs", () => {
+  const r = berekenMaisonPriveeSaldo({
+    orders: [order("1", "2026-09-30", "9.1"), order("2", "2026-10-01", "9.1"), order("3", "2026-10-05", "9.1")],
+    prijzen: [
+      { pakketnummer: "9.1", prijs: 10, geldig_vanaf: "" },
+      { pakketnummer: "9.1", prijs: 12, geldig_vanaf: "2026-10-01" },
+    ],
+    betalingen: [{ id: "a", datum: "2026-09-26", bedrag: 100 }], correcties: [], instellingen,
+  });
+  assert.deepEqual(r.orders.map((o) => o.bedrag), [10, 12, 12]);
+  assert.equal(r.besteld, 34);
+});
+
+test("prijs met alleen een latere ingangsdatum: eerdere order heeft geen prijs", () => {
+  const r = berekenMaisonPriveeSaldo({
+    orders: [order("1", "2026-09-30", "9.9")],
+    prijzen: [{ pakketnummer: "9.9", prijs: 5, geldig_vanaf: "2026-10-01" }],
+    betalingen: [{ id: "a", datum: "2026-09-26", bedrag: 100 }], correcties: [], instellingen,
+  });
+  assert.equal(r.orders[0].bedrag, null);
+  assert.equal(r.orders[0].reden, "prijs ontbreekt voor pakket 9.9");
+});
+
+test("factuuroverzicht splitst per prijs als de prijs in de periode verandert", () => {
+  const orders = [order("1", "2026-09-30", "9.1"), order("2", "2026-10-01", "9.1"), order("3", "2026-10-02", "9.1")];
+  const saldo = berekenMaisonPriveeSaldo({
+    orders,
+    prijzen: [{ pakketnummer: "9.1", prijs: 10, geldig_vanaf: "" }, { pakketnummer: "9.1", prijs: 12, geldig_vanaf: "2026-10-01" }],
+    betalingen: [], correcties: [], instellingen,
+  });
+  const f = mmpFactuurOverzicht(saldo, "2026-09-26", "2026-10-31", 6.01);
+  assert.deepEqual(f.regels, [
+    { pakketnummer: "9.1", aantal: 1, prijs: 10, totaal: 10 },
+    { pakketnummer: "9.1", aantal: 2, prijs: 12, totaal: 24 },
+  ]);
+  assert.equal(f.totaal, 34);
+});

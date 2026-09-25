@@ -2093,12 +2093,20 @@ function renderMmpDialog() {
 
   const zoek = mmpPrijsZoekterm.trim().toLowerCase();
   const ontbrekend = saldo.ontbrekendePrijzen.map((p) => ({ pakketnummer: p, artikel: "", ean: "", prijs: null }));
+  // Per pakket de nieuwste prijs bovenaan; eerdere prijzen (die nog gelden
+  // voor oudere orders) eronder, lichter weergegeven.
   const prijsRijen = [...ontbrekend, ...[...data.prijzen]
-    .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true }))]
+    .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true })
+      || (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))]
     .filter((p) => !zoek || p.pakketnummer.toLowerCase().includes(zoek) || p.artikel.toLowerCase().includes(zoek));
-  document.querySelector("#mmpPrijzenBody").innerHTML = prijsRijen.map((p) => p.prijs === null
-    ? `<tr class="mmp-rij-geen-prijs"><td>${escapeHtml(p.pakketnummer)}</td><td colspan="2">besteld, maar nog geen prijs</td><td class="verkoop-col-aantal">—</td><td></td></tr>`
-    : `<tr><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(p.artikel)}</td><td>${escapeHtml(p.ean)}</td><td class="verkoop-col-aantal">${formatEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-pakket="${escapeHtml(p.pakketnummer)}" aria-label="Prijs verwijderen">×</button></td></tr>`).join("");
+  document.querySelector("#mmpPrijzenBody").innerHTML = prijsRijen.map((p, index) => {
+    if (p.prijs === null) {
+      return `<tr class="mmp-rij-geen-prijs"><td>${escapeHtml(p.pakketnummer)}</td><td colspan="3">besteld, maar nog geen prijs</td><td class="verkoop-col-aantal">—</td><td></td></tr>`;
+    }
+    const eerder = index > 0 && prijsRijen[index - 1].pakketnummer === p.pakketnummer && prijsRijen[index - 1].prijs !== null;
+    const sleutel = `${p.pakketnummer}@${p.geldig_vanaf || ""}`;
+    return `<tr${eerder ? ' class="mmp-rij-oud"' : ""}><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(p.artikel)}</td><td>${escapeHtml(p.ean)}</td><td>${p.geldig_vanaf ? escapeHtml(p.geldig_vanaf) : "start"}</td><td class="verkoop-col-aantal">${formatEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-sleutel="${escapeHtml(sleutel)}" aria-label="Prijs verwijderen">×</button></td></tr>`;
+  }).join("");
 
   document.querySelector("#mmpCorrectiesBody").innerHTML = data.correcties
     .map((c) => `<tr><td>${escapeHtml(c.ordernummer)}</td><td>${escapeHtml(c.reden)}</td><td><button type="button" class="mmp-tekst-knop" data-correctie="${escapeHtml(c.ordernummer)}" aria-label="Correctie verwijderen">×</button></td></tr>`)
@@ -3651,6 +3659,7 @@ document.querySelector("#closeVerkoopDialog").addEventListener("click", () => ve
 document.querySelector("#openMmpButton").addEventListener("click", () => {
   const vandaag = todayIso();
   document.querySelector("#mmpBetalingForm").datum.value = vandaag;
+  document.querySelector("#mmpPrijsForm").geldig_vanaf.value = vandaag;
   document.querySelector("#mmpFactuurVan").value = mmpData().instellingen.startdatum;
   document.querySelector("#mmpFactuurTot").value = vandaag;
   document.querySelector("#mmpMessage").textContent = "";
@@ -3676,8 +3685,11 @@ document.querySelector("#mmpPrijsForm").addEventListener("submit", async (event)
   event.preventDefault();
   const form = event.target;
   const pakketnummer = form.pakketnummer.value.trim();
-  const nieuw = { pakketnummer, artikel: form.artikel.value, ean: form.ean.value, prijs: form.prijs.value };
-  if (await mmpBewaar("prijzen", { toevoegen: [nieuw] })) form.reset();
+  const nieuw = { pakketnummer, artikel: form.artikel.value, ean: form.ean.value, prijs: form.prijs.value, geldig_vanaf: form.geldig_vanaf.value };
+  if (await mmpBewaar("prijzen", { toevoegen: [nieuw] })) {
+    form.reset();
+    form.geldig_vanaf.value = todayIso();
+  }
 });
 document.querySelector("#mmpCorrectieForm").addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -3695,8 +3707,8 @@ mmpDialog.addEventListener("click", async (event) => {
   if (!knop) return;
   if (knop.dataset.betalingId && await confirmDialog("Deze betaling verwijderen?")) {
     await mmpBewaar("betalingen", { verwijderen: [knop.dataset.betalingId] });
-  } else if (knop.dataset.prijsPakket && await confirmDialog(`Prijs van pakket ${knop.dataset.prijsPakket} verwijderen?`)) {
-    await mmpBewaar("prijzen", { verwijderen: [knop.dataset.prijsPakket] });
+  } else if (knop.dataset.prijsSleutel && await confirmDialog(`Deze prijs van pakket ${knop.dataset.prijsSleutel.split("@")[0]} verwijderen?`)) {
+    await mmpBewaar("prijzen", { verwijderen: [knop.dataset.prijsSleutel] });
   } else if (knop.dataset.correctie && await confirmDialog("Deze correctie verwijderen?")) {
     await mmpBewaar("correcties", { verwijderen: [knop.dataset.correctie] });
   }
@@ -3707,12 +3719,17 @@ document.querySelector("#mmpPrijzenBody").addEventListener("click", (event) => {
   const rij = event.target.closest("tr");
   if (!rij) return;
   const pakketnummer = rij.cells[0].textContent;
-  const prijs = mmpData().prijzen.find((p) => p.pakketnummer === pakketnummer);
+  // Uitgaan van de nieuwste prijs; een aanpassing wordt een nieuwe regel
+  // met ingangsdatum vandaag (aan te passen in het formulier).
+  const prijs = mmpData().prijzen
+    .filter((p) => p.pakketnummer === pakketnummer)
+    .sort((a, b) => (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))[0];
   const form = document.querySelector("#mmpPrijsForm");
   form.pakketnummer.value = pakketnummer;
   form.artikel.value = prijs ? prijs.artikel : "";
   form.ean.value = prijs ? prijs.ean : "";
   form.prijs.value = prijs ? String(prijs.prijs).replace(".", ",") : "";
+  form.geldig_vanaf.value = todayIso();
   form.prijs.focus();
 });
 document.querySelector("#verkoopSeizoenToggle").addEventListener("click", (event) => {

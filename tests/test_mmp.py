@@ -102,3 +102,30 @@ def test_parse_instellingen_validates():
         parse_instellingen({"startdatum": "1-10-2026", "pokon_toeslag": "6.01"})
     with pytest.raises(ValueError):
         parse_instellingen({"startdatum": "2026-10-01", "pokon_toeslag": "x"})
+
+
+def test_prijzen_with_geldig_vanaf_round_trip_and_old_csv_without_column(tmp_path):
+    path = tmp_path / "mmp_prijzen.csv"
+    path.write_text("pakketnummer,artikel,ean,prijs\n1.1,Roses,,29.4\n", encoding="utf-8")
+    assert load_prijzen(path) == [MmpPrijs("1.1", "Roses", "", 29.4, "")]
+    prijzen = [MmpPrijs("1.1", "Roses", "", 29.4, ""), MmpPrijs("1.1", "Roses", "", 31.0, "2026-10-01")]
+    write_prijzen(prijzen, path)
+    assert load_prijzen(path) == prijzen
+
+
+def test_parse_prijzen_allows_same_pakket_with_other_geldig_vanaf():
+    prijzen = parse_prijzen([
+        {"pakketnummer": "1.1", "artikel": "x", "ean": "", "prijs": 1},
+        {"pakketnummer": "1.1", "artikel": "x", "ean": "", "prijs": 2, "geldig_vanaf": "2026-10-01"},
+    ])
+    assert [p.geldig_vanaf for p in prijzen] == ["", "2026-10-01"]
+
+
+@pytest.mark.parametrize("rows", [
+    [{"pakketnummer": "1.1", "artikel": "x", "ean": "", "prijs": 1, "geldig_vanaf": "1-10-2026"}],
+    [{"pakketnummer": "1.1", "artikel": "x", "ean": "", "prijs": 1, "geldig_vanaf": "2026-10-01"},
+     {"pakketnummer": "1.1", "artikel": "y", "ean": "", "prijs": 2, "geldig_vanaf": "2026-10-01"}],
+])
+def test_parse_prijzen_rejects_bad_or_duplicate_geldig_vanaf(rows):
+    with pytest.raises(ValueError):
+        parse_prijzen(rows)

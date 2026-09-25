@@ -328,11 +328,13 @@ def add_verkoop_orders(payload, verkoop_csv_path=VERKOOP_CSV_PATH, geannuleerd_c
     return all_orders, toegevoegd, overgeslagen, verwijderd
 
 
-# Per sectie: (inlezen, valideren, wegschrijven, sleutel van een regel).
+# Per sectie: (inlezen, valideren, wegschrijven, sleutel van een regel). Een
+# prijs is uniek per pakketnummer + ingangsdatum ("1.1@2026-10-01", of "1.1@"
+# voor de startprijs zonder datum).
 _MMP_SECTIES = {
-    "prijzen": (load_prijzen, parse_prijzen, write_prijzen, "pakketnummer"),
-    "betalingen": (load_betalingen, parse_betalingen, write_betalingen, "id"),
-    "correcties": (load_correcties, parse_correcties, write_correcties, "ordernummer"),
+    "prijzen": (load_prijzen, parse_prijzen, write_prijzen, lambda p: f"{p.pakketnummer}@{p.geldig_vanaf}"),
+    "betalingen": (load_betalingen, parse_betalingen, write_betalingen, lambda b: b.id),
+    "correcties": (load_correcties, parse_correcties, write_correcties, lambda c: c.ordernummer),
 }
 
 
@@ -358,10 +360,10 @@ def save_mmp_sectie(sectie, payload, paths=MMP_PATHS):
     if not isinstance(verwijderen, list):
         raise ValueError("Ongeldige aanvraag.")
     weg = {str(waarde).strip() for waarde in verwijderen}
-    nieuw = {getattr(regel, sleutel): regel for regel in toevoegen}
+    nieuw = {sleutel(regel): regel for regel in toevoegen}
     rijen = []
     for regel in load(paths[sectie]):
-        waarde = getattr(regel, sleutel)
+        waarde = sleutel(regel)
         if waarde in weg:
             continue
         # Een bestaande regel met dezelfde sleutel wordt op zijn plek vervangen.

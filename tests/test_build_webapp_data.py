@@ -79,7 +79,7 @@ def test_build_mmp_data_js_writes_all_sections(tmp_path):
     text = output_path.read_text(encoding="utf-8")
     assert text.startswith("window.PICKLIST_MMP = ")
     data = json.loads(text[len("window.PICKLIST_MMP = "):].rstrip().rstrip(";"))
-    assert data["prijzen"] == [{"pakketnummer": "1.1", "artikel": "Roses", "ean": "", "prijs": 29.4}]
+    assert data["prijzen"] == [{"pakketnummer": "1.1", "artikel": "Roses", "ean": "", "prijs": 29.4, "geldig_vanaf": ""}]
     assert data["betalingen"][0]["bedrag"] == 100.0
     assert data["correcties"] == []
     assert data["instellingen"] == {"startdatum": "2026-09-26", "pokon_toeslag": "6.01"}

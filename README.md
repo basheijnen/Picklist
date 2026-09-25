@@ -84,6 +84,10 @@ gedekt zijn komen in een nieuwe, actieve lijst "Maison Privée vrijgegeven …",
 de rest blijft wachten. Een order waarvan het pakket nog geen prijs heeft wacht
 altijd, tot je de prijs invult.
 
+Een prijs aanpassen doe je met een ingangsdatum ("Geldig vanaf", standaard
+vandaag): orders vanaf die datum krijgen de nieuwe prijs, oudere orders houden
+de prijs die toen gold. De startprijzen (zonder datum) gelden vanaf het begin.
+
 Op dezelfde pagina beheer je de prijslijst, correcties (orders die niet mogen
 meetellen, bijv. een retour), de startdatum en de Pokon-toeslag, en maak je een
 factuuroverzicht per periode (met afdrukknop). De gegevens staan in

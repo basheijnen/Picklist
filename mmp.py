@@ -21,6 +21,9 @@ class MmpPrijs:
     artikel: str
     ean: str
     prijs: float
+    # Leeg = geldt altijd (de startprijs); anders geldt deze prijs voor orders
+    # vanaf deze datum, tot een regel met een latere datum het overneemt.
+    geldig_vanaf: str = ""
 
 
 @dataclass(frozen=True)
@@ -37,7 +40,7 @@ class MmpCorrectie:
     reden: str
 
 
-PRIJZEN_FIELDNAMES = ["pakketnummer", "artikel", "ean", "prijs"]
+PRIJZEN_FIELDNAMES = ["pakketnummer", "artikel", "ean", "prijs", "geldig_vanaf"]
 BETALINGEN_FIELDNAMES = ["id", "datum", "omschrijving", "bedrag"]
 CORRECTIES_FIELDNAMES = ["ordernummer", "reden"]
 INSTELLINGEN_FIELDNAMES = ["sleutel", "waarde"]
@@ -63,7 +66,10 @@ def write_prijzen(prijzen, path):
 
 
 def load_prijzen(path):
-    return [MmpPrijs(r["pakketnummer"], r["artikel"], r["ean"], float(r["prijs"])) for r in _read(path)]
+    return [
+        MmpPrijs(r["pakketnummer"], r["artikel"], r["ean"], float(r["prijs"]), r.get("geldig_vanaf") or "")
+        for r in _read(path)
+    ]
 
 
 def write_betalingen(betalingen, path):
@@ -121,14 +127,17 @@ def parse_prijzen(rows):
         pakketnummer = str(row.get("pakketnummer", "")).strip()
         if not pakketnummer:
             raise ValueError("Elke prijsregel moet een pakketnummer hebben.")
-        if pakketnummer in gezien:
+        geldig_vanaf = str(row.get("geldig_vanaf") or "").strip()
+        if geldig_vanaf:
+            geldig_vanaf = _datum(geldig_vanaf, f"Geldig vanaf van pakket {pakketnummer} moet het formaat JJJJ-MM-DD hebben.")
+        if (pakketnummer, geldig_vanaf) in gezien:
             raise ValueError(f"Pakketnummer {pakketnummer} staat dubbel in de prijslijst.")
-        gezien.add(pakketnummer)
+        gezien.add((pakketnummer, geldig_vanaf))
         prijs = _getal(row.get("prijs", ""), f"Prijs van pakket {pakketnummer} is geen geldig getal.")
         if prijs < 0:
             raise ValueError(f"Prijs van pakket {pakketnummer} mag niet negatief zijn.")
         prijzen.append(MmpPrijs(pakketnummer, str(row.get("artikel", "")).strip(),
-                                str(row.get("ean", "")).strip(), prijs))
+                                str(row.get("ean", "")).strip(), prijs, geldig_vanaf))
     return prijzen
 
 

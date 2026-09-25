@@ -870,3 +870,13 @@ def test_merge_verkoop_orders_does_not_resurrect_cancelled(tmp_path, monkeypatch
     assert load_verkoop_csv(repo / "verkoop_orders.csv") == []
     assert load_verkoop_csv(shared / "verkoop_orders.csv") == []
     assert load_geannuleerd(shared / "verkoop_geannuleerd.csv") == {"1"}
+
+
+def test_save_mmp_sectie_new_price_with_date_keeps_old_price(tmp_path):
+    paths = _mmp_paths(tmp_path)
+    save_mmp_sectie("prijzen", {"toevoegen": [{"pakketnummer": "1.1", "artikel": "a", "ean": "", "prijs": "10"}]}, paths)
+    save_mmp_sectie("prijzen", {"toevoegen": [{"pakketnummer": "1.1", "artikel": "a", "ean": "", "prijs": "12", "geldig_vanaf": "2026-10-01"}]}, paths)
+    save_mmp_sectie("prijzen", {"toevoegen": [{"pakketnummer": "1.1", "artikel": "a", "ean": "", "prijs": "13", "geldig_vanaf": "2026-10-01"}]}, paths)
+    assert [(p.prijs, p.geldig_vanaf) for p in load_prijzen(paths["prijzen"])] == [(10.0, ""), (13.0, "2026-10-01")]
+    save_mmp_sectie("prijzen", {"verwijderen": ["1.1@2026-10-01"]}, paths)
+    assert [(p.prijs, p.geldig_vanaf) for p in load_prijzen(paths["prijzen"])] == [(10.0, "")]
