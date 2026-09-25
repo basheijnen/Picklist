@@ -625,7 +625,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .verkoop-dialog-body { gap: 12px; }
 /* Terracotta achtergrond; de witte blokken en de donkergroene kopbalk steken
    daar tegen af. */
-.mmp-dialog { background: radial-gradient(circle at 90% 0, #d8957a 0, transparent 40%), #c1704f; }
+.mmp-dialog { background: radial-gradient(circle at 90% 0, #ecc7b5 0, transparent 40%), #dcae98; }
 .mmp-dialog .dialog-header { background: var(--brand); border-bottom: 0; }
 .mmp-dialog .dialog-header h2 { color: white; }
 .mmp-dialog .dialog-header .eyebrow { color: var(--gold); }
