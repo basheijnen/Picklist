@@ -67,14 +67,14 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 36.1p,KOELING,Parfumé de Envy,TH Geel,1.0,Geurende Grootbloemige tuinrozen 60CM:,22
 36.4,KOELING,Parfumé de Envy,TH Geel,4.0,Geurende Grootbloemige tuinrozen 60CM:,22
 36.4p,KOELING,Parfumé de Envy,TH Geel,4.0,Geurende Grootbloemige tuinrozen 60CM:,22
-36.1,KOELING,Parfumé de Moulin Rouge,TH Rood,1.0,Geurende Grootbloemige tuinrozen 60CM:,23
-36.1p,KOELING,Parfumé de Moulin Rouge,TH Rood,1.0,Geurende Grootbloemige tuinrozen 60CM:,23
-36.2,KOELING,Parfumé de Moulin Rouge,TH Rood,4.0,Geurende Grootbloemige tuinrozen 60CM:,23
-36.2p,KOELING,Parfumé de Moulin Rouge,TH Rood,4.0,Geurende Grootbloemige tuinrozen 60CM:,23
-36.1,KOELING,Parfumé de Paris,TH Roze,1.0,Geurende Grootbloemige tuinrozen 60CM:,24
-36.1p,KOELING,Parfumé de Paris,TH Roze,1.0,Geurende Grootbloemige tuinrozen 60CM:,24
-36.3,KOELING,Parfumé de Paris,TH Roze,4.0,Geurende Grootbloemige tuinrozen 60CM:,24
-36.3p,KOELING,Parfumé de Paris,TH Roze,4.0,Geurende Grootbloemige tuinrozen 60CM:,24
+36.1,KOELING,Parfumé de Moulin Rouge ,TH Rood,1.0,Geurende Grootbloemige tuinrozen 60CM:,23
+36.1p,KOELING,Parfumé de Moulin Rouge ,TH Rood,1.0,Geurende Grootbloemige tuinrozen 60CM:,23
+36.2,KOELING,Parfumé de Moulin Rouge ,TH Rood,4.0,Geurende Grootbloemige tuinrozen 60CM:,23
+36.2p,KOELING,Parfumé de Moulin Rouge ,TH Rood,4.0,Geurende Grootbloemige tuinrozen 60CM:,23
+36.1,KOELING,Parfumé de Paris   ,TH Roze,1.0,Geurende Grootbloemige tuinrozen 60CM:,24
+36.1p,KOELING,Parfumé de Paris   ,TH Roze,1.0,Geurende Grootbloemige tuinrozen 60CM:,24
+36.3,KOELING,Parfumé de Paris   ,TH Roze,4.0,Geurende Grootbloemige tuinrozen 60CM:,24
+36.3p,KOELING,Parfumé de Paris   ,TH Roze,4.0,Geurende Grootbloemige tuinrozen 60CM:,24
 5.2,KOELING,Bambino,Pink,1.0,Mini Stamroos 70CM:,27
 5.2p,KOELING,Bambino,Pink,1.0,Mini Stamroos 70CM:,27
 5.6,KOELING,Bambino,Pink,3.0,Mini Stamroos 70CM:,27
@@ -423,12 +423,12 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 100.3p,KAS,Olijfboom winterhard op stam medium,,1.0,Mediterrane:,19
 100.4,KAS,Olijfboom winterhard op stam medium,,2.0,Mediterrane:,19
 100.4p,KAS,Olijfboom winterhard op stam medium,,2.0,Mediterrane:,19
-161.0,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),1.0,Mediterrane:,20
-161.0p,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),1.0,Mediterrane:,20
-161.1,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),2.0,Mediterrane:,20
-161.1p,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),2.0,Mediterrane:,20
-161.2,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),4.0,Mediterrane:,20
-161.2p,KAS,Olea europaea 1/2 stam 80 cm,(Breukers),4.0,Mediterrane:,20
+161.0,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),1.0,Mediterrane:,20
+161.0p,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),1.0,Mediterrane:,20
+161.1,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),2.0,Mediterrane:,20
+161.1p,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),2.0,Mediterrane:,20
+161.2,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),4.0,Mediterrane:,20
+161.2p,KAS,Olea europaea 1/2 stam 80 cm ,(Breukers),4.0,Mediterrane:,20
 100.1,KAS,Olijfboom winterhard op stam XXL,,1.0,Mediterrane:,21
 100.1p,KAS,Olijfboom winterhard op stam XXL,,1.0,Mediterrane:,21
 100.2,KAS,Olijfboom winterhard op stam XXL,,2.0,Mediterrane:,21
@@ -589,10 +589,10 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 263.1p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,1.0,Klimplanten:,82
 263.2,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,82
 263.2p,KAS,Bougainvillea glabra 'Alexandra' paars op rek,,2.0,Klimplanten:,82
-253.1,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide,,1.0,Klimplanten:,84
-253.1p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide,,1.0,Klimplanten:,84
-253.2,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide,,2.0,Klimplanten:,84
-253.2p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide,,2.0,Klimplanten:,84
+253.1,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,84
+253.1p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,1.0,Klimplanten:,84
+253.2,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,84
+253.2p,KAS,Ceanothus thyrsiflorus 'Repens' XL P17 Pyramide ,,2.0,Klimplanten:,84
 254.1,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,86
 254.1p,KAS,Campsis radicans 'Flava' XXL P17 (geel),,1.0,Klimplanten:,86
 254.2,KAS,Campsis radicans 'Flava' XXL P17 (geel),,2.0,Klimplanten:,86
@@ -625,26 +625,26 @@ pakketnummer,gebied,item,soort,aantal_per_pakket,groep,volgorde
 262.1p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,1.0,Klimplanten:,95
 262.2,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,95
 262.2p,KAS,Passiflora caerulea 'Constance Elliot' XXL P17 (wit),,2.0,Klimplanten:,95
-230.1,KAS,Cotoneaster dammeri,,8.0,Bodembedekkers:,98
-230.1p,KAS,Cotoneaster dammeri,,8.0,Bodembedekkers:,98
-231.1,KAS,Lonicera nitida,,8.0,Bodembedekkers:,99
-231.1p,KAS,Lonicera nitida,,8.0,Bodembedekkers:,99
+230.1,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,98
+230.1p,KAS,Cotoneaster dammeri ,,8.0,Bodembedekkers:,98
+231.1,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,99
+231.1p,KAS,Lonicera nitida ,,8.0,Bodembedekkers:,99
 232.1,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,100
 232.1p,KAS,Vinca minor (lila),,8.0,Bodembedekkers:,100
-233.1,KAS,Vinca minor 'Albus' (wit),,8.0,Bodembedekkers:,101
-233.1p,KAS,Vinca minor 'Albus' (wit),,8.0,Bodembedekkers:,101
+233.1,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,101
+233.1p,KAS,Vinca minor 'Albus' (wit) ,,8.0,Bodembedekkers:,101
 237.1,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,102
 237.1p,KAS,Geranium 'Rozanne',,7.0,Bodembedekkers:,102
 237.0,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,102
 237.0p,KAS,Geranium 'Rozanne',,3.0,Bodembedekkers:,102
-234.1,KAS,Pachysandra terminalis,,8.0,Bodembedekkers:,103
-234.1p,KAS,Pachysandra terminalis,,8.0,Bodembedekkers:,103
-235.1,KAS,Hedera hibernica,,8.0,Bodembedekkers:,104
-235.1p,KAS,Hedera hibernica,,8.0,Bodembedekkers:,104
-236.1,KAS,Lavandula angustifolia 'Hidcote',,8.0,Bodembedekkers:,105
-236.1p,KAS,Lavandula angustifolia 'Hidcote',,8.0,Bodembedekkers:,105
-236.0,KAS,Lavandula angustifolia 'Hidcote',,4.0,Bodembedekkers:,105
-236.0p,KAS,Lavandula angustifolia 'Hidcote',,4.0,Bodembedekkers:,105
+234.1,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,103
+234.1p,KAS,Pachysandra terminalis ,,8.0,Bodembedekkers:,103
+235.1,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,104
+235.1p,KAS,Hedera hibernica ,,8.0,Bodembedekkers:,104
+236.1,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,105
+236.1p,KAS,Lavandula angustifolia 'Hidcote' ,,8.0,Bodembedekkers:,105
+236.0,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,105
+236.0p,KAS,Lavandula angustifolia 'Hidcote' ,,4.0,Bodembedekkers:,105
 6.1,KAS,Camellia Rood,,1.0,Camellia:,108
 6.1p,KAS,Camellia Rood,,1.0,Camellia:,108
 6.2,KAS,Camellia Rood,,2.0,Camellia:,108
@@ -1051,22 +1051,22 @@ T009p,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,159
 41.2p,KAS,"Fargesia XL ""Niet woekerend"" C2",,2.0,Bamboe:,213
 269.1,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,214
 269.1p,KAS,Fargesia 'Groen' P10,,2.0,Bamboe:,214
-270.1,KAS,Fargesia 'Rood' C1,,3.0,Bamboe:,215
-270.1p,KAS,Fargesia 'Rood' C1,,3.0,Bamboe:,215
-270.2,KAS,Fargesia 'Rood' C1,,6.0,Bamboe:,215
-270.2p,KAS,Fargesia 'Rood' C1,,6.0,Bamboe:,215
-270.0,KAS,Fargesia 'Rood' C1,,2.0,Bamboe:,215
-270.0p,KAS,Fargesia 'Rood' C1,,2.0,Bamboe:,215
+270.1,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,215
+270.1p,KAS,Fargesia 'Rood' C1 ,,3.0,Bamboe:,215
+270.2,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,215
+270.2p,KAS,Fargesia 'Rood' C1 ,,6.0,Bamboe:,215
+270.0,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,215
+270.0p,KAS,Fargesia 'Rood' C1 ,,2.0,Bamboe:,215
 271.1,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,216
 271.1p,KAS,Fargesia 'Groen' C1,,3.0,Bamboe:,216
 271.2,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,216
 271.2p,KAS,Fargesia 'Groen' C1,,6.0,Bamboe:,216
-273.1,KAS,Fargesia 'Rood' C2,,2.0,Bamboe:,217
-273.1p,KAS,Fargesia 'Rood' C2,,2.0,Bamboe:,217
-273.2,KAS,Fargesia 'Rood' C2,,4.0,Bamboe:,217
-273.2p,KAS,Fargesia 'Rood' C2,,4.0,Bamboe:,217
-273.3,KAS,Fargesia 'Rood' C2,,6.0,Bamboe:,217
-273.3p,KAS,Fargesia 'Rood' C2,,6.0,Bamboe:,217
+273.1,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,217
+273.1p,KAS,Fargesia 'Rood' C2 ,,2.0,Bamboe:,217
+273.2,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,217
+273.2p,KAS,Fargesia 'Rood' C2 ,,4.0,Bamboe:,217
+273.3,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,217
+273.3p,KAS,Fargesia 'Rood' C2 ,,6.0,Bamboe:,217
 272.1,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,218
 272.1p,KAS,Fargesia 'Groen' C2,,2.0,Bamboe:,218
 272.2,KAS,Fargesia 'Groen' C2,,4.0,Bamboe:,218
@@ -1117,14 +1117,14 @@ T009p,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,159
 44.5p,KAS,Paeonia lactiflora Pink,,3.0,Pioenrozen:,229
 44.6,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,229
 44.6p,KAS,Paeonia lactiflora Pink,,6.0,Pioenrozen:,229
-44.3,KAS,Paeonia lactiflora White,,1.0,Pioenrozen:,230
-44.3p,KAS,Paeonia lactiflora White,,1.0,Pioenrozen:,230
-44.4,KAS,Paeonia lactiflora White,,2.0,Pioenrozen:,230
-44.4p,KAS,Paeonia lactiflora White,,2.0,Pioenrozen:,230
-44.7,KAS,Paeonia lactiflora White,,3.0,Pioenrozen:,230
-44.7p,KAS,Paeonia lactiflora White,,3.0,Pioenrozen:,230
-44.8,KAS,Paeonia lactiflora White,,6.0,Pioenrozen:,230
-44.8p,KAS,Paeonia lactiflora White,,6.0,Pioenrozen:,230
+44.3,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,230
+44.3p,KAS,Paeonia lactiflora White ,,1.0,Pioenrozen:,230
+44.4,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,230
+44.4p,KAS,Paeonia lactiflora White ,,2.0,Pioenrozen:,230
+44.7,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,230
+44.7p,KAS,Paeonia lactiflora White ,,3.0,Pioenrozen:,230
+44.8,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,230
+44.8p,KAS,Paeonia lactiflora White ,,6.0,Pioenrozen:,230
 70.1,KAS,Azalea Paars,,3.0,Rhododendrons:,233
 70.1p,KAS,Azalea Paars,,3.0,Rhododendrons:,233
 70.5,KAS,Azalea Paars,,1.0,Rhododendrons:,233
@@ -1305,30 +1305,30 @@ T009p,KAS,Acer palm. 'Little Princess' Bonsai (P23) - patio,,1.0,Acers:,159
 201.0p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
 201.3,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
 201.3p,KAS,C2 - Zwarte Bes,,1.0,Planten 2 liter ( C2 ):,256
-204.0,KAS,C2 - Wisteria sin. 'Alba' Wit,,2.0,Planten 2 liter ( C2 ):,258
-204.0p,KAS,C2 - Wisteria sin. 'Alba' Wit,,2.0,Planten 2 liter ( C2 ):,258
-204.3,KAS,C2 - Wisteria sin. 'Alba' Wit,,1.0,Planten 2 liter ( C2 ):,258
-204.3p,KAS,C2 - Wisteria sin. 'Alba' Wit,,1.0,Planten 2 liter ( C2 ):,258
-204.1,KAS,C2 - Wisteria sin. 'Rosea' Roze,,2.0,Planten 2 liter ( C2 ):,259
-204.1p,KAS,C2 - Wisteria sin. 'Rosea' Roze,,2.0,Planten 2 liter ( C2 ):,259
-204.3,KAS,C2 - Wisteria sin. 'Rosea' Roze,,1.0,Planten 2 liter ( C2 ):,259
-204.3p,KAS,C2 - Wisteria sin. 'Rosea' Roze,,1.0,Planten 2 liter ( C2 ):,259
-204.2,KAS,C2 - Wisteria sin. 'Prolific' Blauw,,2.0,Planten 2 liter ( C2 ):,260
-204.2p,KAS,C2 - Wisteria sin. 'Prolific' Blauw,,2.0,Planten 2 liter ( C2 ):,260
-204.3,KAS,C2 - Wisteria sin. 'Prolific' Blauw,,1.0,Planten 2 liter ( C2 ):,260
-204.3p,KAS,C2 - Wisteria sin. 'Prolific' Blauw,,1.0,Planten 2 liter ( C2 ):,260
+204.0,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,258
+204.0p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,2.0,Planten 2 liter ( C2 ):,258
+204.3,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,258
+204.3p,KAS,C2 - Wisteria sin. 'Alba' Wit ,,1.0,Planten 2 liter ( C2 ):,258
+204.1,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,259
+204.1p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,2.0,Planten 2 liter ( C2 ):,259
+204.3,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,259
+204.3p,KAS,C2 - Wisteria sin. 'Rosea' Roze ,,1.0,Planten 2 liter ( C2 ):,259
+204.2,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,260
+204.2p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,2.0,Planten 2 liter ( C2 ):,260
+204.3,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,260
+204.3p,KAS,C2 - Wisteria sin. 'Prolific' Blauw ,,1.0,Planten 2 liter ( C2 ):,260
 207.0,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,262
 207.0p,KAS,C2 - Hydrangea macr. Blauw,,2.0,Planten 2 liter ( C2 ):,262
 207.4,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
 207.4p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
 206.1,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
 206.1p,KAS,C2 - Hydrangea macr. Blauw,,1.0,Planten 2 liter ( C2 ):,262
-207.1,KAS,C2 - Hydrangea macr. Rood,,2.0,Planten 2 liter ( C2 ):,263
-207.1p,KAS,C2 - Hydrangea macr. Rood,,2.0,Planten 2 liter ( C2 ):,263
-207.4,KAS,C2 - Hydrangea macr. Rood,,1.0,Planten 2 liter ( C2 ):,263
-207.4p,KAS,C2 - Hydrangea macr. Rood,,1.0,Planten 2 liter ( C2 ):,263
-206.2,KAS,C2 - Hydrangea macr. Rood,,1.0,Planten 2 liter ( C2 ):,263
-206.2p,KAS,C2 - Hydrangea macr. Rood,,1.0,Planten 2 liter ( C2 ):,263
+207.1,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,263
+207.1p,KAS,C2 - Hydrangea macr. Rood ,,2.0,Planten 2 liter ( C2 ):,263
+207.4,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+207.4p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+206.2,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
+206.2p,KAS,C2 - Hydrangea macr. Rood ,,1.0,Planten 2 liter ( C2 ):,263
 207.2,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,264
 207.2p,KAS,C2 - Hydrangea macr. Roze,,2.0,Planten 2 liter ( C2 ):,264
 207.4,KAS,C2 - Hydrangea macr. Roze,,1.0,Planten 2 liter ( C2 ):,264
@@ -1351,22 +1351,22 @@ T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,267
 209.0p,KAS,C2 - Cornus alba 'Siberica',,2.0,Planten 2 liter ( C2 ):,269
 209.5,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,269
 209.5p,KAS,C2 - Cornus alba 'Siberica',,1.0,Planten 2 liter ( C2 ):,269
-209.1,KAS,C2 - Deutzia scabra,,2.0,Planten 2 liter ( C2 ):,270
-209.1p,KAS,C2 - Deutzia scabra,,2.0,Planten 2 liter ( C2 ):,270
-209.5,KAS,C2 - Deutzia scabra,,1.0,Planten 2 liter ( C2 ):,270
-209.5p,KAS,C2 - Deutzia scabra,,1.0,Planten 2 liter ( C2 ):,270
-209.2,KAS,C2 - Forsythia int. 'Spectabilis',,2.0,Planten 2 liter ( C2 ):,271
-209.2p,KAS,C2 - Forsythia int. 'Spectabilis',,2.0,Planten 2 liter ( C2 ):,271
-209.5,KAS,C2 - Forsythia int. 'Spectabilis',,1.0,Planten 2 liter ( C2 ):,271
-209.5p,KAS,C2 - Forsythia int. 'Spectabilis',,1.0,Planten 2 liter ( C2 ):,271
-209.3,KAS,C2 - Philadelphus 'Virginal',,2.0,Planten 2 liter ( C2 ):,272
-209.3p,KAS,C2 - Philadelphus 'Virginal',,2.0,Planten 2 liter ( C2 ):,272
-209.5,KAS,C2 - Philadelphus 'Virginal',,1.0,Planten 2 liter ( C2 ):,272
-209.5p,KAS,C2 - Philadelphus 'Virginal',,1.0,Planten 2 liter ( C2 ):,272
-209.4,KAS,C2 - Weigela 'Bristol Ruby',,2.0,Planten 2 liter ( C2 ):,273
-209.4p,KAS,C2 - Weigela 'Bristol Ruby',,2.0,Planten 2 liter ( C2 ):,273
-209.5,KAS,C2 - Weigela 'Bristol Ruby',,1.0,Planten 2 liter ( C2 ):,273
-209.5p,KAS,C2 - Weigela 'Bristol Ruby',,1.0,Planten 2 liter ( C2 ):,273
+209.1,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,270
+209.1p,KAS,C2 - Deutzia scabra ,,2.0,Planten 2 liter ( C2 ):,270
+209.5,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,270
+209.5p,KAS,C2 - Deutzia scabra ,,1.0,Planten 2 liter ( C2 ):,270
+209.2,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,271
+209.2p,KAS,C2 - Forsythia int. 'Spectabilis' ,,2.0,Planten 2 liter ( C2 ):,271
+209.5,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,271
+209.5p,KAS,C2 - Forsythia int. 'Spectabilis' ,,1.0,Planten 2 liter ( C2 ):,271
+209.3,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,272
+209.3p,KAS,C2 - Philadelphus 'Virginal' ,,2.0,Planten 2 liter ( C2 ):,272
+209.5,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,272
+209.5p,KAS,C2 - Philadelphus 'Virginal' ,,1.0,Planten 2 liter ( C2 ):,272
+209.4,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,273
+209.4p,KAS,C2 - Weigela 'Bristol Ruby' ,,2.0,Planten 2 liter ( C2 ):,273
+209.5,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,273
+209.5p,KAS,C2 - Weigela 'Bristol Ruby' ,,1.0,Planten 2 liter ( C2 ):,273
 210.0,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,276
 210.0p,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,2.0,Planten 3 liter ( C3 ):,276
 210.4,KAS,C3 - Hibiscus syr. 'Totus Albus' Wit,,1.0,Planten 3 liter ( C3 ):,276
@@ -1441,8 +1441,8 @@ T012p,KAS,C2 - Lavendel,,8.0,Planten 2 liter ( C2 ):,267
 107.1p,KAS,Choisya ternata 'Sundance' - P9,,3.0,Kas diversen:,292
 107.2,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,292
 107.2p,KAS,Choisya ternata 'Sundance' - P9,,6.0,Kas diversen:,292
-22.1,KAS,Eucalyptus Gunnii Azura op stam,,1.0,Kas diversen:,293
-22.1p,KAS,Eucalyptus Gunnii Azura op stam,,1.0,Kas diversen:,293
+22.1,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,293
+22.1p,KAS,Eucalyptus Gunnii Azura op stam ,,1.0,Kas diversen:,293
 259.2,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,294
 259.2p,KAS,Eucalyptus 'Silver Dollar' XXL,,2.0,Kas diversen:,294
 280.1,KAS,Eucalyptus Gunnii Azura struik,,1.0,Kas diversen:,295
@@ -1986,69 +1986,69 @@ T012p,POKON,Pokon Tuinmest 1kg,,1.0,Pokon:,7
 283.1p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 283.2p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
 283.3p,POKON,Pokon Siergrassen & Bamboe Mest 1kg,,1.0,Pokon:,11
-11.0p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.1p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.2p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.3p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.4p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.5p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.6p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-11.7p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.1p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.2p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.3p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.4p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.5p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.6p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-17.7p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-202.0p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-202.1p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-202.2p,POKON,Pokon Bio Fruitbomen Mest 1kg,,1.0,Pokon:,12
-7.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-7.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.4p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.5p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.6p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.7p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.8p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.9p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.10p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-10.11p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-15.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-26.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-26.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-26.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-26.4p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-26.5p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-27.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-27.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-27.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-28.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-28.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-28.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-29.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-29.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-30.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.0p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.4p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.5p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.6p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.7p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.8p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-200.9p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.0p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.1p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.2p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.3p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.4p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.5p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
-201.6p,POKON,Pokon Bio Kleinfruit Mest 1kg,,1.0,Pokon:,13
+11.0p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.1p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.2p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.3p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.4p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.5p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.6p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+11.7p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.1p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.2p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.3p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.4p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.5p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.6p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+17.7p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+202.0p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+202.1p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+202.2p,POKON,Pokon Bio Fruitbomen Mest 1kg ,,1.0,Pokon:,12
+7.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+7.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.4p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.5p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.6p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.7p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.8p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.9p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.10p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+10.11p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+15.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+26.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+26.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+26.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+26.4p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+26.5p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+27.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+27.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+27.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+28.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+28.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+28.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+29.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+29.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+30.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.0p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.4p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.5p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.6p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.7p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.8p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+200.9p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.0p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.1p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.2p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.3p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.4p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.5p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
+201.6p,POKON,Pokon Bio Kleinfruit Mest 1kg ,,1.0,Pokon:,13
 114.1p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,14
 115.1p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,14
 116.1p,POKON,Pokon Bio Kamerplanten Voeding 250ml,,1.0,Pokon:,14
