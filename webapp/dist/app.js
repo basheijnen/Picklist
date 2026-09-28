@@ -3092,6 +3092,8 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
     const itemsHtml = entries
       .map((entry) => `<li>${displayNumber(entry.aantal_per_pakket)} x ${escapeHtml(entry.item)}${entry.soort ? ` – ${escapeHtml(entry.soort)}` : ""}</li>`)
       .join("");
+    const pokonHtml = pokonBlokHtml((bomByPakket.get(pakketnummer) || []).filter((entry) => entry.gebied === "POKON")
+      .map((entry) => ({ aantal: entry.aantal_per_pakket, item: entry.item })));
     // Het aantal stickers is het aantal pakketten (orderCounts), niet het
     // aantal planten in de kaart-header (dat komt uit de BOM en staat vast).
     const stickerAantal = orderCounts.get(pakketnummer) || 0;
@@ -3103,6 +3105,7 @@ function buildPakketkaarten(orderCounts, { includeNazendingen = true, showSticke
       <div class="pakketkaart-nummer">${escapeHtml(pakketnummer)}</div>
       <div class="pakketkaart-naam"><span>${escapeHtml(info ? info.pakketnaam : "Onbekend pakket")}</span><span>x ${displayNumber(totalCount)}</span></div>
       <ul class="pakketkaart-items">${itemsHtml}</ul>
+      ${pokonHtml}
       <div class="pakketkaart-footer">
         <span class="pakketkaart-stickers">${stickersHtml}</span>
         <div class="pakketkaart-doos"><span class="pakketkaart-doos-label">DOOSNUMMER:</span><span class="pakketkaart-doos-nummer${doosnummerFontKlasse(info ? info.doosnummers : "—")}">${escapeHtml(info ? info.doosnummers : "—")}</span></div>
@@ -3158,8 +3161,19 @@ function nazendingContentNaam(content) {
     .join(" + ");
 }
 
+// Groot, gecentreerd Pokon-blok midden op de pakketkaart, zodat de picker
+// niet over het hoofd ziet dat er mest bij moet — en welke.
+function pokonBlokHtml(pokonRegels) {
+  if (!pokonRegels.length) return "";
+  const regelsHtml = pokonRegels
+    .map((regel) => `<div class="pakketkaart-pokon-item">${displayNumber(regel.aantal)} x ${escapeHtml(regel.item)}</div>`)
+    .join("");
+  return `<div class="pakketkaart-pokon"><div class="pakketkaart-pokon-blok"><div class="pakketkaart-pokon-label">+ POKON</div>${regelsHtml}</div></div>`;
+}
+
 function appendNazendingPakketkaarten(nz, showStickers = false) {
   const isBundelNz = nz.soort === "bundel";
+  const pokonHtml = pokonBlokHtml(nz.entries.filter((entry) => entry.gebied === "POKON"));
   groupNazendingByDoos(nz).forEach((group) => {
     const totalCount = group.content.reduce((sum, entry) => sum + entry.aantal, 0);
     const itemsHtml = group.content
@@ -3182,6 +3196,7 @@ function appendNazendingPakketkaarten(nz, showStickers = false) {
       <div class="pakketkaart-nummer">${toontPakketnummer ? escapeHtml(group.pakketnummer) : ""}</div>
       ${toontPakketnummer ? `<div class="pakketkaart-naam"><span>${nazendingContentNaam(group.content)}</span><span>x ${displayNumber(totalCount)}</span></div>` : ""}
       <ul class="pakketkaart-items">${itemsHtml}</ul>
+      ${pokonHtml}
       ${isBundel && nz.klantnaam ? `<div class="pakketkaart-klantnaam">${escapeHtml(nz.klantnaam)}</div>` : ""}
       ${nz.opmerking ? `<div class="pakketkaart-opmerking"><span class="pakketkaart-doos-label">OPMERKING:</span><p>${escapeHtml(nz.opmerking)}</p></div>` : ""}
       <div class="pakketkaart-footer">

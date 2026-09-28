@@ -230,6 +230,10 @@ tbody tr:hover { background: #f5faf7; }
 .nazending-opmerking-field textarea { width: 100%; padding: 8px 10px; border: 1px solid #bdcbc4; border-radius: 9px; font: inherit; font-size: .95rem; resize: vertical; }
 .pakketkaart-items { margin: 14mm 0 0; padding: 0; list-style: none; font-size: 13pt; line-height: 1.9; }
 .pakketkaart-incomplete .pakketkaart-items { font-size: 18pt; font-weight: 800; }
+.pakketkaart-pokon { display: flex; flex: 1; align-items: center; justify-content: center; padding: 8mm 0; }
+.pakketkaart-pokon-blok { padding: 6mm 12mm; border: 4pt solid #d17b2a; border-radius: 8pt; background: #fbeee0; text-align: center; }
+.pakketkaart-pokon-label { color: #d17b2a; font-size: 34pt; font-weight: 800; letter-spacing: .04em; line-height: 1.1; }
+.pakketkaart-pokon-item { margin-top: 3mm; font-size: 20pt; font-weight: 800; line-height: 1.25; }
 .pakketkaart-footer { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: auto; }
 .pakketkaart-tracking { margin-top: 4px; text-align: right; font-size: 14pt; font-weight: 800; }
 .pakketkaart-doos { display: flex; align-items: baseline; gap: 12px; max-width: 60%; }
@@ -526,7 +530,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
   .department[data-department="PAKKETTEN"] td:nth-child(6) { width: 0; }
   .department[data-department="PAKKETTEN"] table { min-width: 0; }
   .nazending-row, .nazending-badge, tr.has-nazending { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .pakketkaart-nazending, .pakketkaart-bundel, .pakketkaart-nazending-badge, .pakketkaart-opmerking { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .pakketkaart-nazending, .pakketkaart-bundel, .pakketkaart-nazending-badge, .pakketkaart-opmerking, .pakketkaart-pokon-blok { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
 
 .verkoop-dialog { width: 100vw; height: 100vh; max-width: 100vw; max-height: 100vh; margin: 0; border-radius: 0; }
