@@ -768,6 +768,8 @@ const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
 let verkoopActiefKanaal = "";
+// Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
+let verkoopOpengeklaptPakket = "";
 let verkoopView = "kalender";
 // Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
 // een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
@@ -2265,7 +2267,12 @@ function verkoopGefilterdeOrders() {
     if (kanaal && order.kanaal !== kanaal) return false;
     if (zoek) {
       const naam = verkoopPakketnaam(order.pakketnummer).toLowerCase();
-      if (!order.pakketnummer.toLowerCase().includes(zoek) && !naam.includes(zoek)) return false;
+      // Ook op ordernummer zoeken, om 1 order terug te vinden en te kunnen
+      // verwijderen — behalve de gemigreerde dagtotalen, waarvan het
+      // "ordernummer" kanaalnamen bevat en anders bij elke kanaal-zoekterm
+      // zou opduiken.
+      const ordernummer = order.ordernummer.startsWith("migratie-") ? "" : order.ordernummer.toLowerCase();
+      if (!order.pakketnummer.toLowerCase().includes(zoek) && !naam.includes(zoek) && !ordernummer.includes(zoek)) return false;
     }
     return true;
   });
@@ -2527,15 +2534,79 @@ function renderVerkoopTable(orders) {
     if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
     return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
   });
-  document.querySelector("#verkoopTableBody").innerHTML = rijen
-    .map((rij) => `<tr>
+  const body = document.querySelector("#verkoopTableBody");
+  body.innerHTML = rijen
+    .map((rij) => {
+      const open = rij.pakketnummer === verkoopOpengeklaptPakket;
+      const hoofdRij = `<tr class="verkoop-pakket-rij${open ? " is-open" : ""}" data-pakketnummer="${escapeHtml(rij.pakketnummer)}" title="Klik voor de losse orders">
       <td>${escapeHtml(rij.pakketnummer)}</td>
       <td>${escapeHtml(rij.naam)}</td>
       <td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td>
-    </tr>`)
+    </tr>`;
+      return open ? hoofdRij + verkoopOrderDetailRij(orders.filter((order) => order.pakketnummer === rij.pakketnummer)) : hoofdRij;
+    })
     .join("");
+  body.querySelectorAll(".verkoop-pakket-rij").forEach((tr) => {
+    tr.addEventListener("click", () => {
+      verkoopOpengeklaptPakket = verkoopOpengeklaptPakket === tr.dataset.pakketnummer ? "" : tr.dataset.pakketnummer;
+      renderVerkoopTable(orders);
+    });
+  });
+  body.querySelectorAll(".verkoop-order-verwijder").forEach((knop) => {
+    knop.addEventListener("click", () => {
+      const order = orders.find((o) => o.ordernummer === knop.dataset.ordernummer);
+      if (order) verwijderVerkoopOrder(order, knop);
+    });
+  });
   const totaal = orders.reduce((sum, order) => sum + order.aantal, 0);
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
+}
+
+// Uitklapregel onder een pakket in de Verkopen-tabel: de losse orders
+// (binnen de huidige filter) met per order een verwijderknop.
+function verkoopOrderDetailRij(orders) {
+  const regels = [...orders]
+    .sort((a, b) => b.datum.localeCompare(a.datum) || a.ordernummer.localeCompare(b.ordernummer, "nl", { numeric: true }))
+    .map((order) => `<tr>
+        <td>${escapeHtml(order.datum)}</td>
+        <td>${escapeHtml(order.kanaal)}</td>
+        <td>${escapeHtml(order.ordernummer)}</td>
+        <td class="verkoop-col-aantal">${displayNumber(order.aantal)}</td>
+        <td class="verkoop-col-verwijder"><button type="button" class="verkoop-order-verwijder" data-ordernummer="${escapeHtml(order.ordernummer)}" title="Order uit de verkopen verwijderen" aria-label="Order ${escapeHtml(order.ordernummer)} verwijderen">×</button></td>
+      </tr>`)
+    .join("");
+  return `<tr class="verkoop-order-detail"><td colspan="3"><div class="verkoop-order-scroll"><table class="verkoop-order-tabel">
+      <thead><tr><th>Datum</th><th>Kanaal</th><th>Ordernummer</th><th class="verkoop-col-aantal">Aantal</th><th></th></tr></thead>
+      <tbody>${regels}</tbody>
+    </table></div></td></tr>`;
+}
+
+// Haalt 1 order uit de verkopen door hem als geannuleerd naar de server te
+// sturen (zelfde route als een "Cancelled"-regel uit een export): zo komt hij
+// ook bij het samenvoegen met de K:-kopie of een latere upload niet terug.
+async function verwijderVerkoopOrder(order, knop) {
+  const pokonRegel = (window.PICKLIST_VERKOOP || []).some((o) => o.ordernummer === `${order.ordernummer}-pokon`);
+  const isDagtotaal = order.ordernummer.startsWith("migratie-");
+  const melding = `Order ${order.ordernummer} (${order.pakketnummer}, ${order.kanaal}, ${order.datum}) uit de verkopen verwijderen?`
+    + (isDagtotaal ? ` Let op: dit is een dagtotaal uit de oude historie, alle ${displayNumber(order.aantal)} stuks verdwijnen.` : "")
+    + (pokonRegel ? " De bijbehorende Pokon-regel gaat ook mee." : "");
+  if (!await confirmDialog(melding, "Verwijderen", { title: "Order verwijderen" })) return;
+  knop.disabled = true;
+  try {
+    const response = await fetch("/api/verkoop", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ datum: todayIso(), rows: [], geannuleerd: [order.ordernummer] }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Verwijderen mislukt.");
+    window.PICKLIST_VERKOOP = result.orders;
+    renderVerkoopDialog();
+    renderVerkoopOverzichtPanel();
+  } catch (error) {
+    knop.disabled = false;
+    await confirmDialog(`Kan order niet verwijderen: ${error.message}`, "OK", { title: "Verwijderen mislukt", style: "primary" });
+  }
 }
 
 // De 12 maanden (juli t/m juni) van het seizoen dat bij seizoenStartJaar

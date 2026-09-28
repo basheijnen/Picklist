@@ -590,13 +590,25 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .verkoop-filters label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-filters select, .verkoop-filters input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
-.verkoop-filters input[type="search"] { min-width: 220px; }
+.verkoop-filters input[type="search"] { min-width: 320px; max-width: 100%; }
 
 .verkoop-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
 .verkoop-table th, .verkoop-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
 .verkoop-table th { cursor: pointer; user-select: none; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; }
 .verkoop-table .verkoop-col-aantal { text-align: right; }
 .verkoop-table tfoot td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
+.verkoop-pakket-rij { cursor: pointer; }
+.verkoop-pakket-rij:hover td, .verkoop-pakket-rij.is-open td { background: #eef3f0; }
+.verkoop-pakket-rij.is-open td { font-weight: 800; }
+.verkoop-table .verkoop-order-detail > td { padding: 0 0 10px 24px; background: #f7f9f8; }
+.verkoop-order-scroll { max-height: 320px; overflow-y: auto; }
+.verkoop-order-tabel { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.verkoop-table .verkoop-order-tabel th { cursor: default; position: sticky; top: 0; background: #f7f9f8; }
+.verkoop-table .verkoop-order-tabel th, .verkoop-table .verkoop-order-tabel td { padding: 5px 10px; }
+.verkoop-col-verwijder { width: 36px; text-align: right; }
+.verkoop-order-verwijder { width: 26px; height: 26px; border: 0; border-radius: 6px; color: #b42318; background: #fbe4e1; font-size: 1rem; font-weight: 800; line-height: 1; cursor: pointer; }
+.verkoop-order-verwijder:hover { background: #f5c9c3; }
+.verkoop-order-verwijder:disabled { opacity: .5; cursor: wait; }
 
 @media (max-width: 720px) {
   .verkoop-tiles { grid-template-columns: 1fr 1fr; }
