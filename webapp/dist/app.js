@@ -2139,14 +2139,20 @@ function mmpSaldoMail(saldo = mmpBereken()) {
   const opmerking = tekort
     ? `${saldo.wachtend ? `${saldo.wachtend} order(s) are on hold. ` : ""}Please transfer the amount due so we can ship ${saldo.wachtend ? "them" : "your next orders"} without delay.`
     : "";
+  // Aanhef naar het tijdstip; de mail gaat mee met de trackinggegevens van
+  // de orders die die dag verwerkt zijn.
+  const aanhef = new Date().getHours() < 12 ? "Good morning," : "Good afternoon,";
+  const intro = "Thank you for today's orders. Please find the tracking details attached.";
+  const alinea = "font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:0 0 12px;";
   const cel = "padding:4px 24px 4px 0;font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;";
-  const html = `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">`
+  const html = `<p style="${alinea}">${aanhef}</p><p style="${alinea}">${intro}</p>`
+    + `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">`
     + `<tr><td colspan="2" style="${cel}padding-bottom:8px;font-weight:bold;color:#1a1a1a;">Account statement – ${escapeHtml(datum)}</td></tr>`
     + regels.map(([label, bedrag]) => `<tr><td style="${cel}">${label}</td><td style="${cel}text-align:right;padding-right:0;">${bedrag}</td></tr>`).join("")
     + `<tr><td style="${cel}border-top:1px solid #999;padding-top:6px;font-weight:bold;color:${kleur};">${slotLabel}</td>`
     + `<td style="${cel}border-top:1px solid #999;padding-top:6px;padding-right:0;text-align:right;font-weight:bold;font-size:13pt;color:${kleur};">${slotBedrag}</td></tr>`
     + `</table>${opmerking ? `<p style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:8px 0 0;">${opmerking}</p>` : ""}`;
-  const tekst = [`Account statement – ${datum}`, ...regels.map(([l, b]) => `${l}: ${b}`), `${slotLabel}: ${slotBedrag}`, opmerking].filter(Boolean).join("\n");
+  const tekst = [aanhef, "", intro, "", `Account statement – ${datum}`, ...regels.map(([l, b]) => `${l}: ${b}`), `${slotLabel}: ${slotBedrag}`, ...(opmerking ? ["", opmerking] : [])].join("\n");
   return { html, tekst };
 }
 
