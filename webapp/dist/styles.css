@@ -752,3 +752,6 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .import-row:not(.is-held), #importsList .import-row:not(.is-held):first-child { border: 1.5px solid #6f9c84; border-top: 4px solid var(--brand); }
 .nazending-group-row:not(.is-held) { border: 1.5px solid #b9974f; border-top: 4px solid var(--brand); }
 .import-row.is-held, #importsList .import-row.is-held:first-child { border: 1px solid var(--line); }
+/* Actieknoppen onder het sleepvak: alle drie donkergroen omlijnd. */
+.manage-packages-button, .klant-duplicaten-button, .nazending-add-button,
+.manage-packages-button:hover:not(:disabled), .klant-duplicaten-button:hover:not(:disabled), .nazending-add-button:hover:not(:disabled) { border: 1.5px solid var(--brand); }
