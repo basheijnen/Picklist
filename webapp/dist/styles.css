@@ -784,3 +784,7 @@ tr.has-nazending { border-left-color: #d9c28a; }
 /* Voorblad afdrukken: bronzen vulling, zwarte tekst/printer en rand; rood bij aanwijzen. */
 .import-wacht-voorblad-button { border: 1.5px solid #000; color: #000; background: #ecd3b6; }
 .import-wacht-voorblad-button:hover { border-color: #e5534b; background: #e5c4a0; }
+/* Voorblad afdrukken helemaal rechts: de metaregel loopt door onder het
+   verwijderkruisje, en de knop schuift naar het eind. */
+.import-meta-row { grid-column: 2 / 4; }
+.import-wacht-voorblad-button { margin-left: auto; }
