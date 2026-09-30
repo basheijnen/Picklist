@@ -789,15 +789,15 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .import-meta-row { grid-column: 2 / 4; }
 .import-wacht-voorblad-button { margin-left: auto; }
 .import-verkoop-button, .import-verkoop-status { margin-left: auto; }
-/* Verkopen-knop pulseert langzaam met een rode neongloed, zodat hij uitnodigt
+/* Verkopen-knop pulseert langzaam met een gele neongloed, zodat hij uitnodigt
    om erop te klikken. Bij aanwijzen stopt het pulseren (rand blijft rood).
    Wie "minder beweging" heeft ingesteld in Windows krijgt een vaste gloed. */
 @keyframes verkoop-neon {
-  0%, 100% { border-color: #000; box-shadow: 0 0 0 0 rgba(255, 45, 70, 0); }
-  50% { border-color: #ff2d46; box-shadow: 0 0 8px 2px rgba(255, 45, 70, .85), 0 0 22px 6px rgba(255, 45, 70, .4); }
+  0%, 100% { border-color: #000; box-shadow: 0 0 0 0 rgba(255, 214, 0, 0); }
+  50% { border-color: #ffd600; box-shadow: 0 0 8px 2px rgba(255, 214, 0, .85), 0 0 22px 6px rgba(255, 214, 0, .4); }
 }
 .header-actions .verkoop-header-button { animation: verkoop-neon 2.6s ease-in-out infinite; }
-.header-actions .verkoop-header-button:hover { animation: none; box-shadow: 0 0 8px 2px rgba(255, 45, 70, .85), 0 0 22px 6px rgba(255, 45, 70, .4); }
+.header-actions .verkoop-header-button:hover { animation: none; box-shadow: 0 0 8px 2px rgba(255, 214, 0, .85), 0 0 22px 6px rgba(255, 214, 0, .4); }
 @media (prefers-reduced-motion: reduce) {
-  .header-actions .verkoop-header-button { animation: none; box-shadow: 0 0 6px 1px rgba(255, 45, 70, .6); }
+  .header-actions .verkoop-header-button { animation: none; box-shadow: 0 0 6px 1px rgba(255, 214, 0, .6); }
 }
