@@ -737,3 +737,13 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .nazending-group-row:not(.is-held) { border-color: var(--accent-oker-rand); border-left-color: var(--accent-oker); background: #fbf4e6; }
 .import-delete-button, .nazending-delete-button { border-color: var(--accent-rood-rand); color: var(--accent-rood); background: var(--accent-rood-zacht); }
 .import-delete-button:hover, .nazending-delete-button:hover { border-color: var(--accent-rood); background: #f1d6d1; }
+/* Duidelijkere omlijning: 1,5px in (bijna) de tekstkleur van de knop. */
+.manage-packages-button { border: 1.5px solid #6f93b8; }
+.manage-packages-button:hover:not(:disabled) { border-color: var(--accent-blauw); }
+.klant-duplicaten-button { border: 1.5px solid #b9974f; }
+.klant-duplicaten-button:hover:not(:disabled) { border-color: var(--accent-oker); }
+.nazending-add-button { border: 1.5px solid #c9776d; }
+.nazending-add-button:hover:not(:disabled) { border-color: var(--accent-rood); }
+.button-secondary, .verkoop-header-button, .print-status-reset-button, .mmp-kop-badge { border: 1.5px solid rgba(255,255,255,.7); }
+.button-secondary:hover:not(:disabled), .verkoop-header-button:hover:not(:disabled), .print-status-reset-button:hover:not(:disabled), .mmp-kop-badge:hover { border-color: var(--gold); }
+.button-secondary:disabled, .print-status-reset-button:disabled { border-color: rgba(255,255,255,.45); }
