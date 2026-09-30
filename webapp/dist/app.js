@@ -2124,35 +2124,25 @@ function renderMmpDialog() {
 }
 
 // Saldoblok voor de mail aan Ma Maison Privée (in het Engels, zoals de rest
-// van die mail). Inline stijlen, want Outlook negeert stylesheets; plus een
-// platte-tekstversie voor programma's die geen opmaak plakken.
+// van die mail). Alleen het saldo: de totalen van ontvangen en besteld lopen
+// het seizoen door op en zeggen de klant weinig. Inline stijlen, want Outlook
+// negeert stylesheets; plus een platte-tekstversie.
 function mmpSaldoMail(saldo = mmpBereken()) {
-  const datum = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   const tekort = saldo.saldo < 0;
-  const regels = [
-    ["Payments received", formatEuro(saldo.ontvangen)],
-    ["Orders to date", formatEuro(saldo.besteld)],
-  ];
-  const slotLabel = tekort ? "Amount due" : "Current balance";
-  const slotBedrag = formatEuro(Math.abs(saldo.saldo));
+  const label = tekort ? "Amount due" : "Current balance";
+  const bedrag = formatEuro(Math.abs(saldo.saldo));
   const kleur = tekort ? "#b3261e" : "#009640";
   const opmerking = tekort
     ? `${saldo.wachtend ? `${saldo.wachtend} order(s) are on hold. ` : ""}Please transfer the amount due so we can ship ${saldo.wachtend ? "them" : "your next orders"} without delay.`
     : "";
-  // Aanhef naar het tijdstip; de mail gaat mee met de trackinggegevens van
-  // de orders die die dag verwerkt zijn.
+  // Aanhef naar het tijdstip; de mail gaat mee met de trackinggegevens.
   const aanhef = new Date().getHours() < 12 ? "Good morning," : "Good afternoon,";
-  const intro = "Thank you for today's orders. Please find the tracking details attached.";
+  const intro = "Thank you for the orders. Please find the tracking details attached.";
   const alinea = "font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:0 0 12px;";
-  const cel = "padding:4px 24px 4px 0;font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;";
   const html = `<p style="${alinea}">${aanhef}</p><p style="${alinea}">${intro}</p>`
-    + `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">`
-    + `<tr><td colspan="2" style="${cel}padding-bottom:8px;font-weight:bold;color:#1a1a1a;">Account statement – ${escapeHtml(datum)}</td></tr>`
-    + regels.map(([label, bedrag]) => `<tr><td style="${cel}">${label}</td><td style="${cel}text-align:right;padding-right:0;">${bedrag}</td></tr>`).join("")
-    + `<tr><td style="${cel}border-top:1px solid #999;padding-top:6px;font-weight:bold;color:${kleur};">${slotLabel}</td>`
-    + `<td style="${cel}border-top:1px solid #999;padding-top:6px;padding-right:0;text-align:right;font-weight:bold;font-size:13pt;color:${kleur};">${slotBedrag}</td></tr>`
-    + `</table>${opmerking ? `<p style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:8px 0 0;">${opmerking}</p>` : ""}`;
-  const tekst = [aanhef, "", intro, "", `Account statement – ${datum}`, ...regels.map(([l, b]) => `${l}: ${b}`), `${slotLabel}: ${slotBedrag}`, ...(opmerking ? ["", opmerking] : [])].join("\n");
+    + `<p style="${alinea}font-size:13pt;font-weight:bold;color:${kleur};">${label}: ${bedrag}</p>`
+    + (opmerking ? `<p style="${alinea}">${opmerking}</p>` : "");
+  const tekst = [aanhef, "", intro, "", `${label}: ${bedrag}`, ...(opmerking ? ["", opmerking] : [])].join("\n");
   return { html, tekst };
 }
 
