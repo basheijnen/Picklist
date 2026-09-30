@@ -720,3 +720,20 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .nazending-full-badge { color: var(--accent-oker); background: var(--accent-oker-zacht); }
 tr.has-nazending { border-left-color: #d9c28a; }
 .verkoop-klant-button.is-actief { color: white; background: var(--brand); border-color: var(--brand); }
+
+/* Iets meer kleur, maar gedempt: zachte tinten van de oude kleurfamilies
+   (blauw, oranje, rood, groen) in plaats van felle vlakken. Hoort bij het
+   rustige palet hierboven; samen weghalen om terug te gaan. */
+:root { --accent-blauw: #2f5d8a; --accent-blauw-zacht: #e7eef6; --accent-blauw-rand: #bfd1e3; --accent-oker-rand: #e0cb98; --accent-rood-rand: #e3bab3; --groen-zacht: #dfeee5; --groen-rand: #a9cbb7; }
+.verkoop-header-button { background: #2d6a51; border-color: rgba(255,255,255,.3); }
+.verkoop-header-button:hover:not(:disabled) { background: #347a5d; }
+.manage-packages-button { border-color: var(--accent-blauw-rand); color: var(--accent-blauw); background: var(--accent-blauw-zacht); }
+.manage-packages-button:hover:not(:disabled) { border-color: var(--accent-blauw); background: #dbe6f2; }
+.klant-duplicaten-button { border-color: var(--accent-oker-rand); color: var(--accent-oker); background: var(--accent-oker-zacht); }
+.klant-duplicaten-button:hover:not(:disabled) { border-color: var(--accent-oker); background: #eddcb8; }
+.nazending-add-button { border-color: var(--accent-rood-rand); background: var(--accent-rood-zacht); }
+.nazending-add-button:hover:not(:disabled) { border-color: var(--accent-rood); background: #f1d6d1; }
+.import-row { border-color: var(--groen-rand); background: var(--groen-zacht); }
+.nazending-group-row:not(.is-held) { border-color: var(--accent-oker-rand); border-left-color: var(--accent-oker); background: #fbf4e6; }
+.import-delete-button, .nazending-delete-button { border-color: var(--accent-rood-rand); color: var(--accent-rood); background: var(--accent-rood-zacht); }
+.import-delete-button:hover, .nazending-delete-button:hover { border-color: var(--accent-rood); background: #f1d6d1; }
