@@ -2153,6 +2153,9 @@ function mmpSaldoMail(saldo = mmpBereken()) {
   return { html, tekst };
 }
 
+const MMP_ICOON_KOPIEER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+const MMP_ICOON_VINK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
+
 async function kopieerMmpSaldo() {
   const { html, tekst } = mmpSaldoMail();
   const knop = document.querySelector("#mmpKopieerSaldo");
@@ -2174,8 +2177,14 @@ async function kopieerMmpSaldo() {
     selectie.removeAllRanges(); tijdelijk.remove();
     if (!gelukt) { document.querySelector("#mmpMessage").textContent = "Kopiëren is niet gelukt."; return; }
   }
-  knop.textContent = "Gekopieerd ✓";
-  setTimeout(() => { knop.textContent = "Saldo kopiëren voor mail"; }, 2000);
+  knop.innerHTML = MMP_ICOON_VINK;
+  knop.classList.add("is-gekopieerd");
+  knop.title = "Gekopieerd";
+  setTimeout(() => {
+    knop.innerHTML = MMP_ICOON_KOPIEER;
+    knop.classList.remove("is-gekopieerd");
+    knop.title = "Saldo kopiëren voor mail";
+  }, 2000);
 }
 
 function mmpFactuurTabelHtml(saldo = mmpBereken()) {
@@ -3818,6 +3827,7 @@ document.querySelector("#closeMmpDialog").addEventListener("click", () => mmpDia
 document.querySelector("#mmpFactuurVan").addEventListener("change", () => renderMmpFactuur());
 document.querySelector("#mmpFactuurTot").addEventListener("change", () => renderMmpFactuur());
 document.querySelector("#mmpFactuurPrint").addEventListener("click", printMmpFactuur);
+document.querySelector("#mmpKopieerSaldo").innerHTML = MMP_ICOON_KOPIEER;
 document.querySelector("#mmpKopieerSaldo").addEventListener("click", kopieerMmpSaldo);
 document.querySelector("#mmpPrijsZoek").addEventListener("input", (event) => { mmpPrijsZoekterm = event.target.value; renderMmpDialog(); });
 
