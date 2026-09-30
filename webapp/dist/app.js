@@ -2131,18 +2131,25 @@ function mmpSaldoMail(saldo = mmpBereken()) {
   const tekort = saldo.saldo < 0;
   const label = tekort ? "Amount due" : "Current balance";
   const bedrag = formatEuro(Math.abs(saldo.saldo));
-  const kleur = tekort ? "#b3261e" : "#009640";
+  // Zwart zoals de rest van de mail; alleen een tekort in rood.
+  const kleur = tekort ? "#b3261e" : "#000";
   const opmerking = tekort
     ? `${saldo.wachtend ? `${saldo.wachtend} order(s) are on hold. ` : ""}Please transfer the amount due so we can ship ${saldo.wachtend ? "them" : "your next orders"} without delay.`
     : "";
   // Aanhef naar het tijdstip; de mail gaat mee met de trackinggegevens.
   const aanhef = new Date().getHours() < 12 ? "Good morning," : "Good afternoon,";
   const intro = "Thank you for the orders. Please find the tracking details attached.";
-  const alinea = "font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:0 0 12px;";
-  const html = `<p style="${alinea}">${aanhef}</p><p style="${alinea}">${intro}</p>`
-    + `<p style="${alinea}font-size:13pt;font-weight:bold;color:${kleur};">${label}: ${bedrag}</p>`
-    + (opmerking ? `<p style="${alinea}">${opmerking}</p>` : "");
-  const tekst = [aanhef, "", intro, "", `${label}: ${bedrag}`, ...(opmerking ? ["", opmerking] : [])].join("\n");
+  // Outlook negeert marges op alinea's; witregels als lege alinea's.
+  const letter = "font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#000;";
+  const alinea = (inhoud) => `<p style="margin:0;${letter}">${inhoud}</p>`;
+  const wit = alinea("&nbsp;");
+  const html = [
+    alinea(aanhef), wit, alinea(intro), wit,
+    alinea(`<b style="color:${kleur};">${label}:</b> <b style="font-size:14pt;color:${kleur};">${bedrag}</b>`),
+    ...(opmerking ? [wit, alinea(opmerking)] : []),
+    wit,
+  ].join("");
+  const tekst = [aanhef, "", intro, "", `${label}: ${bedrag}`, ...(opmerking ? ["", opmerking] : []), ""].join("\n");
   return { html, tekst };
 }
 
