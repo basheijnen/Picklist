@@ -3674,7 +3674,8 @@ function renderImportsList() {
   // Klachten count/toggle together as one group — they're all "extra
   // stuff on top of the normal order" the same way, so one Meetellen
   // switch for all of them is simpler than one per klacht. Removing a
-  // specific klacht is still possible, just per-item in the sublist below.
+  // specific klacht is per-item in the sublist below; the × on the group
+  // row removes them all at once.
   if (nazendingen.length) {
     const allActive = nazendingen.every((nz) => nz.active !== false);
     const totalDoos = nazendingen.reduce((sum, nz) => sum + nz.entries
@@ -3696,7 +3697,16 @@ function renderImportsList() {
         <button type="button" class="nazending-sublist-toggle${klachtenGroupUitgeklapt ? " is-open" : ""}" aria-label="${klachtenGroupUitgeklapt ? "Inklappen" : "Uitklappen"}" aria-expanded="${klachtenGroupUitgeklapt}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
         ${groupLabel}
       </span>
-      <span class="import-order-total">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>`;
+      <span class="import-order-total nazending-group-dozen">${displayNumber(totalDoos)} ${totalDoos === 1 ? "doos" : "dozen"}</span>
+      <button type="button" class="import-delete-button" aria-label="Alle ${groupLabel.replace(/ \(\d+\)$/, "").toLowerCase()} verwijderen" title="Alles verwijderen">×</button>`;
+    // In één keer alle klachten (en bundels) weg, na één bevestiging.
+    groupRow.querySelector(".import-delete-button").addEventListener("click", async () => {
+      const wat = groupLabel.replace(/ \(\d+\)$/, "").toLowerCase();
+      if (!(await confirmDialog(`Alle ${nazendingen.length} ${wat} verwijderen?`, "Alles verwijderen"))) return;
+      nazendingen = [];
+      saveNazendingen();
+      if (imports.length) renderAll(); else resetImport();
+    });
     const groupCheckbox = groupRow.querySelector(".import-active-checkbox");
     groupCheckbox.indeterminate = someActive && !allActive;
     groupCheckbox.addEventListener("change", (event) => {
