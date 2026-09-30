@@ -781,3 +781,6 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .header-actions .print-status-reset-button { width: 48px; height: 44px; border-radius: 12px; color: white; background: rgba(255,255,255,.06); }
 .header-actions .print-status-reset-button:hover:not(:disabled) { background: rgba(255,255,255,.12); }
 .header-actions .print-status-reset-button:disabled { opacity: .45; }
+/* Voorblad afdrukken: bronzen vulling, zwarte tekst/printer en rand; rood bij aanwijzen. */
+.import-wacht-voorblad-button { border: 1.5px solid #000; color: #000; background: #ecd3b6; }
+.import-wacht-voorblad-button:hover { border-color: #e5534b; background: #e5c4a0; }
