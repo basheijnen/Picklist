@@ -2611,7 +2611,7 @@ function renderVerkoopOverzichtPanel() {
   const top10 = [...perPakket.entries()].sort(([, a], [, b]) => b - a).slice(0, 10);
   const top10El = document.querySelector("#verkoopOverzichtTop10");
   top10El.innerHTML = top10
-    .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item" data-pakketnummer="${escapeHtml(pakketnummer)}">
+    .map(([pakketnummer, aantal], index) => `<li class="verkoop-overzicht-top10-item${index < 3 ? ` is-podium-${index + 1}` : ""}" data-pakketnummer="${escapeHtml(pakketnummer)}">
         <span class="verkoop-overzicht-top10-rang">${index < 3 ? index + 1 : ""}</span>
         <span class="verkoop-overzicht-top10-nummer">${escapeHtml(pakketnummer)}</span>
         <span class="verkoop-overzicht-top10-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
