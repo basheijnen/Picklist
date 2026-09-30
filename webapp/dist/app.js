@@ -2128,9 +2128,15 @@ function mmpFactuurTabelHtml(saldo = mmpBereken()) {
   const tot = document.querySelector("#mmpFactuurTot").value;
   if (!van || !tot) return "";
   const factuur = mmpFactuurOverzicht(saldo, van, tot, Number(mmpData().instellingen.pokon_toeslag));
-  return `<table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th class="verkoop-col-aantal">Aantal</th><th class="verkoop-col-aantal">Prijs</th><th class="verkoop-col-aantal">Totaal</th></tr></thead><tbody>${
-    factuur.regels.map((r) => `<tr><td>${escapeHtml(r.pakketnummer)}</td><td>${escapeHtml(r.pakketnummer === "Pokon-toeslag" ? "" : verkoopPakketnaam(r.pakketnummer))}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${formatEuro(r.prijs)}</td><td class="verkoop-col-aantal">${formatEuro(r.totaal)}</td></tr>`).join("")
-  }</tbody><tfoot><tr><td colspan="2">Totaal (${displayNumber(factuur.aantal)} pakketten)</td><td></td><td></td><td class="verkoop-col-aantal">${formatEuro(factuur.totaal)}</td></tr></tfoot></table>${
+  // De klant kent onze pakketnummers niet, wel de EAN; per pakket de EAN van
+  // de nieuwste prijsregel die er een heeft.
+  const eanPerPakket = new Map();
+  [...mmpData().prijzen]
+    .sort((a, b) => (a.geldig_vanaf || "").localeCompare(b.geldig_vanaf || ""))
+    .forEach((p) => { if (p.ean) eanPerPakket.set(p.pakketnummer, p.ean); });
+  return `<table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>EAN</th><th>Pakketnaam</th><th class="verkoop-col-aantal">Aantal</th><th class="verkoop-col-aantal">Prijs</th><th class="verkoop-col-aantal">Totaal</th></tr></thead><tbody>${
+    factuur.regels.map((r) => `<tr><td>${escapeHtml(r.pakketnummer)}</td><td>${escapeHtml(eanPerPakket.get(r.pakketnummer) || "")}</td><td>${escapeHtml(r.pakketnummer === "Pokon-toeslag" ? "" : verkoopPakketnaam(r.pakketnummer))}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${formatEuro(r.prijs)}</td><td class="verkoop-col-aantal">${formatEuro(r.totaal)}</td></tr>`).join("")
+  }</tbody><tfoot><tr><td colspan="3">Totaal (${displayNumber(factuur.aantal)} pakketten)</td><td></td><td></td><td class="verkoop-col-aantal">${formatEuro(factuur.totaal)}</td></tr></tfoot></table>${
     factuur.zonderPrijs ? `<div class="mmp-waarschuwing">${factuur.zonderPrijs} order(s) in deze periode hebben nog geen prijs en staan niet in dit overzicht.</div>` : ""}`;
 }
 
