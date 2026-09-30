@@ -671,3 +671,5 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .verkoop-datum-bereik input, .mmp-dialog .button-quiet, .mmp-dialog .mmp-form input { border-color: var(--mmp-rand); }
 .mmp-dialog .mmp-form input:focus, .mmp-dialog #mmpPrijsZoek:focus, .mmp-dialog .verkoop-datum-bereik input:focus { outline-color: var(--mmp-accent); }
 .mmp-dialog .button-terug { background: white; border-color: var(--mmp-accent); color: var(--mmp-accent); }
+.mmp-kopieer-rij { display: flex; justify-content: flex-end; }
+.mmp-kopieer-rij .button { min-height: 38px; padding: 0 18px; }

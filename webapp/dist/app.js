@@ -2123,6 +2123,58 @@ function renderMmpDialog() {
   renderMmpFactuur(saldo);
 }
 
+// Saldoblok voor de mail aan Ma Maison Privée (in het Engels, zoals de rest
+// van die mail). Inline stijlen, want Outlook negeert stylesheets; plus een
+// platte-tekstversie voor programma's die geen opmaak plakken.
+function mmpSaldoMail(saldo = mmpBereken()) {
+  const datum = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const tekort = saldo.saldo < 0;
+  const regels = [
+    ["Payments received", formatEuro(saldo.ontvangen)],
+    ["Orders to date", formatEuro(saldo.besteld)],
+  ];
+  const slotLabel = tekort ? "Amount due" : "Current balance";
+  const slotBedrag = formatEuro(Math.abs(saldo.saldo));
+  const kleur = tekort ? "#b3261e" : "#009640";
+  const opmerking = tekort
+    ? `${saldo.wachtend ? `${saldo.wachtend} order(s) are on hold. ` : ""}Please transfer the amount due so we can ship ${saldo.wachtend ? "them" : "your next orders"} without delay.`
+    : "";
+  const cel = "padding:4px 24px 4px 0;font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;";
+  const html = `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;">`
+    + `<tr><td colspan="2" style="${cel}padding-bottom:8px;font-weight:bold;color:#1a1a1a;">Account statement – ${escapeHtml(datum)}</td></tr>`
+    + regels.map(([label, bedrag]) => `<tr><td style="${cel}">${label}</td><td style="${cel}text-align:right;padding-right:0;">${bedrag}</td></tr>`).join("")
+    + `<tr><td style="${cel}border-top:1px solid #999;padding-top:6px;font-weight:bold;color:${kleur};">${slotLabel}</td>`
+    + `<td style="${cel}border-top:1px solid #999;padding-top:6px;padding-right:0;text-align:right;font-weight:bold;font-size:13pt;color:${kleur};">${slotBedrag}</td></tr>`
+    + `</table>${opmerking ? `<p style="font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#333;margin:8px 0 0;">${opmerking}</p>` : ""}`;
+  const tekst = [`Account statement – ${datum}`, ...regels.map(([l, b]) => `${l}: ${b}`), `${slotLabel}: ${slotBedrag}`, opmerking].filter(Boolean).join("\n");
+  return { html, tekst };
+}
+
+async function kopieerMmpSaldo() {
+  const { html, tekst } = mmpSaldoMail();
+  const knop = document.querySelector("#mmpKopieerSaldo");
+  try {
+    await navigator.clipboard.write([new ClipboardItem({
+      "text/html": new Blob([html], { type: "text/html" }),
+      "text/plain": new Blob([tekst], { type: "text/plain" }),
+    })]);
+  } catch (_error) {
+    // Terugval voor browsers zonder ClipboardItem: opgemaakte inhoud
+    // selecteren en de oude kopieeropdracht gebruiken.
+    const tijdelijk = document.createElement("div");
+    tijdelijk.innerHTML = html;
+    tijdelijk.style.position = "fixed"; tijdelijk.style.left = "-9999px";
+    mmpDialog.append(tijdelijk);
+    const bereik = document.createRange(); bereik.selectNodeContents(tijdelijk);
+    const selectie = window.getSelection(); selectie.removeAllRanges(); selectie.addRange(bereik);
+    const gelukt = document.execCommand("copy");
+    selectie.removeAllRanges(); tijdelijk.remove();
+    if (!gelukt) { document.querySelector("#mmpMessage").textContent = "Kopiëren is niet gelukt."; return; }
+  }
+  knop.textContent = "Gekopieerd ✓";
+  setTimeout(() => { knop.textContent = "Saldo kopiëren voor mail"; }, 2000);
+}
+
 function mmpFactuurTabelHtml(saldo = mmpBereken()) {
   const van = document.querySelector("#mmpFactuurVan").value;
   const tot = document.querySelector("#mmpFactuurTot").value;
@@ -3763,6 +3815,7 @@ document.querySelector("#closeMmpDialog").addEventListener("click", () => mmpDia
 document.querySelector("#mmpFactuurVan").addEventListener("change", () => renderMmpFactuur());
 document.querySelector("#mmpFactuurTot").addEventListener("change", () => renderMmpFactuur());
 document.querySelector("#mmpFactuurPrint").addEventListener("click", printMmpFactuur);
+document.querySelector("#mmpKopieerSaldo").addEventListener("click", kopieerMmpSaldo);
 document.querySelector("#mmpPrijsZoek").addEventListener("input", (event) => { mmpPrijsZoekterm = event.target.value; renderMmpDialog(); });
 
 document.querySelector("#mmpBetalingForm").addEventListener("submit", async (event) => {
