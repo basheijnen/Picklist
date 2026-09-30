@@ -755,3 +755,4 @@ tr.has-nazending { border-left-color: #d9c28a; }
 /* Actieknoppen onder het sleepvak: alle drie donkergroen omlijnd. */
 .manage-packages-button, .klant-duplicaten-button, .nazending-add-button,
 .manage-packages-button:hover:not(:disabled), .klant-duplicaten-button:hover:not(:disabled), .nazending-add-button:hover:not(:disabled) { border: 1.5px solid var(--brand); }
+.manage-packages-button, .klant-duplicaten-button { color: #000; }
