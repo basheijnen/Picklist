@@ -772,3 +772,7 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .header-actions .button-secondary, .header-actions .verkoop-header-button, .header-actions .print-status-reset-button { border: 1.5px solid var(--gold); }
 .header-actions .button-secondary:hover:not(:disabled), .header-actions .verkoop-header-button:hover:not(:disabled), .header-actions .print-status-reset-button:hover:not(:disabled) { border-color: #e5534b; }
 .header-actions .button-secondary:disabled, .header-actions .print-status-reset-button:disabled { border-color: rgba(230,184,92,.5); }
+/* Verkopen-knop valt op: zelfde zachte oker als "Dubbele klanten bekijken",
+   met zwarte tekst en zwarte rand (rood bij aanwijzen, zoals de rest). */
+.header-actions .verkoop-header-button { border-color: #000; color: #000; background: var(--accent-oker-zacht); }
+.header-actions .verkoop-header-button:hover:not(:disabled) { background: #eddcb8; }
