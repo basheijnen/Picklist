@@ -747,3 +747,8 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .button-secondary, .verkoop-header-button, .print-status-reset-button, .mmp-kop-badge { border: 1.5px solid rgba(255,255,255,.7); }
 .button-secondary:hover:not(:disabled), .verkoop-header-button:hover:not(:disabled), .print-status-reset-button:hover:not(:disabled), .mmp-kop-badge:hover { border-color: var(--gold); }
 .button-secondary:disabled, .print-status-reset-button:disabled { border-color: rgba(255,255,255,.45); }
+/* Ingeladen lijsten: een geselecteerde (meetellende) lijst krijgt de
+   donkere bovenrand en een duidelijke rand rondom; uitgevinkt blijft licht. */
+.import-row:not(.is-held), #importsList .import-row:not(.is-held):first-child { border: 1.5px solid #6f9c84; border-top: 4px solid var(--brand); }
+.nazending-group-row:not(.is-held) { border: 1.5px solid #b9974f; border-top: 4px solid var(--brand); }
+.import-row.is-held, #importsList .import-row.is-held:first-child { border: 1px solid var(--line); }
