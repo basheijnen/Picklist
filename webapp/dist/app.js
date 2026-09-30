@@ -2006,6 +2006,126 @@ function mmpData() {
   };
 }
 
+// Taal van de Maison Privée-pagina (Nederlands of Frans), zodat er af en
+// toe een overzicht of schermafdruk naar de klant kan. Alleen deze pagina;
+// het saldoblok voor de mail blijft Engels.
+const MMP_TEKSTEN = {
+  eyebrow: ["Vooruitbetaling", "Prépaiement"],
+  terug: ["← Terug naar picklisten", "← Retour aux listes de préparation"],
+  kopieer: ["Saldo kopiëren voor mail", "Copier le solde pour l'e-mail"],
+  taalKnop: ["Taal: Nederlands — klik voor Frans", "Langue : français — cliquez pour le néerlandais"],
+  ontvangen: ["Ontvangen", "Reçu"],
+  besteld: ["Besteld", "Commandé"],
+  saldoNu: ["Saldo nu", "Solde actuel"],
+  wachtTitel: ["Wacht op betaling", "En attente de paiement"],
+  tekort: ["Tekort", "Montant dû"],
+  orders: ["order(s)", "commande(s)"],
+  prijsOntbreektMelding: ["Prijs ontbreekt voor pakket {nrs} — die orders wachten tot je een prijs invult (zie Prijzen).", "Prix manquant pour le colis {nrs} — ces commandes restent en attente jusqu'à la saisie d'un prix (voir Prix)."],
+  datum: ["Datum", "Date"],
+  ordernummer: ["Ordernummer", "N° de commande"],
+  pakket: ["Pakket", "Colis"],
+  bedrag: ["Bedrag", "Montant"],
+  reden: ["Reden", "Motif"],
+  teWeinigSaldo: ["te weinig saldo", "solde insuffisant"],
+  prijsOntbreekt: ["prijs ontbreekt voor pakket {nr}", "prix manquant pour le colis {nr}"],
+  nietsWacht: ["Er wacht niets — alle orders zijn gedekt.", "Rien en attente — toutes les commandes sont couvertes."],
+  betalingen: ["Betalingen", "Paiements"],
+  omschrijving: ["Omschrijving", "Description"],
+  omschrijvingVoorbeeld: ["Vooruitbetaling okt.", "Prépaiement oct."],
+  bedragEuro: ["Bedrag (€)", "Montant (€)"],
+  toevoegen: ["Toevoegen", "Ajouter"],
+  geenBetalingen: ["Nog geen betalingen.", "Aucun paiement pour l'instant."],
+  betalingVerwijderen: ["Betaling verwijderen", "Supprimer le paiement"],
+  factuurTitel: ["Factuuroverzicht", "Récapitulatif de facturation"],
+  van: ["Van", "Du"],
+  tot: ["Tot", "Au"],
+  afdrukken: ["Afdrukken", "Imprimer"],
+  pakketnummer: ["Pakketnummer", "N° de colis"],
+  pakketnaam: ["Pakketnaam", "Désignation"],
+  aantal: ["Aantal", "Quantité"],
+  prijs: ["Prijs", "Prix"],
+  totaal: ["Totaal", "Total"],
+  totaalPakketten: ["Totaal ({n} pakketten)", "Total ({n} colis)"],
+  pokonToeslag: ["Pokon-toeslag", "Supplément Pokon"],
+  zonderPrijs: ["{n} order(s) in deze periode hebben nog geen prijs en staan niet in dit overzicht.", "{n} commande(s) de cette période n'ont pas encore de prix et ne figurent pas dans ce récapitulatif."],
+  periodeTekst: ["{van} t/m {tot}", "du {van} au {tot}"],
+  kiesPeriode: ["Kies eerst een periode (van en tot).", "Choisissez d'abord une période (du et au)."],
+  prijzen: ["Prijzen", "Prix"],
+  prijsEuro: ["Prijs (€)", "Prix (€)"],
+  geldigVanaf: ["Geldig vanaf", "Valable à partir du"],
+  opslaan: ["Opslaan", "Enregistrer"],
+  prijsUitleg: ["Een nieuwe prijs geldt voor orders vanaf de ingangsdatum; oudere orders houden hun oude prijs. Klik op een regel om de prijs aan te passen.", "Un nouveau prix s'applique aux commandes à partir de sa date d'effet ; les commandes plus anciennes conservent leur ancien prix. Cliquez sur une ligne pour modifier le prix."],
+  prijsZoek: ["Zoek pakketnummer of pakketnaam…", "Rechercher un n° ou un nom de colis…"],
+  nogGeenPrijs: ["besteld, maar nog geen prijs", "commandé, mais pas encore de prix"],
+  start: ["start", "départ"],
+  prijsVerwijderen: ["Prijs verwijderen", "Supprimer le prix"],
+  correcties: ["Correcties", "Corrections"],
+  correctieUitleg: ["Orders die niet mogen meetellen voor saldo en factuur (bijv. een retour).", "Commandes qui ne comptent ni pour le solde ni pour la facture (p. ex. un retour)."],
+  ordernrIntern: ["Ordernr. intern", "N° de commande interne"],
+  geenCorrecties: ["Geen correcties.", "Aucune correction."],
+  correctieVerwijderen: ["Correctie verwijderen", "Supprimer la correction"],
+  instellingen: ["Instellingen", "Paramètres"],
+  startdatum: ["Orders tellen mee vanaf", "Commandes prises en compte à partir du"],
+  pokonToeslagEuro: ["Pokon-toeslag (€)", "Supplément Pokon (€)"],
+  opgeslagen: ["Opgeslagen. Vink de lijst \"{lijst}\" aan om orders die nu gedekt zijn vrij te geven.", "Enregistré. Cochez la liste « {lijst} » pour libérer les commandes désormais couvertes."],
+  kanNietOpslaan: ["Kan niet opslaan: {fout}", "Impossible d'enregistrer : {fout}"],
+  kopierenMislukt: ["Kopiëren is niet gelukt.", "La copie a échoué."],
+  gekopieerd: ["Gekopieerd", "Copié"],
+  vraagBetaling: ["Deze betaling verwijderen?", "Supprimer ce paiement ?"],
+  vraagPrijs: ["Deze prijs van pakket {nr} verwijderen?", "Supprimer ce prix du colis {nr} ?"],
+  vraagCorrectie: ["Deze correctie verwijderen?", "Supprimer cette correction ?"],
+  verwijderen: ["Verwijderen", "Supprimer"],
+  annuleren: ["Annuleren", "Annuler"],
+  zeker: ["Weet je het zeker?", "Êtes-vous sûr ?"],
+};
+let mmpTaal = "nl";
+try { if (localStorage.getItem("mmpTaal") === "fr") mmpTaal = "fr"; } catch (_error) { /* geen opslag: Nederlands */ }
+
+function mt(sleutel, waarden = {}) {
+  const tekst = MMP_TEKSTEN[sleutel][mmpTaal === "fr" ? 1 : 0];
+  return tekst.replace(/\{(\w+)\}/g, (_, naam) => waarden[naam]);
+}
+
+// Bedragen en datums in de notatie van de gekozen taal.
+function mmpEuro(bedrag) {
+  return new Intl.NumberFormat(mmpTaal === "fr" ? "fr-FR" : "nl-NL", { style: "currency", currency: "EUR" }).format(bedrag);
+}
+function mmpDatum(iso) {
+  if (mmpTaal !== "fr" || !/^\d{4}-\d{2}-\d{2}$/.test(iso || "")) return iso;
+  const [jaar, maand, dag] = iso.split("-");
+  return `${dag}/${maand}/${jaar}`;
+}
+
+// In het Frans de Franse artikelnaam uit de prijslijst (nieuwste regel die
+// er een heeft); anders, of als die ontbreekt, de naam uit de eigen database.
+function mmpPakketnaam(pakketnummer) {
+  if (mmpTaal === "fr") {
+    const frans = mmpData().prijzen
+      .filter((p) => p.pakketnummer === pakketnummer && p.artikel)
+      .sort((a, b) => (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))[0];
+    if (frans) return frans.artikel;
+  }
+  return verkoopPakketnaam(pakketnummer);
+}
+
+// De redenen komen in het Nederlands uit mmp_saldo.js; hier alleen vertaald.
+function mmpReden(reden) {
+  if (reden === "te weinig saldo") return mt("teWeinigSaldo");
+  const ontbreekt = /^prijs ontbreekt voor pakket (.+)$/.exec(reden || "");
+  return ontbreekt ? mt("prijsOntbreekt", { nr: ontbreekt[1] }) : reden;
+}
+
+function pasMmpTaalToe() {
+  mmpDialog.querySelectorAll("[data-mmp-tekst]").forEach((el) => { el.textContent = mt(el.dataset.mmpTekst); });
+  mmpDialog.querySelectorAll("[data-mmp-placeholder]").forEach((el) => { el.placeholder = mt(el.dataset.mmpPlaceholder); });
+  mmpDialog.querySelectorAll("[data-mmp-title]").forEach((el) => { el.title = mt(el.dataset.mmpTitle); el.setAttribute("aria-label", el.title); });
+  const taalKnop = document.querySelector("#mmpTaal");
+  taalKnop.textContent = mmpTaal.toUpperCase();
+  taalKnop.title = mt("taalKnop");
+  taalKnop.setAttribute("aria-label", taalKnop.title);
+  mmpDialog.lang = mmpTaal;
+}
+
 // Alle bekende Maison Privée-orders: de verkoopdata plus wat er in de
 // ingeladen lijsten en de wachtlijst staat (nog niet naar Verkopen gestuurd).
 // De ingeladen lijsten gaan vóór de verkoopdata: zij dragen de echte
@@ -2055,11 +2175,11 @@ async function mmpBewaar(sectie, body) {
     await mmpOpslaan(sectie, body);
     renderMmpDialog();
     if (sectie === "betalingen" && imports.some(isMmpWachtlijst)) {
-      melding.textContent = `Opgeslagen. Vink de lijst "${MMP_WACHT_NAAM}" aan om orders die nu gedekt zijn vrij te geven.`;
+      melding.textContent = mt("opgeslagen", { lijst: MMP_WACHT_NAAM });
     }
     return true;
   } catch (error) {
-    melding.textContent = `Kan niet opslaan: ${error.message}`;
+    melding.textContent = mt("kanNietOpslaan", { fout: error.message });
     return false;
   }
 }
@@ -2068,30 +2188,30 @@ function renderMmpDialog() {
   const data = mmpData();
   const saldo = mmpBereken();
   const tegels = [
-    ["Ontvangen", formatEuro(saldo.ontvangen)],
-    ["Besteld", formatEuro(saldo.besteld)],
-    ["Saldo nu", formatEuro(saldo.saldo)],
-    ["Wacht op betaling", `${saldo.wachtend} order(s)`],
-    ["Tekort", formatEuro(saldo.tekort)],
+    [mt("ontvangen"), mmpEuro(saldo.ontvangen)],
+    [mt("besteld"), mmpEuro(saldo.besteld)],
+    [mt("saldoNu"), mmpEuro(saldo.saldo), saldo.saldo < 0],
+    [mt("wachtTitel"), `${saldo.wachtend} ${mt("orders")}`],
+    [mt("tekort"), mmpEuro(saldo.tekort)],
   ];
-  document.querySelector("#mmpTiles").innerHTML = tegels.map(([label, waarde]) =>
-    `<div class="verkoop-tile"><span class="verkoop-tile-label">${label}</span><span class="verkoop-tile-value${label === "Saldo nu" && saldo.saldo < 0 ? " mmp-negatief" : ""}">${waarde}</span></div>`).join("");
+  document.querySelector("#mmpTiles").innerHTML = tegels.map(([label, waarde, negatief]) =>
+    `<div class="verkoop-tile"><span class="verkoop-tile-label">${label}</span><span class="verkoop-tile-value${negatief ? " mmp-negatief" : ""}">${waarde}</span></div>`).join("");
 
   document.querySelector("#mmpWaarschuwingen").innerHTML = saldo.ontbrekendePrijzen.length
-    ? `<div class="mmp-waarschuwing">Prijs ontbreekt voor pakket ${saldo.ontbrekendePrijzen.map(escapeHtml).join(", ")} — die orders wachten tot je een prijs invult (zie Prijzen).</div>`
+    ? `<div class="mmp-waarschuwing">${escapeHtml(mt("prijsOntbreektMelding", { nrs: saldo.ontbrekendePrijzen.join(", ") }))}</div>`
     : "";
 
   const wachtend = saldo.orders.filter((o) => o.status === "wacht");
   document.querySelector("#mmpWachtend").innerHTML = wachtend.length
-    ? `<table class="verkoop-table"><thead><tr><th>Datum</th><th>Ordernummer</th><th>Pakket</th><th class="verkoop-col-aantal">Bedrag</th><th>Reden</th></tr></thead><tbody>${
-      wachtend.map((o) => `<tr><td>${escapeHtml(o.datum)}</td><td>${escapeHtml(o.ordernummer)}</td><td>${escapeHtml(o.pakketnummer)} – ${escapeHtml(verkoopPakketnaam(o.pakketnummer))}${o.pokon ? " + Pokon" : ""}</td><td class="verkoop-col-aantal">${o.bedrag === null ? "—" : formatEuro(o.bedrag)}</td><td>${escapeHtml(o.reden)}</td></tr>`).join("")
+    ? `<table class="verkoop-table"><thead><tr><th>${mt("datum")}</th><th>${mt("ordernummer")}</th><th>${mt("pakket")}</th><th class="verkoop-col-aantal">${mt("bedrag")}</th><th>${mt("reden")}</th></tr></thead><tbody>${
+      wachtend.map((o) => `<tr><td>${escapeHtml(mmpDatum(o.datum))}</td><td>${escapeHtml(o.ordernummer)}</td><td>${escapeHtml(o.pakketnummer)} – ${escapeHtml(mmpPakketnaam(o.pakketnummer))}${o.pokon ? " + Pokon" : ""}</td><td class="verkoop-col-aantal">${o.bedrag === null ? "—" : mmpEuro(o.bedrag)}</td><td>${escapeHtml(mmpReden(o.reden))}</td></tr>`).join("")
     }</tbody></table>`
-    : "<p class=\"mmp-uitleg\">Er wacht niets — alle orders zijn gedekt.</p>";
+    : `<p class="mmp-uitleg">${mt("nietsWacht")}</p>`;
 
   document.querySelector("#mmpBetalingenBody").innerHTML = [...data.betalingen]
     .sort((a, b) => b.datum.localeCompare(a.datum))
-    .map((b) => `<tr><td>${escapeHtml(b.datum)}</td><td>${escapeHtml(b.omschrijving)}</td><td class="verkoop-col-aantal">${formatEuro(b.bedrag)}</td><td><button type="button" class="mmp-tekst-knop" data-betaling-id="${escapeHtml(b.id)}" aria-label="Betaling verwijderen">×</button></td></tr>`)
-    .join("") || `<tr><td colspan="4">Nog geen betalingen.</td></tr>`;
+    .map((b) => `<tr><td>${escapeHtml(mmpDatum(b.datum))}</td><td>${escapeHtml(b.omschrijving)}</td><td class="verkoop-col-aantal">${mmpEuro(b.bedrag)}</td><td><button type="button" class="mmp-tekst-knop" data-betaling-id="${escapeHtml(b.id)}" aria-label="${mt("betalingVerwijderen")}">×</button></td></tr>`)
+    .join("") || `<tr><td colspan="4">${mt("geenBetalingen")}</td></tr>`;
 
   const zoek = mmpPrijsZoekterm.trim().toLowerCase();
   // Namen komen uit de eigen pakketdatabase (zoals overal in de app), niet
@@ -2102,19 +2222,19 @@ function renderMmpDialog() {
   const prijsRijen = [...ontbrekend, ...[...data.prijzen]
     .sort((a, b) => a.pakketnummer.localeCompare(b.pakketnummer, "nl", { numeric: true })
       || (b.geldig_vanaf || "").localeCompare(a.geldig_vanaf || ""))]
-    .filter((p) => !zoek || p.pakketnummer.toLowerCase().includes(zoek) || verkoopPakketnaam(p.pakketnummer).toLowerCase().includes(zoek));
+    .filter((p) => !zoek || p.pakketnummer.toLowerCase().includes(zoek) || mmpPakketnaam(p.pakketnummer).toLowerCase().includes(zoek));
   document.querySelector("#mmpPrijzenBody").innerHTML = prijsRijen.map((p, index) => {
     if (p.prijs === null) {
-      return `<tr class="mmp-rij-geen-prijs"><td>${escapeHtml(p.pakketnummer)}</td><td colspan="3">besteld, maar nog geen prijs</td><td class="verkoop-col-aantal">—</td><td></td></tr>`;
+      return `<tr class="mmp-rij-geen-prijs"><td>${escapeHtml(p.pakketnummer)}</td><td colspan="3">${mt("nogGeenPrijs")}</td><td class="verkoop-col-aantal">—</td><td></td></tr>`;
     }
     const eerder = index > 0 && prijsRijen[index - 1].pakketnummer === p.pakketnummer && prijsRijen[index - 1].prijs !== null;
     const sleutel = `${p.pakketnummer}@${p.geldig_vanaf || ""}`;
-    return `<tr${eerder ? ' class="mmp-rij-oud"' : ""}><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(verkoopPakketnaam(p.pakketnummer))}</td><td>${escapeHtml(p.ean)}</td><td>${p.geldig_vanaf ? escapeHtml(p.geldig_vanaf) : "start"}</td><td class="verkoop-col-aantal">${formatEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-sleutel="${escapeHtml(sleutel)}" aria-label="Prijs verwijderen">×</button></td></tr>`;
+    return `<tr${eerder ? ' class="mmp-rij-oud"' : ""}><td>${escapeHtml(p.pakketnummer)}</td><td>${escapeHtml(mmpPakketnaam(p.pakketnummer))}</td><td>${escapeHtml(p.ean)}</td><td>${p.geldig_vanaf ? escapeHtml(mmpDatum(p.geldig_vanaf)) : mt("start")}</td><td class="verkoop-col-aantal">${mmpEuro(p.prijs)}</td><td><button type="button" class="mmp-tekst-knop" data-prijs-sleutel="${escapeHtml(sleutel)}" aria-label="${mt("prijsVerwijderen")}">×</button></td></tr>`;
   }).join("");
 
   document.querySelector("#mmpCorrectiesBody").innerHTML = data.correcties
-    .map((c) => `<tr><td>${escapeHtml(c.ordernummer)}</td><td>${escapeHtml(c.reden)}</td><td><button type="button" class="mmp-tekst-knop" data-correctie="${escapeHtml(c.ordernummer)}" aria-label="Correctie verwijderen">×</button></td></tr>`)
-    .join("") || `<tr><td colspan="3">Geen correcties.</td></tr>`;
+    .map((c) => `<tr><td>${escapeHtml(c.ordernummer)}</td><td>${escapeHtml(c.reden)}</td><td><button type="button" class="mmp-tekst-knop" data-correctie="${escapeHtml(c.ordernummer)}" aria-label="${mt("correctieVerwijderen")}">×</button></td></tr>`)
+    .join("") || `<tr><td colspan="3">${mt("geenCorrecties")}</td></tr>`;
 
   const instellingenForm = document.querySelector("#mmpInstellingenForm");
   instellingenForm.startdatum.value = data.instellingen.startdatum;
@@ -2175,15 +2295,15 @@ async function kopieerMmpSaldo() {
     const selectie = window.getSelection(); selectie.removeAllRanges(); selectie.addRange(bereik);
     const gelukt = document.execCommand("copy");
     selectie.removeAllRanges(); tijdelijk.remove();
-    if (!gelukt) { document.querySelector("#mmpMessage").textContent = "Kopiëren is niet gelukt."; return; }
+    if (!gelukt) { document.querySelector("#mmpMessage").textContent = mt("kopierenMislukt"); return; }
   }
   knop.innerHTML = MMP_ICOON_VINK;
   knop.classList.add("is-gekopieerd");
-  knop.title = "Gekopieerd";
+  knop.title = mt("gekopieerd");
   setTimeout(() => {
     knop.innerHTML = MMP_ICOON_KOPIEER;
     knop.classList.remove("is-gekopieerd");
-    knop.title = "Saldo kopiëren voor mail";
+    knop.title = mt("kopieer");
   }, 2000);
 }
 
@@ -2198,10 +2318,13 @@ function mmpFactuurTabelHtml(saldo = mmpBereken()) {
   [...mmpData().prijzen]
     .sort((a, b) => (a.geldig_vanaf || "").localeCompare(b.geldig_vanaf || ""))
     .forEach((p) => { if (p.ean) eanPerPakket.set(p.pakketnummer, p.ean); });
-  return `<table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>EAN</th><th>Pakketnaam</th><th class="verkoop-col-aantal">Aantal</th><th class="verkoop-col-aantal">Prijs</th><th class="verkoop-col-aantal">Totaal</th></tr></thead><tbody>${
-    factuur.regels.map((r) => `<tr><td>${escapeHtml(r.pakketnummer)}</td><td>${escapeHtml(eanPerPakket.get(r.pakketnummer) || "")}</td><td>${escapeHtml(r.pakketnummer === "Pokon-toeslag" ? "" : verkoopPakketnaam(r.pakketnummer))}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${formatEuro(r.prijs)}</td><td class="verkoop-col-aantal">${formatEuro(r.totaal)}</td></tr>`).join("")
-  }</tbody><tfoot><tr><td colspan="3">Totaal (${displayNumber(factuur.aantal)} pakketten)</td><td></td><td></td><td class="verkoop-col-aantal">${formatEuro(factuur.totaal)}</td></tr></tfoot></table>${
-    factuur.zonderPrijs ? `<div class="mmp-waarschuwing">${factuur.zonderPrijs} order(s) in deze periode hebben nog geen prijs en staan niet in dit overzicht.</div>` : ""}`;
+  return `<table class="verkoop-table"><thead><tr><th>${mt("pakketnummer")}</th><th>EAN</th><th>${mt("pakketnaam")}</th><th class="verkoop-col-aantal">${mt("aantal")}</th><th class="verkoop-col-aantal">${mt("prijs")}</th><th class="verkoop-col-aantal">${mt("totaal")}</th></tr></thead><tbody>${
+    factuur.regels.map((r) => {
+      const toeslag = r.pakketnummer === "Pokon-toeslag";
+      return `<tr><td>${escapeHtml(toeslag ? mt("pokonToeslag") : r.pakketnummer)}</td><td>${escapeHtml(eanPerPakket.get(r.pakketnummer) || "")}</td><td>${escapeHtml(toeslag ? "" : mmpPakketnaam(r.pakketnummer))}</td><td class="verkoop-col-aantal">${displayNumber(r.aantal)}</td><td class="verkoop-col-aantal">${mmpEuro(r.prijs)}</td><td class="verkoop-col-aantal">${mmpEuro(r.totaal)}</td></tr>`;
+    }).join("")
+  }</tbody><tfoot><tr><td colspan="3">${mt("totaalPakketten", { n: displayNumber(factuur.aantal) })}</td><td></td><td></td><td class="verkoop-col-aantal">${mmpEuro(factuur.totaal)}</td></tr></tfoot></table>${
+    factuur.zonderPrijs ? `<div class="mmp-waarschuwing">${mt("zonderPrijs", { n: factuur.zonderPrijs })}</div>` : ""}`;
 }
 
 function renderMmpFactuur(saldo) {
@@ -2311,12 +2434,12 @@ function geefMmpOrdersVrij(lijst) {
 function printMmpFactuur() {
   const van = document.querySelector("#mmpFactuurVan").value;
   const tot = document.querySelector("#mmpFactuurTot").value;
-  if (!van || !tot) { document.querySelector("#mmpMessage").textContent = "Kies eerst een periode (van en tot)."; return; }
+  if (!van || !tot) { document.querySelector("#mmpMessage").textContent = mt("kiesPeriode"); return; }
   document.querySelector("#mmpFactuurPrintPanel").innerHTML = `
     <div class="klant-overzicht">
       <header class="klant-overzicht-header">
-        <h1>Factuuroverzicht Ma Maison Privée</h1>
-        <p>${escapeHtml(van)} t/m ${escapeHtml(tot)}</p>
+        <h1>${mt("factuurTitel")} Ma Maison Privée</h1>
+        <p>${escapeHtml(mt("periodeTekst", { van: mmpDatum(van), tot: mmpDatum(tot) }))}</p>
       </header>
       ${mmpFactuurTabelHtml()}
     </div>`;
@@ -3820,6 +3943,7 @@ document.querySelector("#openMmpButton").addEventListener("click", () => {
   document.querySelector("#mmpFactuurVan").value = mmpData().instellingen.startdatum;
   document.querySelector("#mmpFactuurTot").value = vandaag;
   document.querySelector("#mmpMessage").textContent = "";
+  pasMmpTaalToe();
   renderMmpDialog();
   mmpDialog.showModal();
 });
@@ -3829,6 +3953,13 @@ document.querySelector("#mmpFactuurTot").addEventListener("change", () => render
 document.querySelector("#mmpFactuurPrint").addEventListener("click", printMmpFactuur);
 document.querySelector("#mmpKopieerSaldo").innerHTML = MMP_ICOON_KOPIEER;
 document.querySelector("#mmpKopieerSaldo").addEventListener("click", kopieerMmpSaldo);
+document.querySelector("#mmpTaal").addEventListener("click", () => {
+  mmpTaal = mmpTaal === "fr" ? "nl" : "fr";
+  try { localStorage.setItem("mmpTaal", mmpTaal); } catch (_error) { /* niet onthouden */ }
+  document.querySelector("#mmpMessage").textContent = "";
+  pasMmpTaalToe();
+  renderMmpDialog();
+});
 document.querySelector("#mmpPrijsZoek").addEventListener("input", (event) => { mmpPrijsZoekterm = event.target.value; renderMmpDialog(); });
 
 document.querySelector("#mmpBetalingForm").addEventListener("submit", async (event) => {
@@ -3861,14 +3992,17 @@ document.querySelector("#mmpInstellingenForm").addEventListener("submit", async 
   const form = event.target;
   await mmpBewaar("instellingen", { instellingen: { startdatum: form.startdatum.value, pokon_toeslag: form.pokon_toeslag.value } });
 });
+function mmpBevestig(vraag) {
+  return confirmDialog(vraag, mt("verwijderen"), { cancelLabel: mt("annuleren"), title: mt("zeker") });
+}
 mmpDialog.addEventListener("click", async (event) => {
   const knop = event.target.closest("button");
   if (!knop) return;
-  if (knop.dataset.betalingId && await confirmDialog("Deze betaling verwijderen?")) {
+  if (knop.dataset.betalingId && await mmpBevestig(mt("vraagBetaling"))) {
     await mmpBewaar("betalingen", { verwijderen: [knop.dataset.betalingId] });
-  } else if (knop.dataset.prijsSleutel && await confirmDialog(`Deze prijs van pakket ${knop.dataset.prijsSleutel.split("@")[0]} verwijderen?`)) {
+  } else if (knop.dataset.prijsSleutel && await mmpBevestig(mt("vraagPrijs", { nr: knop.dataset.prijsSleutel.split("@")[0] }))) {
     await mmpBewaar("prijzen", { verwijderen: [knop.dataset.prijsSleutel] });
-  } else if (knop.dataset.correctie && await confirmDialog("Deze correctie verwijderen?")) {
+  } else if (knop.dataset.correctie && await mmpBevestig(mt("vraagCorrectie"))) {
     await mmpBewaar("correcties", { verwijderen: [knop.dataset.correctie] });
   }
 });

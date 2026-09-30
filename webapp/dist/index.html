@@ -269,11 +269,14 @@
   <dialog id="mmpDialog" class="package-dialog verkoop-dialog mmp-dialog">
     <div class="dialog-header">
       <div>
-        <span class="eyebrow">Vooruitbetaling</span>
+        <span class="eyebrow" data-mmp-tekst="eyebrow">Vooruitbetaling</span>
         <h2>Ma Maison Privée</h2>
       </div>
-      <button id="closeMmpDialog" class="button button-terug" type="button">← Terug naar picklisten</button>
-      <button id="mmpKopieerSaldo" class="mmp-kopieer-badge" type="button" title="Saldo kopiëren voor mail" aria-label="Saldo kopiëren voor mail"></button>
+      <button id="closeMmpDialog" class="button button-terug" type="button" data-mmp-tekst="terug">← Terug naar picklisten</button>
+      <div class="mmp-kop-knoppen">
+        <button id="mmpTaal" class="mmp-kop-badge mmp-taal-badge" type="button"></button>
+        <button id="mmpKopieerSaldo" class="mmp-kop-badge" type="button" data-mmp-title="kopieer"></button>
+      </div>
     </div>
     <div class="verkoop-dialog-body">
       <p id="mmpMessage" class="message" role="status" aria-live="polite"></p>
@@ -281,65 +284,65 @@
       <div id="mmpWaarschuwingen"></div>
 
       <section class="mmp-sectie">
-        <h3>Wacht op betaling</h3>
+        <h3 data-mmp-tekst="wachtTitel">Wacht op betaling</h3>
         <div id="mmpWachtend"></div>
       </section>
 
       <section class="mmp-sectie">
-        <h3>Betalingen</h3>
+        <h3 data-mmp-tekst="betalingen">Betalingen</h3>
         <form id="mmpBetalingForm" class="mmp-form">
-          <label>Datum <input name="datum" type="date" required></label>
-          <label>Omschrijving <input name="omschrijving" type="text" placeholder="Vooruitbetaling okt."></label>
-          <label>Bedrag (€) <input name="bedrag" type="text" inputmode="decimal" required placeholder="500,00"></label>
-          <button class="button button-primary" type="submit">Toevoegen</button>
+          <label><span data-mmp-tekst="datum">Datum</span> <input name="datum" type="date" required></label>
+          <label><span data-mmp-tekst="omschrijving">Omschrijving</span> <input name="omschrijving" type="text" data-mmp-placeholder="omschrijvingVoorbeeld"></label>
+          <label><span data-mmp-tekst="bedragEuro">Bedrag (€)</span> <input name="bedrag" type="text" inputmode="decimal" required placeholder="500,00"></label>
+          <button class="button button-primary" type="submit" data-mmp-tekst="toevoegen">Toevoegen</button>
         </form>
-        <table class="verkoop-table"><thead><tr><th>Datum</th><th>Omschrijving</th><th class="verkoop-col-aantal">Bedrag</th><th></th></tr></thead>
+        <table class="verkoop-table"><thead><tr><th data-mmp-tekst="datum">Datum</th><th data-mmp-tekst="omschrijving">Omschrijving</th><th class="verkoop-col-aantal" data-mmp-tekst="bedrag">Bedrag</th><th></th></tr></thead>
           <tbody id="mmpBetalingenBody"></tbody></table>
       </section>
 
       <section class="mmp-sectie">
-        <h3>Factuuroverzicht</h3>
+        <h3 data-mmp-tekst="factuurTitel">Factuuroverzicht</h3>
         <div class="verkoop-datum-bereik">
-          <label>Van <input id="mmpFactuurVan" type="date"></label>
-          <label>Tot <input id="mmpFactuurTot" type="date"></label>
-          <button id="mmpFactuurPrint" class="button button-quiet" type="button">Afdrukken</button>
+          <label><span data-mmp-tekst="van">Van</span> <input id="mmpFactuurVan" type="date"></label>
+          <label><span data-mmp-tekst="tot">Tot</span> <input id="mmpFactuurTot" type="date"></label>
+          <button id="mmpFactuurPrint" class="button button-quiet" type="button" data-mmp-tekst="afdrukken">Afdrukken</button>
         </div>
         <div id="mmpFactuur"></div>
       </section>
 
       <section class="mmp-sectie">
-        <h3>Prijzen</h3>
+        <h3 data-mmp-tekst="prijzen">Prijzen</h3>
         <form id="mmpPrijsForm" class="mmp-form">
-          <label>Pakketnummer <input name="pakketnummer" type="text" required></label>
+          <label><span data-mmp-tekst="pakketnummer">Pakketnummer</span> <input name="pakketnummer" type="text" required></label>
           <label>EAN <input name="ean" type="text"></label>
-          <label>Prijs (€) <input name="prijs" type="text" inputmode="decimal" required></label>
-          <label>Geldig vanaf <input name="geldig_vanaf" type="date" required></label>
-          <button class="button button-primary" type="submit">Opslaan</button>
+          <label><span data-mmp-tekst="prijsEuro">Prijs (€)</span> <input name="prijs" type="text" inputmode="decimal" required></label>
+          <label><span data-mmp-tekst="geldigVanaf">Geldig vanaf</span> <input name="geldig_vanaf" type="date" required></label>
+          <button class="button button-primary" type="submit" data-mmp-tekst="opslaan">Opslaan</button>
         </form>
-        <p class="mmp-uitleg">Een nieuwe prijs geldt voor orders vanaf de ingangsdatum; oudere orders houden hun oude prijs. Klik op een regel om de prijs aan te passen.</p>
-        <input id="mmpPrijsZoek" type="search" placeholder="Zoek pakketnummer of pakketnaam…">
-        <div class="mmp-scroll"><table class="verkoop-table"><thead><tr><th>Pakketnummer</th><th>Pakketnaam</th><th>EAN</th><th>Geldig vanaf</th><th class="verkoop-col-aantal">Prijs</th><th></th></tr></thead>
+        <p class="mmp-uitleg" data-mmp-tekst="prijsUitleg">Een nieuwe prijs geldt voor orders vanaf de ingangsdatum; oudere orders houden hun oude prijs. Klik op een regel om de prijs aan te passen.</p>
+        <input id="mmpPrijsZoek" type="search" data-mmp-placeholder="prijsZoek">
+        <div class="mmp-scroll"><table class="verkoop-table"><thead><tr><th data-mmp-tekst="pakketnummer">Pakketnummer</th><th data-mmp-tekst="pakketnaam">Pakketnaam</th><th>EAN</th><th data-mmp-tekst="geldigVanaf">Geldig vanaf</th><th class="verkoop-col-aantal" data-mmp-tekst="prijs">Prijs</th><th></th></tr></thead>
           <tbody id="mmpPrijzenBody"></tbody></table></div>
       </section>
 
       <section class="mmp-sectie">
-        <h3>Correcties</h3>
-        <p class="mmp-uitleg">Orders die niet mogen meetellen voor saldo en factuur (bijv. een retour).</p>
+        <h3 data-mmp-tekst="correcties">Correcties</h3>
+        <p class="mmp-uitleg" data-mmp-tekst="correctieUitleg">Orders die niet mogen meetellen voor saldo en factuur (bijv. een retour).</p>
         <form id="mmpCorrectieForm" class="mmp-form">
-          <label>Ordernr. intern <input name="ordernummer" type="text" required></label>
-          <label>Reden <input name="reden" type="text"></label>
-          <button class="button button-primary" type="submit">Toevoegen</button>
+          <label><span data-mmp-tekst="ordernrIntern">Ordernr. intern</span> <input name="ordernummer" type="text" required></label>
+          <label><span data-mmp-tekst="reden">Reden</span> <input name="reden" type="text"></label>
+          <button class="button button-primary" type="submit" data-mmp-tekst="toevoegen">Toevoegen</button>
         </form>
-        <table class="verkoop-table"><thead><tr><th>Ordernummer</th><th>Reden</th><th></th></tr></thead>
+        <table class="verkoop-table"><thead><tr><th data-mmp-tekst="ordernummer">Ordernummer</th><th data-mmp-tekst="reden">Reden</th><th></th></tr></thead>
           <tbody id="mmpCorrectiesBody"></tbody></table>
       </section>
 
       <section class="mmp-sectie">
-        <h3>Instellingen</h3>
+        <h3 data-mmp-tekst="instellingen">Instellingen</h3>
         <form id="mmpInstellingenForm" class="mmp-form">
-          <label>Orders tellen mee vanaf <input name="startdatum" type="date" required></label>
-          <label>Pokon-toeslag (€) <input name="pokon_toeslag" type="text" inputmode="decimal" required></label>
-          <button class="button button-primary" type="submit">Opslaan</button>
+          <label><span data-mmp-tekst="startdatum">Orders tellen mee vanaf</span> <input name="startdatum" type="date" required></label>
+          <label><span data-mmp-tekst="pokonToeslagEuro">Pokon-toeslag (€)</span> <input name="pokon_toeslag" type="text" inputmode="decimal" required></label>
+          <button class="button button-primary" type="submit" data-mmp-tekst="opslaan">Opslaan</button>
         </form>
       </section>
     </div>
