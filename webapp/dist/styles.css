@@ -776,3 +776,8 @@ tr.has-nazending { border-left-color: #d9c28a; }
    met zwarte tekst en zwarte rand (rood bij aanwijzen, zoals de rest). */
 .header-actions .verkoop-header-button { border-color: #000; color: #000; background: var(--accent-oker-zacht); }
 .header-actions .verkoop-header-button:hover:not(:disabled) { background: #eddcb8; }
+/* Print-status-knop gelijk aan de andere kopbalkknoppen: zelfde hoogte,
+   hoeken en vulling, en bij aanwijzen geen roze vlak maar alleen de rode rand. */
+.header-actions .print-status-reset-button { width: 48px; height: 44px; border-radius: 12px; color: white; background: rgba(255,255,255,.06); }
+.header-actions .print-status-reset-button:hover:not(:disabled) { background: rgba(255,255,255,.12); }
+.header-actions .print-status-reset-button:disabled { opacity: .45; }
