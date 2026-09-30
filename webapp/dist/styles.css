@@ -768,3 +768,7 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .is-podium-2 .verkoop-overzicht-top10-rang { color: #2f3439; background: linear-gradient(145deg, #eceff2, #a9b0b8); }
 .is-podium-3 { border-color: #d0a07a; background: #f8ece2; }
 .is-podium-3 .verkoop-overzicht-top10-rang { color: #3d220d; background: linear-gradient(145deg, #e7b48a, #b0713f); }
+/* Knoppen in de groene kopbalk: goudgeel omlijnd, rood bij aanwijzen. */
+.header-actions .button-secondary, .header-actions .verkoop-header-button, .header-actions .print-status-reset-button { border: 1.5px solid var(--gold); }
+.header-actions .button-secondary:hover:not(:disabled), .header-actions .verkoop-header-button:hover:not(:disabled), .header-actions .print-status-reset-button:hover:not(:disabled) { border-color: #e5534b; }
+.header-actions .button-secondary:disabled, .header-actions .print-status-reset-button:disabled { border-color: rgba(230,184,92,.5); }
