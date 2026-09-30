@@ -788,3 +788,4 @@ tr.has-nazending { border-left-color: #d9c28a; }
    verwijderkruisje, en de knop schuift naar het eind. */
 .import-meta-row { grid-column: 2 / 4; }
 .import-wacht-voorblad-button { margin-left: auto; }
+.import-verkoop-button, .import-verkoop-status { margin-left: auto; }
