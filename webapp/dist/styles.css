@@ -679,3 +679,44 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-kop-badge:hover, .mmp-kop-badge:focus-visible { border-color: var(--gold); color: var(--gold); background: rgba(255,255,255,.14); outline: none; }
 .mmp-kop-badge.is-gekopieerd { border-color: var(--gold); color: var(--gold); }
 .mmp-kop-badge svg { width: 18px; height: 18px; }
+
+/* ---- Rustig palet hoofdpagina ----
+   Overschrijft de felle "kermis"-kleuren (groen #4caf50, oranje #e8842c,
+   rood #e5342a, blauw #5b9bd5, zwarte randen) met de huisstijl: wit,
+   donkergroen en kleur alleen als accent. Terug naar de oude kleuren = dit
+   blok weghalen; de oude versie staat ook onder git-tag
+   hoofdpagina-kleuren-kermis. */
+:root { --accent-rood: #a63f37; --accent-rood-zacht: #f7e6e3; --accent-oker: #8a6a2a; --accent-oker-zacht: #f5ecd9; }
+
+/* Kopbalk: alle knoppen gelijk, dunne lichte rand, geen felle vulling. */
+.button-secondary, .verkoop-header-button { border: 1px solid rgba(255,255,255,.35); color: white; background: rgba(255,255,255,.06); transition: background .15s ease, border-color .15s ease; }
+.button-secondary:hover:not(:disabled), .verkoop-header-button:hover:not(:disabled) { border-color: var(--gold); background: rgba(255,255,255,.12); }
+.print-status-reset-button { border: 1px solid rgba(255,255,255,.35); color: white; background: rgba(255,255,255,.06); }
+
+/* Actieknoppen onder het sleepvak: wit met een gekleurde tekst. */
+.manage-packages-button, .klant-duplicaten-button, .nazending-add-button { border: 1px solid var(--line); color: var(--brand); background: white; font-weight: 750; }
+.manage-packages-button:hover:not(:disabled), .klant-duplicaten-button:hover:not(:disabled) { border-color: var(--brand); background: #f1f6f3; }
+.nazending-add-button { color: var(--accent-rood); }
+.nazending-add-button:hover:not(:disabled) { border-color: var(--accent-rood); background: var(--accent-rood-zacht); }
+.klant-duplicaten-button:disabled { color: var(--muted); background: #f4f6f5; }
+.button-terug { border: 1px solid var(--line); color: var(--brand); background: white; }
+
+/* Ingeladen lijsten: witte kaarten met een groene streep links als ze
+   meetellen, in plaats van een volledig groen vlak met zwarte rand. */
+.import-row { border: 1px solid var(--line); border-left: 4px solid var(--brand); background: white; }
+#importsList .import-row:first-child { border-top: 1px solid var(--line); }
+.import-row.is-held { border-color: var(--line); border-left-color: #c9d3ce; background: #f8faf9; }
+.nazending-group-row.is-held { border-color: #e8d6a8; border-left-color: #d9c28a; background: #fbf6ec; }
+.import-row:not(.is-held) .import-order-total, .import-row:not(.is-held) .import-verkoop-status { color: var(--brand); font-weight: 700; }
+.import-name-input { border-color: var(--line); }
+.import-delete-button, .nazending-delete-button { border: 1px solid var(--line); color: var(--muted); background: white; }
+.import-delete-button:hover, .nazending-delete-button:hover { border-color: var(--accent-rood); color: var(--accent-rood); background: var(--accent-rood-zacht); }
+.import-wacht-voorblad-button { border: 1px solid var(--accent-oker); color: var(--accent-oker); background: var(--accent-oker-zacht); }
+.import-wacht-voorblad-button:hover { background: #eddcb8; }
+.nazending-sublist-toggle { border: 1px solid var(--line); }
+
+/* Klacht-labels en -regels: zacht rood/oker in plaats van fel. */
+.nazending-badge { border: 1px solid var(--accent-rood); color: var(--accent-rood); background: var(--accent-rood-zacht); }
+.nazending-full-badge { color: var(--accent-oker); background: var(--accent-oker-zacht); }
+tr.has-nazending { border-left-color: #d9c28a; }
+.verkoop-klant-button.is-actief { color: white; background: var(--brand); border-color: var(--brand); }
