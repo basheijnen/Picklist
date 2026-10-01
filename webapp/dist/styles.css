@@ -873,3 +873,6 @@ tr.has-nazending { border-left-color: #d9c28a; }
    animatie; bij aanwijzen een rode rand zoals de andere kopbalkknoppen. */
 .header-actions .verkoop-header-button { border-color: var(--gold); color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
 .header-actions .verkoop-header-button:hover:not(:disabled) { border-color: #e5534b; background: linear-gradient(160deg, #cf935a, #a96d38); }
+/* "Terug naar picklisten" in Verkopen: zelfde brons als de Verkopen-knop. */
+#closeVerkoopDialog { border: 2px solid var(--gold); color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
+#closeVerkoopDialog:hover { border-color: #e5534b; background: linear-gradient(160deg, #cf935a, #a96d38); }
