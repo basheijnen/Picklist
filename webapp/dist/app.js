@@ -772,6 +772,9 @@ let verkoopView = "kalender";
 // "Deze week" of "Totaal seizoen" ({ van, tot } of null) — de kalender
 // blijft dan open. Alleen dagen met verkoop worden gemarkeerd.
 let verkoopKalenderMarkering = null;
+// Ging je vanuit het kalenderoverzicht via Europa of Pokon naar een andere
+// weergave, dan brengt een periodetegel (Deze week e.d.) je terug naar de kalender.
+let verkoopTerugNaarKalender = false;
 // Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
 // een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
 // bekeken seizoen zetten (voor de tabel-filter) zonder dat de titel, de
@@ -2606,14 +2609,14 @@ function renderVerkoopTiles() {
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "", behoudPeriode: true },
-    { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
     {
       label: "Selectie", waarde: heeftSelectie ? displayNumber(totaalSelectie) : "–",
       onderschrift: heeftSelectie ? `${verkoopDatumNL(huidigeVan)} t/m ${verkoopDatumNL(huidigeTot)}` : "kies Van/Tot",
       selectie: true,
       ...(heeftSelectie ? { van: huidigeVan, tot: huidigeTot, kalenderMarkering: { van: huidigeVan, tot: huidigeTot, selectie: true } } : {}),
     },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "", behoudPeriode: true },
+    { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
   ];
   const huidigeZoek = document.querySelector("#verkoopZoekInput").value;
   const tilesEl = document.querySelector("#verkoopTiles");
@@ -2656,10 +2659,18 @@ function renderVerkoopTiles() {
       if (tegel.zoek) zoekInput.value = tegel.zoek;
       else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
       if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
-      // In het kalenderoverzicht doen Vandaag/Deze week/Totaal seizoen niets
-      // anders dan die dagen geel markeren; je blijft in de kalender.
+      // Kwam je via Europa/Pokon uit de kalender, dan brengt een periodetegel
+      // je daar weer terug.
+      if (verkoopTerugNaarKalender && tegel.kalenderMarkering) {
+        verkoopView = "kalender";
+        verkoopTerugNaarKalender = false;
+      }
+      // In het kalenderoverzicht doen Vandaag/Deze week/Totaal seizoen/Selectie
+      // niets anders dan die dagen markeren; je blijft in de kalender.
       verkoopKalenderMarkering = (verkoopView === "kalender" || tegel.selectie) && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
       if (verkoopView === "kalender" && verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
+      // Europa of Pokon vanuit de kalender: onthoud dat je terug wilt.
+      if (verkoopView === "kalender" && (tegel.view || tegel.zoek)) verkoopTerugNaarKalender = true;
       // Blijf in Verkopen per pakket/per plant als je daar al was.
       if (tegel.view) verkoopView = tegel.view;
       else if (tegel.zoek || !["tabel", "plant"].includes(verkoopView)) verkoopView = "tabel";
@@ -4100,6 +4111,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   verkoopActiefSeizoen = verkoopHuidigSeizoenStart(vandaag);
   // De kalender opent zonder markering; goud alleen na een klik op een tegel.
   verkoopKalenderMarkering = null;
+  verkoopTerugNaarKalender = false;
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
@@ -4263,6 +4275,7 @@ document.querySelectorAll(".verkoop-table th[data-plant-sort]").forEach((th) => 
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
     verkoopView = knop.dataset.view;
+    verkoopTerugNaarKalender = false;
     // Een zelf gekozen Selectie blijft zichtbaar in de kalender; de markering
     // van een tegelklik (Vandaag/Deze week/seizoen) niet.
     if (!verkoopKalenderMarkering?.selectie) verkoopKalenderMarkering = null;
