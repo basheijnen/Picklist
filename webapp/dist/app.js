@@ -2840,7 +2840,9 @@ function verkoopPokonOmschrijving(order, ordersPerNummer) {
   // naam: alles in één regel (export); in de tabel staan pakket, soort en
   // klant in eigen kolommen.
   const naam = pakket ? `${soortNaam} · bij ${pakket} · ${order.kanaal}` : `${soortNaam} · ${order.kanaal}`;
-  return { sleutel: `Pokon|${naam}`, naam, pakket: pakket || "Pokon", soortNaam, klant: order.kanaal };
+  // In de tabel het bestelde p-pakket (249.1p), zodat de Pokon-regel niet
+  // verward wordt met de gewone regel van 249.1.
+  return { sleutel: `Pokon|${naam}`, naam, pakket: pakket ? `${pakket}p` : "Pokon", soortNaam, klant: order.kanaal };
 }
 
 function verkoopOrdersPerNummer() {
