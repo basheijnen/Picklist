@@ -646,12 +646,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    each one. */
 .verkoop-kalender { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; padding: 4px 2px; }
 .verkoop-kalender[hidden] { display: none; }
-.verkoop-kalender-maand { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: white; }
-.verkoop-kalender-maand-titel { padding: 5px 4px; background: #e8f4ed; border-bottom: 2px solid var(--brand); color: #000; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verkoop-kalender-maand { min-width: 0; }
+/* De dagen in een eigen wit blok met afgeronde hoeken; de maandnaam los erboven. */
+.verkoop-kalender-dagen { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: white; }
+.verkoop-kalender-maand-titel { padding: 2px 4px 5px; color: #000; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .verkoop-kalender-maand table { border-collapse: separate; border-spacing: 0; font-size: .82rem; }
 .verkoop-kalender-maand td { padding: 0 4px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
-.verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #d3e7da; }
+/* Weekenden licht blauw, dezelfde tint als de periodeknop en de Selectie-tegel (iets lichter). */
+.verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: color-mix(in srgb, #2576a6 8%, white); }
 /* Gemarkeerde dagen: heel licht rood, elk aaneengesloten blok met een dunne grijze rand. */
 .verkoop-kalender { --kalender-rand: #7a7a7a; }
 /* Markering in een zachte bronstint, passend bij de bronzen knoppen. */

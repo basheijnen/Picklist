@@ -3079,7 +3079,7 @@ function renderVerkoopKalender() {
       const vulRijen = Array.from({ length: 31 - dagenInMaand }, () => `<tr><td>&nbsp;</td><td></td></tr>`).join("");
       return `<div class="verkoop-kalender-maand">
         <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])} ${jaar}</div>
-        <table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table>
+        <div class="verkoop-kalender-dagen"><table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table></div>
       </div>`;
     })
     .join("");
