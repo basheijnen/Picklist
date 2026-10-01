@@ -1051,3 +1051,6 @@ dialog { overscroll-behavior: contain; }
 @media print {
   .bundel-label { padding: 0 5px; font-size: 6.2pt; letter-spacing: .02em; margin-right: 4px; }
 }
+/* Verwijderkruisje in de pakketlijst (klacht/bundel): dezelfde rode knop. */
+.department .nazending-delete-button { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 1.5px solid #000; border-radius: 7px; color: white; background: #c0392b; font-size: 1.05rem; font-weight: 900; line-height: 1; cursor: pointer; }
+.department .nazending-delete-button:hover { border-color: #000; color: white; background: #a5281d; }
