@@ -766,7 +766,15 @@ let nazendingen = [];
 const VERKOOP_STANDAARD_SORT = { kolom: "pakketnummer", richting: "asc" };
 let verkoopSort = { ...VERKOOP_STANDAARD_SORT };
 let verkoopPlantSort = { kolom: "aantal", richting: "desc" };
-let verkoopActiefKanaal = "";
+// Gekozen klanten (kanalen) in Verkopen; leeg = alle klanten. Meerdere
+// tegelijk kan (bijv. Amazon + Bol.com).
+let verkoopActieveKanalen = new Set();
+function verkoopKanaalPast(kanaal) {
+  return !verkoopActieveKanalen.size || verkoopActieveKanalen.has(kanaal);
+}
+function verkoopKanalenLijst() {
+  return [...verkoopActieveKanalen].sort((a, b) => a.localeCompare(b, "nl"));
+}
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
 let verkoopOpengeklaptPakket = "";
 // Breedte (aantal kolommen) van de uitklapregel; 4 als de kolom Klant er staat.
@@ -2470,13 +2478,12 @@ function printMmpFactuur() {
 function verkoopGefilterdeOrders({ metZoek = true } = {}) {
   const van = document.querySelector("#verkoopVanDatum").value;
   const tot = document.querySelector("#verkoopTotDatum").value;
-  const kanaal = verkoopActiefKanaal;
   const zoek = metZoek ? document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() : "";
   return (window.PICKLIST_VERKOOP || []).filter((order) => {
     // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
     if (van && order.datum < van) return false;
     if (tot && order.datum > tot) return false;
-    if (kanaal && order.kanaal !== kanaal) return false;
+    if (!verkoopKanaalPast(order.kanaal)) return false;
     if (zoek) {
       const naam = verkoopPakketnaam(order.pakketnummer).toLowerCase();
       // Ook op ordernummer zoeken, om 1 order terug te vinden en te kunnen
@@ -2528,7 +2535,7 @@ function verkoopExporteren(formaat) {
 async function verkoopDownload(rijen, bestandsnaam, bladnaam, formaat) {
   const van = document.querySelector("#verkoopVanDatum").value || "alles";
   const tot = document.querySelector("#verkoopTotDatum").value || "alles";
-  const kanaalDeel = verkoopActiefKanaal ? `${verkoopActiefKanaal.replace(/[^a-z0-9]+/gi, "-")}_` : "";
+  const kanaalDeel = verkoopActieveKanalen.size ? `${verkoopKanalenLijst().join("-").replace(/[^a-z0-9-]+/gi, "-")}_` : "";
   const naam = `${bestandsnaam}_${kanaalDeel}${van}_tot_${tot}.${formaat}`;
   let blob;
   if (formaat === "xlsx") {
@@ -2579,7 +2586,7 @@ function renderVerkoopTiles() {
   const seizoenEindVolledig = `${Number(seizoenStart.slice(0, 4)) + 1}-06-30`;
   const seizoenTot = seizoenEindVolledig > vandaag ? vandaag : seizoenEindVolledig;
   const alleOrders = (window.PICKLIST_VERKOOP || [])
-    .filter((o) => !verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    .filter((o) => verkoopKanaalPast(o.kanaal))
     .filter((o) => o.datum >= seizoenStart && o.datum <= seizoenTot);
   // ALDI telt niet mee in "Totaal seizoen" (en dus ook niet in Vandaag/Deze
   // week) — dat krijgt een eigen tegel, zodat de twee elkaar niet overlappen.
@@ -2604,14 +2611,14 @@ function renderVerkoopTiles() {
   const heeftSelectie = Boolean(huidigeVan && huidigeTot);
   const totaalSelectie = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon"
     && regioVoorKanaal(o.kanaal) !== "ALDI"
-    && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    && verkoopKanaalPast(o.kanaal)
     && o.datum >= huidigeVan && o.datum <= huidigeTot).reduce((sum, o) => sum + o.aantal, 0);
   // Pokon volgt de gekozen periode (zonder Van/Tot: het seizoen), net als
   // Europa · Benelux — dus bij "Deze week" de Pokon van deze week.
   const pokonVan = huidigeVan || seizoenStart;
   const pokonTot = huidigeTot || seizoenTot;
   const totaalPokonPeriode = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer === "Pokon"
-    && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    && verkoopKanaalPast(o.kanaal)
     && o.datum >= pokonVan && o.datum <= pokonTot).reduce((sum, o) => sum + o.aantal, 0);
 
   // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
@@ -2658,11 +2665,10 @@ function renderVerkoopTiles() {
       // De Selectie-tegel toont altijd Van/Tot en is dus altijd actief.
       let periodePast = tegel.selectie || (tegel.van === huidigeVan && tegel.tot === huidigeTot);
       if (tegel.behoudPeriode && tegel.view === "regio") periodePast = verkoopView === "regio";
-      const actief = (klikbaar && periodePast && zoekPast
-        && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal))
+      const actief = (klikbaar && periodePast && zoekPast)
         // Met een kanaal gekozen (bijv. Amazon) lichten Totaal seizoen, Vandaag
         // en Deze week op als dat kanaal er verkopen in heeft; 0 blijft wit.
-        || Boolean(verkoopActiefKanaal && tegel.kanaalTotaal > 0)
+        || Boolean(verkoopActieveKanalen.size && tegel.kanaalTotaal > 0)
         || Boolean(tegel.actiefAls);
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
@@ -2686,7 +2692,7 @@ function renderVerkoopTiles() {
       const zoekInput = document.querySelector("#verkoopZoekInput");
       if (tegel.zoek) zoekInput.value = tegel.zoek;
       else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
-      if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
+      // De gekozen klanten blijven staan bij het wisselen van tegel.
       // Kwam je via Europa/Pokon uit de kalender, dan brengt een periodetegel
       // je daar weer terug.
       if (verkoopTerugNaarKalender && tegel.kalenderMarkering) {
@@ -2814,18 +2820,19 @@ function renderVerkoopKlantFilters() {
   );
   const kanalen = [...kanalenDitSeizoen].sort((a, b) => a.localeCompare(b, "nl"));
   const container = document.querySelector("#verkoopKlantFilters");
-  if (!kanalen.includes(verkoopActiefKanaal)) verkoopActiefKanaal = "";
+  verkoopActieveKanalen.forEach((kanaal) => { if (!kanalen.includes(kanaal)) verkoopActieveKanalen.delete(kanaal); });
   container.innerHTML = kanalen
-    .map((kanaal, index) => {
-      const kleur = VERKOOP_KLANT_KLEUREN[index % VERKOOP_KLANT_KLEUREN.length];
-      const actief = kanaal === verkoopActiefKanaal;
-      return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-kanaal="${escapeHtml(kanaal)}" style="--klant-kleur:${kleur}">${escapeHtml(kanaal)}</button>`;
+    .map((kanaal) => {
+      const actief = verkoopActieveKanalen.has(kanaal);
+      return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-kanaal="${escapeHtml(kanaal)}" aria-pressed="${actief}">${escapeHtml(kanaal)}</button>`;
     })
     .join("");
   container.querySelectorAll(".verkoop-klant-button").forEach((knop) => {
     knop.addEventListener("click", () => {
+      // Aan/uit per klant; meerdere tegelijk kan.
       const kanaal = knop.dataset.kanaal;
-      verkoopActiefKanaal = verkoopActiefKanaal === kanaal ? "" : kanaal;
+      if (verkoopActieveKanalen.has(kanaal)) verkoopActieveKanalen.delete(kanaal);
+      else verkoopActieveKanalen.add(kanaal);
       renderVerkoopDialog();
     });
   });
@@ -3032,7 +3039,7 @@ const VERKOOP_MAAND_NAMEN = [
 ];
 
 function renderVerkoopKalender() {
-  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon" && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal));
+  const pakketOrders = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon" && verkoopKanaalPast(o.kanaal));
   const perDag = new Map();
   pakketOrders.forEach((order) => {
     perDag.set(order.datum, (perDag.get(order.datum) || 0) + order.aantal);
@@ -3175,7 +3182,7 @@ function verkoopPeriodeTekst() {
   if (van && tot) periode = van === tot ? opmaak(van) : `${opmaak(van)} – ${opmaak(tot)}`;
   else if (van) periode = `Vanaf ${opmaak(van)}`;
   else if (tot) periode = `Tot en met ${opmaak(tot)}`;
-  return verkoopActiefKanaal ? `${periode} · ${verkoopActiefKanaal}` : periode;
+  return verkoopActieveKanalen.size ? `${periode} · ${verkoopKanalenLijst().join(", ")}` : periode;
 }
 
 function renderVerkoopDialog() {
@@ -4193,7 +4200,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   document.querySelector("#verkoopVanDatum").value = vandaag;
   document.querySelector("#verkoopTotDatum").value = vandaag;
   verkoopView = "kalender";
-  verkoopActiefKanaal = "";
+  verkoopActieveKanalen = new Set();
   verkoopActiefSeizoen = verkoopHuidigSeizoenStart(vandaag);
   // De kalender opent zonder markering; goud alleen na een klik op een tegel.
   verkoopKalenderMarkering = null;
