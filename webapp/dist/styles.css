@@ -559,7 +559,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 
 .verkoop-view-toggle { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
-.verkoop-view-button.is-actief { color: white; border-color: var(--brand); background: var(--brand); }
+/* Actief = lichtgroen met donkergroene rand, net als een actieve tegel. */
+.verkoop-view-button.is-actief { color: var(--brand); border-color: var(--brand); background: #e8f4ed; box-shadow: inset 0 0 0 1px var(--brand); }
 
 .verkoop-klant-filters { display: contents; }
 .verkoop-klant-button { padding: 6px 14px; border: 2px solid var(--klant-kleur, var(--line)); border-radius: 999px; color: var(--klant-kleur, var(--muted)); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
@@ -743,7 +744,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .nazending-badge { border: 1px solid var(--accent-rood); color: var(--accent-rood); background: var(--accent-rood-zacht); }
 .nazending-full-badge { color: var(--accent-oker); background: var(--accent-oker-zacht); }
 tr.has-nazending { border-left-color: #d9c28a; }
-.verkoop-klant-button.is-actief { color: white; background: var(--brand); border-color: var(--brand); }
+/* Actief kanaal: lichte tint van de eigen kanaalkleur met een zachte gloed. */
+.verkoop-klant-button.is-actief { color: var(--klant-kleur); background: color-mix(in srgb, var(--klant-kleur) 14%, white); border-color: var(--klant-kleur); box-shadow: 0 0 0 3px color-mix(in srgb, var(--klant-kleur) 22%, transparent); }
 
 /* Iets meer kleur, maar gedempt: zachte tinten van de oude kleurfamilies
    (blauw, oranje, rood, groen) in plaats van felle vlakken. Hoort bij het
