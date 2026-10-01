@@ -767,6 +767,8 @@ let verkoopPlantSort = { kolom: "aantal", richting: "desc" };
 let verkoopActiefKanaal = "";
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
 let verkoopOpengeklaptPakket = "";
+// Breedte (aantal kolommen) van de uitklapregel; 4 als de kolom Klant er staat.
+let verkoopDetailColspan = 3;
 let verkoopView = "kalender";
 // Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag",
 // "Deze week" of "Totaal seizoen" ({ van, tot } of null) — de kalender
@@ -2831,11 +2833,14 @@ function renderVerkoopKlantFilters() {
 // welk kanaal (zie pokonHerkomst); Pokon uit de oude administratie is onbekend.
 function verkoopPokonOmschrijving(order, ordersPerNummer) {
   const { soort, pakket } = pokonHerkomst(order, ordersPerNummer, window.PICKLIST_BOM || []);
-  let naam = `Pokon onbekend (oude administratie) · ${order.kanaal}`;
-  if (soort) naam = `${soort} · bij ${pakket} · ${order.kanaal}`;
+  let soortNaam = "Pokon onbekend (oude administratie)";
+  if (soort) soortNaam = soort;
   // Order bekend, maar het p-pakket heeft geen Pokon-regel in de database.
-  else if (pakket) naam = `Pokon (soort ontbreekt bij ${pakket}p) · bij ${pakket} · ${order.kanaal}`;
-  return { sleutel: `Pokon|${naam}`, naam };
+  else if (pakket) soortNaam = `Pokon (soort ontbreekt bij ${pakket}p)`;
+  // naam: alles in één regel (export); in de tabel staan pakket, soort en
+  // klant in eigen kolommen.
+  const naam = pakket ? `${soortNaam} · bij ${pakket} · ${order.kanaal}` : `${soortNaam} · ${order.kanaal}`;
+  return { sleutel: `Pokon|${naam}`, naam, pakket: pakket || "Pokon", soortNaam, klant: order.kanaal };
 }
 
 function verkoopOrdersPerNummer() {
@@ -2858,9 +2863,9 @@ function verkoopAggregeerPerPakket(orders) {
   orders.forEach((order) => {
     const pokon = order.pakketnummer === "Pokon" ? verkoopPokonOmschrijving(order, ordersPerNummer) : null;
     const sleutel = pokon ? pokon.sleutel : order.pakketnummer;
-    const groep = groepen.get(sleutel) || {
-      sleutel, pakketnummer: order.pakketnummer, naam: pokon ? pokon.naam : verkoopPakketnaam(order.pakketnummer), aantal: 0,
-    };
+    const groep = groepen.get(sleutel) || (pokon
+      ? { sleutel, pakketnummer: pokon.pakket, naam: pokon.soortNaam, klant: pokon.klant, isPokon: true, aantal: 0 }
+      : { sleutel, pakketnummer: order.pakketnummer, naam: verkoopPakketnaam(order.pakketnummer), klant: "", aantal: 0 });
     groep.aantal += order.aantal;
     groepen.set(sleutel, groep);
   });
@@ -2876,6 +2881,12 @@ function renderVerkoopTable(orders) {
     if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
     return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
   });
+  // De kolom Klant alleen als er Pokon in staat (een Pokon-regel is per
+  // klant; een pakketregel telt alle klanten samen).
+  const metKlant = rijen.some((rij) => rij.isPokon);
+  document.querySelectorAll(".verkoop-klant-kolom").forEach((el) => { el.hidden = !metKlant; });
+  document.querySelector("#verkoopTotaalLabel").colSpan = metKlant ? 3 : 2;
+  verkoopDetailColspan = metKlant ? 4 : 3;
   const body = document.querySelector("#verkoopTableBody");
   body.innerHTML = rijen
     .map((rij) => {
@@ -2883,6 +2894,7 @@ function renderVerkoopTable(orders) {
       const hoofdRij = `<tr class="verkoop-pakket-rij${open ? " is-open" : ""}" data-sleutel="${escapeHtml(rij.sleutel)}" title="Klik voor de losse orders">
       <td>${escapeHtml(rij.pakketnummer)}</td>
       <td>${escapeHtml(rij.naam)}</td>
+      ${metKlant ? `<td>${escapeHtml(rij.klant)}</td>` : ""}
       <td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td>
     </tr>`;
       return open ? hoofdRij + verkoopOrderDetailRij(orders.filter((order) => verkoopRijSleutel(order, ordersPerNummer) === rij.sleutel)) : hoofdRij;
@@ -2964,7 +2976,7 @@ function verkoopOrderDetailRij(orders) {
         <td class="verkoop-col-verwijder"><button type="button" class="verkoop-order-verwijder" data-ordernummer="${escapeHtml(order.ordernummer)}" title="Order uit de verkopen verwijderen" aria-label="Order ${escapeHtml(order.ordernummer)} verwijderen">×</button></td>
       </tr>`)
     .join("");
-  return `<tr class="verkoop-order-detail"><td colspan="3"><div class="verkoop-order-scroll"><table class="verkoop-order-tabel">
+  return `<tr class="verkoop-order-detail"><td colspan="${verkoopDetailColspan}"><div class="verkoop-order-scroll"><table class="verkoop-order-tabel">
       <thead><tr><th>Datum</th><th>Kanaal</th><th>Ordernummer</th><th class="verkoop-col-aantal">Aantal</th><th></th></tr></thead>
       <tbody>${regels}</tbody>
     </table></div></td></tr>`;

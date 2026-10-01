@@ -284,13 +284,14 @@
                 <tr>
                   <th data-sort="pakketnummer">Pakketnummer</th>
                   <th data-sort="naam">Pakketnaam</th>
+                  <th data-sort="klant" class="verkoop-klant-kolom" hidden>Klant</th>
                   <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
                 </tr>
               </thead>
               <tbody id="verkoopTableBody"></tbody>
               <tfoot>
                 <tr class="package-total-row">
-                  <td colspan="2">Totaal</td>
+                  <td id="verkoopTotaalLabel" colspan="2">Totaal</td>
                   <td id="verkoopTotaalCel" class="package-grand-total"></td>
                 </tr>
               </tfoot>
