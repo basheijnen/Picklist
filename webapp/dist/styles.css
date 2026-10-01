@@ -574,7 +574,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender[hidden] { display: none; }
 .verkoop-kalender-maand { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .verkoop-kalender-maand-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.verkoop-kalender-maand table { border-collapse: collapse; font-size: .82rem; }
+.verkoop-kalender-maand table { border-collapse: separate; border-spacing: 0; font-size: .82rem; }
 .verkoop-kalender-maand td { padding: 0 4px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
@@ -582,14 +582,17 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering td { background: color-mix(in srgb, #d82c25 9%, white); }
 /* Gemarkeerde weekenddag (orders op zaterdag/zondag) iets donkerder rood, zodat het weekend herkenbaar blijft. */
 .verkoop-kalender-maand tr.verkoop-kalender-weekend.verkoop-kalender-markering td { background: color-mix(in srgb, #d82c25 20%, white); }
-.verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { box-shadow: inset 3px 0 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { box-shadow: inset -3px 0 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:first-child { box-shadow: inset 3px 3px 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:last-child { box-shadow: inset -3px 3px 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 3px -3px 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -3px -3px 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 3px 3px 0 #000, inset 0 -3px 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -3px 3px 0 #000, inset 0 -3px 0 #000; }
+/* Iets extra binnenruimte zodat de rand niet tegen de datum/het aantal aan ligt. */
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { padding-left: 6px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { padding-right: 6px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { box-shadow: inset 2px 0 0 #000; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { box-shadow: inset -2px 0 0 #000; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:first-child { box-shadow: inset 2px 2px 0 #000; border-top-left-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:last-child { box-shadow: inset -2px 2px 0 #000; border-top-right-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 2px -2px 0 #000; border-bottom-left-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -2px -2px 0 #000; border-bottom-right-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 2px 2px 0 #000, inset 0 -2px 0 #000; border-radius: 7px 0 0 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -2px 2px 0 #000, inset 0 -2px 0 #000; border-radius: 0 7px 7px 0; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
