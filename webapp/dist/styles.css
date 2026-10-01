@@ -646,9 +646,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kaart .pakketten-title h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 /* Ruimte links en rechts, zodat de titel gecentreerd blijft en het label rechtsboven er niet overheen valt. */
 .verkoop-kaart .pakketten-header { padding-inline: 190px; }
+/* Label met totaal rechtsboven, met de Pokon (rood, zoals in de picklist) eronder. */
+.verkoop-kaart-totalen { position: absolute; top: 20px; right: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.verkoop-kaart-totalen .badge { position: static; }
+.verkoop-kaart-pokon { color: #d82c25; font-style: italic; font-weight: 850; }
+.verkoop-kaart-pokon[hidden] { display: none; }
 @media (max-width: 760px) {
   .verkoop-kaart .pakketten-header { padding-inline: 20px; }
   .verkoop-kaart .badge { position: static; align-self: center; }
+  .verkoop-kaart-totalen { position: static; }
 }
 .verkoop-kaart .verkoop-table { font-size: 1.05rem; }
 .verkoop-kaart .verkoop-table th, .verkoop-kaart .verkoop-table td { padding: 9px 22px; border-bottom: 1px solid #edf1ee; }

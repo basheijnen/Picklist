@@ -2578,7 +2578,6 @@ function renderVerkoopTiles() {
   const europa = periodeOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
   const benelux = periodeOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const aldi = aldiOrders.reduce((sum, o) => sum + o.aantal, 0);
-  const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
   // Selectie: altijd de periode die nu in Van/Tot staat (via een tegel of
   // zelf gekozen, mag buiten het seizoen vallen), geteld zoals "Totaal
   // seizoen" (zonder Pokon en ALDI).
@@ -2589,6 +2588,13 @@ function renderVerkoopTiles() {
     && regioVoorKanaal(o.kanaal) !== "ALDI"
     && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
     && o.datum >= huidigeVan && o.datum <= huidigeTot).reduce((sum, o) => sum + o.aantal, 0);
+  // Pokon volgt de gekozen periode (zonder Van/Tot: het seizoen), net als
+  // Europa · Benelux — dus bij "Deze week" de Pokon van deze week.
+  const pokonVan = huidigeVan || seizoenStart;
+  const pokonTot = huidigeTot || seizoenTot;
+  const totaalPokonPeriode = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer === "Pokon"
+    && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    && o.datum >= pokonVan && o.datum <= pokonTot).reduce((sum, o) => sum + o.aantal, 0);
 
   // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
   // — klikbaar maken zou Van/Tot naar de échte huidige datum zetten, en dus
@@ -2610,13 +2616,16 @@ function renderVerkoopTiles() {
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     {
-      label: "Selectie", waarde: heeftSelectie ? displayNumber(totaalSelectie) : "–",
-      onderschrift: heeftSelectie ? `${verkoopDatumNL(huidigeVan)} t/m ${verkoopDatumNL(huidigeTot)}` : "kies Van/Tot",
+      label: "Selectie",
+      waarde: heeftSelectie ? displayNumber(totaalSelectie) : "–",
+      onderschrift: [heeftSelectie ? `${verkoopDatumNL(huidigeVan)} t/m ${verkoopDatumNL(huidigeTot)}` : "kies een periode"],
       selectie: true,
       ...(heeftSelectie ? { van: huidigeVan, tot: huidigeTot, kalenderMarkering: { van: huidigeVan, tot: huidigeTot, selectie: true } } : {}),
     },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "", behoudPeriode: true },
-    { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
+    // Pokon: volgt de periode, groen zodra er in die periode Pokon verkocht is;
+    // een klik houdt de periode aan en toont de Pokon-verkopen.
+    { label: "Pokon", waarde: displayNumber(totaalPokonPeriode), van: pokonVan, tot: pokonTot, zoek: "Pokon", kanaal: "", behoudPeriode: true, actiefAls: totaalPokonPeriode > 0 },
   ];
   const huidigeZoek = document.querySelector("#verkoopZoekInput").value;
   const tilesEl = document.querySelector("#verkoopTiles");
@@ -2630,16 +2639,17 @@ function renderVerkoopTiles() {
       // regio-overzicht zit — ongeacht Van/Tot.
       // De Selectie-tegel toont altijd Van/Tot en is dus altijd actief.
       let periodePast = tegel.selectie || (tegel.van === huidigeVan && tegel.tot === huidigeTot);
-      if (tegel.behoudPeriode) periodePast = verkoopView === "regio";
+      if (tegel.behoudPeriode && tegel.view === "regio") periodePast = verkoopView === "regio";
       const actief = (klikbaar && periodePast && zoekPast
         && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal))
         // Met een kanaal gekozen (bijv. Amazon) lichten Totaal seizoen, Vandaag
         // en Deze week op als dat kanaal er verkopen in heeft; 0 blijft wit.
-        || Boolean(verkoopActiefKanaal && tegel.kanaalTotaal > 0);
+        || Boolean(verkoopActiefKanaal && tegel.kanaalTotaal > 0)
+        || Boolean(tegel.actiefAls);
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
         : "";
-      return `<div class="verkoop-tile${tegel.selectie ? " verkoop-tile-selectie" : ""}${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${tegel.onderschrift ? `<span class="verkoop-tile-onderschrift">${escapeHtml(tegel.onderschrift)}</span>` : ""}${badge}</div>`;
+      return `<div class="verkoop-tile${tegel.selectie ? " verkoop-tile-selectie" : ""}${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${(tegel.onderschrift || []).map((regel) => `<span class="verkoop-tile-onderschrift">${escapeHtml(regel)}</span>`).join("")}${badge}</div>`;
     })
     .join("");
   [...tilesEl.children].forEach((el, index) => {
@@ -2852,7 +2862,13 @@ function renderVerkoopTable(orders) {
   });
   const totaal = orders.reduce((sum, order) => sum + order.aantal, 0);
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
-  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(totaal)} ${totaal === 1 ? "pakket" : "pakketten"}`;
+  // Label rechtsboven: pakketten zonder Pokon, de Pokon apart eronder.
+  const pokon = orders.filter((order) => order.pakketnummer === "Pokon").reduce((sum, order) => sum + order.aantal, 0);
+  const pakketten = totaal - pokon;
+  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
+  const pokonEl = document.querySelector("#verkoopTabelPokon");
+  pokonEl.hidden = !pokon;
+  pokonEl.textContent = `${displayNumber(pokon)} Pokon`;
 }
 
 // Verkochte pakketten teruggerekend naar losse planten, per potmaat. Zelfde
