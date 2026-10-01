@@ -21,7 +21,9 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 
-from sales import VerkoopOrder, load_geannuleerd, load_verkoop_csv, write_geannuleerd, write_verkoop_csv
+from sales import (
+    VerkoopOrder, load_geannuleerd, load_verkoop_csv, verwijder_geannuleerd, write_geannuleerd, write_verkoop_csv,
+)
 
 VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
 GEANNULEERD_CSV_PATH = PROJECT_DIR / "verkoop_geannuleerd.csv"
@@ -74,15 +76,13 @@ def koppel_pokon_orders(orders, export, geannuleerd):
     nieuwe_geannuleerd = set(geannuleerd)
     nieuwe_geannuleerd |= {f"handmatig-Pokon-{kanaal}-{datum}" for kanaal, datum in pokon_per_dag}
     nieuwe_geannuleerd |= {sleutel for sleutel, aantal in aangepast.items() if aantal == 0}
-    resultaat = [
-        replace(o, aantal=aangepast[o.ordernummer]) if aangepast.get(o.ordernummer) else o
-        for o in orders
-    ]
+    resultaat = [replace(o, aantal=aangepast[o.ordernummer]) if o.ordernummer in aangepast else o for o in orders]
     for o in nieuw:
         pakket = o["pakketnummer"].removesuffix("p")
         resultaat.append(VerkoopOrder(o["ordernummer"], o["datum"], o["kanaal"], pakket, 1.0))
         resultaat.append(VerkoopOrder(f"{o['ordernummer']}-pokon", o["datum"], o["kanaal"], "Pokon", 1.0))
-    return resultaat, nieuwe_geannuleerd, rapport
+    # Zoals overal in de app: geannuleerde regels gaan ook echt uit de lijst.
+    return verwijder_geannuleerd(resultaat, nieuwe_geannuleerd), nieuwe_geannuleerd, rapport
 
 
 def main(export_path, verkoop_path=VERKOOP_CSV_PATH, geannuleerd_path=GEANNULEERD_CSV_PATH):

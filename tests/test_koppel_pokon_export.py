@@ -28,7 +28,9 @@ def test_koppelt_pokon_aan_echte_orders_zonder_totalen_te_veranderen():
 
     nieuw, geannuleerd, rapport = koppel_pokon_orders(orders, export, set())
 
-    actief = [o for o in nieuw if o.ordernummer not in geannuleerd]
+    # Geannuleerde regels zijn ook echt uit de lijst gehaald.
+    assert not [o for o in nieuw if o.ordernummer in geannuleerd]
+    actief = nieuw
     per_nummer = {o.ordernummer: o for o in actief}
     # Dagtotalen verlaagd, echte orders + gekoppelde Pokon erbij.
     assert per_nummer["migratie-Bol.com-2026-08-10-249.4"].aantal == 2.0

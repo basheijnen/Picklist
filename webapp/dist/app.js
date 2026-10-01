@@ -2820,9 +2820,10 @@ function renderVerkoopKlantFilters() {
 // welk kanaal (zie pokonHerkomst); Pokon uit de oude administratie is onbekend.
 function verkoopPokonOmschrijving(order, ordersPerNummer) {
   const { soort, pakket } = pokonHerkomst(order, ordersPerNummer, window.PICKLIST_BOM || []);
-  const naam = soort
-    ? `${soort} · bij ${pakket} · ${order.kanaal}`
-    : `Pokon onbekend (oude administratie) · ${order.kanaal}`;
+  let naam = `Pokon onbekend (oude administratie) · ${order.kanaal}`;
+  if (soort) naam = `${soort} · bij ${pakket} · ${order.kanaal}`;
+  // Order bekend, maar het p-pakket heeft geen Pokon-regel in de database.
+  else if (pakket) naam = `Pokon (soort ontbreekt bij ${pakket}p) · bij ${pakket} · ${order.kanaal}`;
   return { sleutel: `Pokon|${naam}`, naam };
 }
 
