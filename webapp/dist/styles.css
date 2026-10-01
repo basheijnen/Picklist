@@ -651,6 +651,13 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 #verkoopTiles .verkoop-tile.is-actief:not(.verkoop-tile-selectie) { background: var(--brand); border: 2px solid var(--gold); border-top-width: 4px; }
 #verkoopTiles .verkoop-tile.is-actief:not(.verkoop-tile-selectie) :is(.verkoop-tile-label, .verkoop-tile-value, .verkoop-tile-onderschrift, .verkoop-tile-badge-label, .verkoop-tile-badge-waarde) { color: var(--gold); }
 #verkoopTiles .verkoop-tile.verkoop-tile-selectie { border-color: var(--brand); }
+/* Grotere, beter leesbare tekst in de Verkopen-tegels. */
+#verkoopTiles .verkoop-tile { padding: 16px 18px; }
+#verkoopTiles .verkoop-tile-label { font-size: .88rem; margin-bottom: 6px; }
+#verkoopTiles .verkoop-tile-value { font-size: 1.75rem; line-height: 1.15; }
+#verkoopTiles .verkoop-tile-onderschrift { font-size: .85rem; margin-top: 4px; }
+#verkoopTiles .verkoop-tile-badge-label { font-size: .75rem; }
+#verkoopTiles .verkoop-tile-badge-waarde { font-size: 1.1rem; }
 
 .verkoop-view-toggle { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .verkoop-view-button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: white; font-size: .8rem; font-weight: 700; cursor: pointer; }
