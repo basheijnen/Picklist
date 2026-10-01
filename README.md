@@ -125,9 +125,9 @@ Voeg een regel toe aan `bom.csv`:
   gebiedslijsten is het daarom beter om een echte `volgorde` te kiezen, in de
   buurt van de categorie waar het item bij hoort.
 
-## Potmaten (Verkopen → Per plant)
+## Potmaten (Verkopen → Verkopen per plant)
 
-De weergave "Per plant" rekent verkochte pakketten terug naar losse planten,
+De weergave "Verkopen per plant" rekent verkochte pakketten terug naar losse planten,
 per potmaat. De potmaat per pakket staat in `potmaten.csv` en komt uit
 `K:\E-Commerce\Overzichten\2026-2027\Potmaten.xlsm` (kolom "Korte uitleg"):
 
