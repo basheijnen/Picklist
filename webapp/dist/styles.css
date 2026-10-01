@@ -581,6 +581,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-regio[hidden] { display: none; }
 #verkoopPlantView { width: fit-content; max-width: 100%; margin: 0 auto; }
 #verkoopPlantView .verkoop-table { width: auto; }
+#verkoopPlantView .verkoop-filters { margin-bottom: 14px; }
+/* Kopregel in dezelfde stijl als de actieve tegel (bijv. Totaal seizoen). */
+#verkoopPlantView .verkoop-table thead th { background: #e8f4ed; border-top: 4px solid var(--brand); }
 #verkoopPlantView .verkoop-table td { white-space: nowrap; }
 #verkoopPlantView .verkoop-table th + th, #verkoopPlantView .verkoop-table td + td { padding-left: 28px; }
 .verkoop-plant-onbekend { max-width: 60ch;  margin: 8px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; color: var(--muted); }
