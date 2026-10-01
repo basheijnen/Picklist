@@ -987,7 +987,8 @@ dialog { overscroll-behavior: contain; }
    gouden rand. */
 .tab { color: white; background: var(--brand); border: 1.5px solid #000; border-top: 4px solid #000; }
 .tab:hover { border-color: var(--gold); }
-.tab[aria-selected="true"] { color: white; background: var(--brand); border-color: var(--gold); }
+/* Geselecteerde tab zoals de Verkopen-knop: brons, zwarte tekst, zwarte rand. */
+.tab[aria-selected="true"], .tab[aria-selected="true"]:hover { color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); border-color: #000; }
 /* Knoppen in de kopbalk: zwarte rand met dikke zwarte bovenrand. */
 .header-actions :is(.button, .print-status-reset-button), .header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border: 1.5px solid #000; border-top: 4px solid #000; }
 /* Bij aanwijzen helemaal goud omlijnd (ook de bovenrand), geen zwart meer. */
@@ -997,3 +998,5 @@ dialog { overscroll-behavior: contain; }
 .mmp-dialog .mmp-kop-badge { border: 1.5px solid #000; border-top: 4px solid #000; }
 .mmp-dialog .mmp-kop-badge:hover, .mmp-dialog .mmp-kop-badge:focus-visible, .mmp-dialog .mmp-kop-badge.is-gekopieerd { border-color: var(--gold); }
 .mmp-dialog .mmp-kop-badge, .mmp-dialog .mmp-kop-badge:hover, .mmp-dialog .mmp-kop-badge:focus-visible, .mmp-dialog .mmp-kop-badge.is-gekopieerd { color: white; }
+/* Verkopen-knop bij aanwijzen: rondom dik zwart omlijnd (geen goud). */
+.header-actions .verkoop-header-button:hover:not(:disabled) { border: 3px solid #000; border-top-width: 4px; }
