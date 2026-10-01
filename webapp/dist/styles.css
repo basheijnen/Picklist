@@ -1054,3 +1054,7 @@ dialog { overscroll-behavior: contain; }
 /* Verwijderkruisje in de pakketlijst (klacht/bundel): dezelfde rode knop. */
 .department .nazending-delete-button { display: inline-grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 1.5px solid #000; border-radius: 7px; color: white; background: #c0392b; font-size: 1.05rem; font-weight: 900; line-height: 1; cursor: pointer; }
 .department .nazending-delete-button:hover { border-color: #000; color: white; background: #a5281d; }
+/* Gardenzo-logo in de Verkopen-kop, op dezelfde plek als op de picklistpagina
+   (zelfde zijmarge als de bovenbalk daar). */
+#verkoopDialog .dialog-header { padding-left: clamp(20px, 5vw, 72px); padding-right: clamp(20px, 5vw, 72px); }
+#verkoopDialog .dialog-header > .kop-logo { justify-self: start; }
