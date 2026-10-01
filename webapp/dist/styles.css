@@ -990,4 +990,5 @@ dialog { overscroll-behavior: contain; }
 .tab[aria-selected="true"] { color: var(--gold); background: var(--brand); border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
 /* Knoppen in de kopbalk: zwarte rand met dikke zwarte bovenrand. */
 .header-actions :is(.button, .print-status-reset-button), .header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border: 1.5px solid #000; border-top: 4px solid #000; }
-.header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border-left-color: var(--gold); border-right-color: var(--gold); border-bottom-color: var(--gold); }
+/* Bij aanwijzen helemaal goud omlijnd (ook de bovenrand), geen zwart meer. */
+.header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border-color: var(--gold); }
