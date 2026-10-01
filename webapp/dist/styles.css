@@ -1020,3 +1020,5 @@ dialog { overscroll-behavior: contain; }
 .verkoop-overzicht-top10-item { border: 1.5px solid #8fa79b; }
 .verkoop-overzicht-top10-item[class*="is-podium-"] { border: 1.5px solid #000; }
 .verkoop-overzicht-top10-item:hover, .verkoop-overzicht-top10-item[class*="is-podium-"]:hover { border-color: var(--brand); }
+/* Pakketnummers in de top 10 iets groter (en de kolom wat breder). */
+.verkoop-overzicht-top10-nummer { width: 44px; padding-top: 0; font-size: .86rem; }
