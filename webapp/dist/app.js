@@ -2498,8 +2498,11 @@ function verkoopExporteren(formaat) {
   // (een dagtotaal uit de oude Excel), losse orders hebben altijd aantal 1 —
   // in de export moet elke regel dus precies 1 stuk voorstellen.
   const rijen = [];
+  const ordersPerNummer = verkoopOrdersPerNummer();
   orders.forEach((order) => {
-    const naam = verkoopPakketnaam(order.pakketnummer);
+    const naam = order.pakketnummer === "Pokon"
+      ? verkoopPokonOmschrijving(order, ordersPerNummer).naam
+      : verkoopPakketnaam(order.pakketnummer);
     for (let i = 0; i < Math.round(order.aantal); i += 1) {
       rijen.push([order.ordernummer, order.datum, order.kanaal, order.pakketnummer, naam, 1]);
     }
@@ -2813,23 +2816,48 @@ function renderVerkoopKlantFilters() {
   });
 }
 
+// Omschrijving van een losse Pokon-verkoop: soort, bij welk pakket en via
+// welk kanaal (zie pokonHerkomst); Pokon uit de oude administratie is onbekend.
+function verkoopPokonOmschrijving(order, ordersPerNummer) {
+  const { soort, pakket } = pokonHerkomst(order, ordersPerNummer, window.PICKLIST_BOM || []);
+  const naam = soort
+    ? `${soort} · bij ${pakket} · ${order.kanaal}`
+    : `Pokon onbekend (oude administratie) · ${order.kanaal}`;
+  return { sleutel: `Pokon|${naam}`, naam };
+}
+
+function verkoopOrdersPerNummer() {
+  return new Map((window.PICKLIST_VERKOOP || []).map((order) => [order.ordernummer, order]));
+}
+
+// Sleutel van de tabelrij waar een order onder valt: het pakketnummer, of
+// voor Pokon een rij per soort + pakket + kanaal.
+function verkoopRijSleutel(order, ordersPerNummer) {
+  return order.pakketnummer === "Pokon" ? verkoopPokonOmschrijving(order, ordersPerNummer).sleutel : order.pakketnummer;
+}
+
 function verkoopAggregeerPerPakket(orders) {
   // Een totaalrij per pakketnummer, over alle kanalen heen opgeteld -- de
   // export (verkoopExporteren) blijft juist per order/stuk ongeaggregeerd,
   // dat verschil is bewust: de tabel is een overzicht, de export is detail.
+  // Pokon krijgt een rij per soort, pakket en kanaal.
+  const ordersPerNummer = verkoopOrdersPerNummer();
   const groepen = new Map();
   orders.forEach((order) => {
-    groepen.set(order.pakketnummer, (groepen.get(order.pakketnummer) || 0) + order.aantal);
+    const pokon = order.pakketnummer === "Pokon" ? verkoopPokonOmschrijving(order, ordersPerNummer) : null;
+    const sleutel = pokon ? pokon.sleutel : order.pakketnummer;
+    const groep = groepen.get(sleutel) || {
+      sleutel, pakketnummer: order.pakketnummer, naam: pokon ? pokon.naam : verkoopPakketnaam(order.pakketnummer), aantal: 0,
+    };
+    groep.aantal += order.aantal;
+    groepen.set(sleutel, groep);
   });
-  return [...groepen.entries()].map(([pakketnummer, aantal]) => ({
-    pakketnummer,
-    naam: verkoopPakketnaam(pakketnummer),
-    aantal,
-  }));
+  return [...groepen.values()];
 }
 
 function renderVerkoopTable(orders) {
   const rijen = verkoopAggregeerPerPakket(orders);
+  const ordersPerNummer = verkoopOrdersPerNummer();
   const { kolom, richting } = verkoopSort;
   rijen.sort((a, b) => {
     const factor = richting === "asc" ? 1 : -1;
@@ -2839,18 +2867,18 @@ function renderVerkoopTable(orders) {
   const body = document.querySelector("#verkoopTableBody");
   body.innerHTML = rijen
     .map((rij) => {
-      const open = rij.pakketnummer === verkoopOpengeklaptPakket;
-      const hoofdRij = `<tr class="verkoop-pakket-rij${open ? " is-open" : ""}" data-pakketnummer="${escapeHtml(rij.pakketnummer)}" title="Klik voor de losse orders">
+      const open = rij.sleutel === verkoopOpengeklaptPakket;
+      const hoofdRij = `<tr class="verkoop-pakket-rij${open ? " is-open" : ""}" data-sleutel="${escapeHtml(rij.sleutel)}" title="Klik voor de losse orders">
       <td>${escapeHtml(rij.pakketnummer)}</td>
       <td>${escapeHtml(rij.naam)}</td>
       <td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td>
     </tr>`;
-      return open ? hoofdRij + verkoopOrderDetailRij(orders.filter((order) => order.pakketnummer === rij.pakketnummer)) : hoofdRij;
+      return open ? hoofdRij + verkoopOrderDetailRij(orders.filter((order) => verkoopRijSleutel(order, ordersPerNummer) === rij.sleutel)) : hoofdRij;
     })
     .join("");
   body.querySelectorAll(".verkoop-pakket-rij").forEach((tr) => {
     tr.addEventListener("click", () => {
-      verkoopOpengeklaptPakket = verkoopOpengeklaptPakket === tr.dataset.pakketnummer ? "" : tr.dataset.pakketnummer;
+      verkoopOpengeklaptPakket = verkoopOpengeklaptPakket === tr.dataset.sleutel ? "" : tr.dataset.sleutel;
       renderVerkoopTable(orders);
     });
   });

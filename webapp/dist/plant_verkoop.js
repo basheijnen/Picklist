@@ -60,7 +60,23 @@
     };
   }
 
-  const api = { normaliseerPotmaat, verkoopPerPlant };
+  // Welke Pokon een losse "Pokon"-verkoopregel was: bij het inlezen wordt
+  // een p-pakket (bijv. 249.2p) gesplitst in het pakket (249.2) en een regel
+  // "<ordernummer>-pokon". Via die order vinden we het pakket, en via de BOM
+  // van het p-pakket de soort. Regels uit de oude administratie hebben geen
+  // gekoppelde order: dan blijven soort en pakket leeg (onbekend).
+  function pokonHerkomst(order, ordersPerNummer, bom) {
+    const basisOrder = order.ordernummer.endsWith("-pokon")
+      ? ordersPerNummer.get(order.ordernummer.slice(0, -"-pokon".length))
+      : null;
+    if (!basisOrder) return { soort: "", pakket: "" };
+    const soorten = bom
+      .filter((regel) => regel.gebied === "POKON" && regel.pakketnummer === `${basisOrder.pakketnummer}p`)
+      .map((regel) => regel.item);
+    return { soort: [...new Set(soorten)].join(" + "), pakket: basisOrder.pakketnummer };
+  }
+
+  const api = { normaliseerPotmaat, verkoopPerPlant, pokonHerkomst };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else Object.assign(root, api);
 })(this);
