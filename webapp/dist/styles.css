@@ -1033,3 +1033,6 @@ dialog { overscroll-behavior: contain; }
 .verkoop-overzicht-top10-nummer { margin-right: 8px; }
 /* Podium (top 3): dikke zwarte bovenrand en wat meer ruimte eronder. */
 .verkoop-overzicht-top10-item[class*="is-podium-"] { border-top: 4px solid #000; margin-bottom: 4px; }
+/* Verwijderkruisje bij de ingeladen lijsten: duidelijke rode knop met wit kruisje. */
+#importsList .import-delete-button { display: grid; place-items: center; width: 26px; height: 26px; padding: 0; border: 1.5px solid #000; border-radius: 7px; color: white; background: #c0392b; font-size: 1.05rem; font-weight: 900; line-height: 1; }
+#importsList .import-delete-button:hover { border-color: #000; color: white; background: #a5281d; }
