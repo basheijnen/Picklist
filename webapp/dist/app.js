@@ -762,7 +762,9 @@ function openVerplaatsMenu(geselecteerd, kanalen) {
 
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
-let verkoopSort = { kolom: "aantal", richting: "desc" };
+// Verkopen per pakket opent altijd op pakketnummer (oplopend).
+const VERKOOP_STANDAARD_SORT = { kolom: "pakketnummer", richting: "asc" };
+let verkoopSort = { ...VERKOOP_STANDAARD_SORT };
 let verkoopPlantSort = { kolom: "aantal", richting: "desc" };
 let verkoopActiefKanaal = "";
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
@@ -4186,6 +4188,7 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   // De kalender opent zonder markering; goud alleen na een klik op een tegel.
   verkoopKalenderMarkering = null;
   verkoopTerugNaarKalender = false;
+  verkoopSort = { ...VERKOOP_STANDAARD_SORT };
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
