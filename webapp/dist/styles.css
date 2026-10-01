@@ -773,9 +773,11 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .mmp-form input:focus, .mmp-dialog #mmpPrijsZoek:focus, .mmp-dialog .verkoop-datum-bereik input:focus { outline-color: var(--mmp-accent); }
 .mmp-dialog .button-terug { background: white; border-color: var(--mmp-accent); color: var(--mmp-accent); }
 /* Taal- en kopieerknop: kleine badges rechts in de groene kopbalk. */
-.mmp-dialog .dialog-header > .button-terug { justify-self: center; }
+/* Kop: titel groot in het midden; rechts taal, kopiëren en (met wat ruimte) Terug. */
+.mmp-dialog .dialog-header .mmp-titel { justify-self: center; font-size: clamp(1.6rem, 3vw, 2.3rem); text-align: center; }
+.mmp-dialog .mmp-kop-knoppen #closeMmpDialog { margin-left: 10px; }
 .mmp-dialog .dialog-header > .mmp-kop-knoppen { justify-self: end; }
-.mmp-kop-knoppen { display: flex; gap: 8px; }
+.mmp-kop-knoppen { display: flex; align-items: center; gap: 8px; }
 .mmp-kop-badge { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 1.5px solid rgba(255,255,255,.45); border-radius: 10px; color: white; background: rgba(255,255,255,.08); font: inherit; font-size: .78rem; font-weight: 800; letter-spacing: .06em; cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease; }
 .mmp-kop-badge:hover, .mmp-kop-badge:focus-visible { border-color: var(--gold); color: var(--gold); background: rgba(255,255,255,.14); outline: none; }
 .mmp-kop-badge.is-gekopieerd { border-color: var(--gold); color: var(--gold); }
