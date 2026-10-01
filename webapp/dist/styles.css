@@ -962,7 +962,7 @@ tr.has-nazending { border-left-color: #d9c28a; }
 .header-actions .verkoop-header-button { border-color: var(--gold); color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
 .header-actions .verkoop-header-button:hover:not(:disabled) { border-color: #e5534b; background: linear-gradient(160deg, #cf935a, #a96d38); }
 /* "Terug naar picklisten" in Verkopen: zelfde brons als de Verkopen-knop. */
-#closeVerkoopDialog, .mmp-dialog #closeMmpDialog { border: 2px solid #000; color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
+#closeVerkoopDialog, .mmp-dialog #closeMmpDialog { border: 2px solid #000; border-top: 4px solid #000; color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
 #closeVerkoopDialog:hover, .mmp-dialog #closeMmpDialog:hover { border-color: #e5534b; background: linear-gradient(160deg, #cf935a, #a96d38); }
 /* Ingeladen lijsten: een aangevinkte (meetellende) lijst donkergroen met
    gouden rand en gouden tekst, zoals de actieve tegels in Verkopen. */
