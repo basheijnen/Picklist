@@ -640,7 +640,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 6px; padding: 4px 2px; }
 .verkoop-kalender[hidden] { display: none; }
 .verkoop-kalender-maand { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.verkoop-kalender-maand-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.verkoop-kalender-maand-titel { padding: 5px 4px; background: var(--brand); color: var(--gold); font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .verkoop-kalender-maand table { border-collapse: separate; border-spacing: 0; font-size: .82rem; }
 .verkoop-kalender-maand td { padding: 0 4px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
