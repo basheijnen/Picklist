@@ -581,7 +581,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-regio[hidden] { display: none; }
 /* Tabel en Per plant: compact en gecentreerd, zodat het aantal dicht bij de naam staat. */
 #verkoopTabelView, #verkoopPlantView { width: fit-content; max-width: 100%; margin: 0 auto; }
-:is(#verkoopTabelView, #verkoopPlantView) > .verkoop-table { width: auto; }
+:is(#verkoopTabelView, #verkoopPlantView) > .verkoop-table { width: auto; border-collapse: separate; border-spacing: 0; }
+/* Afgeronde kopregel, net als de tegels (border-collapse: separate is daarvoor nodig). */
+:is(#verkoopTabelView, #verkoopPlantView) > .verkoop-table > thead th:first-child { border-top-left-radius: 12px; }
+:is(#verkoopTabelView, #verkoopPlantView) > .verkoop-table > thead th:last-child { border-top-right-radius: 12px; }
 :is(#verkoopTabelView, #verkoopPlantView) > .verkoop-filters { margin-bottom: 14px; }
 /* Kopregel in dezelfde stijl als de actieve tegel (bijv. Totaal seizoen). */
 :is(#verkoopTabelView, #verkoopPlantView) > .verkoop-table > thead th { background: #e8f4ed; border-top: 4px solid var(--brand); }
