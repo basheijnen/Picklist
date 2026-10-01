@@ -941,3 +941,6 @@ tr.has-nazending { border-left-color: #d9c28a; }
 #importsList .import-row:not(.is-held):not(.nazending-group-row) .import-name-input { border-color: color-mix(in srgb, var(--gold) 55%, var(--brand)); background: transparent; color: var(--gold); }
 #importsList .import-row:not(.is-held):not(.nazending-group-row) :is(.import-order-total, .import-verkoop-status) { color: var(--gold); }
 #importsList .import-row:not(.is-held):not(.nazending-group-row) .import-active-checkbox { accent-color: var(--gold); }
+/* Uitgevinkte lijst: de lichtgroene stijl die een actieve lijst eerst had. */
+#importsList .import-row.is-held:not(.nazending-group-row) { border: 1.5px solid #6f9c84; border-top: 4px solid var(--brand); background: var(--groen-zacht); }
+#importsList .import-row.is-held:not(.nazending-group-row) :is(.import-order-total, .import-verkoop-status) { color: var(--brand); font-weight: 700; }
