@@ -18,11 +18,12 @@
     const d = naarDatum(vandaag);
     const jaar = d.getFullYear();
     const maand = d.getMonth();
+    // Weken lopen van maandag t/m zondag, net als de "Deze week"-tegel.
+    const maandag = plusDagen(vandaag, -((d.getDay() + 6) % 7));
     return [
       { label: "Vandaag", van: vandaag, tot: vandaag },
-      { label: "Gisteren", van: plusDagen(vandaag, -1), tot: plusDagen(vandaag, -1) },
-      { label: "Laatste 7 dagen", van: plusDagen(vandaag, -6), tot: vandaag },
-      { label: "Laatste 30 dagen", van: plusDagen(vandaag, -29), tot: vandaag },
+      { label: "Deze week", van: maandag, tot: plusDagen(maandag, 6) },
+      { label: "Vorige week", van: plusDagen(maandag, -7), tot: plusDagen(maandag, -1) },
       { label: "Deze maand", van: iso(new Date(jaar, maand, 1)), tot: iso(new Date(jaar, maand + 1, 0)) },
       { label: "Vorige maand", van: iso(new Date(jaar, maand - 1, 1)), tot: iso(new Date(jaar, maand, 0)) },
     ];
