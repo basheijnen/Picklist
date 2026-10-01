@@ -2569,8 +2569,11 @@ function renderVerkoopTiles() {
   const totaalVandaag = pakketOrders.filter((o) => o.datum === vandaag).reduce((sum, o) => sum + o.aantal, 0);
   const dezeWeek = verkoopWeekBereik(vandaag);
   const totaalDezeWeek = pakketOrders.filter((o) => o.datum >= dezeWeek.van && o.datum <= dezeWeek.tot).reduce((sum, o) => sum + o.aantal, 0);
-  const europa = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
-  const benelux = pakketOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
+  // Europa · Benelux volgt de gekozen periode (Van/Tot), net als het
+  // regio-overzicht eronder — dus na "Deze week" de cijfers van deze week.
+  const periodeOrders = verkoopGefilterdeOrders().filter((o) => o.pakketnummer !== "Pokon");
+  const europa = periodeOrders.filter((o) => regioVoorKanaal(o.kanaal) === "EUROPA").reduce((sum, o) => sum + o.aantal, 0);
+  const benelux = periodeOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const aldi = aldiOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
 
