@@ -547,6 +547,12 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Verkopen: titel in het midden, Terug naar picklisten helemaal rechts. */
 #verkoopDialog .dialog-header > .verkoop-kop-titel { justify-self: center; display: flex; flex-direction: column; align-items: center; }
 #verkoopDialog .dialog-header > #closeVerkoopDialog { justify-self: end; white-space: nowrap; }
+/* Zelfde kopbalk als Maison Privée: donkergroen, witte titel, goud bovenschrift. */
+#verkoopDialog .dialog-header { background: var(--brand); border-bottom: 0; }
+#verkoopDialog .dialog-header .eyebrow { color: var(--gold); }
+#verkoopDialog .dialog-header h2 { color: white; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.1; }
+#verkoopDialog .verkoop-seizoen-toggle { color: white; }
+#verkoopDialog .verkoop-seizoen-toggle:hover, #verkoopDialog .verkoop-seizoen-toggle[aria-expanded="true"] { color: var(--brand); background: #edf3ef; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
 
 .verkoop-datum-bereik { display: flex; align-items: end; gap: 12px; }
