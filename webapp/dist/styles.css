@@ -953,3 +953,7 @@ tr.has-nazending { border-left-color: #d9c28a; }
 /* Uitgevinkte lijst: de lichtgroene stijl die een actieve lijst eerst had. */
 #importsList .import-row.is-held:not(.nazending-group-row) { border: 1.5px solid #6f9c84; border-top: 4px solid var(--brand); background: var(--groen-zacht); }
 #importsList .import-row.is-held:not(.nazending-group-row) :is(.import-order-total, .import-verkoop-status) { color: var(--brand); font-weight: 700; }
+/* Scrollen in Verkopen, Maison Privée of een pop-up mag de picklistpagina
+   erachter niet laten meescrollen. */
+html:has(dialog[open]), body:has(dialog[open]) { overflow: hidden; }
+dialog { overscroll-behavior: contain; }
