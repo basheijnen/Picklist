@@ -576,7 +576,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .periode-voet .button { min-height: 36px; padding: 6px 16px; }
 .periode-voet .button:disabled { opacity: .45; cursor: default; }
 #verkoopExportMenu { min-width: 160px; right: auto; }
-.verkoop-filter-totaal { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 2px solid #000; border-radius: 12px; background: color-mix(in srgb, #2576a6 12%, white); color: #2576a6; font-weight: 800; font-size: .95rem; white-space: nowrap; }
+/* Selectie-tegel: lichtblauw (vroeger de "Totaal (huidige filter)"-chip), zwarte tekst. */
+.verkoop-tile.verkoop-tile-selectie, .verkoop-tile.verkoop-tile-selectie.is-actief { background: color-mix(in srgb, #2576a6 12%, white); }
+.verkoop-tile-selectie .verkoop-tile-label, .verkoop-tile-selectie .verkoop-tile-value, .verkoop-tile-selectie .verkoop-tile-onderschrift { color: #000; }
 .verkoop-datum-bereik label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-datum-bereik input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 

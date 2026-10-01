@@ -2639,7 +2639,7 @@ function renderVerkoopTiles() {
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
         : "";
-      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${tegel.onderschrift ? `<span class="verkoop-tile-onderschrift">${escapeHtml(tegel.onderschrift)}</span>` : ""}${badge}</div>`;
+      return `<div class="verkoop-tile${tegel.selectie ? " verkoop-tile-selectie" : ""}${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${tegel.onderschrift ? `<span class="verkoop-tile-onderschrift">${escapeHtml(tegel.onderschrift)}</span>` : ""}${badge}</div>`;
     })
     .join("");
   [...tilesEl.children].forEach((el, index) => {
@@ -3098,10 +3098,6 @@ function renderVerkoopDialog() {
   renderVerkoopTiles();
   renderVerkoopKlantFilters();
   const gefilterd = verkoopGefilterdeOrders();
-  // Pokon telt overal elders (tegels, kalenderoverzicht) apart mee, niet bij
-  // de pakketten — deze totaal-chip moet daarom hetzelfde uitsluiten.
-  const totaalGefilterd = gefilterd.filter((o) => o.pakketnummer !== "Pokon").reduce((sum, order) => sum + order.aantal, 0);
-  document.querySelector("#verkoopFilterTotaal").textContent = `Totaal (huidige filter): ${displayNumber(totaalGefilterd)}`;
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
   });
