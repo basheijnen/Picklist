@@ -1024,3 +1024,10 @@ dialog { overscroll-behavior: contain; }
 .verkoop-overzicht-top10-nummer { width: 44px; padding-top: 0; font-size: .86rem; }
 .verkoop-overzicht-top10-naam { font-size: .84rem; }
 .verkoop-overzicht-top10-aantal { width: 40px; font-size: .98rem; }
+/* Verkopen-kolom op de picklistpagina iets breder, met meer ruimte tussen
+   pakketnummer en naam in de top 10. */
+@media (min-width: 1101px) {
+  .verkoop-overzicht-panel { flex-basis: 360px; width: 360px; }
+}
+.verkoop-overzicht-top10-item { gap: 8px; }
+.verkoop-overzicht-top10-nummer { margin-right: 8px; }
