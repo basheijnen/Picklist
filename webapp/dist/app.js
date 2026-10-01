@@ -768,8 +768,9 @@ let verkoopActiefKanaal = "";
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
 let verkoopOpengeklaptPakket = "";
 let verkoopView = "kalender";
-// Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag"
-// of "Deze week" ({ van, tot } of null) — de kalender blijft dan open.
+// Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag",
+// "Deze week" of "Totaal seizoen" ({ van, tot, alleenMetVerkoop } of null) —
+// de kalender blijft dan open. Bij het seizoen alleen dagen met verkoop.
 let verkoopKalenderMarkering = null;
 // Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
 // een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
@@ -2588,6 +2589,7 @@ function renderVerkoopTiles() {
       waarde: displayNumber(totaalSeizoen),
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
       van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen,
+      kalenderMarkering: { van: seizoenStart, tot: seizoenTot, alleenMetVerkoop: true },
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
@@ -2628,8 +2630,8 @@ function renderVerkoopTiles() {
       if (tegel.zoek) zoekInput.value = tegel.zoek;
       else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
       if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
-      // In het kalenderoverzicht doen Vandaag/Deze week niets anders dan die
-      // dagen geel markeren; je blijft in de kalender.
+      // In het kalenderoverzicht doen Vandaag/Deze week/Totaal seizoen niets
+      // anders dan die dagen geel markeren; je blijft in de kalender.
       verkoopKalenderMarkering = verkoopView === "kalender" && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
       if (verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
       // Blijf in Verkopen per pakket/per plant als je daar al was.
@@ -2934,7 +2936,8 @@ function renderVerkoopKalender() {
         const waarde = perDag.get(datum) || 0;
         totaalMaand += waarde;
         const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
-        const gemarkeerd = markering && datum >= markering.van && datum <= markering.tot;
+        const gemarkeerd = markering && datum >= markering.van && datum <= markering.tot
+          && (!markering.alleenMetVerkoop || waarde > 0);
         const klassen = [isWeekend && "verkoop-kalender-weekend", gemarkeerd && "verkoop-kalender-markering"].filter(Boolean).join(" ");
         return `<tr${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
