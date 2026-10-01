@@ -2784,15 +2784,36 @@ function openVerkoopHardloperDialog(pakketnummer, anchorEl) {
 
 // Pop-up met de verkopen per kanaal, van hoog naar laag. Met anchorEl naast
 // dat element (Top 10), zonder anchorEl midden op het scherm (kalenderdag).
+// Wat de pop-up nu toont, zodat een klik op een kanaal de pakketten van dat
+// kanaal kan laten zien en "← Terug" weer de kanalen.
+let kanaalVerdelingContext = { titel: "", orders: [] };
+
 function toonKanaalVerdeling(titel, orders, anchorEl = null) {
+  kanaalVerdelingContext = { titel, orders };
+  renderKanaalVerdeling();
+  const dialog = document.querySelector("#verkoopHardloperDialog");
+  if (!dialog.open) {
+    // Een eerdere plek naast een Top 10-regel weghalen, zodat hij zonder
+    // anker gewoon in het midden opent.
+    dialog.removeAttribute("style");
+    dialog.showModal();
+    if (anchorEl) positioneerBijAnker(dialog, anchorEl);
+  }
+}
+
+function renderKanaalVerdeling() {
+  const { titel, orders } = kanaalVerdelingContext;
   const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
   const perKanaal = new Map();
   orders.forEach((o) => perKanaal.set(o.kanaal, (perKanaal.get(o.kanaal) || 0) + o.aantal));
   const verdeling = [...perKanaal.entries()].sort(([, a], [, b]) => b - a);
 
+  document.querySelector("#verkoopHardloperDialog").classList.remove("is-pakketten");
+  document.querySelector("#verkoopHardloperEyebrow").textContent = "Kanalen";
+  document.querySelector("#verkoopHardloperTerug").hidden = true;
   document.querySelector("#verkoopHardloperTitel").textContent = titel;
   document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = verdeling
-    .map(([kanaal, aantal]) => `<li class="verkoop-hardloper-kanaal-item">
+    .map(([kanaal, aantal]) => `<li class="verkoop-hardloper-kanaal-item is-klikbaar" data-kanaal="${escapeHtml(kanaal)}" title="Klik voor de pakketten van ${escapeHtml(kanaal || "Onbekend")}">
         <span class="verkoop-hardloper-kanaal-badge" style="--klant-kleur:${kanaalKleur(kanaal)}"></span>
         <span class="verkoop-hardloper-kanaal-naam">${escapeHtml(kanaal || "Onbekend")}</span>
         <span class="verkoop-hardloper-kanaal-percentage">${totaal ? Math.round((aantal / totaal) * 100) : 0}%</span>
@@ -2802,14 +2823,29 @@ function toonKanaalVerdeling(titel, orders, anchorEl = null) {
   if (!verdeling.length) {
     document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = '<li class="verkoop-hardloper-kanaal-item"><span class="verkoop-hardloper-kanaal-naam">Geen verkopen</span></li>';
   }
-  const dialog = document.querySelector("#verkoopHardloperDialog");
-  if (!dialog.open) {
-    // Een eerdere plek naast een Top 10-regel weghalen, zodat hij zonder
-    // anker gewoon in het midden opent.
-    dialog.removeAttribute("style");
-    dialog.showModal();
-    if (anchorEl) positioneerBijAnker(dialog, anchorEl);
-  }
+}
+
+// Klik op een kanaal in de pop-up: de pakketten van dat kanaal, hoog → laag.
+function renderKanaalPakketten(kanaal) {
+  const orders = kanaalVerdelingContext.orders.filter((o) => o.kanaal === kanaal);
+  const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
+  const perPakket = new Map();
+  orders.forEach((o) => perPakket.set(o.pakketnummer, (perPakket.get(o.pakketnummer) || 0) + o.aantal));
+  const pakketten = [...perPakket.entries()]
+    .sort(([a, x], [b, y]) => y - x || a.localeCompare(b, "nl", { numeric: true }));
+
+  document.querySelector("#verkoopHardloperDialog").classList.add("is-pakketten");
+  document.querySelector("#verkoopHardloperEyebrow").textContent = `${kanaal || "Onbekend"} · ${displayNumber(totaal)} ${totaal === 1 ? "pakket" : "pakketten"}`;
+  document.querySelector("#verkoopHardloperTerug").hidden = false;
+  document.querySelector("#verkoopHardloperTitel").textContent = kanaalVerdelingContext.titel.split(" · ")[0];
+  document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = pakketten
+    .map(([pakketnummer, aantal]) => `<li class="verkoop-hardloper-kanaal-item">
+        <span class="verkoop-hardloper-pakketnummer">${escapeHtml(pakketnummer)}</span>
+        <span class="verkoop-hardloper-kanaal-naam">${escapeHtml(verkoopPakketnaam(pakketnummer))}</span>
+        <span class="verkoop-hardloper-kanaal-percentage">${totaal ? Math.round((aantal / totaal) * 100) : 0}%</span>
+        <span class="verkoop-hardloper-kanaal-aantal">${displayNumber(aantal)}</span>
+      </li>`)
+    .join("");
 }
 
 // Klik op een dag in het kalenderoverzicht: verkopen per kanaal van die dag
@@ -4567,6 +4603,11 @@ document.querySelector("#klantDuplicatenButton").addEventListener("click", openK
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#closeVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
+document.querySelector("#verkoopHardloperKanalenLijst").addEventListener("click", (event) => {
+  const item = event.target.closest("li[data-kanaal]");
+  if (item) renderKanaalPakketten(item.dataset.kanaal);
+});
+document.querySelector("#verkoopHardloperTerug").addEventListener("click", renderKanaalVerdeling);
 document.querySelector("#verkoopKalenderView").addEventListener("click", (event) => {
   const dag = event.target.closest("tr[data-datum]");
   if (dag) openKalenderDagVerdeling(dag.dataset.datum);
