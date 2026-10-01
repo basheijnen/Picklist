@@ -774,7 +774,7 @@ let verkoopDetailColspan = 3;
 let verkoopView = "kalender";
 // Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag",
 // "Deze week" of "Totaal seizoen" ({ van, tot } of null) — de kalender
-// blijft dan open. Alleen dagen met verkoop worden gemarkeerd.
+// blijft dan open. Werkdagen altijd, weekenddagen alleen met verkoop.
 let verkoopKalenderMarkering = null;
 // Ging je vanuit het kalenderoverzicht via Europa of Pokon naar een andere
 // weergave, dan brengt een periodetegel (Deze week e.d.) je terug naar de kalender.
@@ -3051,10 +3051,10 @@ function renderVerkoopKalender() {
         const datum = `${jaar}-${String(maand).padStart(2, "0")}-${String(dag).padStart(2, "0")}`;
         const waarde = perDag.get(datum) || 0;
         const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
-        // Alleen dagen mét verkoop (ook een weekenddag als daar orders zijn
-        // verwerkt); lege dagen onderbreken de markering, zodat elk
-        // aaneengesloten blok een eigen rand krijgt.
-        const gemarkeerd = Boolean(markering && datum >= markering.van && datum <= markering.tot && waarde > 0);
+        // Werkdagen in de periode altijd (ook een lege dag zoals 29-9, zodat
+        // het blok doorloopt); weekenddagen alleen als er orders zijn verwerkt.
+        // Een weekend zonder verkoop onderbreekt het blok.
+        const gemarkeerd = Boolean(markering && datum >= markering.van && datum <= markering.tot && (!isWeekend || waarde > 0));
         return { dag, datum, waarde, isWeekend, gemarkeerd };
       });
       const rijen = dagen.map(({ dag, waarde, isWeekend, gemarkeerd }, i) => {
