@@ -4030,6 +4030,9 @@ function renderAll() {
     tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
     tab.style.setProperty("--accent", { PAKKETTEN: "#163d32", KOELING: "#2576a6", KAS: "#4e8b45", KAMER: "#9a5a9e", POKON: "#d17b2a", DOZEN: "#6f6254" }[name]);
     tab.addEventListener("click", () => selectDepartment(name));
+    // Afdelingen zonder inhoud (bijv. vandaag geen KOELING) krijgen geen tab;
+    // bij het afdrukken worden ze al overgeslagen (.department.is-empty).
+    tab.hidden = name !== "PAKKETTEN" && !calculated.departments[name].size;
     tabs.append(tab);
     if (name === "POKON" || name === "DOZEN") {
       pokonDozenPage.append(renderDepartment(name, calculated.departments[name], calculated.nazendingKeys[name]));
