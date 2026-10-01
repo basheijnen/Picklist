@@ -2473,6 +2473,10 @@ function verkoopGefilterdeOrders({ metZoek = true } = {}) {
 }
 
 function verkoopExporteren() {
+  if (verkoopView === "plant") {
+    verkoopPerPlantExporteren();
+    return;
+  }
   // Pokon telt nergens mee in de export, tenzij de Pokon-tegel zelf actief
   // is (die zet de zoekterm op exact "Pokon") — dan is dat juist wat je wil.
   const pokonGeselecteerd = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() === "pokon";
@@ -2490,7 +2494,20 @@ function verkoopExporteren() {
       rijen.push([order.ordernummer, order.datum, order.kanaal, order.pakketnummer, naam, 1]);
     }
   });
-  const csv = [header, ...rijen]
+  verkoopDownloadCsv([header, ...rijen], "verkopen");
+}
+
+// In "Verkopen per plant" exporteert de knop precies de lijst op het scherm.
+function verkoopPerPlantExporteren() {
+  const { zichtbaar } = verkoopPerPlantZichtbaar();
+  verkoopDownloadCsv(
+    [["Plant", "Potmaat", "Aantal verkocht"], ...zichtbaar.map((rij) => [rij.plant, rij.potmaat, String(rij.aantal).replace(".", ",")])],
+    "verkopen_per_plant",
+  );
+}
+
+function verkoopDownloadCsv(rijen, bestandsnaam) {
+  const csv = rijen
     .map((rij) => rij.map((waarde) => `"${String(waarde).replace(/"/g, '""')}"`).join(";"))
     .join("\r\n");
   const van = document.querySelector("#verkoopVanDatum").value || "alles";
@@ -2499,7 +2516,7 @@ function verkoopExporteren() {
   const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }));
   const link = document.createElement("a");
   link.href = url;
-  link.download = `verkopen_${kanaalDeel}${van}_tot_${tot}.csv`;
+  link.download = `${bestandsnaam}_${kanaalDeel}${van}_tot_${tot}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -2759,7 +2776,7 @@ function renderVerkoopTable(orders) {
 // Verkochte pakketten teruggerekend naar losse planten, per potmaat. Zelfde
 // Van/Tot/kanaal-filter als de andere weergaven; de pakket-zoekbalk van de
 // tabel telt hier niet mee, deze weergave heeft een eigen zoekveld op plant.
-function renderVerkoopPerPlant() {
+function verkoopPerPlantZichtbaar() {
   const { rijen, onbekend } = verkoopPerPlant(
     verkoopGefilterdeOrders({ metZoek: false }), window.PICKLIST_BOM || [], window.PICKLIST_POTMATEN || {},
   );
@@ -2773,6 +2790,11 @@ function renderVerkoopPerPlant() {
     if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
     return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
   });
+  return { zichtbaar, onbekend };
+}
+
+function renderVerkoopPerPlant() {
+  const { zichtbaar, onbekend } = verkoopPerPlantZichtbaar();
   document.querySelector("#verkoopPlantBody").innerHTML = zichtbaar
     .map((rij) => `<tr><td>${escapeHtml(rij.plant)}</td><td>${escapeHtml(rij.potmaat)}</td><td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td></tr>`)
     .join("");
