@@ -758,7 +758,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .mmp-form label, .mmp-dialog .verkoop-table thead th { color: var(--mmp-kopje); }
 #mmpMessage:not(:empty) { padding: 8px 14px; border-radius: 10px; background: white; }
 .mmp-dialog .verkoop-tile, .mmp-dialog .mmp-sectie { border: 1px solid var(--mmp-rand); box-shadow: 0 1px 3px rgba(60, 40, 20, .06), 0 8px 24px rgba(60, 40, 20, .05); }
-.mmp-dialog .verkoop-tile { border-top: 3px solid var(--mmp-accent); }
+.mmp-dialog .verkoop-tile, .mmp-dialog .mmp-sectie { border-top: 3px solid var(--mmp-accent); }
 /* Vakken en tabellen met een dunne warme rand en afgeronde hoeken; alleen de
    onderlijn van de kolomkoppen in cognac. */
 .mmp-dialog .mmp-form { border: 1px solid var(--mmp-rand); }
