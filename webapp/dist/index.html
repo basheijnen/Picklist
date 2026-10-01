@@ -225,7 +225,13 @@
         <label>Van <input id="verkoopVanDatum" type="date"></label>
         <label>Tot <input id="verkoopTotDatum" type="date"></label>
         <span id="verkoopFilterTotaal" class="verkoop-filter-totaal"></span>
-        <button id="verkoopExportButton" class="button button-quiet" type="button">⬇ Exporteren</button>
+        <div class="verkoop-export-wrap">
+          <button id="verkoopExportButton" class="button button-quiet" type="button" aria-haspopup="true" aria-expanded="false">⬇ Exporteren</button>
+          <ul id="verkoopExportMenu" class="nazending-suggestions" hidden>
+            <li><button type="button" data-formaat="xlsx">Excel (.xlsx)</button></li>
+            <li><button type="button" data-formaat="csv">CSV (.csv)</button></li>
+          </ul>
+        </div>
       </div>
 
       <div id="verkoopTiles" class="verkoop-tiles"></div>

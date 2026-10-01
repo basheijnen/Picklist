@@ -19,6 +19,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from bom import BomEntry, load_bom_csv, write_bom_csv
+from export_xlsx import maak_xlsx
 from packages import PackageInfo, load_package_info_csv, write_package_info_csv
 from mmp import (
     load_betalingen,
@@ -542,6 +543,9 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
         if self.path == "/api/verkoop":
             self._handle_verkoop_upload()
             return
+        if self.path == "/api/export-xlsx":
+            self._handle_export_xlsx()
+            return
         if self.path != "/api/pakketten":
             self._send_json(404, {"error": "Onbekend endpoint."})
             return
@@ -627,6 +631,30 @@ class PicklistRequestHandler(SimpleHTTPRequestHandler):
             self._send_json(400, {"error": str(error)})
         except Exception as error:
             self._send_json(500, {"error": f"Onverwachte fout bij opslaan: {error}"})
+
+    def _handle_export_xlsx(self):
+        """De browser stuurt de rijen van een export (Verkopen); hier wordt
+        er een echt Excel-bestand van gemaakt. Er wordt niets opgeslagen.
+        """
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            payload = json.loads(self.rfile.read(length) or b"{}")
+            rijen = payload["rijen"]
+            if not isinstance(rijen, list) or not all(isinstance(rij, list) for rij in rijen):
+                raise ValueError
+        except (TypeError, ValueError, KeyError):
+            self._send_json(400, {"error": "Ongeldige aanvraag: kan de exportgegevens niet lezen."})
+            return
+        try:
+            body = maak_xlsx(rijen, payload.get("bladnaam") or "Export")
+        except Exception as error:
+            self._send_json(500, {"error": f"Kan het Excel-bestand niet maken: {error}"})
+            return
+        self.send_response(200)
+        self.send_header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _handle_mmp_write(self, sectie):
         try:

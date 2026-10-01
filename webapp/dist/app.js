@@ -2472,9 +2472,16 @@ function verkoopGefilterdeOrders({ metZoek = true } = {}) {
   });
 }
 
-function verkoopExporteren() {
+// Exporteren vraagt eerst Excel of CSV (#verkoopExportMenu) en exporteert dan
+// wat bij de huidige weergave hoort: in "Verkopen per plant" de plantenlijst
+// op het scherm, anders de losse verkopen (één regel per stuk).
+function verkoopExporteren(formaat) {
   if (verkoopView === "plant") {
-    verkoopPerPlantExporteren();
+    const { zichtbaar } = verkoopPerPlantZichtbaar();
+    verkoopDownload(
+      [["Plant", "Potmaat", "Aantal verkocht"], ...zichtbaar.map((rij) => [rij.plant, rij.potmaat, rij.aantal])],
+      "verkopen_per_plant", "Verkopen per plant", formaat,
+    );
     return;
   }
   // Pokon telt nergens mee in de export, tenzij de Pokon-tegel zelf actief
@@ -2494,31 +2501,50 @@ function verkoopExporteren() {
       rijen.push([order.ordernummer, order.datum, order.kanaal, order.pakketnummer, naam, 1]);
     }
   });
-  verkoopDownloadCsv([header, ...rijen], "verkopen");
+  verkoopDownload([header, ...rijen], "verkopen", "Verkopen", formaat);
 }
 
-// In "Verkopen per plant" exporteert de knop precies de lijst op het scherm.
-function verkoopPerPlantExporteren() {
-  const { zichtbaar } = verkoopPerPlantZichtbaar();
-  verkoopDownloadCsv(
-    [["Plant", "Potmaat", "Aantal verkocht"], ...zichtbaar.map((rij) => [rij.plant, rij.potmaat, String(rij.aantal).replace(".", ",")])],
-    "verkopen_per_plant",
-  );
-}
-
-function verkoopDownloadCsv(rijen, bestandsnaam) {
-  const csv = rijen
-    .map((rij) => rij.map((waarde) => `"${String(waarde).replace(/"/g, '""')}"`).join(";"))
-    .join("\r\n");
+async function verkoopDownload(rijen, bestandsnaam, bladnaam, formaat) {
   const van = document.querySelector("#verkoopVanDatum").value || "alles";
   const tot = document.querySelector("#verkoopTotDatum").value || "alles";
   const kanaalDeel = verkoopActiefKanaal ? `${verkoopActiefKanaal.replace(/[^a-z0-9]+/gi, "-")}_` : "";
-  const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" }));
+  const naam = `${bestandsnaam}_${kanaalDeel}${van}_tot_${tot}.${formaat}`;
+  let blob;
+  if (formaat === "xlsx") {
+    // Het Excel-bestand maakt de server (openpyxl); getallen blijven getallen.
+    try {
+      const response = await fetch("/api/export-xlsx", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bladnaam, rijen }),
+      });
+      if (!response.ok) throw new Error((await response.json().catch(() => ({}))).error || "Exporteren mislukt.");
+      blob = await response.blob();
+    } catch (error) {
+      await confirmDialog(`Kan geen Excel-bestand maken: ${error.message}`, "OK", { title: "Exporteren mislukt", style: "primary" });
+      return;
+    }
+  } else {
+    // Puntkomma + komma als decimaalteken, zodat Nederlandse Excel het goed leest.
+    const csv = rijen
+      .map((rij) => rij.map((waarde) => {
+        const tekst = typeof waarde === "number" ? String(waarde).replace(".", ",") : String(waarde);
+        return `"${tekst.replace(/"/g, '""')}"`;
+      }).join(";"))
+      .join("\r\n");
+    blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  }
+  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `${bestandsnaam}_${kanaalDeel}${van}_tot_${tot}.csv`;
+  link.download = naam;
   link.click();
   URL.revokeObjectURL(url);
+}
+
+function sluitVerkoopExportMenu() {
+  document.querySelector("#verkoopExportMenu").hidden = true;
+  document.querySelector("#verkoopExportButton").setAttribute("aria-expanded", "false");
 }
 
 function renderVerkoopTiles() {
@@ -4106,7 +4132,26 @@ document.addEventListener("click", (event) => {
     sluitVerkoopSeizoenDropdown();
   }
 });
-document.querySelector("#verkoopExportButton").addEventListener("click", verkoopExporteren);
+document.querySelector("#verkoopExportButton").addEventListener("click", (event) => {
+  event.stopPropagation();
+  const menu = document.querySelector("#verkoopExportMenu");
+  if (menu.hidden) {
+    menu.hidden = false;
+    document.querySelector("#verkoopExportButton").setAttribute("aria-expanded", "true");
+  } else {
+    sluitVerkoopExportMenu();
+  }
+});
+document.querySelectorAll("#verkoopExportMenu button").forEach((knop) => {
+  knop.addEventListener("click", () => {
+    sluitVerkoopExportMenu();
+    verkoopExporteren(knop.dataset.formaat);
+  });
+});
+document.addEventListener("click", (event) => {
+  const menu = document.querySelector("#verkoopExportMenu");
+  if (!menu.hidden && !menu.contains(event.target)) sluitVerkoopExportMenu();
+});
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
 });
