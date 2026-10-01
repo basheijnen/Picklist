@@ -306,6 +306,9 @@ footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-siz
 .doos-kiezer-tegel.is-lang { font-size: .85rem; line-height: 1.15; }
 .doos-kiezer-verwijder { position: absolute; top: -6px; right: -6px; width: 20px; height: 20px; padding: 0; border: 1.5px solid #000; border-radius: 50%; background: white; color: var(--danger); font: inherit; font-size: .85rem; font-weight: 800; line-height: 1; cursor: pointer; }
 .doos-kiezer-verwijder:hover { background: #f9e9e7; }
+.doos-kiezer-voet { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.doos-kiezer-voet span { font-weight: 800; color: var(--ink); }
+.doos-kiezer-voet .button:disabled { opacity: .45; cursor: default; }
 .doos-kiezer-beheer { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .doos-kiezer-beheer[hidden], .doos-kiezer-toevoegen[hidden] { display: none; }
 .doos-kiezer-beheer > .text-button { align-self: center; }

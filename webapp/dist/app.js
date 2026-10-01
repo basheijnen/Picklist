@@ -918,6 +918,9 @@ function getDoosnummerList() {
 let doosKiezerInput = null;
 let doosKiezerLijstFn = getBeheerbareDoosnummerList;
 let doosKiezerBewerken = false;
+// Gekozen dozen in de dooskiezer; een pakket kan in meerdere dozen gaan
+// (bijv. "14 + 15"), dus tegels gaan aan/uit en "Toepassen" vult het veld.
+let doosKiezerSelectie = [];
 
 // De keuzes zijn overal zelf te beheren via "Dozen toevoegen / verwijderen"
 // — pas dan verschijnen de kruisjes. Toevoegen/weghalen gaat via dezelfde
@@ -930,8 +933,6 @@ function getBeheerbareDoosnummerList() {
 }
 
 function renderDoosKiezer() {
-  const dialog = document.querySelector("#doosKiezerDialog");
-  const huidige = doosKiezerInput.value.trim();
   const bewerken = doosKiezerBewerken;
   document.querySelector("#doosKiezerBeheer").hidden = false;
   document.querySelector("#doosKiezerToevoegen").hidden = !bewerken;
@@ -942,14 +943,16 @@ function renderDoosKiezer() {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "doos-kiezer-tegel";
-    if (doosnummer === huidige) button.classList.add("is-actief");
+    if (doosKiezerSelectie.includes(doosnummer)) button.classList.add("is-actief");
+    button.setAttribute("aria-pressed", String(doosKiezerSelectie.includes(doosnummer)));
     // "Doos 12 tubes" e.d. passen anders alleen over 3 regels in een tegel.
     if (doosnummer.length > 5) button.classList.add("is-lang");
     button.textContent = doosnummer;
     button.addEventListener("click", () => {
-      doosKiezerInput.value = doosnummer;
-      doosKiezerInput.dispatchEvent(new Event("input", { bubbles: true }));
-      dialog.close();
+      doosKiezerSelectie = doosKiezerSelectie.includes(doosnummer)
+        ? doosKiezerSelectie.filter((d) => d !== doosnummer)
+        : [...doosKiezerSelectie, doosnummer];
+      renderDoosKiezer();
     });
     item.append(button);
     if (bewerken) {
@@ -976,6 +979,13 @@ function renderDoosKiezer() {
     }
     return item;
   }));
+  const gekozen = doosKiezerGekozenTekst();
+  document.querySelector("#doosKiezerGekozen").textContent = gekozen ? `Gekozen: ${gekozen}` : "Klik één of meer dozen aan";
+  document.querySelector("#doosKiezerToepassen").disabled = !gekozen;
+}
+
+function doosKiezerGekozenTekst() {
+  return [...doosKiezerSelectie].sort((a, b) => a.localeCompare(b, "nl", { numeric: true })).join(" + ");
 }
 
 function doosKiezerVoegToe() {
@@ -997,6 +1007,7 @@ function wireDoosKiezer(inputEl, lijstFn = getBeheerbareDoosnummerList) {
     doosKiezerInput = inputEl;
     doosKiezerLijstFn = lijstFn;
     doosKiezerBewerken = false;
+    doosKiezerSelectie = inputEl.value.split("+").map((deel) => deel.trim()).filter(Boolean);
     renderDoosKiezer();
     const dialog = document.querySelector("#doosKiezerDialog");
     if (!dialog.open) dialog.showModal();
@@ -4520,6 +4531,11 @@ document.querySelector("#doosKiezerBewerkButton").addEventListener("click", () =
   if (doosKiezerBewerken) document.querySelector("#doosKiezerNieuw").focus();
 });
 document.querySelector("#doosKiezerToevoegenButton").addEventListener("click", doosKiezerVoegToe);
+document.querySelector("#doosKiezerToepassen").addEventListener("click", () => {
+  doosKiezerInput.value = doosKiezerGekozenTekst();
+  doosKiezerInput.dispatchEvent(new Event("input", { bubbles: true }));
+  document.querySelector("#doosKiezerDialog").close();
+});
 document.querySelector("#doosKiezerNieuw").addEventListener("keydown", (event) => {
   if (event.key !== "Enter") return;
   event.preventDefault();
