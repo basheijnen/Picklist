@@ -585,7 +585,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 #verkoopDialog .verkoop-datum-bereik > .verkoop-export-wrap { grid-column: 3; grid-row: 2; justify-self: end; }
 #verkoopDialog .periode-popup { left: 50%; transform: translateX(-50%); }
 /* Exporteren met de dikke lijn erboven, zoals de tegels. */
-#verkoopExportButton { border: 1px solid var(--line); border-top: 4px solid var(--brand); }
+#verkoopExportButton { border: 1.5px solid #8fa79b; border-top: 4px solid var(--brand); }
+#verkoopExportButton:hover, #verkoopExportButton[aria-expanded="true"] { border-color: var(--brand); }
 .verkoop-export-wrap { position: relative; }
 /* Periodekiezer (Verkopen): knop + popup met snelkeuzes en twee maanden. */
 .periode-kiezer { position: relative; }
