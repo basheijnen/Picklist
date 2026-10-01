@@ -598,7 +598,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-datum-bereik label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 700; color: var(--muted); }
 .verkoop-datum-bereik input { font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; }
 
-.verkoop-tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.verkoop-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+/* Verkopen heeft 6 tegels (met Selectie); Maison Privée houdt er 5 over de volle breedte. */
+#verkoopTiles { grid-template-columns: repeat(6, 1fr); }
 .verkoop-tile { position: relative; padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
 .verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
 .verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
@@ -710,7 +712,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-order-verwijder:disabled { opacity: .5; cursor: wait; }
 
 @media (max-width: 720px) {
-  .verkoop-tiles { grid-template-columns: 1fr 1fr; }
+  .verkoop-tiles, #verkoopTiles { grid-template-columns: 1fr 1fr; }
 }
 
 .mmp-dialog .verkoop-dialog-body { overflow-y: auto; max-height: calc(100vh - 110px); }
