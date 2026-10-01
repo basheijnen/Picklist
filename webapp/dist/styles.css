@@ -655,7 +655,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 #verkoopTiles .verkoop-tile { padding: 16px 18px; }
 #verkoopTiles .verkoop-tile-label { font-size: .88rem; margin-bottom: 6px; }
 #verkoopTiles .verkoop-tile-value { font-size: 1.75rem; line-height: 1.15; }
-#verkoopTiles .verkoop-tile-onderschrift { font-size: .85rem; margin-top: 4px; }
+#verkoopTiles .verkoop-tile-onderschrift { font-size: .85rem; margin-top: 4px; white-space: normal; }
 #verkoopTiles .verkoop-tile-badge-label { font-size: .75rem; }
 #verkoopTiles .verkoop-tile-badge-waarde { font-size: 1.1rem; }
 

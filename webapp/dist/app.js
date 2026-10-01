@@ -2643,7 +2643,9 @@ function renderVerkoopTiles() {
     {
       label: "Selectie",
       waarde: heeftSelectie ? displayNumber(totaalSelectie) : "–",
-      onderschrift: [heeftSelectie ? `${verkoopDatumNL(huidigeVan)} t/m ${verkoopDatumNL(huidigeTot)}` : "kies een periode"],
+      onderschrift: [heeftSelectie
+        ? (huidigeVan === huidigeTot ? verkoopDatumVoluit(huidigeVan) : `${verkoopDatumVoluit(huidigeVan)} t/m ${verkoopDatumVoluit(huidigeTot)}`)
+        : "kies een periode"],
       selectie: true,
       ...(heeftSelectie ? { van: huidigeVan, tot: huidigeTot, kalenderMarkering: { van: huidigeVan, tot: huidigeTot, selectie: true } } : {}),
     },
