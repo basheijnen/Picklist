@@ -768,6 +768,9 @@ let verkoopActiefKanaal = "";
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
 let verkoopOpengeklaptPakket = "";
 let verkoopView = "kalender";
+// Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag"
+// of "Deze week" ({ van, tot } of null) — de kalender blijft dan open.
+let verkoopKalenderMarkering = null;
 // Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
 // een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
 // bekeken seizoen zetten (voor de tabel-filter) zonder dat de titel, de
@@ -2586,8 +2589,8 @@ function renderVerkoopTiles() {
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
       van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen,
     },
-    { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
-    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
   ];
@@ -2625,6 +2628,10 @@ function renderVerkoopTiles() {
       if (tegel.zoek) zoekInput.value = tegel.zoek;
       else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
       if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
+      // In het kalenderoverzicht doen Vandaag/Deze week niets anders dan die
+      // dagen geel markeren; je blijft in de kalender.
+      verkoopKalenderMarkering = verkoopView === "kalender" && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
+      if (verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
       // Blijf in Verkopen per pakket/per plant als je daar al was.
       if (tegel.view) verkoopView = tegel.view;
       else if (tegel.zoek || !["tabel", "plant"].includes(verkoopView)) verkoopView = "tabel";
@@ -2916,6 +2923,7 @@ function renderVerkoopKalender() {
   // ook door andere tegels ("Vandaag" e.d.) wordt aangepast.
   if (!verkoopActiefSeizoen) verkoopActiefSeizoen = verkoopHuidigSeizoenStart(todayIso());
   const seizoenStartJaar = Number(verkoopActiefSeizoen.slice(0, 4));
+  const markering = verkoopKalenderMarkering;
   document.querySelector("#verkoopKalenderView").innerHTML = verkoopSeizoenMaanden(seizoenStartJaar)
     .map(([jaar, maand]) => {
       const dagenInMaand = new Date(jaar, maand, 0).getDate();
@@ -2926,7 +2934,9 @@ function renderVerkoopKalender() {
         const waarde = perDag.get(datum) || 0;
         totaalMaand += waarde;
         const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
-        return `<tr${isWeekend ? ' class="verkoop-kalender-weekend"' : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+        const gemarkeerd = markering && datum >= markering.van && datum <= markering.tot;
+        const klassen = [isWeekend && "verkoop-kalender-weekend", gemarkeerd && "verkoop-kalender-markering"].filter(Boolean).join(" ");
+        return `<tr${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
       // Pad every month out to 31 rows so "Totaal" lines up on the same
       // horizontal row across all 12 columns, regardless of month length.
@@ -4173,7 +4183,10 @@ document.addEventListener("click", (event) => {
   if (!menu.hidden && !menu.contains(event.target)) sluitVerkoopExportMenu();
 });
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
-  document.querySelector(selector).addEventListener("change", renderVerkoopDialog);
+  document.querySelector(selector).addEventListener("change", () => {
+    verkoopKalenderMarkering = null;
+    renderVerkoopDialog();
+  });
 });
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   const input = document.querySelector(selector);
