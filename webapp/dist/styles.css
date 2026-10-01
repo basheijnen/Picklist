@@ -16,7 +16,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; background: radial-gradient(circle at 90% 0, #e0eee6 0, transparent 35%), var(--canvas); }
 button, input { font: inherit; }
-.topbar { min-height: 92px; padding: 12px clamp(20px, 5vw, 72px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; color: white; background: var(--brand); }
+.topbar { min-height: var(--kopbalk-hoogte); padding: 12px clamp(20px, 5vw, 72px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; color: white; background: var(--brand); }
 .brand { grid-column: 2; display: flex; align-items: center; justify-self: center; gap: 14px; }
 .header-logo { display: block; max-width: 100%; object-fit: contain; }
 .header-logos { grid-column: 1; justify-self: start; display: flex; align-items: center; gap: 20px; }
@@ -553,6 +553,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 #verkoopDialog .dialog-header > #closeVerkoopDialog { justify-self: end; white-space: nowrap; }
 /* Zelfde kopbalk als Maison Privée: donkergroen, witte titel, goud bovenschrift. */
 #verkoopDialog .dialog-header { background: var(--brand); border-bottom: 0; }
+/* De groene kopbalk is op Picklist, Verkopen en Maison Privée even hoog. */
+:root { --kopbalk-hoogte: 121px; }
+#verkoopDialog .dialog-header, .mmp-dialog .dialog-header { min-height: var(--kopbalk-hoogte); padding-top: 12px; padding-bottom: 12px; }
 #verkoopDialog .dialog-header .eyebrow { color: var(--gold); }
 #verkoopDialog .dialog-header h2 { color: white; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.1; }
 #verkoopDialog .verkoop-seizoen-toggle { color: white; }
