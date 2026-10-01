@@ -257,6 +257,10 @@ tbody tr:hover { background: #f5faf7; }
 footer { padding: 0 20px 36px; color: var(--muted); text-align: center; font-size: .85rem; }
 .package-dialog { width: min(900px, calc(100% - 24px)); max-height: calc(100vh - 32px); padding: 0; overflow: auto; border: 0; border-radius: 20px; color: var(--ink); background: white; box-shadow: 0 28px 90px rgba(0,0,0,.3); }
 .package-dialog::backdrop { background: rgba(10, 30, 24, .68); backdrop-filter: blur(3px); }
+/* Verkopen en Maison Privée vullen het hele scherm: de vervaging erachter is
+   onzichtbaar, maar Chrome rekent hem bij elke wijziging opnieuw uit en liet
+   daarbij soms blokken staan op de tegels (gouden/groene vlakken). */
+.verkoop-dialog::backdrop { backdrop-filter: none; background: var(--canvas); }
 /* Pakketformulier vast bovenaan i.p.v. verticaal gecentreerd: anders schuift
    het venster (en de knop Volgende) mee met het aantal regels per pakket. */
 #packageDialog { margin-top: 16px; margin-bottom: auto; }
