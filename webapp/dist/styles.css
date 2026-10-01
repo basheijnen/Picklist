@@ -1023,4 +1023,4 @@ dialog { overscroll-behavior: contain; }
 /* Pakketnummers in de top 10 iets groter (en de kolom wat breder). */
 .verkoop-overzicht-top10-nummer { width: 44px; padding-top: 0; font-size: .86rem; }
 .verkoop-overzicht-top10-naam { font-size: .84rem; }
-.verkoop-overzicht-top10-aantal { width: 34px; font-size: .84rem; }
+.verkoop-overzicht-top10-aantal { width: 40px; font-size: .98rem; }
