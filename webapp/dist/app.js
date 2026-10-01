@@ -2828,11 +2828,17 @@ function renderVerkoopKlantFilters() {
     })
     .join("");
   container.querySelectorAll(".verkoop-klant-button").forEach((knop) => {
-    knop.addEventListener("click", () => {
-      // Aan/uit per klant; meerdere tegelijk kan.
+    knop.addEventListener("click", (event) => {
       const kanaal = knop.dataset.kanaal;
-      if (verkoopActieveKanalen.has(kanaal)) verkoopActieveKanalen.delete(kanaal);
-      else verkoopActieveKanalen.add(kanaal);
+      if (event.ctrlKey || event.metaKey) {
+        // Ctrl+klik: klant erbij of eraf, voor meerdere klanten tegelijk.
+        if (verkoopActieveKanalen.has(kanaal)) verkoopActieveKanalen.delete(kanaal);
+        else verkoopActieveKanalen.add(kanaal);
+      } else {
+        // Gewone klik: alleen deze klant; nogmaals klikken = weer alle klanten.
+        const alleenDeze = verkoopActieveKanalen.size === 1 && verkoopActieveKanalen.has(kanaal);
+        verkoopActieveKanalen = alleenDeze ? new Set() : new Set([kanaal]);
+      }
       renderVerkoopDialog();
     });
   });
