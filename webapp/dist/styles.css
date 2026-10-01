@@ -1031,3 +1031,5 @@ dialog { overscroll-behavior: contain; }
 }
 .verkoop-overzicht-top10-item { gap: 8px; }
 .verkoop-overzicht-top10-nummer { margin-right: 8px; }
+/* Podium (top 3): dikke zwarte bovenrand en wat meer ruimte eronder. */
+.verkoop-overzicht-top10-item[class*="is-podium-"] { border-top: 4px solid #000; margin-bottom: 4px; }
