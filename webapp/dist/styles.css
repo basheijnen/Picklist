@@ -774,7 +774,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .mmp-dialog .button-terug { background: white; border-color: var(--mmp-accent); color: var(--mmp-accent); }
 /* Taal- en kopieerknop: kleine badges rechts in de groene kopbalk. */
 /* Kop: titel groot in het midden; rechts taal, kopiëren en (met wat ruimte) Terug. */
-.mmp-dialog .dialog-header .mmp-titel { justify-self: center; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.1; text-align: center; white-space: nowrap; }
+.mmp-dialog .dialog-header .mmp-titel-blok { justify-self: center; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mmp-dialog .dialog-header .mmp-titel { font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.1; text-align: center; white-space: nowrap; }
 .mmp-dialog .mmp-kop-knoppen #closeMmpDialog { margin-left: 10px; white-space: nowrap; }
 .mmp-dialog .dialog-header > .mmp-kop-knoppen { justify-self: end; }
 .mmp-kop-knoppen { display: flex; align-items: center; gap: 8px; }
