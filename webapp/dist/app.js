@@ -2593,7 +2593,7 @@ function renderVerkoopTiles() {
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
-    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
+    { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "", behoudPeriode: true },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
   ];
   const huidigeVan = document.querySelector("#verkoopVanDatum").value;
@@ -2606,7 +2606,10 @@ function renderVerkoopTiles() {
       // Een eigen zoekterm (bijv. "wisteria") houdt een tegel gewoon actief;
       // alleen de Pokon-tegel hoort bij de zoekterm "Pokon".
       const zoekPast = tegel.zoek ? tegel.zoek === huidigeZoek : huidigeZoek.trim().toLowerCase() !== "pokon";
-      const actief = (klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && zoekPast
+      // Europa · Benelux volgt de gekozen periode, dus actief zodra je in het
+      // regio-overzicht zit — ongeacht Van/Tot.
+      const periodePast = tegel.behoudPeriode ? verkoopView === "regio" : tegel.van === huidigeVan && tegel.tot === huidigeTot;
+      const actief = (klikbaar && periodePast && zoekPast
         && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal))
         // Met een kanaal gekozen (bijv. Amazon) lichten Totaal seizoen, Vandaag
         // en Deze week op als dat kanaal er verkopen in heeft; 0 blijft wit.
@@ -2621,8 +2624,12 @@ function renderVerkoopTiles() {
     const tegel = tegels[index];
     if (tegel.van === undefined) return;
     el.addEventListener("click", () => {
-      document.querySelector("#verkoopVanDatum").value = tegel.van;
-      document.querySelector("#verkoopTotDatum").value = tegel.tot;
+      // Europa · Benelux houdt de periode die je al gekozen had (bijv. Deze
+      // week); de andere tegels zetten Van/Tot op hun eigen periode.
+      if (!tegel.behoudPeriode) {
+        document.querySelector("#verkoopVanDatum").value = tegel.van;
+        document.querySelector("#verkoopTotDatum").value = tegel.tot;
+      }
       // De ingevoerde zoekterm blijft staan bij wisselen tussen tegels; alleen
       // de Pokon-tegel zet er "Pokon" in, en die wordt weer gewist zodra je
       // naar een andere tegel gaat.
