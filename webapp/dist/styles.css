@@ -659,8 +659,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand table { border-collapse: separate; border-spacing: 0; font-size: .82rem; }
 .verkoop-kalender-maand td { padding: 0 4px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
-/* Weekenden licht blauw, dezelfde tint als de periodeknop en de Selectie-tegel (iets lichter). */
-.verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: color-mix(in srgb, #2576a6 8%, white); }
+/* Weekenden lichtgroen, de tint van de pagina-achtergrond. */
+.verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e6f0ea; }
 /* Gemarkeerde dagen: heel licht rood, elk aaneengesloten blok met een dunne grijze rand. */
 .verkoop-kalender { --kalender-rand: var(--gold); }
 /* Markering zoals een actieve tegel: donkergroen, gouden rand en gouden tekst. */
