@@ -634,8 +634,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-tile { position: relative; padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
 /* Geen verschuiving bij aanwijzen: een bewegende tegel die net opnieuw getekend
    wordt, gaf soms een half getekend (goud) vlak. Alleen de schaduw blijft. */
-.verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease; }
-.verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.18); }
+.verkoop-tile-klikbaar { cursor: pointer; }
+/* Bij aanwijzen alleen een donkerdere rand: geen schaduw of animatie, die gaven
+   in Chrome tekenfouten (blokken op de tegels). */
+#verkoopTiles .verkoop-tile-klikbaar:hover { border-color: var(--brand); }
 .verkoop-tile.is-actief { background: #e8f4ed; border-color: var(--brand); }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
@@ -692,7 +694,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 7px 0 0 7px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 0 7px 7px 0; }
 .verkoop-kalender-maand tr:is([data-datum], [data-maand]) { cursor: pointer; }
-.verkoop-kalender-maand tr:is([data-datum], [data-maand]):hover td { box-shadow: inset 0 0 0 999px rgba(22, 61, 50, .08); }
+.verkoop-kalender-maand tr:is([data-datum], [data-maand]):hover td { background-image: linear-gradient(rgba(22, 61, 50, .1), rgba(22, 61, 50, .1)); }
 .verkoop-kalender-maand tr.verkoop-kalender-weekendgrens td { border-bottom: 2px solid #8fa79b; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
