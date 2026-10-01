@@ -1059,3 +1059,5 @@ dialog { overscroll-behavior: contain; }
    (zelfde zijmarge als de bovenbalk daar). */
 #verkoopDialog .dialog-header { padding-left: clamp(20px, 5vw, 72px); padding-right: clamp(20px, 5vw, 72px); }
 #verkoopDialog .dialog-header > .kop-logo { justify-self: start; }
+/* Afdelingstabs in een eigen donkergroen blok, zoals de kopbalk. */
+#departmentTabs { padding: 12px; border: 1.5px solid #000; border-top: 4px solid #000; border-radius: 16px; background: var(--brand); }
