@@ -579,6 +579,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
 .verkoop-regio[hidden] { display: none; }
+.verkoop-plant-onbekend { margin: 8px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; color: var(--muted); }
 .verkoop-regio-sectie { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
 .verkoop-regio-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; }
 .verkoop-regio-sectie table { width: 100%; border-collapse: collapse; font-size: .82rem; }

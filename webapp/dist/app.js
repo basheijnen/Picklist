@@ -767,6 +767,7 @@ function openVerplaatsMenu(geselecteerd, kanalen) {
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
 let verkoopSort = { kolom: "aantal", richting: "desc" };
+let verkoopPlantSort = { kolom: "aantal", richting: "desc" };
 let verkoopActiefKanaal = "";
 // Pakketnummer waarvan in de Verkopen-tabel de losse orders uitgeklapt staan.
 let verkoopOpengeklaptPakket = "";
@@ -2448,11 +2449,11 @@ function printMmpFactuur() {
   window.print();
 }
 
-function verkoopGefilterdeOrders() {
+function verkoopGefilterdeOrders({ metZoek = true } = {}) {
   const van = document.querySelector("#verkoopVanDatum").value;
   const tot = document.querySelector("#verkoopTotDatum").value;
   const kanaal = verkoopActiefKanaal;
-  const zoek = document.querySelector("#verkoopZoekInput").value.trim().toLowerCase();
+  const zoek = metZoek ? document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() : "";
   return (window.PICKLIST_VERKOOP || []).filter((order) => {
     // ISO "YYYY-MM-DD" strings compare chronologically as plain strings.
     if (van && order.datum < van) return false;
@@ -2755,6 +2756,35 @@ function renderVerkoopTable(orders) {
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
 }
 
+// Verkochte pakketten teruggerekend naar losse planten, per potmaat. Zelfde
+// Van/Tot/kanaal-filter als de andere weergaven; de pakket-zoekbalk van de
+// tabel telt hier niet mee, deze weergave heeft een eigen zoekveld op plant.
+function renderVerkoopPerPlant() {
+  const { rijen, onbekend } = verkoopPerPlant(
+    verkoopGefilterdeOrders({ metZoek: false }), window.PICKLIST_BOM || [], window.PICKLIST_POTMATEN || {},
+  );
+  const zoek = document.querySelector("#verkoopPlantZoekInput").value.trim().toLowerCase();
+  const zichtbaar = zoek
+    ? rijen.filter((rij) => rij.plant.toLowerCase().includes(zoek) || rij.potmaat.toLowerCase().includes(zoek))
+    : rijen;
+  const { kolom, richting } = verkoopPlantSort;
+  zichtbaar.sort((a, b) => {
+    const factor = richting === "asc" ? 1 : -1;
+    if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
+    return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
+  });
+  document.querySelector("#verkoopPlantBody").innerHTML = zichtbaar
+    .map((rij) => `<tr><td>${escapeHtml(rij.plant)}</td><td>${escapeHtml(rij.potmaat)}</td><td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td></tr>`)
+    .join("");
+  document.querySelector("#verkoopPlantTotaalCel").textContent = displayNumber(zichtbaar.reduce((sum, rij) => sum + rij.aantal, 0));
+  const melding = document.querySelector("#verkoopPlantOnbekend");
+  const aantalOnbekend = onbekend.reduce((sum, rij) => sum + rij.aantal, 0);
+  melding.hidden = !onbekend.length;
+  melding.textContent = onbekend.length
+    ? `${displayNumber(aantalOnbekend)} verkochte pakketten niet meegeteld (inhoud onbekend): ${onbekend.map((rij) => `${rij.pakketnummer} (${displayNumber(rij.aantal)})`).join(", ")}`
+    : "";
+}
+
 // Uitklapregel onder een pakket in de Verkopen-tabel: de losse orders
 // (binnen de huidige filter) met per order een verwijderknop.
 function verkoopOrderDetailRij(orders) {
@@ -2937,10 +2967,13 @@ function renderVerkoopDialog() {
   document.querySelector("#verkoopTabelView").hidden = verkoopView !== "tabel";
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
+  document.querySelector("#verkoopPlantView").hidden = verkoopView !== "plant";
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {
     renderVerkoopRegio();
+  } else if (verkoopView === "plant") {
+    renderVerkoopPerPlant();
   } else {
     renderVerkoopTable(gefilterd);
   }
@@ -4065,6 +4098,17 @@ document.querySelector("#verkoopExportButton").addEventListener("click", verkoop
   });
 });
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
+document.querySelector("#verkoopPlantZoekInput").addEventListener("input", renderVerkoopPerPlant);
+document.querySelectorAll(".verkoop-table th[data-plant-sort]").forEach((th) => {
+  th.addEventListener("click", () => {
+    const kolom = th.dataset.plantSort;
+    verkoopPlantSort = {
+      kolom,
+      richting: verkoopPlantSort.kolom === kolom && verkoopPlantSort.richting === "desc" ? "asc" : "desc",
+    };
+    renderVerkoopPerPlant();
+  });
+});
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
     verkoopView = knop.dataset.view;

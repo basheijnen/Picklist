@@ -11,10 +11,12 @@ sys.path.insert(0, str(PROJECT_DIR))
 from bom import load_bom_csv
 from mmp import load_betalingen, load_correcties, load_instellingen, load_prijzen
 from packages import load_package_info_csv
+from potmaten import load_potmaten
 from sales import load_geannuleerd, load_verkoop_csv
 
 BOM_CSV_PATH = PROJECT_DIR / "bom.csv"
 PACKAGE_INFO_CSV_PATH = PROJECT_DIR / "package_info.csv"
+POTMATEN_CSV_PATH = PROJECT_DIR / "potmaten.csv"
 DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "data.js"
 VERKOOP_CSV_PATH = PROJECT_DIR / "verkoop_orders.csv"
 VERKOOP_DATA_JS_PATH = PROJECT_DIR / "webapp" / "dist" / "verkoop_data.js"
@@ -23,7 +25,7 @@ MMP_PATHS = {naam: PROJECT_DIR / f"mmp_{naam}.csv" for naam in ("prijzen", "beta
 
 
 def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_CSV_PATH,
-                   output_path=DATA_JS_PATH):
+                   output_path=DATA_JS_PATH, potmaten_csv_path=POTMATEN_CSV_PATH):
     entries = [
         {
             "pakketnummer": entry.pakketnummer,
@@ -48,7 +50,9 @@ def build_data_js(bom_csv_path=BOM_CSV_PATH, package_info_csv_path=PACKAGE_INFO_
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
-        "window.PICKLIST_BOM = "
+        "window.PICKLIST_POTMATEN = "
+        + json.dumps(load_potmaten(potmaten_csv_path), ensure_ascii=False, separators=(",", ":"))
+        + ";\nwindow.PICKLIST_BOM = "
         + json.dumps(entries, ensure_ascii=False, separators=(",", ":"))
         + ";\nwindow.PICKLIST_PACKAGES = "
         + json.dumps(packages, ensure_ascii=False, separators=(",", ":"))

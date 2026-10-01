@@ -125,8 +125,23 @@ Voeg een regel toe aan `bom.csv`:
   gebiedslijsten is het daarom beter om een echte `volgorde` te kiezen, in de
   buurt van de categorie waar het item bij hoort.
 
+## Potmaten (Verkopen → Per plant)
+
+De weergave "Per plant" rekent verkochte pakketten terug naar losse planten,
+per potmaat. De potmaat per pakket staat in `potmaten.csv` en komt uit
+`K:\E-Commerce\Overzichten\2026-2027\Potmaten.xlsm` (kolom "Korte uitleg"):
+
+    python tools/import_potmaten.py
+    python tools/build_webapp_data.py
+
+Het script vult alleen pakketten aan die nog geen potmaat hebben; een potmaat
+die al in `potmaten.csv` staat wordt nooit overschreven. Afwijkingen met de
+Excel worden alleen gemeld — pas die zelf aan in `potmaten.csv`. C2 en P17
+(en C3 en P19) tellen in de weergave als dezelfde potmaat.
+
 ## Ontwikkelaars
 
 Tests draaien met `python -m pytest`; de saldoberekening van Ma Maison Privée
-(`webapp/dist/mmp_saldo.js`) wordt getest met `node --test tests/*.test.js`. Zie
+(`webapp/dist/mmp_saldo.js`) en de telling per plant (`webapp/dist/plant_verkoop.js`)
+worden getest met `node --test tests/*.test.js`. Zie
 `docs/superpowers/specs/2026-09-15-picklist-automation-design.md` voor het ontwerp.
