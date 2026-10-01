@@ -662,11 +662,11 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Weekenden licht blauw, dezelfde tint als de periodeknop en de Selectie-tegel (iets lichter). */
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: color-mix(in srgb, #2576a6 8%, white); }
 /* Gemarkeerde dagen: heel licht rood, elk aaneengesloten blok met een dunne grijze rand. */
-.verkoop-kalender { --kalender-rand: #7a7a7a; }
-/* Markering in een zachte bronstint, passend bij de bronzen knoppen. */
-.verkoop-kalender-maand tr.verkoop-kalender-markering td { background: color-mix(in srgb, #c8894f 22%, white); }
+.verkoop-kalender { --kalender-rand: var(--gold); }
+/* Markering zoals een actieve tegel: donkergroen, gouden rand en gouden tekst. */
+.verkoop-kalender-maand tr.verkoop-kalender-markering td { background: var(--brand); color: var(--gold); border-bottom-color: color-mix(in srgb, var(--gold) 30%, var(--brand)); }
 /* Gemarkeerde weekenddag (orders op zaterdag/zondag) iets donkerder rood, zodat het weekend herkenbaar blijft. */
-.verkoop-kalender-maand tr.verkoop-kalender-weekend.verkoop-kalender-markering td { background: color-mix(in srgb, #c8894f 42%, white); }
+.verkoop-kalender-maand tr.verkoop-kalender-weekend.verkoop-kalender-markering td { background: color-mix(in srgb, var(--brand) 78%, white); }
 /* Iets extra binnenruimte zodat de rand niet tegen de datum/het aantal aan ligt. */
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { padding-left: 6px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { padding-right: 6px; }
