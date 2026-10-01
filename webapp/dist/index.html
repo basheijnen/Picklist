@@ -248,22 +248,30 @@
           <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer, naam of ordernummer…">
         </div>
 
-        <table class="verkoop-table">
-          <thead>
-            <tr>
-              <th data-sort="pakketnummer">Pakketnummer</th>
-              <th data-sort="naam">Naam</th>
-              <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
-            </tr>
-          </thead>
-          <tbody id="verkoopTableBody"></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2">Totaal (huidige filter)</td>
-              <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
-            </tr>
-          </tfoot>
-        </table>
+        <section class="verkoop-kaart">
+          <header class="department-header pakketten-header">
+            <div class="pakketten-title"><h2>VERKOPEN PER PAKKET</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
+            <div id="verkoopTabelBadge" class="department-total badge"></div>
+          </header>
+          <div class="table-wrap">
+            <table class="verkoop-table">
+              <thead>
+                <tr>
+                  <th data-sort="pakketnummer">Pakketnummer</th>
+                  <th data-sort="naam">Pakketnaam</th>
+                  <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
+                </tr>
+              </thead>
+              <tbody id="verkoopTableBody"></tbody>
+              <tfoot>
+                <tr class="package-total-row">
+                  <td colspan="2">Totaal</td>
+                  <td id="verkoopTotaalCel" class="package-grand-total"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
       </div>
 
       <div id="verkoopKalenderView" class="verkoop-kalender"></div>
@@ -275,22 +283,30 @@
           <input id="verkoopPlantZoekInput" type="search" placeholder="Zoek plant of potmaat…">
         </div>
         <p id="verkoopPlantOnbekend" class="verkoop-plant-onbekend" hidden></p>
-        <table class="verkoop-table">
-          <thead>
-            <tr>
-              <th data-plant-sort="plant">Plant</th>
-              <th data-plant-sort="potmaat">Potmaat</th>
-              <th data-plant-sort="aantal" class="verkoop-col-aantal">Aantal verkocht</th>
-            </tr>
-          </thead>
-          <tbody id="verkoopPlantBody"></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2">Totaal planten (huidige filter)</td>
-              <td id="verkoopPlantTotaalCel" class="verkoop-col-aantal"></td>
-            </tr>
-          </tfoot>
-        </table>
+        <section class="verkoop-kaart">
+          <header class="department-header pakketten-header">
+            <div class="pakketten-title"><h2>VERKOPEN PER PLANT</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
+            <div id="verkoopPlantBadge" class="department-total badge"></div>
+          </header>
+          <div class="table-wrap">
+            <table class="verkoop-table">
+              <thead>
+                <tr>
+                  <th data-plant-sort="plant">Plant</th>
+                  <th data-plant-sort="potmaat">Potmaat</th>
+                  <th data-plant-sort="aantal" class="verkoop-col-aantal">Aantal</th>
+                </tr>
+              </thead>
+              <tbody id="verkoopPlantBody"></tbody>
+              <tfoot>
+                <tr class="package-total-row">
+                  <td colspan="2">Totaal</td>
+                  <td id="verkoopPlantTotaalCel" class="package-grand-total"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
       </div>
 
     </div>

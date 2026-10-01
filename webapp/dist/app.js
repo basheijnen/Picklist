@@ -2588,7 +2588,7 @@ function renderVerkoopTiles() {
       label: "Totaal seizoen",
       waarde: displayNumber(totaalSeizoen),
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
-      van: seizoenStart, tot: seizoenTot, view: "tabel", kanaal: "",
+      van: seizoenStart, tot: seizoenTot, kanaal: "",
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
@@ -2602,7 +2602,10 @@ function renderVerkoopTiles() {
   tilesEl.innerHTML = tegels
     .map((tegel) => {
       const klikbaar = tegel.van !== undefined;
-      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && (tegel.zoek || "") === huidigeZoek
+      // Een eigen zoekterm (bijv. "wisteria") houdt een tegel gewoon actief;
+      // alleen de Pokon-tegel hoort bij de zoekterm "Pokon".
+      const zoekPast = tegel.zoek ? tegel.zoek === huidigeZoek : huidigeZoek.trim().toLowerCase() !== "pokon";
+      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && zoekPast
         && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal);
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
@@ -2616,9 +2619,16 @@ function renderVerkoopTiles() {
     el.addEventListener("click", () => {
       document.querySelector("#verkoopVanDatum").value = tegel.van;
       document.querySelector("#verkoopTotDatum").value = tegel.tot;
-      document.querySelector("#verkoopZoekInput").value = tegel.zoek || "";
+      // De ingevoerde zoekterm blijft staan bij wisselen tussen tegels; alleen
+      // de Pokon-tegel zet er "Pokon" in, en die wordt weer gewist zodra je
+      // naar een andere tegel gaat.
+      const zoekInput = document.querySelector("#verkoopZoekInput");
+      if (tegel.zoek) zoekInput.value = tegel.zoek;
+      else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
       if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
-      verkoopView = tegel.view || "tabel";
+      // Blijf in Verkopen per pakket/per plant als je daar al was.
+      if (tegel.view) verkoopView = tegel.view;
+      else if (tegel.zoek || !["tabel", "plant"].includes(verkoopView)) verkoopView = "tabel";
       renderVerkoopDialog();
     });
   });
@@ -2797,6 +2807,7 @@ function renderVerkoopTable(orders) {
   });
   const totaal = orders.reduce((sum, order) => sum + order.aantal, 0);
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
+  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(totaal)} ${totaal === 1 ? "pakket" : "pakketten"}`;
 }
 
 // Verkochte pakketten teruggerekend naar losse planten, per potmaat. Zelfde
@@ -2824,7 +2835,9 @@ function renderVerkoopPerPlant() {
   document.querySelector("#verkoopPlantBody").innerHTML = zichtbaar
     .map((rij) => `<tr><td>${escapeHtml(rij.plant)}</td><td>${escapeHtml(rij.potmaat)}</td><td class="verkoop-col-aantal">${displayNumber(rij.aantal)}</td></tr>`)
     .join("");
-  document.querySelector("#verkoopPlantTotaalCel").textContent = displayNumber(zichtbaar.reduce((sum, rij) => sum + rij.aantal, 0));
+  const totaalPlanten = zichtbaar.reduce((sum, rij) => sum + rij.aantal, 0);
+  document.querySelector("#verkoopPlantTotaalCel").textContent = displayNumber(totaalPlanten);
+  document.querySelector("#verkoopPlantBadge").textContent = `${displayNumber(totaalPlanten)} ${totaalPlanten === 1 ? "plant" : "planten"}`;
   const melding = document.querySelector("#verkoopPlantOnbekend");
   const aantalOnbekend = onbekend.reduce((sum, rij) => sum + rij.aantal, 0);
   melding.hidden = !onbekend.length;
@@ -3000,6 +3013,20 @@ function renderVerkoopRegio() {
   document.querySelector("#verkoopRegioView").innerHTML = html;
 }
 
+// Periode-regel onder de titel van de Verkopen-kaarten, bijv.
+// "1 juli 2026 – 1 oktober 2026 · Amazon".
+function verkoopPeriodeTekst() {
+  const opmaak = (datumStr) => new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" })
+    .format(new Date(`${datumStr}T00:00:00`));
+  const van = document.querySelector("#verkoopVanDatum").value;
+  const tot = document.querySelector("#verkoopTotDatum").value;
+  let periode = "Alle verkopen";
+  if (van && tot) periode = van === tot ? opmaak(van) : `${opmaak(van)} – ${opmaak(tot)}`;
+  else if (van) periode = `Vanaf ${opmaak(van)}`;
+  else if (tot) periode = `Tot en met ${opmaak(tot)}`;
+  return verkoopActiefKanaal ? `${periode} · ${verkoopActiefKanaal}` : periode;
+}
+
 function renderVerkoopDialog() {
   renderVerkoopSeizoenDropdown();
   renderVerkoopTiles();
@@ -3016,6 +3043,7 @@ function renderVerkoopDialog() {
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
   document.querySelector("#verkoopPlantView").hidden = verkoopView !== "plant";
+  document.querySelectorAll(".verkoop-kaart-periode").forEach((el) => { el.textContent = verkoopPeriodeTekst(); });
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {
