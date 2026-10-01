@@ -2823,6 +2823,16 @@ function openKalenderDagVerdeling(datum) {
   toonKanaalVerdeling(titel, orders);
 }
 
+// Klik op "Totaal" onder een maand: verkopen per kanaal van die hele maand.
+function openKalenderMaandVerdeling(jaarMaand) {
+  const orders = (window.PICKLIST_VERKOOP || [])
+    .filter((o) => o.datum.startsWith(jaarMaand) && o.pakketnummer !== "Pokon" && verkoopKanaalPast(o.kanaal));
+  const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
+  const maand = new Intl.DateTimeFormat("nl-NL", { month: "long", year: "numeric" }).format(new Date(`${jaarMaand}-01T00:00:00`));
+  const titel = `${maand.charAt(0).toUpperCase()}${maand.slice(1)} · ${displayNumber(totaal)} ${totaal === 1 ? "pakket" : "pakketten"}`;
+  toonKanaalVerdeling(titel, orders);
+}
+
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
   const [jaar, maand, dag] = datumStr.split("-").map(Number);
   const d = new Date(jaar, maand - 1, dag + aantalDagen);
@@ -3114,7 +3124,7 @@ function renderVerkoopKalender() {
       const vulRijen = Array.from({ length: 31 - dagenInMaand }, () => `<tr><td>&nbsp;</td><td></td></tr>`).join("");
       return `<div class="verkoop-kalender-maand">
         <div class="verkoop-kalender-maand-titel">${escapeHtml(VERKOOP_MAAND_NAMEN[maand - 1])} ${jaar}</div>
-        <div class="verkoop-kalender-dagen"><table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table></div>
+        <div class="verkoop-kalender-dagen"><table><tbody>${rijen}${vulRijen}<tr class="verkoop-kalender-totaal" data-maand="${jaar}-${String(maand).padStart(2, "0")}" title="Klik voor de verkopen per kanaal deze maand"><td>Totaal</td><td>${displayNumber(totaalMaand)}</td></tr></tbody></table></div>
       </div>`;
     })
     .join("");
@@ -4560,6 +4570,8 @@ document.querySelector("#closeVerkoopHardloperDialog").addEventListener("click",
 document.querySelector("#verkoopKalenderView").addEventListener("click", (event) => {
   const dag = event.target.closest("tr[data-datum]");
   if (dag) openKalenderDagVerdeling(dag.dataset.datum);
+  const maandTotaal = event.target.closest("tr[data-maand]");
+  if (maandTotaal) openKalenderMaandVerdeling(maandTotaal.dataset.maand);
 });
 klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
   const aangevinkt = event.target.checked;
