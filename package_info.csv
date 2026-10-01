@@ -566,9 +566,7 @@ pakketnummer,pakketnaam,pokon,doosnummers
 103.1,Asimina triloba – Pawpaw / Indianenbanaan x 1,nee,15
 103.1p,Asimina triloba – Pawpaw / Indianenbanaan x 1,ja,15
 104.1,Strelitzia Reginae x 3,nee,15
-104.1p,Strelitzia Reginae x 3,ja,14 + 15
 104.2,Strelitzia Reginae x 6,nee,14
-104.2p,Strelitzia Reginae x 6,ja,2
 105.0,Calliandra surinamensis 'Dixie Pink' x 2,nee,15
 105.0p,Calliandra surinamensis 'Dixie Pink' x 2,ja,14 + 15
 105.1,Calliandra surinamensis 'Dixie Pink' x 3,nee,15
@@ -1077,7 +1075,6 @@ T012p,Lavendel C2 x 8,ja,EUR40
 259.1,Eucalyptus 'Silver Dollar' XXL x 1,nee,10
 259.1p,Eucalyptus 'Silver Dollar' XXL x 1,ja,10
 264.1,Ficus carica 'Brown Turkey' x 1 - P17,nee,10
-264.1p,Ficus carica 'Brown Turkey' x 1 - P17,nee,10
 282.2,Hydrangea arbo. 'Pink Annabelle'® x2,nee,4
 282.2p,Hydrangea arbo. 'Pink Annabelle'® x2,ja,4
 300.2,Acer palm. 'Garnet' x2 - P19,nee,11
@@ -1089,3 +1086,6 @@ T012p,Lavendel C2 x 8,ja,EUR40
 130.4,Ficus Lyrata P17 x 1,nee,10
 130.4p,Ficus Lyrata P17 x 1,ja,10
 249.3p,Trachelospermum jasminoides P9 x 3 roze,ja,14 + 15
+264.1p,Ficus carica 'Brown Turkey' x 1 - P17,ja,10
+104.1p,Strelitzia Reginae x 3,ja,2
+104.2p,Strelitzia Reginae x 6,ja,2
