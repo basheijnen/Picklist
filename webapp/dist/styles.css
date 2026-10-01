@@ -620,14 +620,14 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Iets extra binnenruimte zodat de rand niet tegen de datum/het aantal aan ligt. */
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { padding-left: 6px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { padding-right: 6px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { box-shadow: inset 2px 0 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { box-shadow: inset -2px 0 0 #000; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:first-child { box-shadow: inset 2px 2px 0 #000; border-top-left-radius: 7px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:last-child { box-shadow: inset -2px 2px 0 #000; border-top-right-radius: 7px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 2px -2px 0 #000; border-bottom-left-radius: 7px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -2px -2px 0 #000; border-bottom-right-radius: 7px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 2px 2px 0 #000, inset 0 -2px 0 #000; border-radius: 7px 0 0 7px; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -2px 2px 0 #000, inset 0 -2px 0 #000; border-radius: 0 7px 7px 0; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { box-shadow: inset 1px 0 0 #000; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { box-shadow: inset -1px 0 0 #000; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:first-child { box-shadow: inset 1px 1px 0 #000; border-top-left-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start td:last-child { box-shadow: inset -1px 1px 0 #000; border-top-right-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 1px -1px 0 #000; border-bottom-left-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px -1px 0 #000; border-bottom-right-radius: 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 1px 1px 0 #000, inset 0 -1px 0 #000; border-radius: 7px 0 0 7px; }
+.verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px 1px 0 #000, inset 0 -1px 0 #000; border-radius: 0 7px 7px 0; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
