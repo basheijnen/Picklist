@@ -2865,9 +2865,13 @@ function renderVerkoopTable(orders) {
   // Label rechtsboven: pakketten zonder Pokon, de Pokon apart eronder.
   const pokon = orders.filter((order) => order.pakketnummer === "Pokon").reduce((sum, order) => sum + order.aantal, 0);
   const pakketten = totaal - pokon;
-  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
+  // Alleen Pokon in beeld (bijv. via de Pokon-tegel): dan alleen "16 Pokon".
+  const alleenPokon = !pakketten && pokon > 0;
+  document.querySelector("#verkoopTabelBadge").textContent = alleenPokon
+    ? `${displayNumber(pokon)} Pokon`
+    : `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
   const pokonEl = document.querySelector("#verkoopTabelPokon");
-  pokonEl.hidden = !pokon;
+  pokonEl.hidden = !pokon || alleenPokon;
   pokonEl.textContent = `${displayNumber(pokon)} Pokon`;
 }
 
