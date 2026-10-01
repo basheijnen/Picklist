@@ -2701,6 +2701,10 @@ function renderVerkoopTiles() {
       }
       // In het kalenderoverzicht doen Vandaag/Deze week/Totaal seizoen/Selectie
       // niets anders dan die dagen markeren; je blijft in de kalender.
+      // Nog eens op dezelfde tegel in de kalender: markering weer weg.
+      const zelfdeMarkering = verkoopView === "kalender" && verkoopKalenderMarkering && tegel.kalenderMarkering
+        && verkoopKalenderMarkering.van === tegel.kalenderMarkering.van && verkoopKalenderMarkering.tot === tegel.kalenderMarkering.tot;
+      if (zelfdeMarkering) { verkoopKalenderMarkering = null; renderVerkoopDialog(); return; }
       verkoopKalenderMarkering = (verkoopView === "kalender" || tegel.selectie) && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
       if (verkoopView === "kalender" && verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
       // Europa of Pokon vanuit de kalender: onthoud dat je terug wilt.
