@@ -3151,6 +3151,13 @@ function renderVerkoopRegio() {
   document.querySelector("#verkoopRegioView").innerHTML = html;
 }
 
+// "2026-07-01" → "1 Juli 2026", voor de periodeknop.
+function verkoopDatumVoluit(datumStr) {
+  return new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" })
+    .format(new Date(`${datumStr}T00:00:00`))
+    .replace(/ (\p{L})/u, (_, letter) => ` ${letter.toUpperCase()}`);
+}
+
 // "2026-09-28" → "28-09-2026", voor de Selectie-tegel.
 function verkoopDatumNL(datumStr) {
   const [jaar, maand, dag] = datumStr.split("-");
@@ -4342,7 +4349,7 @@ function renderPeriodeKnop() {
   const van = document.querySelector("#verkoopVanDatum").value;
   const tot = document.querySelector("#verkoopTotDatum").value;
   document.querySelector("#periodeKnopTekst").textContent = van && tot
-    ? (van === tot ? verkoopDatumNL(van) : `${verkoopDatumNL(van)} – ${verkoopDatumNL(tot)}`)
+    ? (van === tot ? verkoopDatumVoluit(van) : `${verkoopDatumVoluit(van)} – ${verkoopDatumVoluit(tot)}`)
     : "Kies een periode";
 }
 
@@ -4377,7 +4384,7 @@ function renderPeriodeKiezer() {
   document.querySelector("#periodeMaandRechts").innerHTML = periodeMaandHtml(...verschuifMaand(jaar, maand, 1));
   const { van, tot } = periodeConcept;
   document.querySelector("#periodeVoorbeeld").textContent = van
-    ? `${verkoopDatumNL(van)} – ${tot ? verkoopDatumNL(tot) : "…"}`
+    ? `${verkoopDatumVoluit(van)} – ${tot ? verkoopDatumVoluit(tot) : "…"}`
     : "Klik een begin- en einddatum";
   document.querySelector("#periodeToepassen").disabled = !(van && tot);
 }

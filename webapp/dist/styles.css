@@ -560,9 +560,12 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    "Periode" gecentreerd erboven en dezelfde tussenruimte als de tegels (8px). */
 /* Twee even brede kolommen met 8px ertussen: de ruimte tussen de periodeknop
    en Exporteren valt zo precies boven die tussen Deze week en Selectie. */
-#verkoopDialog .verkoop-dialog-body > .verkoop-datum-bereik { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 6px 8px; }
-#verkoopDialog .verkoop-datum-bereik > .periode-kiezer { justify-self: end; }
-#verkoopDialog .verkoop-datum-bereik > .verkoop-export-wrap { justify-self: start; }
+/* Periodeknop in het midden (met "Periode" erboven), Exporteren helemaal rechts. */
+#verkoopDialog .verkoop-dialog-body > .verkoop-datum-bereik { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 6px 8px; }
+#verkoopDialog .verkoop-datum-bereik > .periode-kiezer-label { grid-column: 2; grid-row: 1; }
+#verkoopDialog .verkoop-datum-bereik > .periode-kiezer { grid-column: 2; grid-row: 2; }
+#verkoopDialog .verkoop-datum-bereik > .verkoop-export-wrap { grid-column: 3; grid-row: 2; justify-self: end; }
+#verkoopDialog .periode-popup { left: 50%; transform: translateX(-50%); }
 /* Exporteren met de dikke lijn erboven, zoals de tegels. */
 #verkoopExportButton { border: 1px solid var(--line); border-top: 4px solid var(--brand); }
 .verkoop-export-wrap { position: relative; }
@@ -600,7 +603,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .periode-voet span { margin-right: auto; padding-left: 4px; font-weight: 700; color: var(--ink); }
 .periode-voet .button { min-height: 36px; padding: 6px 16px; }
 .periode-voet .button:disabled { opacity: .45; cursor: default; }
-#verkoopExportMenu { min-width: 160px; right: auto; }
+#verkoopExportMenu { min-width: 160px; left: auto; right: 0; }
 /* Selectie-tegel: lichtblauw (vroeger de "Totaal (huidige filter)"-chip), zwarte tekst. */
 .verkoop-tile.verkoop-tile-selectie, .verkoop-tile.verkoop-tile-selectie.is-actief { background: color-mix(in srgb, #2576a6 12%, white); }
 .verkoop-tile-selectie .verkoop-tile-label, .verkoop-tile-selectie .verkoop-tile-value, .verkoop-tile-selectie .verkoop-tile-onderschrift { color: #000; }
