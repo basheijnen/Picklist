@@ -2576,6 +2576,16 @@ function renderVerkoopTiles() {
   const benelux = periodeOrders.filter((o) => regioVoorKanaal(o.kanaal) === "BENELUX").reduce((sum, o) => sum + o.aantal, 0);
   const aldi = aldiOrders.reduce((sum, o) => sum + o.aantal, 0);
   const totaalPokon = pokonOrders.reduce((sum, o) => sum + o.aantal, 0);
+  // Selectie: altijd de periode die nu in Van/Tot staat (via een tegel of
+  // zelf gekozen, mag buiten het seizoen vallen), geteld zoals "Totaal
+  // seizoen" (zonder Pokon en ALDI).
+  const huidigeVan = document.querySelector("#verkoopVanDatum").value;
+  const huidigeTot = document.querySelector("#verkoopTotDatum").value;
+  const heeftSelectie = Boolean(huidigeVan && huidigeTot);
+  const totaalSelectie = (window.PICKLIST_VERKOOP || []).filter((o) => o.pakketnummer !== "Pokon"
+    && regioVoorKanaal(o.kanaal) !== "ALDI"
+    && (!verkoopActiefKanaal || o.kanaal === verkoopActiefKanaal)
+    && o.datum >= huidigeVan && o.datum <= huidigeTot).reduce((sum, o) => sum + o.aantal, 0);
 
   // "Vandaag"/"Deze week" bestaan niet in een ander seizoen dan het huidige
   // — klikbaar maken zou Van/Tot naar de échte huidige datum zetten, en dus
@@ -2598,9 +2608,13 @@ function renderVerkoopTiles() {
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "", behoudPeriode: true },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
+    {
+      label: "Selectie", waarde: heeftSelectie ? displayNumber(totaalSelectie) : "–",
+      onderschrift: heeftSelectie ? `${verkoopDatumNL(huidigeVan)} t/m ${verkoopDatumNL(huidigeTot)}` : "kies Van/Tot",
+      selectie: true,
+      ...(heeftSelectie ? { van: huidigeVan, tot: huidigeTot, kalenderMarkering: { van: huidigeVan, tot: huidigeTot, selectie: true } } : {}),
+    },
   ];
-  const huidigeVan = document.querySelector("#verkoopVanDatum").value;
-  const huidigeTot = document.querySelector("#verkoopTotDatum").value;
   const huidigeZoek = document.querySelector("#verkoopZoekInput").value;
   const tilesEl = document.querySelector("#verkoopTiles");
   tilesEl.innerHTML = tegels
@@ -2611,7 +2625,9 @@ function renderVerkoopTiles() {
       const zoekPast = tegel.zoek ? tegel.zoek === huidigeZoek : huidigeZoek.trim().toLowerCase() !== "pokon";
       // Europa · Benelux volgt de gekozen periode, dus actief zodra je in het
       // regio-overzicht zit — ongeacht Van/Tot.
-      const periodePast = tegel.behoudPeriode ? verkoopView === "regio" : tegel.van === huidigeVan && tegel.tot === huidigeTot;
+      // De Selectie-tegel toont altijd Van/Tot en is dus altijd actief.
+      let periodePast = tegel.selectie || (tegel.van === huidigeVan && tegel.tot === huidigeTot);
+      if (tegel.behoudPeriode) periodePast = verkoopView === "regio";
       const actief = (klikbaar && periodePast && zoekPast
         && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal))
         // Met een kanaal gekozen (bijv. Amazon) lichten Totaal seizoen, Vandaag
@@ -2620,7 +2636,7 @@ function renderVerkoopTiles() {
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
         : "";
-      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${badge}</div>`;
+      return `<div class="verkoop-tile${klikbaar ? " verkoop-tile-klikbaar" : ""}${actief ? " is-actief" : ""}"><span class="verkoop-tile-label">${escapeHtml(tegel.label)}</span><span class="verkoop-tile-value">${escapeHtml(tegel.waarde)}</span>${tegel.onderschrift ? `<span class="verkoop-tile-onderschrift">${escapeHtml(tegel.onderschrift)}</span>` : ""}${badge}</div>`;
     })
     .join("");
   [...tilesEl.children].forEach((el, index) => {
@@ -2642,8 +2658,8 @@ function renderVerkoopTiles() {
       if (tegel.kanaal !== undefined) verkoopActiefKanaal = tegel.kanaal;
       // In het kalenderoverzicht doen Vandaag/Deze week/Totaal seizoen niets
       // anders dan die dagen geel markeren; je blijft in de kalender.
-      verkoopKalenderMarkering = verkoopView === "kalender" && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
-      if (verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
+      verkoopKalenderMarkering = (verkoopView === "kalender" || tegel.selectie) && tegel.kalenderMarkering ? tegel.kalenderMarkering : null;
+      if (verkoopView === "kalender" && verkoopKalenderMarkering) { renderVerkoopDialog(); return; }
       // Blijf in Verkopen per pakket/per plant als je daar al was.
       if (tegel.view) verkoopView = tegel.view;
       else if (tegel.zoek || !["tabel", "plant"].includes(verkoopView)) verkoopView = "tabel";
@@ -3043,6 +3059,12 @@ function renderVerkoopRegio() {
   </div>`;
 
   document.querySelector("#verkoopRegioView").innerHTML = html;
+}
+
+// "2026-09-28" → "28-09-2026", voor de Selectie-tegel.
+function verkoopDatumNL(datumStr) {
+  const [jaar, maand, dag] = datumStr.split("-");
+  return `${dag}-${maand}-${jaar}`;
 }
 
 // Periode-regel onder de titel van de Verkopen-kaarten, bijv.
@@ -4209,7 +4231,11 @@ document.addEventListener("click", (event) => {
 });
 ["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
   document.querySelector(selector).addEventListener("change", () => {
-    verkoopKalenderMarkering = null;
+    // Een zelf gekozen periode is de Selectie en wordt in het
+    // kalenderoverzicht gemarkeerd.
+    const van = document.querySelector("#verkoopVanDatum").value;
+    const tot = document.querySelector("#verkoopTotDatum").value;
+    verkoopKalenderMarkering = van && tot && van <= tot ? { van, tot, selectie: true } : null;
     renderVerkoopDialog();
   });
 });
@@ -4237,7 +4263,9 @@ document.querySelectorAll(".verkoop-table th[data-plant-sort]").forEach((th) => 
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
     verkoopView = knop.dataset.view;
-    verkoopKalenderMarkering = null;
+    // Een zelf gekozen Selectie blijft zichtbaar in de kalender; de markering
+    // van een tegelklik (Vandaag/Deze week/seizoen) niet.
+    if (!verkoopKalenderMarkering?.selectie) verkoopKalenderMarkering = null;
     renderVerkoopDialog();
   });
 });
