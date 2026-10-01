@@ -983,3 +983,8 @@ dialog { overscroll-behavior: contain; }
 .verkoop-tile, .verkoop-view-button, .verkoop-klant-button, .periode-knop,
 .verkoop-kalender-maand tr[data-datum], .verkoop-kalender-maand tr[data-maand],
 .verkoop-hardloper-kanaal-item, .tab { user-select: none; -webkit-user-select: none; }
+/* Afdelingstabs: donkergroen met gouden tekst; de geselecteerde tab met een
+   gouden rand. */
+.tab { color: var(--gold); background: var(--brand); border: 2px solid #000; }
+.tab:hover { border-color: color-mix(in srgb, var(--gold) 60%, #000); }
+.tab[aria-selected="true"] { color: var(--gold); background: var(--brand); border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); }
