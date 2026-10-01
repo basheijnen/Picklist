@@ -992,3 +992,7 @@ dialog { overscroll-behavior: contain; }
 .header-actions :is(.button, .print-status-reset-button), .header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border: 1.5px solid #000; border-top: 4px solid #000; }
 /* Bij aanwijzen helemaal goud omlijnd (ook de bovenrand), geen zwart meer. */
 .header-actions :is(.button, .print-status-reset-button):hover:not(:disabled) { border-color: var(--gold); }
+/* NL/FR- en kopieerknop op Maison Privée: zoals de kopbalkknoppen (zwarte rand,
+   dikke zwarte bovenrand; helemaal goud bij aanwijzen of na kopiëren). */
+.mmp-dialog .mmp-kop-badge { border: 1.5px solid #000; border-top: 4px solid #000; }
+.mmp-dialog .mmp-kop-badge:hover, .mmp-dialog .mmp-kop-badge:focus-visible, .mmp-dialog .mmp-kop-badge.is-gekopieerd { border-color: var(--gold); }
