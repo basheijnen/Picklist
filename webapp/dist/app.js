@@ -2584,10 +2584,10 @@ function renderVerkoopTiles() {
       label: "Totaal seizoen",
       waarde: displayNumber(totaalSeizoen),
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
-      van: seizoenStart, tot: seizoenTot, kanaal: "",
+      van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen,
     },
-    { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
-    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
+    { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
+    { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
     { label: "Europa · Benelux", waarde: `${displayNumber(europa)} · ${displayNumber(benelux)}`, van: seizoenStart, tot: seizoenTot, view: "regio", kanaal: "" },
     { label: "Pokon", waarde: displayNumber(totaalPokon), van: seizoenStart, tot: seizoenTot, zoek: "Pokon", kanaal: "" },
   ];
@@ -2601,8 +2601,11 @@ function renderVerkoopTiles() {
       // Een eigen zoekterm (bijv. "wisteria") houdt een tegel gewoon actief;
       // alleen de Pokon-tegel hoort bij de zoekterm "Pokon".
       const zoekPast = tegel.zoek ? tegel.zoek === huidigeZoek : huidigeZoek.trim().toLowerCase() !== "pokon";
-      const actief = klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && zoekPast
-        && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal);
+      const actief = (klikbaar && tegel.van === huidigeVan && tegel.tot === huidigeTot && zoekPast
+        && (tegel.kanaal === undefined || tegel.kanaal === verkoopActiefKanaal))
+        // Met een kanaal gekozen (bijv. Amazon) lichten Totaal seizoen, Vandaag
+        // en Deze week op als dat kanaal er verkopen in heeft; 0 blijft wit.
+        || Boolean(verkoopActiefKanaal && tegel.kanaalTotaal > 0);
       const badge = tegel.badge
         ? `<div class="verkoop-tile-badge"><span class="verkoop-tile-badge-label">${escapeHtml(tegel.badge.label)}</span><span class="verkoop-tile-badge-waarde">${escapeHtml(tegel.badge.waarde)}</span></div>`
         : "";
