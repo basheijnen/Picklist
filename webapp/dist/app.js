@@ -769,8 +769,8 @@ let verkoopActiefKanaal = "";
 let verkoopOpengeklaptPakket = "";
 let verkoopView = "kalender";
 // Dagen die in het kalenderoverzicht geel oplichten na een klik op "Vandaag",
-// "Deze week" of "Totaal seizoen" ({ van, tot, alleenMetVerkoop } of null) —
-// de kalender blijft dan open. Bij het seizoen alleen dagen met verkoop.
+// "Deze week" of "Totaal seizoen" ({ van, tot } of null) — de kalender
+// blijft dan open. Alleen dagen met verkoop worden gemarkeerd.
 let verkoopKalenderMarkering = null;
 // Los van de Van/Tot-velden: alleen het seizoensmenu zelf verandert dit —
 // een tegel als "Vandaag"/"Deze week" mag Van/Tot best naar buiten het
@@ -2592,7 +2592,7 @@ function renderVerkoopTiles() {
       waarde: displayNumber(totaalSeizoen),
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
       van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen,
-      kalenderMarkering: { van: seizoenStart, tot: seizoenTot, alleenMetVerkoop: true },
+      kalenderMarkering: { van: seizoenStart, tot: seizoenTot },
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
     { label: "Deze week", waarde: displayNumber(totaalDezeWeek), kanaal: "", kanaalTotaal: totaalDezeWeek, kalenderMarkering: { van: dezeWeek.van, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: dezeWeek.van, tot: dezeWeek.tot } : {}) },
@@ -2940,15 +2940,25 @@ function renderVerkoopKalender() {
     .map(([jaar, maand]) => {
       const dagenInMaand = new Date(jaar, maand, 0).getDate();
       let totaalMaand = 0;
-      const rijen = Array.from({ length: dagenInMaand }, (_, i) => {
+      const dagen = Array.from({ length: dagenInMaand }, (_, i) => {
         const dag = i + 1;
         const datum = `${jaar}-${String(maand).padStart(2, "0")}-${String(dag).padStart(2, "0")}`;
         const waarde = perDag.get(datum) || 0;
-        totaalMaand += waarde;
         const isWeekend = [0, 6].includes(new Date(jaar, maand - 1, dag).getDay());
-        const gemarkeerd = markering && datum >= markering.van && datum <= markering.tot
-          && (!markering.alleenMetVerkoop || waarde > 0);
-        const klassen = [isWeekend && "verkoop-kalender-weekend", gemarkeerd && "verkoop-kalender-markering"].filter(Boolean).join(" ");
+        // Alleen dagen mét verkoop (ook een weekenddag als daar orders zijn
+        // verwerkt); lege dagen onderbreken de markering, zodat elk
+        // aaneengesloten blok een eigen rand krijgt.
+        const gemarkeerd = Boolean(markering && datum >= markering.van && datum <= markering.tot && waarde > 0);
+        return { dag, datum, waarde, isWeekend, gemarkeerd };
+      });
+      const rijen = dagen.map(({ dag, waarde, isWeekend, gemarkeerd }, i) => {
+        totaalMaand += waarde;
+        const klassen = [
+          isWeekend && "verkoop-kalender-weekend",
+          gemarkeerd && "verkoop-kalender-markering",
+          gemarkeerd && !dagen[i - 1]?.gemarkeerd && "verkoop-kalender-markering-start",
+          gemarkeerd && !dagen[i + 1]?.gemarkeerd && "verkoop-kalender-markering-eind",
+        ].filter(Boolean).join(" ");
         return `<tr${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
       // Pad every month out to 31 rows so "Totaal" lines up on the same
