@@ -2779,12 +2779,18 @@ function positioneerBijAnker(dialog, anchorEl) {
 // seizoen-selectie als het paneel zelf (verkoopOverzichtPakketOrders).
 function openVerkoopHardloperDialog(pakketnummer, anchorEl) {
   const orders = verkoopOverzichtPakketOrders.filter((o) => o.pakketnummer === pakketnummer);
+  toonKanaalVerdeling(`${pakketnummer} – ${verkoopPakketnaam(pakketnummer)}`, orders, anchorEl);
+}
+
+// Pop-up met de verkopen per kanaal, van hoog naar laag. Met anchorEl naast
+// dat element (Top 10), zonder anchorEl midden op het scherm (kalenderdag).
+function toonKanaalVerdeling(titel, orders, anchorEl = null) {
   const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
   const perKanaal = new Map();
   orders.forEach((o) => perKanaal.set(o.kanaal, (perKanaal.get(o.kanaal) || 0) + o.aantal));
   const verdeling = [...perKanaal.entries()].sort(([, a], [, b]) => b - a);
 
-  document.querySelector("#verkoopHardloperTitel").textContent = `${pakketnummer} – ${verkoopPakketnaam(pakketnummer)}`;
+  document.querySelector("#verkoopHardloperTitel").textContent = titel;
   document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = verdeling
     .map(([kanaal, aantal]) => `<li class="verkoop-hardloper-kanaal-item">
         <span class="verkoop-hardloper-kanaal-badge" style="--klant-kleur:${kanaalKleur(kanaal)}"></span>
@@ -2793,11 +2799,28 @@ function openVerkoopHardloperDialog(pakketnummer, anchorEl) {
         <span class="verkoop-hardloper-kanaal-aantal">${displayNumber(aantal)}</span>
       </li>`)
     .join("");
+  if (!verdeling.length) {
+    document.querySelector("#verkoopHardloperKanalenLijst").innerHTML = '<li class="verkoop-hardloper-kanaal-item"><span class="verkoop-hardloper-kanaal-naam">Geen verkopen</span></li>';
+  }
   const dialog = document.querySelector("#verkoopHardloperDialog");
   if (!dialog.open) {
+    // Een eerdere plek naast een Top 10-regel weghalen, zodat hij zonder
+    // anker gewoon in het midden opent.
+    dialog.removeAttribute("style");
     dialog.showModal();
     if (anchorEl) positioneerBijAnker(dialog, anchorEl);
   }
+}
+
+// Klik op een dag in het kalenderoverzicht: verkopen per kanaal van die dag
+// (zelfde telling als de kalender: zonder Pokon, met de gekozen klanten).
+function openKalenderDagVerdeling(datum) {
+  const orders = (window.PICKLIST_VERKOOP || [])
+    .filter((o) => o.datum === datum && o.pakketnummer !== "Pokon" && verkoopKanaalPast(o.kanaal));
+  const totaal = orders.reduce((sum, o) => sum + o.aantal, 0);
+  const dag = new Intl.DateTimeFormat("nl-NL", { weekday: "long" }).format(new Date(`${datum}T00:00:00`));
+  const titel = `${dag.charAt(0).toUpperCase()}${dag.slice(1)} ${verkoopDatumVoluit(datum)} · ${displayNumber(totaal)} ${totaal === 1 ? "pakket" : "pakketten"}`;
+  toonKanaalVerdeling(titel, orders);
 }
 
 function verkoopVerschuifDatum(datumStr, aantalDagen) {
@@ -3074,7 +3097,7 @@ function renderVerkoopKalender() {
         const gemarkeerd = Boolean(markering && datum >= markering.van && datum <= markering.tot && (!isWeekend || waarde > 0));
         return { dag, datum, waarde, isWeekend, gemarkeerd };
       });
-      const rijen = dagen.map(({ dag, waarde, isWeekend, gemarkeerd }, i) => {
+      const rijen = dagen.map(({ dag, datum, waarde, isWeekend, gemarkeerd }, i) => {
         totaalMaand += waarde;
         const klassen = [
           isWeekend && "verkoop-kalender-weekend",
@@ -3084,7 +3107,7 @@ function renderVerkoopKalender() {
           // Dikkere lijn op de overgang werkdag ↔ weekend (boven za, onder zo).
           dagen[i + 1] && dagen[i + 1].isWeekend !== isWeekend && "verkoop-kalender-weekendgrens",
         ].filter(Boolean).join(" ");
-        return `<tr${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+        return `<tr data-datum="${datum}" title="Klik voor de verkopen per kanaal"${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
       // Pad every month out to 31 rows so "Totaal" lines up on the same
       // horizontal row across all 12 columns, regardless of month length.
@@ -4534,6 +4557,10 @@ document.querySelector("#klantDuplicatenButton").addEventListener("click", openK
 document.querySelector("#closeKlantDuplicatenDialog").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#cancelKlantDuplicatenButton").addEventListener("click", () => klantDuplicatenDialog.close());
 document.querySelector("#closeVerkoopHardloperDialog").addEventListener("click", () => document.querySelector("#verkoopHardloperDialog").close());
+document.querySelector("#verkoopKalenderView").addEventListener("click", (event) => {
+  const dag = event.target.closest("tr[data-datum]");
+  if (dag) openKalenderDagVerdeling(dag.dataset.datum);
+});
 klantDuplicatenSelectAllCheckbox.addEventListener("change", (event) => {
   const aangevinkt = event.target.checked;
   klantDuplicatenListEl.querySelectorAll(".klant-duplicaat-select").forEach((checkbox) => { checkbox.checked = aangevinkt; });

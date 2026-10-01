@@ -678,6 +678,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px -1px 0 var(--kalender-rand); border-bottom-right-radius: 7px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 7px 0 0 7px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 0 7px 7px 0; }
+.verkoop-kalender-maand tr[data-datum] { cursor: pointer; }
+.verkoop-kalender-maand tr[data-datum]:hover td { box-shadow: inset 0 0 0 999px rgba(22, 61, 50, .08); }
 .verkoop-kalender-maand tr.verkoop-kalender-weekendgrens td { border-bottom: 2px solid #8fa79b; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
