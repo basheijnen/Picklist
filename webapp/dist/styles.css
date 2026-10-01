@@ -1042,3 +1042,12 @@ dialog { overscroll-behavior: contain; }
 /* KLACHT rood, BUNDEL paars (zoals op de pakketkaart), zodat ze goed te
    onderscheiden zijn. */
 .nazending-badge.nazending-badge-bundel { border-color: #6a3fa0; color: #6a3fa0; background: #efe7fa; }
+/* Bundelpakket in de pakketlijst: geen paarse regel meer, maar een duidelijk
+   label vooraan (ook op de afdruk). */
+.nazending-row.is-bundel, .nazending-row.is-bundel:hover { background: inherit !important; }
+.department tbody tr.nazending-row.is-bundel:nth-child(even) { background: color-mix(in srgb, var(--accent) 14%, white) !important; }
+.department tbody tr.nazending-row.is-bundel:nth-child(odd) { background: white !important; }
+.bundel-label { display: inline-block; padding: 3px 10px; border: 1.5px solid #000; border-radius: 999px; background: var(--brand); color: white; font-size: .78rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+@media print {
+  .bundel-label { padding: 0 5px; font-size: 6.2pt; letter-spacing: .02em; margin-right: 4px; }
+}

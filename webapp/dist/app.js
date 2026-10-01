@@ -3523,8 +3523,11 @@ function renderPackages(orderCounts) {
         ? `<span class="nazending-full-badge">${doosAantal}</span>`
         : `${displayNumber(stukAantal)} stuks`;
       return `<tr class="nazending-row${isBundel ? " is-bundel" : ""}">
-        <td class="package-number">${toontPakketnummer ? escapeHtml(nz.pakketnummer) : ""}</td>
-        <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}<span class="nazending-badge${isBundel ? " nazending-badge-bundel" : ""}">${isBundel ? "Bundelpakket" : "Nazending"}</span></td>
+        <td class="package-number">${isBundel
+          // Bundel: het label vooraan, in de (anders lege) pakketnummer-kolom.
+          ? '<span class="bundel-label">Bundelpakket</span>'
+          : (toontPakketnummer ? escapeHtml(nz.pakketnummer) : "")}</td>
+        <td class="package-name">${nzContent.length ? nazendingContentNaam(nzContent) : escapeHtml(nz.pakketnaam || info.pakketnaam || "Onbekend pakket")}${isBundel ? "" : '<span class="nazending-badge">Nazending</span>'}</td>
         <td class="pokon-cell">${hasPokon ? "Pokon" : ""}</td>
         <td class="package-count">${countCell}</td>
         <td class="box-cell">${escapeHtml(doosnummers || "—")}</td>
