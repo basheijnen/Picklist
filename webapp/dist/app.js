@@ -2923,6 +2923,9 @@ function renderVerkoopTable(orders) {
   const pakketten = totaal - pokon;
   // Alleen Pokon in beeld (bijv. via de Pokon-tegel): dan alleen "16 Pokon".
   const alleenPokon = !pakketten && pokon > 0;
+  // Pokon-weergave (Pokon-tegel, zoekterm "Pokon") of alleen Pokon in beeld.
+  const pokonWeergave = alleenPokon || document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() === "pokon";
+  document.querySelector("#verkoopTabelTitel").textContent = pokonWeergave ? "VERKOPEN MET POKON" : "VERKOPEN PER PAKKET";
   document.querySelector("#verkoopTabelBadge").textContent = alleenPokon
     ? `${displayNumber(pokon)} Pokon`
     : `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
