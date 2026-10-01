@@ -1006,7 +1006,7 @@ dialog { overscroll-behavior: contain; }
 /* "Totaal seizoen" op de picklistpagina: donkergroen met gouden tekst, zwarte
    rand met dikke zwarte bovenrand. */
 .verkoop-overzicht-tile { background: var(--brand); border: 1.5px solid #000; border-top: 4px solid #000; }
-.verkoop-overzicht-tile :is(.verkoop-tile-label, .verkoop-tile-value) { color: var(--gold); }
+.verkoop-overzicht-tile :is(.verkoop-tile-label, .verkoop-tile-value) { color: white; }
 /* Totaal seizoen op de picklistpagina flink groter. */
 .verkoop-overzicht-tile { padding: 18px 20px; }
 .verkoop-overzicht-tile .verkoop-tile-label { font-size: 1rem; margin-bottom: 6px; }
