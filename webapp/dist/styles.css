@@ -628,8 +628,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Verkopen heeft 6 tegels (met Selectie); Maison Privée houdt er 5 over de volle breedte. */
 #verkoopTiles { grid-template-columns: repeat(6, 1fr); }
 .verkoop-tile { position: relative; padding: 14px 16px; border: 1px solid var(--line); border-top: 4px solid var(--brand); border-radius: 12px; background: white; }
-.verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
-.verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
+/* Geen verschuiving bij aanwijzen: een bewegende tegel die net opnieuw getekend
+   wordt, gaf soms een half getekend (goud) vlak. Alleen de schaduw blijft. */
+.verkoop-tile-klikbaar { cursor: pointer; transition: box-shadow .15s ease; }
+.verkoop-tile-klikbaar:hover { box-shadow: 0 4px 14px rgba(22,61,50,.18); }
 .verkoop-tile.is-actief { background: #e8f4ed; border-color: var(--brand); }
 .verkoop-tile-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 .verkoop-tile-value { display: block; color: var(--brand); font-size: 1.3rem; font-weight: 800; }
@@ -961,3 +963,9 @@ tr.has-nazending { border-left-color: #d9c28a; }
    erachter niet laten meescrollen. */
 html:has(dialog[open]), body:has(dialog[open]) { overflow: hidden; }
 dialog { overscroll-behavior: contain; }
+/* Klikbare tegels, knoppen en kalenderdagen: geen tekstselectie. Snel of dubbel
+   klikken selecteerde anders de tekst, in de accentkleur van Windows (goud
+   op gouden tekst = een dicht gouden vlak). */
+.verkoop-tile, .verkoop-view-button, .verkoop-klant-button, .periode-knop,
+.verkoop-kalender-maand tr[data-datum], .verkoop-kalender-maand tr[data-maand],
+.verkoop-hardloper-kanaal-item, .tab { user-select: none; -webkit-user-select: none; }
