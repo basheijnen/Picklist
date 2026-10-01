@@ -70,7 +70,8 @@ main { flex: 0 1 1000px; min-width: 0; margin: 0 auto; padding-top: calc(clamp(1
 .verkoop-overzicht-panel { flex: 0 0 320px; width: 320px; max-width: 100%; padding: calc(clamp(16px, 2.4vw, 24px) + 1px) 0 0; }
 .verkoop-overzicht-header { display: flex; align-items: center; min-height: 30px; margin-bottom: 14px; }
 .verkoop-overzicht-tile { margin-bottom: 16px; }
-.verkoop-overzicht-top10-titel { display: block; margin-bottom: 8px; color: var(--muted); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+/* Zelfde opmaak als de andere kopjes (.eyebrow), alleen eigen ruimte eronder. */
+.verkoop-overzicht-top10-titel { margin-bottom: 8px; }
 .verkoop-overzicht-top10-lijst { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .verkoop-overzicht-top10-item { display: flex; align-items: flex-start; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: white; font-size: .74rem; cursor: pointer; transition: box-shadow .15s ease, transform .15s ease; }
 .verkoop-overzicht-top10-item:hover { box-shadow: 0 4px 14px rgba(22,61,50,.15); transform: translateY(-1px); }
