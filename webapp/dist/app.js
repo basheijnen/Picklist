@@ -3093,6 +3093,7 @@ function verkoopPeriodeTekst() {
 }
 
 function renderVerkoopDialog() {
+  renderPeriodeKnop();
   renderVerkoopSeizoenDropdown();
   renderVerkoopTiles();
   renderVerkoopKlantFilters();
@@ -4251,14 +4252,130 @@ document.addEventListener("click", (event) => {
     renderVerkoopDialog();
   });
 });
-["#verkoopVanDatum", "#verkoopTotDatum"].forEach((selector) => {
-  const input = document.querySelector(selector);
-  // A plain click on a date input only selects the segment under the
-  // cursor (day/month/year) — open the native picker straight away instead,
-  // so one click anywhere on the field is enough.
-  input.addEventListener("click", () => {
-    if (typeof input.showPicker === "function") input.showPicker();
-  });
+// Periodekiezer (knop + popup met snelkeuzes en twee maanden). Vult de
+// verborgen Van/Tot-velden, waar alle filters, tegels en de kalender op lopen.
+const periodePopup = document.querySelector("#periodePopup");
+let periodeConcept = { van: "", tot: "" };
+let periodeHover = "";
+let periodeMaandLinks = [0, 0];
+
+function renderPeriodeKnop() {
+  const van = document.querySelector("#verkoopVanDatum").value;
+  const tot = document.querySelector("#verkoopTotDatum").value;
+  document.querySelector("#periodeKnopTekst").textContent = van && tot
+    ? (van === tot ? verkoopDatumNL(van) : `${verkoopDatumNL(van)} – ${verkoopDatumNL(tot)}`)
+    : "Kies een periode";
+}
+
+function periodeMaandHtml(jaar, maand) {
+  const titel = new Intl.DateTimeFormat("nl-NL", { month: "long", year: "numeric" }).format(new Date(jaar, maand - 1, 1));
+  const { van } = periodeConcept;
+  // Nog geen einddatum gekozen: het bereik volgt de muis (voorbeeld).
+  const tot = periodeConcept.tot || (van && periodeHover >= van ? periodeHover : "");
+  const vandaag = todayIso();
+  const cellen = maandRaster(jaar, maand).map((cel) => {
+    // Dagen uit de buurmaand alleen grijs, zonder bereik — die dag staat al
+    // in zijn eigen maand gemarkeerd.
+    const klassen = !cel.inMaand ? "periode-dag is-buiten" : ["periode-dag",
+      cel.weekend && "is-weekend", cel.datum === vandaag && "is-vandaag",
+      van && tot && cel.datum > van && cel.datum < tot && "is-in-bereik",
+      cel.datum === van && "is-begin", cel.datum === (tot || van) && "is-eind",
+    ].filter(Boolean).join(" ");
+    return `<button type="button" class="${klassen}" data-datum="${cel.datum}">${cel.dag}</button>`;
+  }).join("");
+  const dagnamen = ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"].map((d) => `<span class="periode-dagnaam">${d}</span>`).join("");
+  return `<div class="periode-maand-titel">${escapeHtml(titel)}</div><div class="periode-raster">${dagnamen}${cellen}</div>`;
+}
+
+function renderPeriodeKiezer() {
+  const keuzes = periodeSnelkeuzes(todayIso());
+  const actief = keuzes.find((k) => k.van === periodeConcept.van && k.tot === periodeConcept.tot);
+  document.querySelector("#periodeSnelkeuzes").innerHTML = [...keuzes, { label: "Aangepast" }]
+    .map((k) => `<li><button type="button" class="${(actief ? actief.label === k.label : k.label === "Aangepast") ? "is-actief" : ""}" data-van="${k.van || ""}" data-tot="${k.tot || ""}">${escapeHtml(k.label)}</button></li>`)
+    .join("");
+  const [jaar, maand] = periodeMaandLinks;
+  document.querySelector("#periodeMaandLinks").innerHTML = periodeMaandHtml(jaar, maand);
+  document.querySelector("#periodeMaandRechts").innerHTML = periodeMaandHtml(...verschuifMaand(jaar, maand, 1));
+  const { van, tot } = periodeConcept;
+  document.querySelector("#periodeVoorbeeld").textContent = van
+    ? `${verkoopDatumNL(van)} – ${tot ? verkoopDatumNL(tot) : "…"}`
+    : "Klik een begin- en einddatum";
+  document.querySelector("#periodeToepassen").disabled = !(van && tot);
+}
+
+// Toont de maand van de einddatum rechts, en de maand ervoor links.
+function periodeToonRond(datumStr) {
+  const [jaar, maand] = (datumStr || todayIso()).split("-").map(Number);
+  periodeMaandLinks = verschuifMaand(jaar, maand, -1);
+}
+
+function openPeriodeKiezer() {
+  periodeConcept = {
+    van: document.querySelector("#verkoopVanDatum").value,
+    tot: document.querySelector("#verkoopTotDatum").value,
+  };
+  periodeHover = "";
+  periodeToonRond(periodeConcept.tot);
+  renderPeriodeKiezer();
+  periodePopup.hidden = false;
+  document.querySelector("#periodeKnop").setAttribute("aria-expanded", "true");
+}
+
+function sluitPeriodeKiezer() {
+  periodePopup.hidden = true;
+  document.querySelector("#periodeKnop").setAttribute("aria-expanded", "false");
+}
+
+function pasPeriodeToe(van, tot) {
+  document.querySelector("#verkoopVanDatum").value = van;
+  const totInput = document.querySelector("#verkoopTotDatum");
+  totInput.value = tot;
+  sluitPeriodeKiezer();
+  // Zelfde pad als vroeger het zelf invullen van Van/Tot: wordt de Selectie
+  // en komt in het kalenderoverzicht gemarkeerd.
+  totInput.dispatchEvent(new Event("change"));
+}
+
+document.querySelector("#periodeKnop").addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (periodePopup.hidden) openPeriodeKiezer(); else sluitPeriodeKiezer();
+});
+periodePopup.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const snelkeuze = event.target.closest("#periodeSnelkeuzes button");
+  if (snelkeuze) {
+    // Een snelkeuze wordt meteen toegepast; "Aangepast" laat je zelf kiezen.
+    if (snelkeuze.dataset.van) pasPeriodeToe(snelkeuze.dataset.van, snelkeuze.dataset.tot);
+    return;
+  }
+  const dag = event.target.closest(".periode-dag");
+  if (dag) {
+    const datum = dag.dataset.datum;
+    const { van, tot } = periodeConcept;
+    periodeConcept = !van || tot || datum < van ? { van: datum, tot: "" } : { van, tot: datum };
+    renderPeriodeKiezer();
+    return;
+  }
+  if (event.target.closest("#periodeVorige")) { periodeMaandLinks = verschuifMaand(...periodeMaandLinks, -1); renderPeriodeKiezer(); }
+  if (event.target.closest("#periodeVolgende")) { periodeMaandLinks = verschuifMaand(...periodeMaandLinks, 1); renderPeriodeKiezer(); }
+  if (event.target.closest("#periodeAnnuleren")) sluitPeriodeKiezer();
+  if (event.target.closest("#periodeToepassen") && periodeConcept.van && periodeConcept.tot) {
+    pasPeriodeToe(periodeConcept.van, periodeConcept.tot);
+  }
+});
+periodePopup.addEventListener("mouseover", (event) => {
+  const dag = event.target.closest(".periode-dag");
+  if (!dag || !periodeConcept.van || periodeConcept.tot || dag.dataset.datum === periodeHover) return;
+  periodeHover = dag.dataset.datum;
+  renderPeriodeKiezer();
+});
+document.addEventListener("click", () => { if (!periodePopup.hidden) sluitPeriodeKiezer(); });
+// Escape sluit alleen de periodekiezer, niet het hele Verkopen-scherm.
+verkoopDialog.addEventListener("cancel", (event) => {
+  if (!periodePopup.hidden) {
+    event.preventDefault();
+    sluitPeriodeKiezer();
+  }
 });
 document.querySelector("#verkoopZoekInput").addEventListener("input", renderVerkoopDialog);
 document.querySelector("#verkoopPlantZoekInput").addEventListener("input", renderVerkoopPerPlant);

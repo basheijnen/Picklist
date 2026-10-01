@@ -222,8 +222,31 @@
     <div class="verkoop-dialog-body">
 
       <div class="verkoop-datum-bereik">
-        <label>Van <input id="verkoopVanDatum" type="date"></label>
-        <label>Tot <input id="verkoopTotDatum" type="date"></label>
+        <div class="periode-kiezer">
+          <span class="periode-kiezer-label">Periode</span>
+          <!-- Van/Tot blijven de bron voor alle filters; de periodekiezer vult ze. -->
+          <input id="verkoopVanDatum" type="hidden">
+          <input id="verkoopTotDatum" type="hidden">
+          <button id="periodeKnop" class="periode-knop" type="button" aria-haspopup="dialog" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+            <span id="periodeKnopTekst"></span>
+            <svg class="periode-knop-pijl" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div id="periodePopup" class="periode-popup" role="dialog" aria-label="Periode kiezen" hidden>
+            <ul id="periodeSnelkeuzes" class="periode-snelkeuzes"></ul>
+            <div class="periode-maanden">
+              <button id="periodeVorige" class="periode-nav periode-nav-vorige" type="button" aria-label="Vorige maand">‹</button>
+              <button id="periodeVolgende" class="periode-nav periode-nav-volgende" type="button" aria-label="Volgende maand">›</button>
+              <div id="periodeMaandLinks" class="periode-maand"></div>
+              <div id="periodeMaandRechts" class="periode-maand"></div>
+            </div>
+            <div class="periode-voet">
+              <span id="periodeVoorbeeld"></span>
+              <button id="periodeAnnuleren" class="button button-quiet" type="button">Annuleren</button>
+              <button id="periodeToepassen" class="button button-primary" type="button">Toepassen</button>
+            </div>
+          </div>
+        </div>
         <span id="verkoopFilterTotaal" class="verkoop-filter-totaal"></span>
         <div class="verkoop-export-wrap">
           <button id="verkoopExportButton" class="button button-quiet" type="button" aria-haspopup="true" aria-expanded="false">⬇ Exporteren</button>
@@ -524,6 +547,7 @@
   <script src="mmp_saldo.js"></script>
   <script src="plant_verkoop.js"></script>
   <script src="pakketkaart_print.js"></script>
+  <script src="periode_kiezer.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
