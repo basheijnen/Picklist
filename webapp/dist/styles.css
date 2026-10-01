@@ -1000,3 +1000,5 @@ dialog { overscroll-behavior: contain; }
 .mmp-dialog .mmp-kop-badge, .mmp-dialog .mmp-kop-badge:hover, .mmp-dialog .mmp-kop-badge:focus-visible, .mmp-dialog .mmp-kop-badge.is-gekopieerd { color: white; }
 /* Verkopen-knop bij aanwijzen: rondom dik zwart omlijnd (geen goud). */
 .header-actions .verkoop-header-button:hover:not(:disabled) { border: 4px solid #000; }
+/* Back-up-knop bij aanwijzen rood omlijnd (i.p.v. goud). */
+.header-actions #backupButton:hover:not(:disabled) { border-color: #e5534b; }
