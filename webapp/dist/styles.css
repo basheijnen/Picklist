@@ -580,6 +580,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
 /* Gemarkeerde dagen: heel licht rood, elk aaneengesloten blok met een dikke zwarte rand. */
 .verkoop-kalender-maand tr.verkoop-kalender-markering td { background: color-mix(in srgb, #d82c25 9%, white); }
+/* Gemarkeerde weekenddag (orders op zaterdag/zondag) iets donkerder rood, zodat het weekend herkenbaar blijft. */
+.verkoop-kalender-maand tr.verkoop-kalender-weekend.verkoop-kalender-markering td { background: color-mix(in srgb, #d82c25 20%, white); }
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:first-child { box-shadow: inset 3px 0 0 #000; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering td:last-child { box-shadow: inset -3px 0 0 #000; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start td:first-child { box-shadow: inset 3px 3px 0 #000; }
