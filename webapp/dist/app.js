@@ -3077,6 +3077,8 @@ function renderVerkoopKalender() {
           gemarkeerd && "verkoop-kalender-markering",
           gemarkeerd && !dagen[i - 1]?.gemarkeerd && "verkoop-kalender-markering-start",
           gemarkeerd && !dagen[i + 1]?.gemarkeerd && "verkoop-kalender-markering-eind",
+          // Dikkere lijn op de overgang werkdag ↔ weekend (boven za, onder zo).
+          dagen[i + 1] && dagen[i + 1].isWeekend !== isWeekend && "verkoop-kalender-weekendgrens",
         ].filter(Boolean).join(" ");
         return `<tr${klassen ? ` class="${klassen}"` : ""}><td>${dag}-${maand}-${jaar}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");

@@ -678,6 +678,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px -1px 0 var(--kalender-rand); border-bottom-right-radius: 7px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:first-child { box-shadow: inset 1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 7px 0 0 7px; }
 .verkoop-kalender-maand tr.verkoop-kalender-markering-start.verkoop-kalender-markering-eind td:last-child { box-shadow: inset -1px 1px 0 var(--kalender-rand), inset 0 -1px 0 var(--kalender-rand); border-radius: 0 7px 7px 0; }
+.verkoop-kalender-maand tr.verkoop-kalender-weekendgrens td { border-bottom: 2px solid #8fa79b; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
@@ -934,3 +935,9 @@ tr.has-nazending { border-left-color: #d9c28a; }
 /* "Terug naar picklisten" in Verkopen: zelfde brons als de Verkopen-knop. */
 #closeVerkoopDialog, .mmp-dialog #closeMmpDialog { border: 2px solid #000; color: #000; background: linear-gradient(160deg, #d9a066, #b87a42); }
 #closeVerkoopDialog:hover, .mmp-dialog #closeMmpDialog:hover { border-color: #e5534b; background: linear-gradient(160deg, #cf935a, #a96d38); }
+/* Ingeladen lijsten: een aangevinkte (meetellende) lijst donkergroen met
+   gouden rand en gouden tekst, zoals de actieve tegels in Verkopen. */
+#importsList .import-row:not(.is-held):not(.nazending-group-row) { border: 2px solid var(--gold); background: var(--brand); color: var(--gold); }
+#importsList .import-row:not(.is-held):not(.nazending-group-row) .import-name-input { border-color: color-mix(in srgb, var(--gold) 55%, var(--brand)); background: transparent; color: var(--gold); }
+#importsList .import-row:not(.is-held):not(.nazending-group-row) :is(.import-order-total, .import-verkoop-status) { color: var(--gold); }
+#importsList .import-row:not(.is-held):not(.nazending-group-row) .import-active-checkbox { accent-color: var(--gold); }
