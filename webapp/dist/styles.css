@@ -578,7 +578,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand td { padding: 0 4px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .verkoop-kalender-maand td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekend td { background: #e8f4ed; }
-.verkoop-kalender-maand tr.verkoop-kalender-markering td { background: color-mix(in srgb, var(--gold) 38%, white); color: var(--brand); }
+/* Zelfde lichtblauw als de "Totaal (huidige filter)"-chip: de gemarkeerde dagen zijn de huidige filter. */
+.verkoop-kalender-maand tr.verkoop-kalender-markering td { background: color-mix(in srgb, #2576a6 14%, white); color: #2576a6; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
@@ -744,8 +745,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .nazending-badge { border: 1px solid var(--accent-rood); color: var(--accent-rood); background: var(--accent-rood-zacht); }
 .nazending-full-badge { color: var(--accent-oker); background: var(--accent-oker-zacht); }
 tr.has-nazending { border-left-color: #d9c28a; }
-/* Actief kanaal: lichte tint van de eigen kanaalkleur met een zachte gloed. */
-.verkoop-klant-button.is-actief { color: var(--klant-kleur); background: color-mix(in srgb, var(--klant-kleur) 14%, white); border-color: var(--klant-kleur); box-shadow: 0 0 0 3px color-mix(in srgb, var(--klant-kleur) 22%, transparent); }
+/* Actief kanaal: precies zoals een actieve weergaveknop (lichtgroen, donkergroene rand). */
+.verkoop-klant-button.is-actief { color: var(--brand); background: #e8f4ed; border-color: var(--brand); box-shadow: none; }
 
 /* Iets meer kleur, maar gedempt: zachte tinten van de oude kleurfamilies
    (blauw, oranje, rood, groen) in plaats van felle vlakken. Hoort bij het

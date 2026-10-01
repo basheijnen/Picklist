@@ -4066,6 +4066,8 @@ document.querySelector("#openVerkoopButton").addEventListener("click", () => {
   verkoopView = "kalender";
   verkoopActiefKanaal = "";
   verkoopActiefSeizoen = verkoopHuidigSeizoenStart(vandaag);
+  // De kalender opent zonder markering; goud alleen na een klik op een tegel.
+  verkoopKalenderMarkering = null;
   renderVerkoopDialog();
   verkoopDialog.showModal();
 });
@@ -4225,6 +4227,7 @@ document.querySelectorAll(".verkoop-table th[data-plant-sort]").forEach((th) => 
 document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
     verkoopView = knop.dataset.view;
+    verkoopKalenderMarkering = null;
     renderVerkoopDialog();
   });
 });
