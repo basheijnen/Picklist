@@ -3207,9 +3207,9 @@ function renderVerkoopRegio() {
       }).join("");
     const html = `<div class="verkoop-regio-sectie">
       <div class="verkoop-regio-titel">${escapeHtml(titel)}</div>
-      <table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
+      <div class="verkoop-regio-tabel"><table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
         <tbody>${rijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(totaal)}</td></tr></tbody>
-      </table>
+      </table></div>
     </div>`;
     return { html, totaal };
   };
@@ -3231,9 +3231,9 @@ function renderVerkoopRegio() {
   }
   html += `<div class="verkoop-regio-sectie verkoop-regio-eindtotaal">
     <div class="verkoop-regio-titel">TOTAAL</div>
-    <table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
+    <div class="verkoop-regio-tabel"><table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
       <tbody>${eindTotaalRijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(grandTotaal)}</td></tr></tbody>
-    </table>
+    </table></div>
   </div>`;
 
   document.querySelector("#verkoopRegioView").innerHTML = html;

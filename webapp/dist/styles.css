@@ -690,7 +690,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kalender-maand tr.verkoop-kalender-weekendgrens td { border-bottom: 2px solid #8fa79b; }
 .verkoop-kalender-maand tr.verkoop-kalender-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
 
-.verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; align-items: start; }
+.verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
 .verkoop-regio[hidden] { display: none; }
 /* Verkopen per pakket / per plant: dezelfde kaart als de pakketlijst in de
    picklist (geen .department: die klasse gebruikt de picklist voor de tabbladen). */
@@ -719,12 +719,16 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kaart .verkoop-table > tbody > tr:hover { background: #f5faf7; }
 .verkoop-kaart .verkoop-table > tfoot .package-grand-total { text-align: right; }
 .verkoop-plant-onbekend { max-width: 60ch;  margin: 8px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; color: var(--muted); }
-.verkoop-regio-sectie { min-width: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.verkoop-regio-titel { padding: 5px 4px; background: var(--brand); color: white; font-size: .8rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .02em; }
-.verkoop-regio-sectie table { width: 100%; border-collapse: collapse; font-size: .82rem; }
-.verkoop-regio-sectie th, .verkoop-regio-sectie td { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-.verkoop-regio-sectie th:last-child, .verkoop-regio-sectie td:last-child { text-align: right; font-weight: 650; padding-left: 6px; }
-.verkoop-regio-sectie tr.verkoop-regio-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; }
+/* Regio-overzicht: kop los erboven (zwarte tekst), tabel in een afgerond wit
+   blok, groter en beter leesbaar. */
+.verkoop-regio-sectie { min-width: 0; }
+.verkoop-regio-titel { padding: 2px 4px 8px; color: #000; font-size: 1.05rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
+.verkoop-regio-tabel { border: 1.5px solid #8fa79b; border-radius: 10px; overflow: hidden; background: white; }
+.verkoop-regio-sectie table { width: 100%; border-collapse: collapse; font-size: 1rem; }
+.verkoop-regio-sectie th, .verkoop-regio-sectie td { padding: 8px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.verkoop-regio-sectie th { background: #f7f9f8; color: var(--muted); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+.verkoop-regio-sectie th:last-child, .verkoop-regio-sectie td:last-child { text-align: right; font-weight: 700; padding-left: 8px; }
+.verkoop-regio-sectie tr.verkoop-regio-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; font-size: 1.08rem; }
 .verkoop-regio-eindtotaal { justify-self: stretch; }
 
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
