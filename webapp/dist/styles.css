@@ -713,12 +713,12 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    schermbreedte, met 1 cm ruimte ertussen. Raster met gedeelde rijen
    (subgrid): zoekveld, kop, tabel en melding staan in alle drie de tabellen
    op dezelfde hoogte. Kleuren als de tegels: donkergroen met goud. */
-.verkoop-naast-elkaar { display: grid; grid-template-columns: minmax(max-content, 1fr) 1cm minmax(max-content, 1fr) 1cm minmax(max-content, 1fr); grid-template-rows: repeat(3, auto); }
+.verkoop-naast-elkaar { display: grid; grid-template-columns: minmax(max-content, 1fr) 1cm minmax(max-content, 1fr) 1cm minmax(max-content, 1fr); grid-template-rows: repeat(2, auto); }
 .verkoop-pakket-plant[hidden] { display: none; }
 .verkoop-pakket-plant-kop { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; }
 .verkoop-pakket-plant-kop h2 { margin: 0; color: var(--brand); font-family: Georgia, serif; font-size: 1.9rem; letter-spacing: .01em; text-align: center; }
 #verkoopDialog .periode-kiezer-label[hidden] { display: none; }
-.verkoop-naast-elkaar > div { display: grid; grid-row: 1 / span 3; grid-template-rows: subgrid; min-width: 0; }
+.verkoop-naast-elkaar > div { display: grid; grid-row: 1 / span 2; grid-template-rows: subgrid; min-width: 0; }
 #verkoopTabelView { grid-column: 1; }
 #verkoopPlantView { grid-column: 3; }
 #verkoopPokonView { grid-column: 5; }
@@ -729,14 +729,11 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 }
 .verkoop-export-kop { padding: 8px 10px 2px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
 #verkoopExportMenu { left: auto; min-width: 220px; max-height: none; }
-.verkoop-kaart-kop { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 10px; text-align: center; align-self: end; }
-.verkoop-kaart-kop h2 { margin: 0; color: var(--brand); font-family: Georgia, serif; font-size: 1.5rem; letter-spacing: .01em; }
-.verkoop-kaart-kop .picklist-date { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }
-.verkoop-kaart-totalen { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.verkoop-kaart-totalen .badge { position: static; display: inline-flex; align-items: center; gap: 12px; min-height: 34px; padding: 4px 14px; background: var(--brand); color: var(--gold); font-size: .95rem; font-weight: 850; white-space: nowrap; }
-/* Klein zoekveld in het groene label, rechts van het aantal. */
-.verkoop-kaart-totalen .badge:has(.verkoop-badge-zoek) { padding-right: 4px; }
-.verkoop-badge-zoek { width: 190px; height: 26px; padding: 2px 10px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
+/* Totaal en zoekveld bovenin de groene kopregel: samen met de kolomnamen
+   één groene balk. */
+.verkoop-kaart .verkoop-table > thead > tr.verkoop-kop-totaal > th { padding: 10px 8px 4px; cursor: default; }
+.verkoop-kop-totaal-inhoud { display: flex; min-height: 30px; align-items: center; justify-content: center; gap: 14px; color: var(--gold); font-size: 1.05rem; font-weight: 850; letter-spacing: normal; text-transform: none; white-space: nowrap; }
+.verkoop-badge-zoek { width: 200px; height: 28px; padding: 2px 12px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
 .verkoop-badge-zoek:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 /* Tabel in een wit, afgerond kader (border-collapse: separate is nodig voor de ronding). */
 .verkoop-kaart .verkoop-table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 8px 24px rgba(25, 52, 43, .06); font-size: .84rem; }
@@ -745,7 +742,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kaart .verkoop-table > * > tr > td { white-space: nowrap; }
 /* Kopregel donkergroen met gouden letters, zoals de actieve tegel. */
 .verkoop-kaart .verkoop-table > thead th { background: var(--brand); color: var(--gold); border-bottom: 0; }
-.verkoop-kaart .verkoop-table > thead th:hover { color: white; }
+.verkoop-kaart .verkoop-table > thead th[data-sort]:hover, .verkoop-kaart .verkoop-table > thead th[data-plant-sort]:hover { color: white; }
 /* Rijen om en om wit en heel lichtgroen; aantallen donkergroen en vet. */
 .verkoop-kaart .verkoop-table > tbody > tr > td { border-bottom: 1px solid #e6eee9; }
 .verkoop-kaart .verkoop-table > tbody > tr.verkoop-pakket-rij:nth-child(even of .verkoop-pakket-rij),
