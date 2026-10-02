@@ -760,13 +760,11 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Regio-overzicht: kop los erboven (zwarte tekst), tabel in een afgerond wit
    blok, groter en beter leesbaar. */
 .verkoop-regio-sectie { min-width: 0; }
-.verkoop-regio-titel { padding: 2px 4px 8px; color: #000; font-size: 1.05rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: .04em; }
-.verkoop-regio-tabel { border: 1.5px solid #8fa79b; border-radius: 10px; overflow: hidden; background: white; }
-.verkoop-regio-sectie table { width: 100%; border-collapse: collapse; font-size: 1rem; }
-.verkoop-regio-sectie th, .verkoop-regio-sectie td { padding: 8px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
-.verkoop-regio-sectie th { background: #f7f9f8; color: var(--muted); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
-.verkoop-regio-sectie th:last-child, .verkoop-regio-sectie td:last-child { text-align: right; font-weight: 700; padding-left: 8px; }
-.verkoop-regio-sectie tr.verkoop-regio-totaal td { border-top: 2px solid var(--ink); border-bottom: 0; font-weight: 800; font-size: 1.08rem; }
+/* Regio-tabellen gebruiken de groene kop van .verkoop-kaart; hier alleen de
+   om-en-om-rijen en een iets grotere letter. */
+.verkoop-regio .verkoop-kaart .verkoop-table { font-size: .95rem; }
+.verkoop-regio .verkoop-kaart .verkoop-table > tbody > tr:nth-child(even) { background: #f3f8f5; }
+.verkoop-regio .verkoop-kaart .verkoop-table th { cursor: default; }
 .verkoop-regio-eindtotaal { justify-self: stretch; }
 
 .verkoop-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }

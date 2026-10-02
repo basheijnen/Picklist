@@ -3207,38 +3207,27 @@ function renderVerkoopRegio() {
       .map((kanaal) => {
         const waarde = perKanaal.get(kanaal) || 0;
         totaal += waarde;
-        return `<tr><td>${escapeHtml(kanaal)}</td><td>${waarde ? displayNumber(waarde) : ""}</td></tr>`;
+        return `<tr><td>${escapeHtml(kanaal)}</td><td class="verkoop-col-aantal">${waarde ? displayNumber(waarde) : ""}</td></tr>`;
       }).join("");
-    const html = `<div class="verkoop-regio-sectie">
-      <div class="verkoop-regio-titel">${escapeHtml(titel)}</div>
-      <div class="verkoop-regio-tabel"><table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
-        <tbody>${rijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(totaal)}</td></tr></tbody>
-      </table></div>
-    </div>`;
-    return { html, totaal };
+    return { html: verkoopRegioKaart(titel, rijen, totaal), totaal };
   };
 
-  const europa = sectie("EUROPA", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "EUROPA").map(([naam]) => naam));
-  const benelux = sectie("BENELUX", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "BENELUX").map(([naam]) => naam));
+  const europa = sectie("Europa", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "EUROPA").map(([naam]) => naam));
+  const benelux = sectie("Benelux", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "BENELUX").map(([naam]) => naam));
   const aldi = sectie("ALDI", VERKOOP_KANAAL_REGIO_VOLGORDE.filter(([, regio]) => regio === "ALDI").map(([naam]) => naam));
   // ALDI heeft alleen omzet in 2024-2025 — in seizoenen zonder Aldi-data
   // hoeft de sectie niet leeg getoond te worden.
   let html = europa.html + benelux.html + (aldi.totaal ? aldi.html : "");
 
-  let eindTotaalRijen = `<tr><td>Europa</td><td>${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td>${displayNumber(benelux.totaal)}</td></tr>${aldi.totaal ? `<tr><td>ALDI</td><td>${displayNumber(aldi.totaal)}</td></tr>` : ""}`;
+  let eindTotaalRijen = `<tr><td>Europa</td><td class="verkoop-col-aantal">${displayNumber(europa.totaal)}</td></tr><tr><td>Benelux</td><td class="verkoop-col-aantal">${displayNumber(benelux.totaal)}</td></tr>${aldi.totaal ? `<tr><td>ALDI</td><td class="verkoop-col-aantal">${displayNumber(aldi.totaal)}</td></tr>` : ""}`;
   let grandTotaal = europa.totaal + benelux.totaal + aldi.totaal;
   if (onbekendeKanalen.length) {
-    const onbekend = sectie("ONBEKEND KANAAL", onbekendeKanalen);
+    const onbekend = sectie("Onbekend kanaal", onbekendeKanalen);
     html += onbekend.html;
-    eindTotaalRijen += `<tr><td>Onbekend</td><td>${displayNumber(onbekend.totaal)}</td></tr>`;
+    eindTotaalRijen += `<tr><td>Onbekend</td><td class="verkoop-col-aantal">${displayNumber(onbekend.totaal)}</td></tr>`;
     grandTotaal += onbekend.totaal;
   }
-  html += `<div class="verkoop-regio-sectie verkoop-regio-eindtotaal">
-    <div class="verkoop-regio-titel">TOTAAL</div>
-    <div class="verkoop-regio-tabel"><table><thead><tr><th>Klant</th><th>Totaal</th></tr></thead>
-      <tbody>${eindTotaalRijen}<tr class="verkoop-regio-totaal"><td>Totaal</td><td>${displayNumber(grandTotaal)}</td></tr></tbody>
-    </table></div>
-  </div>`;
+  html += verkoopRegioKaart("Totaal", eindTotaalRijen, grandTotaal, " verkoop-regio-eindtotaal");
 
   document.querySelector("#verkoopRegioView").innerHTML = html;
 }
@@ -3258,10 +3247,28 @@ function verkoopDatumNL(datumStr) {
 
 // Groene kop van een Verkopen-tabel: links wie er geselecteerd is ("Totaal
 // alles", "Bol.com" of "3 klanten"), rechts het aantal (bijv. 10.921).
-function verkoopKopVullen(klantSelector, aantalSelector, aantal) {
+function verkoopKlantLabel() {
   const kanalen = verkoopKanalenLijst();
-  document.querySelector(klantSelector).textContent = !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
-  document.querySelector(aantalSelector).textContent = aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
+  return !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
+}
+function verkoopKopGetal(aantal) {
+  return aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
+}
+function verkoopKopVullen(klantSelector, aantalSelector, aantal) {
+  document.querySelector(klantSelector).textContent = verkoopKlantLabel();
+  document.querySelector(aantalSelector).textContent = verkoopKopGetal(aantal);
+}
+// Regio-tabel (Europa · Benelux) in dezelfde groene kop als de tabellen van
+// Verkopen per pakket, plant en Pokon.
+function verkoopRegioKaart(titel, rijen, totaal, extraKlasse = "") {
+  return `<div class="verkoop-regio-sectie${extraKlasse}"><div class="verkoop-kaart"><table class="verkoop-table">
+    <thead>
+      <tr class="verkoop-kop-totaal"><th colspan="2"><div class="verkoop-kop-naam">${escapeHtml(titel)}</div><div class="verkoop-kop-totaal-inhoud"><span class="verkoop-kop-klant">${escapeHtml(verkoopKlantLabel())}</span><span class="verkoop-kop-aantal">${verkoopKopGetal(totaal)}</span></div></th></tr>
+      <tr><th>Klant</th><th class="verkoop-col-aantal">Totaal</th></tr>
+    </thead>
+    <tbody>${rijen}</tbody>
+    <tfoot><tr><td>Totaal</td><td class="verkoop-col-aantal">${displayNumber(totaal)}</td></tr></tfoot>
+  </table></div></div>`;
 }
 
 function renderVerkoopDialog() {
