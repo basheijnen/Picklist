@@ -713,9 +713,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    van vóór de picklist-kaart (a3a3ce7): gecentreerd, afgeronde lichtgroene
    kopregel met groene lijn erboven. Titel, periode en totaal staan erboven. */
 /* Raster met gedeelde rijen (subgrid): zoekveld, kop, tabel en melding staan
-   in alle drie de tabellen op dezelfde hoogte. Tot ongeveer 8 cm ruimte
-   tussen de tabellen; die krimpt als het scherm daar te smal voor is. */
-.verkoop-naast-elkaar { display: grid; grid-template-columns: max-content minmax(24px, 8cm) max-content minmax(24px, 8cm) max-content; grid-template-rows: repeat(4, auto); justify-content: center; }
+   in alle drie de tabellen op dezelfde hoogte, met 1 cm ruimte ertussen. */
+.verkoop-naast-elkaar { display: grid; grid-template-columns: max-content 1cm max-content 1cm max-content; grid-template-rows: repeat(4, auto); justify-content: center; }
 .verkoop-naast-elkaar[hidden] { display: none; }
 .verkoop-naast-elkaar > div { display: grid; grid-row: 1 / span 4; grid-template-rows: subgrid; min-width: 0; }
 #verkoopTabelView { grid-column: 1; }
@@ -724,7 +723,7 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kaart { --accent: #163d32; display: contents; }
 .verkoop-naast-elkaar .verkoop-filters { margin-bottom: 14px; }
 .verkoop-kaart-kop { align-self: end; }
-@media (max-width: 1880px) {
+@media (max-width: 1890px) {
   .verkoop-naast-elkaar { grid-template-columns: auto; grid-template-rows: none; row-gap: 32px; }
   .verkoop-naast-elkaar > div { grid-column: 1 !important; grid-row: auto; grid-template-rows: none; }
 }
