@@ -1099,3 +1099,7 @@ dialog { overscroll-behavior: contain; }
 .verkoop-badge-zoek { border: 2px solid #000; background: var(--gold); color: var(--brand); font-weight: 700; }
 .verkoop-badge-zoek::placeholder { color: var(--brand); opacity: .75; }
 .verkoop-badge-zoek:focus { outline: 2px solid white; outline-offset: 1px; }
+/* Zoektekst zwart, aantal groter, Pakketten/Planten/Pokon iets losser van de rest. */
+.verkoop-badge-zoek, .verkoop-badge-zoek::placeholder { color: #000; }
+.verkoop-kop-totaal-inhoud > .verkoop-kop-aantal { font-size: 1.9rem; }
+.verkoop-kop-naam { margin-top: 2px; margin-bottom: 10px; }
