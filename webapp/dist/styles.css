@@ -1124,3 +1124,11 @@ dialog { overscroll-behavior: contain; }
 .periode-knop, .periode-knop svg,
 .verkoop-tile-selectie :is(.verkoop-tile-label, .verkoop-tile-value, .verkoop-tile-onderschrift),
 #closeVerkoopDialog, .mmp-dialog #closeMmpDialog, .header-actions .verkoop-header-button, .tab:not([aria-selected="true"]) { color: #000; }
+/* Afdelingstabs zonder groen blok eromheen: gewone tabs donkergroen met
+   gouden tekst, de geselecteerde tab omgekeerd (goud, zwarte tekst); alle
+   tabs zwart omlijnd met dikke bovenrand. */
+#departmentTabs { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.tab, .tab:hover { border: 1.5px solid #000; border-top: 4px solid #000; color: var(--gold); background: var(--brand); }
+.tab:not([aria-selected="true"]) { color: var(--gold); }
+.tab:hover { background: color-mix(in srgb, var(--brand) 85%, white); }
+.tab[aria-selected="true"], .tab[aria-selected="true"]:hover { border: 1.5px solid #000; border-top: 4px solid #000; color: #000; background: var(--gold); }
