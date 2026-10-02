@@ -269,20 +269,22 @@
         <div id="verkoopKlantFilters" class="verkoop-klant-filters"></div>
       </div>
 
-      <div id="verkoopTabelView" hidden>
+      <!-- Verkopen per pakket en per plant staan altijd samen naast elkaar. -->
+      <div id="verkoopPakketPlantView" class="verkoop-naast-elkaar" hidden>
+      <div id="verkoopTabelView">
         <div class="verkoop-filters">
           <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer, naam of ordernummer…">
         </div>
 
         <section class="verkoop-kaart">
-          <header class="department-header pakketten-header">
+          <header class="verkoop-kaart-kop">
             <div class="pakketten-title"><h2 id="verkoopTabelTitel">VERKOPEN PER PAKKET</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
             <div class="verkoop-kaart-totalen">
-              <div id="verkoopTabelBadge" class="department-total badge"></div>
+              <div id="verkoopTabelBadge" class="badge"></div>
               <div id="verkoopTabelPokon" class="verkoop-kaart-pokon" hidden></div>
             </div>
           </header>
-          <div class="table-wrap">
+          <div>
             <table class="verkoop-table">
               <thead>
                 <tr>
@@ -294,9 +296,9 @@
               </thead>
               <tbody id="verkoopTableBody"></tbody>
               <tfoot>
-                <tr class="package-total-row">
+                <tr>
                   <td id="verkoopTotaalLabel" colspan="2">Totaal</td>
-                  <td id="verkoopTotaalCel" class="package-grand-total"></td>
+                  <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
                 </tr>
               </tfoot>
             </table>
@@ -304,21 +306,16 @@
         </section>
       </div>
 
-      <div id="verkoopKalenderView" class="verkoop-kalender"></div>
-
-      <div id="verkoopRegioView" class="verkoop-regio" hidden></div>
-
-      <div id="verkoopPlantView" hidden>
+      <div id="verkoopPlantView">
         <div class="verkoop-filters">
           <input id="verkoopPlantZoekInput" type="search" placeholder="Zoek plant of potmaat…">
         </div>
-        <p id="verkoopPlantOnbekend" class="verkoop-plant-onbekend" hidden></p>
         <section class="verkoop-kaart">
-          <header class="department-header pakketten-header">
+          <header class="verkoop-kaart-kop">
             <div class="pakketten-title"><h2>VERKOPEN PER PLANT</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
-            <div id="verkoopPlantBadge" class="department-total badge"></div>
+            <div class="verkoop-kaart-totalen"><div id="verkoopPlantBadge" class="badge"></div></div>
           </header>
-          <div class="table-wrap">
+          <div>
             <table class="verkoop-table">
               <thead>
                 <tr>
@@ -329,15 +326,22 @@
               </thead>
               <tbody id="verkoopPlantBody"></tbody>
               <tfoot>
-                <tr class="package-total-row">
+                <tr>
                   <td colspan="2">Totaal</td>
-                  <td id="verkoopPlantTotaalCel" class="package-grand-total"></td>
+                  <td id="verkoopPlantTotaalCel" class="verkoop-col-aantal"></td>
                 </tr>
               </tfoot>
             </table>
           </div>
         </section>
+        <p id="verkoopPlantOnbekend" class="verkoop-plant-onbekend" hidden></p>
       </div>
+      </div>
+
+      <div id="verkoopKalenderView" class="verkoop-kalender"></div>
+
+      <div id="verkoopRegioView" class="verkoop-regio" hidden></div>
+
 
     </div>
   </dialog>

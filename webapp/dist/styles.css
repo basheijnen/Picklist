@@ -709,32 +709,28 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 
 .verkoop-regio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
 .verkoop-regio[hidden] { display: none; }
-/* Verkopen per pakket / per plant: dezelfde kaart als de pakketlijst in de
-   picklist (geen .department: die klasse gebruikt de picklist voor de tabbladen). */
-#verkoopTabelView, #verkoopPlantView { width: 100%; max-width: 900px; margin: 0 auto; }
+/* Verkopen per pakket en per plant naast elkaar, in de compacte tabelstijl
+   van vóór de picklist-kaart (a3a3ce7): gecentreerd, afgeronde lichtgroene
+   kopregel met groene lijn erboven. Titel, periode en totaal staan erboven. */
+.verkoop-naast-elkaar { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 24px 48px; }
+.verkoop-naast-elkaar[hidden] { display: none; }
+#verkoopTabelView, #verkoopPlantView { width: fit-content; max-width: 100%; }
 :is(#verkoopTabelView, #verkoopPlantView) > .verkoop-filters { margin-bottom: 14px; }
-.verkoop-kaart { --accent: #163d32; overflow: hidden; border: 1px solid var(--line); border-top: 6px solid var(--accent); border-radius: 18px; background: white; box-shadow: 0 12px 38px rgba(25,52,43,.07); }
-.verkoop-kaart .pakketten-title h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
-/* Ruimte links en rechts, zodat de titel gecentreerd blijft en het label rechtsboven er niet overheen valt. */
-.verkoop-kaart .pakketten-header { padding-inline: 190px; }
-/* Label met totaal rechtsboven, met de Pokon (rood, zoals in de picklist) eronder. */
-.verkoop-kaart-totalen { position: absolute; top: 20px; right: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.verkoop-kaart-totalen .badge { position: static; }
+.verkoop-kaart { --accent: #163d32; }
+.verkoop-kaart-kop { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 10px; text-align: center; }
+.verkoop-kaart-kop h2 { margin: 0; font-family: Georgia, serif; font-size: 1.5rem; letter-spacing: .01em; }
+.verkoop-kaart-kop .picklist-date { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }
+.verkoop-kaart-totalen { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.verkoop-kaart-totalen .badge { position: static; padding: 4px 14px; font-size: .95rem; font-weight: 850; }
 .verkoop-kaart-pokon { color: #d82c25; font-style: italic; font-weight: 850; }
 .verkoop-kaart-pokon[hidden] { display: none; }
-@media (max-width: 760px) {
-  .verkoop-kaart .pakketten-header { padding-inline: 20px; }
-  .verkoop-kaart .badge { position: static; align-self: center; }
-  .verkoop-kaart-totalen { position: static; }
-}
-.verkoop-kaart .verkoop-table { font-size: 1.05rem; }
-.verkoop-kaart .verkoop-table th, .verkoop-kaart .verkoop-table td { padding: 9px 22px; border-bottom: 1px solid #edf1ee; }
-.verkoop-kaart .verkoop-table th { background: #f7f9f8; font-size: .76rem; letter-spacing: .08em; }
-.verkoop-kaart .verkoop-table > tbody > tr > td { font-weight: 600; }
-.verkoop-kaart .verkoop-table > tbody > tr > td:last-child { font-size: 1.18rem; text-align: right; font-variant-numeric: tabular-nums; }
-.verkoop-kaart .verkoop-table > tbody > tr:nth-child(even) { background: color-mix(in srgb, var(--accent) 14%, white); }
-.verkoop-kaart .verkoop-table > tbody > tr:hover { background: #f5faf7; }
-.verkoop-kaart .verkoop-table > tfoot .package-grand-total { text-align: right; }
+.verkoop-kaart .verkoop-table { width: auto; margin: 0 auto; border-collapse: separate; border-spacing: 0; }
+/* Afgeronde kopregel, net als de tegels (border-collapse: separate is daarvoor nodig). */
+.verkoop-kaart .verkoop-table > thead th { background: #e8f4ed; border-top: 4px solid var(--brand); }
+.verkoop-kaart .verkoop-table > thead th:first-child { border-top-left-radius: 12px; }
+.verkoop-kaart .verkoop-table > thead th:last-child { border-top-right-radius: 12px; }
+.verkoop-kaart .verkoop-table > * > tr > td { white-space: nowrap; }
+.verkoop-kaart .verkoop-table > * > tr > :is(th, td) + :is(th, td) { padding-left: 28px; }
 .verkoop-plant-onbekend { max-width: 60ch;  margin: 8px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; color: var(--muted); }
 /* Regio-overzicht: kop los erboven (zwarte tekst), tabel in een afgerond wit
    blok, groter en beter leesbaar. */

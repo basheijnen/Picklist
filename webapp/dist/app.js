@@ -3277,19 +3277,20 @@ function renderVerkoopDialog() {
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
   });
-  document.querySelector("#verkoopTabelView").hidden = verkoopView !== "tabel";
+  // Verkopen per pakket en per plant staan samen naast elkaar; beide knoppen
+  // openen dat scherm (de gekozen knop bepaalt wat Exporteren geeft).
+  const pakketPlant = verkoopView === "tabel" || verkoopView === "plant";
+  document.querySelector("#verkoopPakketPlantView").hidden = !pakketPlant;
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
-  document.querySelector("#verkoopPlantView").hidden = verkoopView !== "plant";
   document.querySelectorAll(".verkoop-kaart-periode").forEach((el) => { el.textContent = verkoopPeriodeTekst(); });
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {
     renderVerkoopRegio();
-  } else if (verkoopView === "plant") {
-    renderVerkoopPerPlant();
   } else {
     renderVerkoopTable(gefilterd);
+    renderVerkoopPerPlant();
   }
 }
 
