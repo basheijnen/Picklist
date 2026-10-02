@@ -254,8 +254,12 @@
         <div class="verkoop-export-wrap">
           <button id="verkoopExportButton" class="button button-quiet" type="button" aria-haspopup="true" aria-expanded="false">⬇ Exporteren</button>
           <ul id="verkoopExportMenu" class="nazending-suggestions" hidden>
-            <li><button type="button" data-formaat="xlsx">Excel (.xlsx)</button></li>
-            <li><button type="button" data-formaat="csv">CSV (.csv)</button></li>
+            <li class="verkoop-export-kop">Verkopen per pakket</li>
+            <li><button type="button" data-lijst="pakket" data-formaat="xlsx">Excel (.xlsx)</button></li>
+            <li><button type="button" data-lijst="pakket" data-formaat="csv">CSV (.csv)</button></li>
+            <li class="verkoop-export-kop">Verkopen per plant</li>
+            <li><button type="button" data-lijst="plant" data-formaat="xlsx">Excel (.xlsx)</button></li>
+            <li><button type="button" data-lijst="plant" data-formaat="csv">CSV (.csv)</button></li>
           </ul>
         </div>
       </div>
@@ -264,8 +268,7 @@
 
       <div class="verkoop-view-toggle">
         <button type="button" class="verkoop-view-button is-actief" data-view="kalender">Kalenderoverzicht</button>
-        <button type="button" class="verkoop-view-button" data-view="tabel">Verkopen per pakket</button>
-        <button type="button" class="verkoop-view-button" data-view="plant">Verkopen per plant</button>
+        <button type="button" class="verkoop-view-button" data-view="tabel">Verkopen per pakket &amp; plant</button>
         <div id="verkoopKlantFilters" class="verkoop-klant-filters"></div>
       </div>
 

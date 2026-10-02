@@ -712,11 +712,24 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Verkopen per pakket en per plant naast elkaar, in de compacte tabelstijl
    van vóór de picklist-kaart (a3a3ce7): gecentreerd, afgeronde lichtgroene
    kopregel met groene lijn erboven. Titel, periode en totaal staan erboven. */
-.verkoop-naast-elkaar { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 24px 48px; }
+/* Raster met gedeelde rijen (subgrid): zoekveld, kop, tabel en melding staan
+   links en rechts op dezelfde hoogte, ook als er links een Pokon-regel bij
+   komt. Ongeveer 8 cm tussen de twee tabellen; de middelste kolom krimpt
+   alleen als het scherm daar te smal voor is. */
+.verkoop-naast-elkaar { display: grid; grid-template-columns: max-content minmax(32px, 8cm) max-content; grid-template-rows: repeat(4, auto); justify-content: center; }
 .verkoop-naast-elkaar[hidden] { display: none; }
-#verkoopTabelView, #verkoopPlantView { width: fit-content; max-width: 100%; }
+#verkoopTabelView, #verkoopPlantView { display: grid; grid-row: 1 / span 4; grid-template-rows: subgrid; min-width: 0; }
+#verkoopTabelView { grid-column: 1; }
+#verkoopPlantView { grid-column: 3; }
+.verkoop-kaart { --accent: #163d32; display: contents; }
 :is(#verkoopTabelView, #verkoopPlantView) > .verkoop-filters { margin-bottom: 14px; }
-.verkoop-kaart { --accent: #163d32; }
+.verkoop-kaart-kop { align-self: end; }
+@media (max-width: 1450px) {
+  .verkoop-naast-elkaar { grid-template-columns: auto; grid-template-rows: none; row-gap: 32px; }
+  #verkoopTabelView, #verkoopPlantView { grid-column: 1; grid-row: auto; grid-template-rows: none; }
+}
+.verkoop-export-kop { padding: 8px 10px 2px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+#verkoopExportMenu { left: auto; min-width: 220px; max-height: none; }
 .verkoop-kaart-kop { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 10px; text-align: center; }
 .verkoop-kaart-kop h2 { margin: 0; font-family: Georgia, serif; font-size: 1.5rem; letter-spacing: .01em; }
 .verkoop-kaart-kop .picklist-date { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }

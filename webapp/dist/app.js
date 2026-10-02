@@ -2497,11 +2497,11 @@ function verkoopGefilterdeOrders({ metZoek = true } = {}) {
   });
 }
 
-// Exporteren vraagt eerst Excel of CSV (#verkoopExportMenu) en exporteert dan
-// wat bij de huidige weergave hoort: in "Verkopen per plant" de plantenlijst
-// op het scherm, anders de losse verkopen (één regel per stuk).
-function verkoopExporteren(formaat) {
-  if (verkoopView === "plant") {
+// Exporteren vraagt welke lijst en welk formaat (#verkoopExportMenu): "plant"
+// geeft de plantenlijst op het scherm, "pakket" de losse verkopen (één regel
+// per stuk).
+function verkoopExporteren(lijst, formaat) {
+  if (lijst === "plant") {
     const { zichtbaar } = verkoopPerPlantZichtbaar();
     verkoopDownload(
       [["Plant", "Potmaat", "Aantal verkocht"], ...zichtbaar.map((rij) => [rij.plant, rij.potmaat, rij.aantal])],
@@ -3277,8 +3277,7 @@ function renderVerkoopDialog() {
   document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
     knop.classList.toggle("is-actief", knop.dataset.view === verkoopView);
   });
-  // Verkopen per pakket en per plant staan samen naast elkaar; beide knoppen
-  // openen dat scherm (de gekozen knop bepaalt wat Exporteren geeft).
+  // Verkopen per pakket en per plant staan samen naast elkaar onder één knop.
   const pakketPlant = verkoopView === "tabel" || verkoopView === "plant";
   document.querySelector("#verkoopPakketPlantView").hidden = !pakketPlant;
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
@@ -4415,7 +4414,7 @@ document.querySelector("#verkoopExportButton").addEventListener("click", (event)
 document.querySelectorAll("#verkoopExportMenu button").forEach((knop) => {
   knop.addEventListener("click", () => {
     sluitVerkoopExportMenu();
-    verkoopExporteren(knop.dataset.formaat);
+    verkoopExporteren(knop.dataset.lijst, knop.dataset.formaat);
   });
 });
 document.addEventListener("click", (event) => {
