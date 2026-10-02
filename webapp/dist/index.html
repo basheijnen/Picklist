@@ -268,11 +268,11 @@
 
       <div class="verkoop-view-toggle">
         <button type="button" class="verkoop-view-button is-actief" data-view="kalender">Kalenderoverzicht</button>
-        <button type="button" class="verkoop-view-button" data-view="tabel">Verkopen per pakket &amp; plant</button>
+        <button type="button" class="verkoop-view-button" data-view="tabel">Verkopen per pakket, plant &amp; Pokon</button>
         <div id="verkoopKlantFilters" class="verkoop-klant-filters"></div>
       </div>
 
-      <!-- Verkopen per pakket en per plant staan altijd samen naast elkaar. -->
+      <!-- Verkopen per pakket, per plant en met Pokon staan samen naast elkaar. -->
       <div id="verkoopPakketPlantView" class="verkoop-naast-elkaar" hidden>
       <div id="verkoopTabelView">
         <div class="verkoop-filters">
@@ -281,11 +281,8 @@
 
         <section class="verkoop-kaart">
           <header class="verkoop-kaart-kop">
-            <div class="pakketten-title"><h2 id="verkoopTabelTitel">VERKOPEN PER PAKKET</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
-            <div class="verkoop-kaart-totalen">
-              <div id="verkoopTabelBadge" class="badge"></div>
-              <div id="verkoopTabelPokon" class="verkoop-kaart-pokon" hidden></div>
-            </div>
+            <div class="pakketten-title"><h2>VERKOPEN PER PAKKET</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
+            <div class="verkoop-kaart-totalen"><div id="verkoopTabelBadge" class="badge"></div></div>
           </header>
           <div>
             <table class="verkoop-table">
@@ -293,14 +290,13 @@
                 <tr>
                   <th data-sort="pakketnummer">Pakketnummer</th>
                   <th data-sort="naam">Pakketnaam</th>
-                  <th data-sort="klant" class="verkoop-klant-kolom" hidden>Klant</th>
                   <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
                 </tr>
               </thead>
               <tbody id="verkoopTableBody"></tbody>
               <tfoot>
                 <tr>
-                  <td id="verkoopTotaalLabel" colspan="2">Totaal</td>
+                  <td colspan="2">Totaal</td>
                   <td id="verkoopTotaalCel" class="verkoop-col-aantal"></td>
                 </tr>
               </tfoot>
@@ -338,6 +334,35 @@
           </div>
         </section>
         <p id="verkoopPlantOnbekend" class="verkoop-plant-onbekend" hidden></p>
+      </div>
+
+      <div id="verkoopPokonView">
+        <div class="verkoop-filters"></div>
+        <section class="verkoop-kaart">
+          <header class="verkoop-kaart-kop">
+            <div class="pakketten-title"><h2>VERKOPEN MET POKON</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
+            <div class="verkoop-kaart-totalen"><div id="verkoopPokonBadge" class="badge"></div></div>
+          </header>
+          <div>
+            <table class="verkoop-table">
+              <thead>
+                <tr>
+                  <th data-sort="pakketnummer">Pakketnummer</th>
+                  <th data-sort="naam">Pokon</th>
+                  <th data-sort="klant">Klant</th>
+                  <th data-sort="aantal" class="verkoop-col-aantal">Aantal</th>
+                </tr>
+              </thead>
+              <tbody id="verkoopPokonBody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3">Totaal</td>
+                  <td id="verkoopPokonTotaalCel" class="verkoop-col-aantal"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
       </div>
       </div>
 

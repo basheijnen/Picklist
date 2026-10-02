@@ -2964,7 +2964,24 @@ function verkoopAggregeerPerPakket(orders) {
   return [...groepen.values()];
 }
 
+// Verkopen per pakket en Verkopen met Pokon: twee aparte tabellen naast de
+// planttabel. Pokon-regels zijn per soort, pakket en klant, dus alleen die
+// tabel heeft de kolom Klant.
 function renderVerkoopTable(orders) {
+  const opnieuw = () => renderVerkoopTable(orders);
+  const pakketOrders = orders.filter((order) => order.pakketnummer !== "Pokon");
+  const pokonOrders = orders.filter((order) => order.pakketnummer === "Pokon");
+  vulVerkoopTabel("#verkoopTableBody", pakketOrders, false, opnieuw);
+  vulVerkoopTabel("#verkoopPokonBody", pokonOrders, true, opnieuw);
+  const pakketten = pakketOrders.reduce((sum, order) => sum + order.aantal, 0);
+  const pokon = pokonOrders.reduce((sum, order) => sum + order.aantal, 0);
+  document.querySelector("#verkoopTotaalCel").textContent = displayNumber(pakketten);
+  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
+  document.querySelector("#verkoopPokonTotaalCel").textContent = displayNumber(pokon);
+  document.querySelector("#verkoopPokonBadge").textContent = `${displayNumber(pokon)} Pokon`;
+}
+
+function vulVerkoopTabel(bodySelector, orders, metKlant, opnieuw) {
   const rijen = verkoopAggregeerPerPakket(orders);
   const ordersPerNummer = verkoopOrdersPerNummer();
   const { kolom, richting } = verkoopSort;
@@ -2973,13 +2990,8 @@ function renderVerkoopTable(orders) {
     if (kolom === "aantal") return (a.aantal - b.aantal) * factor;
     return String(a[kolom]).localeCompare(String(b[kolom]), "nl", { numeric: true }) * factor;
   });
-  // De kolom Klant alleen als er Pokon in staat (een Pokon-regel is per
-  // klant; een pakketregel telt alle klanten samen).
-  const metKlant = rijen.some((rij) => rij.isPokon);
-  document.querySelectorAll(".verkoop-klant-kolom").forEach((el) => { el.hidden = !metKlant; });
-  document.querySelector("#verkoopTotaalLabel").colSpan = metKlant ? 3 : 2;
   verkoopDetailColspan = metKlant ? 4 : 3;
-  const body = document.querySelector("#verkoopTableBody");
+  const body = document.querySelector(bodySelector);
   body.innerHTML = rijen
     .map((rij) => {
       const open = rij.sleutel === verkoopOpengeklaptPakket;
@@ -2995,7 +3007,7 @@ function renderVerkoopTable(orders) {
   body.querySelectorAll(".verkoop-pakket-rij").forEach((tr) => {
     tr.addEventListener("click", () => {
       verkoopOpengeklaptPakket = verkoopOpengeklaptPakket === tr.dataset.sleutel ? "" : tr.dataset.sleutel;
-      renderVerkoopTable(orders);
+      opnieuw();
     });
   });
   body.querySelectorAll(".verkoop-order-verwijder").forEach((knop) => {
@@ -3004,22 +3016,6 @@ function renderVerkoopTable(orders) {
       if (order) verwijderVerkoopOrder(order, knop);
     });
   });
-  const totaal = orders.reduce((sum, order) => sum + order.aantal, 0);
-  document.querySelector("#verkoopTotaalCel").textContent = displayNumber(totaal);
-  // Label rechtsboven: pakketten zonder Pokon, de Pokon apart eronder.
-  const pokon = orders.filter((order) => order.pakketnummer === "Pokon").reduce((sum, order) => sum + order.aantal, 0);
-  const pakketten = totaal - pokon;
-  // Alleen Pokon in beeld (bijv. via de Pokon-tegel): dan alleen "16 Pokon".
-  const alleenPokon = !pakketten && pokon > 0;
-  // Pokon-weergave (Pokon-tegel, zoekterm "Pokon") of alleen Pokon in beeld.
-  const pokonWeergave = alleenPokon || document.querySelector("#verkoopZoekInput").value.trim().toLowerCase() === "pokon";
-  document.querySelector("#verkoopTabelTitel").textContent = pokonWeergave ? "VERKOPEN MET POKON" : "VERKOPEN PER PAKKET";
-  document.querySelector("#verkoopTabelBadge").textContent = alleenPokon
-    ? `${displayNumber(pokon)} Pokon`
-    : `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
-  const pokonEl = document.querySelector("#verkoopTabelPokon");
-  pokonEl.hidden = !pokon || alleenPokon;
-  pokonEl.textContent = `${displayNumber(pokon)} Pokon`;
 }
 
 // Verkochte pakketten teruggerekend naar losse planten, per potmaat. Zelfde

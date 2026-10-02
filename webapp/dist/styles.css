@@ -713,20 +713,20 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    van vóór de picklist-kaart (a3a3ce7): gecentreerd, afgeronde lichtgroene
    kopregel met groene lijn erboven. Titel, periode en totaal staan erboven. */
 /* Raster met gedeelde rijen (subgrid): zoekveld, kop, tabel en melding staan
-   links en rechts op dezelfde hoogte, ook als er links een Pokon-regel bij
-   komt. Ongeveer 8 cm tussen de twee tabellen; de middelste kolom krimpt
-   alleen als het scherm daar te smal voor is. */
-.verkoop-naast-elkaar { display: grid; grid-template-columns: max-content minmax(32px, 8cm) max-content; grid-template-rows: repeat(4, auto); justify-content: center; }
+   in alle drie de tabellen op dezelfde hoogte. Tot ongeveer 8 cm ruimte
+   tussen de tabellen; die krimpt als het scherm daar te smal voor is. */
+.verkoop-naast-elkaar { display: grid; grid-template-columns: max-content minmax(24px, 8cm) max-content minmax(24px, 8cm) max-content; grid-template-rows: repeat(4, auto); justify-content: center; }
 .verkoop-naast-elkaar[hidden] { display: none; }
-#verkoopTabelView, #verkoopPlantView { display: grid; grid-row: 1 / span 4; grid-template-rows: subgrid; min-width: 0; }
+.verkoop-naast-elkaar > div { display: grid; grid-row: 1 / span 4; grid-template-rows: subgrid; min-width: 0; }
 #verkoopTabelView { grid-column: 1; }
 #verkoopPlantView { grid-column: 3; }
+#verkoopPokonView { grid-column: 5; }
 .verkoop-kaart { --accent: #163d32; display: contents; }
-:is(#verkoopTabelView, #verkoopPlantView) > .verkoop-filters { margin-bottom: 14px; }
+.verkoop-naast-elkaar .verkoop-filters { margin-bottom: 14px; }
 .verkoop-kaart-kop { align-self: end; }
-@media (max-width: 1450px) {
+@media (max-width: 1880px) {
   .verkoop-naast-elkaar { grid-template-columns: auto; grid-template-rows: none; row-gap: 32px; }
-  #verkoopTabelView, #verkoopPlantView { grid-column: 1; grid-row: auto; grid-template-rows: none; }
+  .verkoop-naast-elkaar > div { grid-column: 1 !important; grid-row: auto; grid-template-rows: none; }
 }
 .verkoop-export-kop { padding: 8px 10px 2px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
 #verkoopExportMenu { left: auto; min-width: 220px; max-height: none; }
@@ -735,15 +735,15 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-kaart-kop .picklist-date { margin: 2px 0 0; color: var(--muted); font-size: .95rem; }
 .verkoop-kaart-totalen { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .verkoop-kaart-totalen .badge { position: static; padding: 4px 14px; font-size: .95rem; font-weight: 850; }
-.verkoop-kaart-pokon { color: #d82c25; font-style: italic; font-weight: 850; }
-.verkoop-kaart-pokon[hidden] { display: none; }
 .verkoop-kaart .verkoop-table { width: auto; margin: 0 auto; border-collapse: separate; border-spacing: 0; }
 /* Afgeronde kopregel, net als de tegels (border-collapse: separate is daarvoor nodig). */
 .verkoop-kaart .verkoop-table > thead th { background: #e8f4ed; border-top: 4px solid var(--brand); }
 .verkoop-kaart .verkoop-table > thead th:first-child { border-top-left-radius: 12px; }
 .verkoop-kaart .verkoop-table > thead th:last-child { border-top-right-radius: 12px; }
 .verkoop-kaart .verkoop-table > * > tr > td { white-space: nowrap; }
-.verkoop-kaart .verkoop-table > * > tr > :is(th, td) + :is(th, td) { padding-left: 28px; }
+.verkoop-kaart .verkoop-table { font-size: .84rem; }
+.verkoop-kaart .verkoop-table > * > tr > :is(th, td) { padding: 7px 8px; }
+.verkoop-kaart .verkoop-table > * > tr > :is(th, td) + :is(th, td) { padding-left: 16px; }
 .verkoop-plant-onbekend { max-width: 60ch;  margin: 8px 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: .82rem; color: var(--muted); }
 /* Regio-overzicht: kop los erboven (zwarte tekst), tabel in een afgerond wit
    blok, groter en beter leesbaar. */
