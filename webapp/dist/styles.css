@@ -1159,3 +1159,6 @@ dialog { overscroll-behavior: contain; }
 .mmp-dialog :is(.button-primary, .button-quiet):not(.button-terug) { border: 1.5px solid #000; border-top: 4px solid #000; color: #000; background: var(--gold); }
 .mmp-dialog :is(.button-primary, .button-quiet):not(.button-terug):hover:not(:disabled) { border-color: #000; background: #f0cd85; }
 .mmp-dialog .mmp-form input:focus, .mmp-dialog #mmpPrijsZoek:focus, .mmp-dialog .verkoop-datum-bereik input:focus { outline-color: var(--brand); }
+/* Verkopen-tabellen (pakket/plant/Pokon en Europa · Benelux) zwart omlijnd
+   met dikke bovenrand, zoals de tegels. */
+.verkoop-kaart .verkoop-table { border: 1.5px solid #000; border-top: 4px solid #000; }
