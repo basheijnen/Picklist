@@ -3272,7 +3272,16 @@ function renderVerkoopDialog() {
   document.querySelector("#verkoopPakketPlantView").hidden = !pakketPlant;
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
-  document.querySelector("#verkoopPeriodeChipTekst").textContent = document.querySelector("#periodeKnopTekst").textContent;
+  // De periodekiezer staat in deze weergave onder de titel, in de andere
+  // weergaven bovenaan (met "Periode" erboven).
+  const kiezer = document.querySelector(".periode-kiezer");
+  const kiezerLabel = document.querySelector(".periode-kiezer-label");
+  const kiezerPlek = pakketPlant ? document.querySelector(".verkoop-pakket-plant-kop") : kiezerLabel.parentElement;
+  if (kiezer.parentElement !== kiezerPlek) {
+    if (pakketPlant) kiezerPlek.append(kiezer);
+    else kiezerLabel.after(kiezer);
+  }
+  kiezerLabel.hidden = pakketPlant;
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {
