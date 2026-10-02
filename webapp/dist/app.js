@@ -2635,7 +2635,7 @@ function renderVerkoopTiles() {
       label: "Totaal seizoen",
       waarde: displayNumber(totaalSeizoen),
       badge: aldi ? { label: "ALDI", waarde: displayNumber(aldi) } : null,
-      van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen,
+      van: seizoenStart, tot: seizoenTot, kanaal: "", kanaalTotaal: totaalSeizoen, wisKlanten: true,
       kalenderMarkering: { van: seizoenStart, tot: seizoenTot },
     },
     { label: "Vandaag", waarde: displayNumber(totaalVandaag), kanaal: "", kanaalTotaal: totaalVandaag, kalenderMarkering: { van: vandaag, tot: vandaag }, ...(bekijktHuidigSeizoen ? { van: vandaag, tot: vandaag } : {}) },
@@ -2694,7 +2694,9 @@ function renderVerkoopTiles() {
       const zoekInput = document.querySelector("#verkoopZoekInput");
       if (tegel.zoek) zoekInput.value = tegel.zoek;
       else if (zoekInput.value.trim().toLowerCase() === "pokon") zoekInput.value = "";
-      // De gekozen klanten blijven staan bij het wisselen van tegel.
+      // De gekozen klanten blijven staan bij het wisselen van tegel, behalve
+      // bij Totaal seizoen: dan weer alle klanten.
+      if (tegel.wisKlanten) verkoopActieveKanalen = new Set();
       // Kwam je via Europa/Pokon uit de kalender, dan brengt een periodetegel
       // je daar weer terug.
       if (verkoopTerugNaarKalender && tegel.kalenderMarkering) {
