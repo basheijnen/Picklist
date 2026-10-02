@@ -3272,16 +3272,9 @@ function renderVerkoopDialog() {
   document.querySelector("#verkoopPakketPlantView").hidden = !pakketPlant;
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
-  // De periodekiezer staat in deze weergave onder de titel, in de andere
-  // weergaven bovenaan (met "Periode" erboven).
-  const kiezer = document.querySelector(".periode-kiezer");
-  const kiezerLabel = document.querySelector(".periode-kiezer-label");
-  const kiezerPlek = pakketPlant ? document.querySelector(".verkoop-pakket-plant-kop") : kiezerLabel.parentElement;
-  if (kiezer.parentElement !== kiezerPlek) {
-    if (pakketPlant) kiezerPlek.append(kiezer);
-    else kiezerLabel.after(kiezer);
-  }
-  kiezerLabel.hidden = pakketPlant;
+  // In deze weergave staat de titel bovenin de kopbalk, met het seizoen erachter.
+  document.querySelector("#verkoopTitelTekst").textContent = pakketPlant ? "Verkopen per pakket, plant en Pokon" : "Verkopen";
+  document.querySelector("#verkoopTitel").classList.toggle("is-lang", pakketPlant);
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {

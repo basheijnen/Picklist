@@ -570,6 +570,8 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 #verkoopDialog .dialog-header, .mmp-dialog .dialog-header { min-height: var(--kopbalk-hoogte); padding-top: 12px; padding-bottom: 12px; }
 #verkoopDialog .dialog-header .eyebrow { color: var(--gold); }
 #verkoopDialog .dialog-header h2 { color: white; font-size: clamp(1.8rem, 3vw, 3rem); line-height: 1.1; }
+/* Langere titel "Verkopen per pakket, plant en Pokon 2026-2027" iets kleiner. */
+#verkoopDialog .dialog-header h2.is-lang { font-size: clamp(1.4rem, 2.1vw, 2.3rem); }
 #verkoopDialog .verkoop-seizoen-toggle { color: white; }
 #verkoopDialog .verkoop-seizoen-toggle:hover, #verkoopDialog .verkoop-seizoen-toggle[aria-expanded="true"] { color: var(--brand); background: #edf3ef; }
 .verkoop-dialog-body { padding: 0 28px 28px; display: flex; flex-direction: column; gap: 16px; }
@@ -715,9 +717,6 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    op dezelfde hoogte. Kleuren als de tegels: donkergroen met goud. */
 .verkoop-naast-elkaar { display: grid; grid-template-columns: minmax(max-content, 1fr) 1cm minmax(max-content, 1fr) 1cm minmax(max-content, 1fr); grid-template-rows: repeat(2, auto); }
 .verkoop-pakket-plant[hidden] { display: none; }
-.verkoop-pakket-plant-kop { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; }
-.verkoop-pakket-plant-kop h2 { margin: 0; color: var(--brand); font-family: Georgia, serif; font-size: 1.9rem; letter-spacing: .01em; text-align: center; }
-#verkoopDialog .periode-kiezer-label[hidden] { display: none; }
 .verkoop-naast-elkaar > div { display: grid; grid-row: 1 / span 2; grid-template-rows: subgrid; min-width: 0; }
 #verkoopTabelView { grid-column: 1; }
 #verkoopPlantView { grid-column: 3; }
@@ -732,8 +731,10 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Totaal en zoekveld bovenin de groene kopregel: samen met de kolomnamen
    één groene balk. */
 .verkoop-kaart .verkoop-table > thead > tr.verkoop-kop-totaal > th { padding: 10px 8px 4px; cursor: default; }
-.verkoop-kop-totaal-inhoud { display: flex; min-height: 30px; align-items: center; justify-content: center; gap: 14px; color: var(--gold); font-size: 1.05rem; font-weight: 850; letter-spacing: normal; text-transform: none; white-space: nowrap; }
-.verkoop-badge-zoek { width: 200px; height: 28px; padding: 2px 12px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
+.verkoop-kop-totaal-inhoud { display: flex; min-height: 34px; align-items: center; justify-content: center; gap: 14px; color: var(--gold); font-size: 1.4rem; font-weight: 850; letter-spacing: normal; text-transform: none; white-space: nowrap; }
+/* Zoekveld zo ver mogelijk naar rechts; het totaal blijft in het midden van de rest. */
+.verkoop-kop-totaal-inhoud > span { flex: 1; text-align: center; }
+.verkoop-badge-zoek { flex: none; width: 190px; height: 28px; padding: 2px 12px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
 .verkoop-badge-zoek:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 /* Tabel in een wit, afgerond kader (border-collapse: separate is nodig voor de ronding). */
 .verkoop-kaart .verkoop-table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 8px 24px rgba(25, 52, 43, .06); font-size: .84rem; }
