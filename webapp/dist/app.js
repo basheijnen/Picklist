@@ -2976,9 +2976,9 @@ function renderVerkoopTable(orders) {
   const pakketten = pakketOrders.reduce((sum, order) => sum + order.aantal, 0);
   const pokon = pokonOrders.reduce((sum, order) => sum + order.aantal, 0);
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(pakketten);
-  document.querySelector("#verkoopTabelBadge").textContent = verkoopBadgeTekst(pakketten, "pakket", "pakketten");
+  verkoopKopVullen("#verkoopTabelKlant", "#verkoopTabelBadge", pakketten);
   document.querySelector("#verkoopPokonTotaalCel").textContent = displayNumber(pokon);
-  document.querySelector("#verkoopPokonBadge").textContent = verkoopBadgeTekst(pokon, "Pokon", "Pokon");
+  verkoopKopVullen("#verkoopPokonKlant", "#verkoopPokonBadge", pokon);
 }
 
 function vulVerkoopTabel(bodySelector, orders, metKlant, opnieuw) {
@@ -3045,7 +3045,7 @@ function renderVerkoopPerPlant() {
     .join("");
   const totaalPlanten = zichtbaar.reduce((sum, rij) => sum + rij.aantal, 0);
   document.querySelector("#verkoopPlantTotaalCel").textContent = displayNumber(totaalPlanten);
-  document.querySelector("#verkoopPlantBadge").textContent = verkoopBadgeTekst(totaalPlanten, "plant", "planten");
+  verkoopKopVullen("#verkoopPlantKlant", "#verkoopPlantBadge", totaalPlanten);
   const melding = document.querySelector("#verkoopPlantOnbekend");
   const aantalOnbekend = onbekend.reduce((sum, rij) => sum + rij.aantal, 0);
   melding.hidden = !onbekend.length;
@@ -3250,12 +3250,12 @@ function verkoopDatumNL(datumStr) {
   return `${dag}-${maand}-${jaar}`;
 }
 
-// Label boven een Verkopen-tabel, bijv. "Totaal alles  10.921 pakketten",
-// "Bol.com  703 pakketten" of "3 klanten  1.125 pakketten" (twee spaties).
-function verkoopBadgeTekst(aantal, enkelvoud, meervoud) {
+// Groene kop van een Verkopen-tabel: links wie er geselecteerd is ("Totaal
+// alles", "Bol.com" of "3 klanten"), rechts het aantal (bijv. 10.921).
+function verkoopKopVullen(klantSelector, aantalSelector, aantal) {
   const kanalen = verkoopKanalenLijst();
-  const wie = !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
-  return `${wie}  ${aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ${aantal === 1 ? enkelvoud : meervoud}`;
+  document.querySelector(klantSelector).textContent = !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
+  document.querySelector(aantalSelector).textContent = aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
 }
 
 function renderVerkoopDialog() {

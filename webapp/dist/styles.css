@@ -731,9 +731,13 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 /* Totaal en zoekveld bovenin de groene kopregel: samen met de kolomnamen
    één groene balk. */
 .verkoop-kaart .verkoop-table > thead > tr.verkoop-kop-totaal > th { padding: 10px 8px 4px; cursor: default; }
-.verkoop-kop-totaal-inhoud { display: flex; min-height: 34px; align-items: center; justify-content: center; gap: 14px; color: var(--gold); font-size: 1.4rem; font-weight: 850; letter-spacing: normal; text-transform: none; white-space: nowrap; }
+/* Bovenaan gecentreerd Pakketten/Planten/Pokon; daaronder links de klant,
+   rechts het aantal (vlak voor het zoekveld, bij Pokon helemaal rechts). */
+.verkoop-kop-naam { margin-bottom: 2px; color: var(--gold); font-size: 1.4rem; font-weight: 850; letter-spacing: normal; text-align: center; text-transform: none; }
+.verkoop-kop-totaal-inhoud { display: flex; min-height: 34px; align-items: center; gap: 14px; padding-inline: 2px; color: var(--gold); font-size: 1.4rem; font-weight: 850; letter-spacing: normal; text-transform: none; white-space: nowrap; }
 /* Zoekveld zo ver mogelijk naar rechts; het totaal blijft in het midden van de rest. */
-.verkoop-kop-totaal-inhoud > span { flex: 1; text-align: center; }
+.verkoop-kop-totaal-inhoud > .verkoop-kop-klant { flex: 1; text-align: left; }
+.verkoop-kop-totaal-inhoud > .verkoop-kop-aantal { text-align: right; font-variant-numeric: tabular-nums; }
 .verkoop-badge-zoek { flex: none; width: 190px; height: 28px; padding: 2px 12px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
 .verkoop-badge-zoek:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 /* Tabel in een wit, afgerond kader (border-collapse: separate is nodig voor de ronding). */
