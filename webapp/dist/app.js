@@ -3369,8 +3369,10 @@ function calculate(orderCounts) {
   return { departments, unknown, nazendingKeys };
 }
 
+// Aantallen altijd met een punt bij de duizendtallen (10.921). Alleen voor
+// aantallen gebruiken, nooit voor pakketnummers.
 function displayNumber(value) {
-  return Number.isInteger(value) ? String(value) : value.toLocaleString("nl-NL", { maximumFractionDigits: 2 });
+  return Number(value).toLocaleString("nl-NL", { maximumFractionDigits: 2 });
 }
 
 // Een doosnummer als "3" of "15" mag groot en opvallend, maar een langere

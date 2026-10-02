@@ -1132,3 +1132,5 @@ dialog { overscroll-behavior: contain; }
 .tab:not([aria-selected="true"]) { color: var(--gold); }
 .tab:hover { background: color-mix(in srgb, var(--brand) 85%, white); }
 .tab[aria-selected="true"], .tab[aria-selected="true"]:hover { border: 1.5px solid #000; border-top: 4px solid #000; color: #000; background: var(--gold); }
+/* Totaal seizoen op de picklistpagina: label en aantal toch goud. */
+.verkoop-overzicht-tile :is(.verkoop-tile-label, .verkoop-tile-value) { color: var(--gold); }
