@@ -1162,3 +1162,5 @@ dialog { overscroll-behavior: contain; }
 /* Verkopen-tabellen (pakket/plant/Pokon en Europa · Benelux) zwart omlijnd
    met dikke bovenrand, zoals de tegels. */
 .verkoop-kaart .verkoop-table { border: 1.5px solid #000; border-top: 4px solid #000; }
+/* Lijn tussen de groene kop en de tabel ook zwart (pakket/plant/Pokon en Europa · Benelux). */
+.verkoop-kaart .verkoop-table > thead > tr:last-child > th { border-bottom: 2px solid #000; }
