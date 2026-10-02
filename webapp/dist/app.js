@@ -762,8 +762,8 @@ function openVerplaatsMenu(geselecteerd, kanalen) {
 
 const NAZENDINGEN_STORAGE_KEY = "picklist-nazendingen-v1";
 let nazendingen = [];
-// Verkopen per pakket opent altijd op pakketnummer (oplopend).
-const VERKOOP_STANDAARD_SORT = { kolom: "pakketnummer", richting: "asc" };
+// Verkopen per pakket opent altijd op aantal (hoog naar laag).
+const VERKOOP_STANDAARD_SORT = { kolom: "aantal", richting: "desc" };
 let verkoopSort = { ...VERKOOP_STANDAARD_SORT };
 let verkoopPlantSort = { kolom: "aantal", richting: "desc" };
 // Gekozen klanten (kanalen) in Verkopen; leeg = alle klanten. Meerdere
