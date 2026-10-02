@@ -1134,3 +1134,28 @@ dialog { overscroll-behavior: contain; }
 .tab[aria-selected="true"], .tab[aria-selected="true"]:hover { border: 1.5px solid #000; border-top: 4px solid #000; color: #000; background: var(--gold); }
 /* Totaal seizoen op de picklistpagina: label en aantal toch goud. */
 .verkoop-overzicht-tile :is(.verkoop-tile-label, .verkoop-tile-value) { color: var(--gold); }
+/* ---- Maison Privée in de huisstijl van de andere bladen ----
+   Zelfde kleuren als Verkopen: lichtgroene ondergrond, witte vakken met
+   donkergroene bovenrand, tabelkop donkergroen met witte tekst en gouden
+   lijn, om-en-om lichtgroene rijen, lichtgouden totaalregel en gouden
+   knoppen met zwarte tekst. De vorige "papier en cognac"-versie staat onder
+   git-tag mmp-kleuren-cognac. */
+.mmp-dialog {
+  --mmp-ondergrond: var(--canvas);
+  --mmp-vak: #f3f8f5;
+  --mmp-rand: var(--line);
+  --mmp-kopje: var(--muted);
+  --mmp-accent: var(--brand);
+  background: radial-gradient(circle at 90% 0, #e0eee6 0, transparent 35%), var(--canvas);
+}
+.mmp-dialog .verkoop-tile, .mmp-dialog .mmp-sectie { border: 1.5px solid #8fa79b; border-top: 4px solid var(--brand); box-shadow: 0 8px 24px rgba(25, 52, 43, .06); }
+.mmp-dialog .mmp-sectie h3 { color: var(--brand); }
+.mmp-dialog .mmp-form { border: 1px solid var(--line); background: #f3f8f5; }
+.mmp-dialog .verkoop-table thead th, .mmp-dialog .mmp-scroll thead th { background: var(--brand); color: white; border-bottom: 2px solid var(--gold); }
+.mmp-dialog .verkoop-table tbody tr:nth-child(even) td { background: #f3f8f5; }
+.mmp-dialog .verkoop-table tbody tr:hover td { background: #e3efe8; }
+.mmp-dialog .verkoop-table tbody tr.mmp-rij-geen-prijs td { background: #fdf1dc; }
+.mmp-dialog .verkoop-table tfoot td { border-top: 2px solid var(--gold); background: #fbf3e1; color: var(--brand); }
+.mmp-dialog :is(.button-primary, .button-quiet):not(.button-terug) { border: 1.5px solid #000; border-top: 4px solid #000; color: #000; background: var(--gold); }
+.mmp-dialog :is(.button-primary, .button-quiet):not(.button-terug):hover:not(:disabled) { border-color: #000; background: #f0cd85; }
+.mmp-dialog .mmp-form input:focus, .mmp-dialog #mmpPrijsZoek:focus, .mmp-dialog .verkoop-datum-bereik input:focus { outline-color: var(--brand); }
