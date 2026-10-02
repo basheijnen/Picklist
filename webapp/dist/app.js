@@ -2900,7 +2900,8 @@ function renderVerkoopKlantFilters() {
   verkoopActieveKanalen.forEach((kanaal) => { if (!kanalen.includes(kanaal)) verkoopActieveKanalen.delete(kanaal); });
   container.innerHTML = kanalen
     .map((kanaal) => {
-      const actief = verkoopActieveKanalen.has(kanaal);
+      // Geen klant gekozen = alle klanten: dan lichten alle knoppen op.
+      const actief = !verkoopActieveKanalen.size || verkoopActieveKanalen.has(kanaal);
       return `<button type="button" class="verkoop-klant-button${actief ? " is-actief" : ""}" data-kanaal="${escapeHtml(kanaal)}" aria-pressed="${actief}">${escapeHtml(kanaal)}</button>`;
     })
     .join("");
@@ -2909,10 +2910,13 @@ function renderVerkoopKlantFilters() {
       const kanaal = knop.dataset.kanaal;
       if (event.ctrlKey || event.metaKey) {
         // Ctrl+klik: klant erbij of eraf, voor meerdere klanten tegelijk.
-        if (verkoopActieveKanalen.has(kanaal)) verkoopActieveKanalen.delete(kanaal);
+        // Staan alle klanten aan, dan gaat alleen deze eraf.
+        if (!verkoopActieveKanalen.size) verkoopActieveKanalen = new Set(kanalen.filter((k) => k !== kanaal));
+        else if (verkoopActieveKanalen.has(kanaal)) verkoopActieveKanalen.delete(kanaal);
         else verkoopActieveKanalen.add(kanaal);
       } else {
-        // Gewone klik: alleen deze klant; nogmaals klikken = weer alle klanten.
+        // Gewone klik: alleen deze klant (alle andere uit); nogmaals klikken =
+        // weer alle klanten.
         const alleenDeze = verkoopActieveKanalen.size === 1 && verkoopActieveKanalen.has(kanaal);
         verkoopActieveKanalen = alleenDeze ? new Set() : new Set([kanaal]);
       }
@@ -4566,6 +4570,8 @@ document.querySelectorAll(".verkoop-view-button").forEach((knop) => {
   knop.addEventListener("click", () => {
     verkoopView = knop.dataset.view;
     verkoopTerugNaarKalender = false;
+    // Kalenderoverzicht toont weer alle klanten.
+    if (verkoopView === "kalender") verkoopActieveKanalen = new Set();
     // Een zelf gekozen Selectie blijft zichtbaar in de kalender; de markering
     // van een tegelklik (Vandaag/Deze week/seizoen) niet.
     if (!verkoopKalenderMarkering?.selectie) verkoopKalenderMarkering = null;
