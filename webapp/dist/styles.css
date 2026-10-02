@@ -1103,3 +1103,14 @@ dialog { overscroll-behavior: contain; }
 .verkoop-badge-zoek, .verkoop-badge-zoek::placeholder { color: #000; }
 .verkoop-kop-totaal-inhoud > .verkoop-kop-aantal { font-size: 1.9rem; }
 .verkoop-kop-naam { margin-top: 2px; margin-bottom: 10px; }
+/* Zelfde omgekeerde kleuren als periodeknop en Selectie-tegel voor de
+   Terug-knoppen, de Verkopen-knop en de afdelingstabs: goud gevuld,
+   donkergroene tekst, zwart omlijnd met dikke bovenrand. Aanwijzen maakt
+   ze lichter goud; de geselecteerde tab juist donkergroen met gouden tekst
+   en een dikke gouden rand, zodat hij opvalt tussen de gouden tabs. */
+#closeVerkoopDialog, .mmp-dialog #closeMmpDialog, .header-actions .verkoop-header-button, .tab {
+  border: 1.5px solid #000; border-top: 4px solid #000; color: var(--brand); background: var(--gold);
+}
+#closeVerkoopDialog:hover, .mmp-dialog #closeMmpDialog:hover, .tab:hover { border-color: #000; background: #f0cd85; }
+.header-actions .verkoop-header-button:hover:not(:disabled) { background: #f0cd85; }
+.tab[aria-selected="true"], .tab[aria-selected="true"]:hover { border: 4px solid var(--gold); color: var(--gold); background: var(--brand); }
