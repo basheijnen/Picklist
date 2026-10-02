@@ -1087,3 +1087,9 @@ dialog { overscroll-behavior: contain; }
 .periode-knop, #verkoopTiles .verkoop-tile.verkoop-tile-selectie, #verkoopTiles .verkoop-tile.verkoop-tile-selectie:hover { background: var(--gold); border: 1.5px solid #000; border-top: 4px solid #000; }
 .periode-knop:hover, .periode-knop[aria-expanded="true"] { background: color-mix(in srgb, var(--gold) 85%, black); }
 .periode-knop, .periode-knop svg, .verkoop-tile-selectie :is(.verkoop-tile-label, .verkoop-tile-value, .verkoop-tile-onderschrift) { color: var(--brand); }
+/* Groene kop van de Verkopen-tabellen: alle tekst wit (ook de kolomnamen),
+   alleen klantnaam en aantal goud; zoekveld met een gouden rand. */
+.verkoop-kaart .verkoop-table > thead th, .verkoop-kop-naam { color: white; }
+.verkoop-kop-totaal-inhoud > :is(.verkoop-kop-klant, .verkoop-kop-aantal) { color: var(--gold); }
+.verkoop-badge-zoek { border: 2px solid var(--gold); }
+.verkoop-kaart .verkoop-table > thead th[data-sort]:hover, .verkoop-kaart .verkoop-table > thead th[data-plant-sort]:hover { color: var(--gold); }
