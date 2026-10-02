@@ -714,8 +714,6 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
    (subgrid): zoekveld, kop, tabel en melding staan in alle drie de tabellen
    op dezelfde hoogte. Kleuren als de tegels: donkergroen met goud. */
 .verkoop-naast-elkaar { display: grid; grid-template-columns: minmax(max-content, 1fr) 1cm minmax(max-content, 1fr) 1cm minmax(max-content, 1fr); grid-template-rows: repeat(3, auto); }
-/* Titel, periode en de drie tabellen samen in één groot vak, zoals de tegels. */
-.verkoop-pakket-plant { padding: 18px 8px 20px; border: 1px solid var(--line); border-top: 6px solid var(--brand); border-radius: 18px; background: white; box-shadow: 0 12px 38px rgba(25, 52, 43, .07); }
 .verkoop-pakket-plant[hidden] { display: none; }
 .verkoop-pakket-plant-kop { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 18px; }
 .verkoop-pakket-plant-kop h2 { margin: 0; color: var(--brand); font-family: Georgia, serif; font-size: 1.9rem; letter-spacing: .01em; text-align: center; }
@@ -741,9 +739,9 @@ tr.has-nazending { border-left: 4px solid #e8842c; }
 .verkoop-badge-zoek { width: 190px; height: 26px; padding: 2px 10px; border: 0; border-radius: 999px; background: white; color: var(--ink); font: inherit; font-size: .8rem; font-weight: 500; }
 .verkoop-badge-zoek:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
 /* Tabel in een wit, afgerond kader (border-collapse: separate is nodig voor de ronding). */
-.verkoop-kaart .verkoop-table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; font-size: .84rem; }
+.verkoop-kaart .verkoop-table { width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 8px 24px rgba(25, 52, 43, .06); font-size: .84rem; }
 .verkoop-kaart .verkoop-table > * > tr > :is(th, td) { padding: 7px 8px; }
-.verkoop-kaart .verkoop-table > * > tr > :is(th, td) + :is(th, td) { padding-left: 10px; }
+.verkoop-kaart .verkoop-table > * > tr > :is(th, td) + :is(th, td) { padding-left: 16px; }
 .verkoop-kaart .verkoop-table > * > tr > td { white-space: nowrap; }
 /* Kopregel donkergroen met gouden letters, zoals de actieve tegel. */
 .verkoop-kaart .verkoop-table > thead th { background: var(--brand); color: var(--gold); border-bottom: 0; }
