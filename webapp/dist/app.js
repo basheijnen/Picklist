@@ -3250,12 +3250,12 @@ function verkoopDatumNL(datumStr) {
   return `${dag}-${maand}-${jaar}`;
 }
 
-// Label boven een Verkopen-tabel, bijv. "Totaal alles – 10.921 pakketten",
-// "Bol.com – 703 pakketten" of "3 klanten – 1.125 pakketten".
+// Label boven een Verkopen-tabel, bijv. "Totaal alles  10.921 pakketten",
+// "Bol.com  703 pakketten" of "3 klanten  1.125 pakketten" (twee spaties).
 function verkoopBadgeTekst(aantal, enkelvoud, meervoud) {
   const kanalen = verkoopKanalenLijst();
   const wie = !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
-  return `${wie} – ${aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ${aantal === 1 ? enkelvoud : meervoud}`;
+  return `${wie}  ${aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ${aantal === 1 ? enkelvoud : meervoud}`;
 }
 
 function renderVerkoopDialog() {
