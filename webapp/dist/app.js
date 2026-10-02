@@ -2976,9 +2976,9 @@ function renderVerkoopTable(orders) {
   const pakketten = pakketOrders.reduce((sum, order) => sum + order.aantal, 0);
   const pokon = pokonOrders.reduce((sum, order) => sum + order.aantal, 0);
   document.querySelector("#verkoopTotaalCel").textContent = displayNumber(pakketten);
-  document.querySelector("#verkoopTabelBadge").textContent = `${displayNumber(pakketten)} ${pakketten === 1 ? "pakket" : "pakketten"}`;
+  document.querySelector("#verkoopTabelBadge").textContent = verkoopBadgeTekst(pakketten, "pakket", "pakketten");
   document.querySelector("#verkoopPokonTotaalCel").textContent = displayNumber(pokon);
-  document.querySelector("#verkoopPokonBadge").textContent = `${displayNumber(pokon)} Pokon`;
+  document.querySelector("#verkoopPokonBadge").textContent = verkoopBadgeTekst(pokon, "Pokon", "Pokon");
 }
 
 function vulVerkoopTabel(bodySelector, orders, metKlant, opnieuw) {
@@ -3045,7 +3045,7 @@ function renderVerkoopPerPlant() {
     .join("");
   const totaalPlanten = zichtbaar.reduce((sum, rij) => sum + rij.aantal, 0);
   document.querySelector("#verkoopPlantTotaalCel").textContent = displayNumber(totaalPlanten);
-  document.querySelector("#verkoopPlantBadge").textContent = `${displayNumber(totaalPlanten)} ${totaalPlanten === 1 ? "plant" : "planten"}`;
+  document.querySelector("#verkoopPlantBadge").textContent = verkoopBadgeTekst(totaalPlanten, "plant", "planten");
   const melding = document.querySelector("#verkoopPlantOnbekend");
   const aantalOnbekend = onbekend.reduce((sum, rij) => sum + rij.aantal, 0);
   melding.hidden = !onbekend.length;
@@ -3250,18 +3250,12 @@ function verkoopDatumNL(datumStr) {
   return `${dag}-${maand}-${jaar}`;
 }
 
-// Periode-regel onder de titel van de Verkopen-kaarten, bijv.
-// "1 juli 2026 – 1 oktober 2026 · Amazon".
-function verkoopPeriodeTekst() {
-  const opmaak = (datumStr) => new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" })
-    .format(new Date(`${datumStr}T00:00:00`));
-  const van = document.querySelector("#verkoopVanDatum").value;
-  const tot = document.querySelector("#verkoopTotDatum").value;
-  let periode = "Alle verkopen";
-  if (van && tot) periode = van === tot ? opmaak(van) : `${opmaak(van)} – ${opmaak(tot)}`;
-  else if (van) periode = `Vanaf ${opmaak(van)}`;
-  else if (tot) periode = `Tot en met ${opmaak(tot)}`;
-  return verkoopActieveKanalen.size ? `${periode} · ${verkoopKanalenLijst().join(", ")}` : periode;
+// Label boven een Verkopen-tabel, bijv. "Totaal alles – 10.921 pakketten",
+// "Bol.com – 703 pakketten" of "3 klanten – 1.125 pakketten".
+function verkoopBadgeTekst(aantal, enkelvoud, meervoud) {
+  const kanalen = verkoopKanalenLijst();
+  const wie = !kanalen.length ? "Totaal alles" : kanalen.length === 1 ? kanalen[0] : `${kanalen.length} klanten`;
+  return `${wie} – ${aantal.toLocaleString("nl-NL", { maximumFractionDigits: 2 })} ${aantal === 1 ? enkelvoud : meervoud}`;
 }
 
 function renderVerkoopDialog() {
@@ -3278,7 +3272,7 @@ function renderVerkoopDialog() {
   document.querySelector("#verkoopPakketPlantView").hidden = !pakketPlant;
   document.querySelector("#verkoopKalenderView").hidden = verkoopView !== "kalender";
   document.querySelector("#verkoopRegioView").hidden = verkoopView !== "regio";
-  document.querySelectorAll(".verkoop-kaart-periode").forEach((el) => { el.textContent = verkoopPeriodeTekst(); });
+  document.querySelector("#verkoopPeriodeChipTekst").textContent = document.querySelector("#periodeKnopTekst").textContent;
   if (verkoopView === "kalender") {
     renderVerkoopKalender();
   } else if (verkoopView === "regio") {

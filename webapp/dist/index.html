@@ -272,8 +272,17 @@
         <div id="verkoopKlantFilters" class="verkoop-klant-filters"></div>
       </div>
 
-      <!-- Verkopen per pakket, per plant en met Pokon staan samen naast elkaar. -->
-      <div id="verkoopPakketPlantView" class="verkoop-naast-elkaar" hidden>
+      <!-- Verkopen per pakket, per plant en met Pokon staan samen naast elkaar,
+           onder één titel met de gekozen periode. -->
+      <div id="verkoopPakketPlantView" class="verkoop-pakket-plant" hidden>
+      <header class="verkoop-pakket-plant-kop">
+        <h2>VERKOPEN PER PAKKET, PLANT EN POKON</h2>
+        <div class="periode-knop verkoop-periode-chip">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+          <span id="verkoopPeriodeChipTekst"></span>
+        </div>
+      </header>
+      <div class="verkoop-naast-elkaar">
       <div id="verkoopTabelView">
         <div class="verkoop-filters">
           <input id="verkoopZoekInput" type="search" placeholder="Zoek pakketnummer, naam of ordernummer…">
@@ -281,7 +290,6 @@
 
         <section class="verkoop-kaart">
           <header class="verkoop-kaart-kop">
-            <div class="pakketten-title"><h2>VERKOPEN PER PAKKET</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
             <div class="verkoop-kaart-totalen"><div id="verkoopTabelBadge" class="badge"></div></div>
           </header>
           <div>
@@ -311,7 +319,6 @@
         </div>
         <section class="verkoop-kaart">
           <header class="verkoop-kaart-kop">
-            <div class="pakketten-title"><h2>VERKOPEN PER PLANT</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
             <div class="verkoop-kaart-totalen"><div id="verkoopPlantBadge" class="badge"></div></div>
           </header>
           <div>
@@ -340,7 +347,6 @@
         <div class="verkoop-filters"></div>
         <section class="verkoop-kaart">
           <header class="verkoop-kaart-kop">
-            <div class="pakketten-title"><h2>VERKOPEN MET POKON</h2><p class="picklist-date verkoop-kaart-periode"></p></div>
             <div class="verkoop-kaart-totalen"><div id="verkoopPokonBadge" class="badge"></div></div>
           </header>
           <div>
@@ -363,6 +369,7 @@
             </table>
           </div>
         </section>
+      </div>
       </div>
       </div>
 
