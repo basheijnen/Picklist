@@ -1093,3 +1093,9 @@ dialog { overscroll-behavior: contain; }
 .verkoop-kop-totaal-inhoud > :is(.verkoop-kop-klant, .verkoop-kop-aantal) { color: var(--gold); }
 .verkoop-badge-zoek { border: 2px solid var(--gold); }
 .verkoop-kaart .verkoop-table > thead th[data-sort]:hover, .verkoop-kaart .verkoop-table > thead th[data-plant-sort]:hover { color: var(--gold); }
+/* Pakketten/Planten/Pokon toch goud en iets groter; zoekvak omgekeerd zoals
+   de periodeknop: goud gevuld, donkergroene tekst, zwart omlijnd. */
+.verkoop-kop-naam { color: var(--gold); font-size: 1.7rem; }
+.verkoop-badge-zoek { border: 2px solid #000; background: var(--gold); color: var(--brand); font-weight: 700; }
+.verkoop-badge-zoek::placeholder { color: var(--brand); opacity: .75; }
+.verkoop-badge-zoek:focus { outline: 2px solid white; outline-offset: 1px; }
