@@ -874,8 +874,6 @@ pakketnummer,pakketnaam,pokon,doosnummers
 276.1p,Acer palmatum 'Beni-maiko' x1,ja,3
 276.2,Acer palmatum 'Beni-maiko' x2,nee,10
 276.2p,Acer palmatum 'Beni-maiko' x2,ja,10
-277.1,Acer palmatum 'Butterfly' x1,nee,3
-277.1p,Acer palmatum 'Butterfly' x1,ja,3
 277.2,Acer palmatum 'Butterfly' x2,nee,10
 277.2p,Acer palmatum 'Butterfly' x2,ja,10
 278.1,Acer palmatum 'Orange Dream' x1,nee,3
@@ -1089,3 +1087,5 @@ T012p,Lavendel C2 x 8,ja,EUR40
 264.1p,Ficus carica 'Brown Turkey' x 1 - P17,ja,10
 104.1p,Strelitzia Reginae x 3,ja,14 + 15
 104.2p,Strelitzia Reginae x 6,ja,2
+277.1,Acer palmatum 'Butterfly' x1,nee,10
+277.1p,Acer palmatum 'Butterfly' x1,ja,10
